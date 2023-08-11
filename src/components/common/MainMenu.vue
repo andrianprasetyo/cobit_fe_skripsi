@@ -1,0 +1,202 @@
+<script setup>
+import { computed, reactive, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+import LinkMenuItem from '@/components/Link/LinkMenuItem.vue'
+
+import { useAuth } from '@/stores/auth'
+
+const route = useRoute()
+const { menu } = useAuth()
+
+/* ---------------------------------- STATE --------------------------------- */
+const stateSidebar = reactive({
+  activeGroupId: '',
+  activeChildrenGroupId: "",
+})
+
+/* -------------------------------- COMPUTED -------------------------------- */
+const isHasChildren = computed(() => {
+  return (item) => item?.children
+})
+
+const isHasURL = computed(() => {
+  return item => item?.url && item?.url !== "-";
+})
+
+const currentRoutePath = computed(() => {
+  return route.path
+})
+
+const isActiveNav = computed(() => {
+  return item => !item?.parent_id && !item?.children && currentRoutePath.value.toString() === item?.url
+})
+
+const isActiveCollapsedNav = computed(() => {
+  return (children) => {
+    if (children && Array.isArray(children)) {
+      for (let i in children) {
+        let isIncluded = stateSidebar.activeGroupId === children[i]?.parent_id;
+
+        if (isIncluded) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    return false
+  };
+})
+
+const isChildrenActiveMenu = computed(() => {
+  return (children) => {
+    const isHasParams = Object.getOwnPropertyNames(route?.params).length > 0
+
+    let isIncluded = false;
+
+    if (isHasParams) {
+      isIncluded = currentRoutePath.value.startsWith(children?.url)
+    } else {
+      isIncluded = currentRoutePath.value.endsWith(children?.url)
+    }
+
+    if (isIncluded) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+})
+
+/* --------------------------------- METHODS -------------------------------- */
+const setActiveGroupId = value => {
+  if (stateSidebar.activeGroupId !== value) {
+    stateSidebar.activeGroupId = value
+  } else {
+    stateSidebar.activeGroupId = ""
+  }
+}
+
+const setActiveChildrenGroupId = value => {
+  if (stateSidebar.activeChildrenGroupId !== value) {
+    stateSidebar.activeChildrenGroupId = value;
+  } else {
+    stateSidebar.activeChildrenGroupId = "";
+  }
+}
+
+onMounted(() => {
+  if (menu && Array.isArray(menu)) {
+    menu.map(item => {
+      const children = item?.children;
+
+      if (children && Array.isArray(children)) {
+        for (let i in children) {
+          let currentActiveChildren = currentRoutePath.value
+            .toString()
+            == children[i]?.url;
+
+          if (currentActiveChildren) {
+            stateSidebar.activeGroupId = children[i]?.parent_id;
+          }
+
+          const subChildren = children[i]?.children
+
+          if (subChildren && Array.isArray(subChildren)) {
+            for (let indexSub in subChildren) {
+              let currentSubActiveChildren = currentRoutePath.value
+                .toString()
+                == subChildren[indexSub]?.url;
+
+              if (currentSubActiveChildren) {
+                if (!this.activeGroupId) {
+                  stateSidebar.activeGroupId = children[i]?.parent_id;
+                }
+
+                if (!this.activeChildrenGroupId) {
+                  stateSidebar.activeChildrenGroupId = children[i]?.id;
+                }
+
+                stateSidebar.activeSubChildrenGroupId = subChildren[indexSub]?.parent_id;
+
+                return
+              }
+            }
+          }
+        }
+      }
+    })
+  }
+})
+
+</script>
+
+<template>
+  <nav class="sidebar-nav scroll-sidebar my-3" data-simplebar>
+    <ul id="sidebarnav">
+      <!-- Menu Level 1 -->
+      <template v-for="menuItem in menu" :key="menuItem.id">
+        <!-- Navigation Header -->
+        <li v-if="menuItem.menu_key.includes('header')" class="nav-small-cap">
+          <TablerIcon size="21" icon="DotsIcon" class="nav-small-cap-icon fs-4" />
+          <span class="hide-menu">{{ menuItem.title }}</span>
+        </li>
+
+        <!-- Navigation Item  -->
+        <li v-else class="sidebar-item" :class="[isActiveNav(menuItem) ? 'selected' : '']">
+          <!-- Navigation Item With URL -->
+          <LinkMenuItem v-if="isHasURL(menuItem)" :to="menuItem?.url || '-'" class="sidebar-link"
+            :class="[isHasChildren(menuItem?.children) ? 'has-arrow' : '', isActiveNav(menuItem) ? 'active' : '']"
+            @click="setActiveGroupId('')">
+            <TablerIcon size=" 21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4" />
+            <span class="hide-menu">{{ menuItem?.title }}</span>
+          </LinkMenuItem>
+
+          <!-- Navigation Item Hasn't URL -->
+          <!-- Header Group -->
+          <a v-else class="sidebar-link has-arrow cursor-pointer"
+            :class="[isActiveCollapsedNav(menuItem?.children) ? 'active' : '']" aria-expanded="false"
+            @click="setActiveGroupId(menuItem?.id)">
+            <TablerIcon size="21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4" />
+            <span class="hide-menu">{{ menuItem?.title }}</span>
+          </a>
+
+          <ul aria-expanded="false" class="collapse first-level"
+            :class="[isActiveCollapsedNav(menuItem?.children) ? 'in' : '']">
+            <!-- Menu Level Ke 2 -->
+            <template v-for="children in menuItem?.children" :key="children?.id">
+              <LinkMenuItem v-if="isHasURL(children)" :to="children?.url || '-'"
+                class="sidebar-link ms-1 d-flex align-items-center"
+                :class="[isHasChildren(children?.children) ? 'has-arrow' : '', isChildrenActiveMenu(children) ? 'active fw-bolder' : '']"
+                @click="setActiveChildrenGroupId(children?.id)">
+                <!-- With Icons -->
+                <!-- <TablerIcon size="14" :icon="children?.icon" class="nav-small-cap-icon fs-4 icon-children" /> -->
+
+                <!-- Static Icons -->
+                <TablerIcon size="8" icon="CircleIcon" class="nav-small-cap-icon fs-4" />
+                <span class="hide-menu">{{ children?.title }}</span>
+              </LinkMenuItem>
+
+              <!-- Header Group Level 2 -->
+              <a v-else class="sidebar-link has-arrow cursor-pointer " aria-expanded="false"
+                @click="setActiveChildrenGroupId(children?.id)">
+                <TablerIcon :icon="children?.icon" class="nav-small-cap-icon fs-4 icon-children" />
+                <span class="hide-menu">{{ children?.title }}</span>
+              </a>
+            </template>
+          </ul>
+        </li>
+      </template>
+    </ul>
+  </nav>
+</template>
+
+<style scoped>
+.icon-children {
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+</style>

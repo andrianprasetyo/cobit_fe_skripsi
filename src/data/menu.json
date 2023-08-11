@@ -1,0 +1,116 @@
+[
+  {
+    "id": "305f809b-c531-4b0e-88a8-49a0bef14da6",
+    "parent_id": null,
+    "title": "Dashboard",
+    "menu_key": "dashboard",
+    "url": "/dashboard",
+    "icon": "SmartHomeIcon",
+    "type": "menu",
+    "urutan": 0,
+    "role_type": "[\"admin\",\"legal\",\"customer\",\"finance\",\"director\",\"sales\",\"super\",\"verifier\"]"
+  },
+  {
+    "id": "68170d81-6ff6-4490-9ac9-a465a8874b63",
+    "parent_id": null,
+    "title": "Data Master",
+    "menu_key": "header-master",
+    "url": null,
+    "icon": null,
+    "type": "menu",
+    "urutan": 2,
+    "role_type": "[\"admin\",\"super\"]"
+  },
+  {
+    "id": "98061b78-a961-4910-8756-d0e2161458bd",
+    "parent_id": null,
+    "title": "Data Master",
+    "menu_key": "master",
+    "url": null,
+    "icon": "AssemblyIcon",
+    "type": "menu",
+    "urutan": 3,
+    "role_type": "[\"admin\",\"super\"]",
+    "children": [
+      {
+        "id": "5383e3c5-21d2-47f0-94d9-c4296c7f86cf",
+        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
+        "title": "Design Factor",
+        "menu_key": "master-design-factor",
+        "url": "/design-factor",
+        "icon": "PackageIcon",
+        "type": "menu",
+        "urutan": 0,
+        "role_type": "[\"admin\",\"super\"]"
+      },
+      {
+        "id": "98061bf4-3e16-43f1-b645-6cfbedbd7238",
+        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
+        "title": "Group Answer",
+        "menu_key": "masterlayanan",
+        "url": "/group-answer",
+        "icon": "Book2Icon",
+        "type": "menu",
+        "urutan": 1,
+        "role_type": "[\"admin\",\"super\"]"
+      }
+    ]
+  },
+  {
+    "id": "868f393b-e8bf-4db8-81b6-8b5b8517edb0",
+    "parent_id": null,
+    "title": "Manajemen User",
+    "menu_key": "header-manusers",
+    "url": null,
+    "icon": null,
+    "type": "menu",
+    "urutan": 4,
+    "role_type": "[\"admin\",\"customer\",\"super\"]"
+  },
+  {
+    "id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
+    "parent_id": null,
+    "title": "Manajemen User",
+    "menu_key": "manusers",
+    "url": null,
+    "icon": "UsersIcon",
+    "type": "menu",
+    "urutan": 5,
+    "role_type": "[\"admin\",\"customer\",\"super\"]",
+    "children": [
+      {
+        "id": "f6c0d617-97ba-45bb-a77b-9d007043ba4d",
+        "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
+        "title": "Roles",
+        "menu_key": "manusersrole",
+        "url": "/roles",
+        "icon": "ShieldLockIcon",
+        "type": "menu",
+        "urutan": 1,
+        "role_type": "[\"admin\",\"customer\",\"super\"]"
+      },
+      {
+        "id": "ddc47f2a-e362-4f17-8455-fe835e9c7b32",
+        "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
+        "title": "Hak Akses",
+        "menu_key": "manusershakakses",
+        "url": "/hak-akses",
+        "icon": "KeyIcon",
+        "type": "menu",
+        "urutan": 2,
+        "role_type": "[\"admin\",\"customer\",\"super\"]"
+      },
+      {
+        "id": "5ab4e70f-0ea9-4dd5-acce-f3a3eb78724c",
+        "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
+        "title": "Users",
+        "menu_key": "manusersuser",
+        "url": "/users",
+        "icon": "UsersIcon",
+        "type": "menu",
+        "urutan": 3,
+        "role_type": "[\"admin\",\"customer\",\"super\"]"
+      }
+    ]
+  }
+]

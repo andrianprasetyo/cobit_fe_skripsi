@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "moduleResolution": "node",
+    "target": "es6",
+    "baseUrl": "./src",
+    "paths": {
+      // penggunaan komponen / helpers "@/components/namaComponents"
+      "@/components/*": ["components/*"],
+      "@/layouts/*": ["layouts/*"],
+      "@/plugins/*": ["plugins/*"],
+      "@/router/*": ["router/*"],
+      "@/stores/*": ["stores/*"],
+      "@/services/*": ["services/*"],
+      "@/utils/*": ["utils/*"],
+      "@/views/*": ["views/*"]
+    }
+  },
+  "include": ["./src", "**/*.js", "**/*.jsx", "**/*.vue", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
