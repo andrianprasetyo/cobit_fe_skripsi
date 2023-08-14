@@ -9,12 +9,12 @@ build site:
     paths:
       - dist
 
-# unit test:
-#   image: node:18
-#   stage: test
-#   script:
-#     - npm install --progress=false
-#     - npm test:unit
+unit test:
+  image: node:18
+  stage: test
+  script:
+    - npm install --progress=false
+    - npm run test:unit
 
 deploy:
   image: alpine
