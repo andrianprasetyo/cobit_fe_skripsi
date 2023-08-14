@@ -37,7 +37,12 @@ const router = createRouter({
   routes: [
     {
       path: '/:pathMatch(.*)*',
-      component: () => import('@/views/error/NotFound.vue')
+      component: () => import('@/views/error/NotFound.vue'),
+      meta: {
+        layout: 'AppLayoutBlank',
+        requiredAuth: false,
+        background_picture: '/assets/images/illustrations/not-found.svg'
+      }
     },
     {
       path: '/',
@@ -48,35 +53,103 @@ const router = createRouter({
     {
       path: '/main',
       redirect: '/dashboard',
-      component: () => import('@/layouts/AppLayoutAdmin.vue'),
-      meta: {
-        requiredAuth: true
-      },
       children: [
         {
           name: 'Dashboard',
           path: '/dashboard',
-          component: () => import('@/views/dashboard/MainDashboard.vue')
+          component: () => import('@/views/dashboard/MainDashboard.vue'),
+          meta: {
+            pageTitle: 'Dashboard',
+            layout: 'AppLayoutAdmin',
+            requiredAuth: true,
+            breadcrumbs: [
+              {
+                text: 'Dashboard',
+                disabled: false,
+                href: '/dashboard',
+                active: true
+              }
+            ]
+          }
         },
+
         {
-          name: 'Design Factor',
-          path: '/design-factor',
-          component: () => import('@/views/design-factor/DesignFactor.vue')
+          path: '/master',
+          redirect: '/master/design-factor',
+          children: [
+            {
+              name: 'Design Factor',
+              path: '/master/design-factor',
+              component: () => import('@/views/master/design-factor/DesignFactor.vue'),
+              meta: {
+                pageTitle: 'Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Design Factor',
+                    disabled: true,
+                    href: '/master/design-factor',
+                    active: true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+
+        {
+          path: '/manajemen-user',
+          redirect: '/manajemen-user/users',
+          children: [
+            {
+              name: 'Users',
+              path: '/manajemen-user/users',
+              component: () => import('@/views/manajemen-user/users/UsersList.vue'),
+              meta: {
+                pageTitle: 'Users',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Manajemen User',
+                    disabled: false,
+                    href: '/manajemen-user',
+                    active: false
+                  },
+                  {
+                    text: 'Users',
+                    disabled: true,
+                    href: '/manajemen-user/users',
+                    active: true
+                  }
+                ]
+              }
+            }
+          ]
         }
       ]
     },
     {
       path: '/auth',
       redirect: '/auth/login',
-      component: () => import('@/layouts/AppLayoutAuth.vue'),
-      meta: {
-        requiredAuth: false
-      },
       children: [
         {
           name: 'Login',
           path: '/auth/login',
-          component: () => import('@/views/auth/login/AuthLogin.vue')
+          component: () => import('@/views/auth/login/AuthLogin.vue'),
+          meta: {
+            pageTitle: 'Login',
+            layout: 'AppLayoutAuth',
+            background_picture: '/assets/images/illustrations/discussion.svg',
+            requiredAuth: false
+          }
         }
       ]
     }
@@ -99,7 +172,7 @@ router.beforeEach((to, from, next) => {
 
 // For splash screen
 // Remove afterEach hook if you are not using splash screen
-router.afterEach(() => {
+router.afterEach((to) => {
   const { app } = useAppConfig()
   // Remove initial loading
   const appLoading = document.getElementById('loading-bg')
@@ -107,7 +180,7 @@ router.afterEach(() => {
     appLoading.style.display = 'none'
   }
 
-  document.title = `${app.appName}`
+  document.title = `${to.meta?.pageTitle} | ${app.appName || ''}` || `${app.appName || ''}`
 })
 
 export default router

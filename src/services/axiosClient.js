@@ -55,9 +55,9 @@ axiosClient.interceptors.response.use(
 
     const toast = useToast()
 
-    console.error('ERROR', error)
+    console.error('ERROR INTERCEPTORS', error)
 
-    const messageTokenExpired = 'This token has expired.'
+    const messageTokenExpired = 'User tidak dikenal / Token has expired'
 
     const isNetworkError =
       error?.code === 'ERR_NETWORK' && error?.message?.includes('Network Error')
@@ -75,13 +75,8 @@ axiosClient.interceptors.response.use(
     }
 
     if (error?.response?.status === 401 && error?.response?.data?.message == messageTokenExpired) {
-      auth.logout()
-      toast.error({
-        title: 'Akses Token Kadaluarsa',
-        icon: 'AlertTriangleIcon',
-        text: 'Silahkan Login untuk melanjutkan kembali',
-        variant: 'danger'
-      })
+      auth.resetState()
+      auth.redirectToLogin()
 
       // Kalau Maintenance
     } else if (error?.response?.status == 503) {

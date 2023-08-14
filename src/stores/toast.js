@@ -12,27 +12,37 @@ export const useToast = defineStore({
   id: 'toast',
   actions: {
     success(payload) {
-      toast.success({
-        component: ToastificationContent,
-        props: {
-          title: payload.title,
-          icon: payload.icon || 'CircleCheckFilledIcon',
-          text: payload.text,
-          variant: payload.variant || 'success'
+      toast(
+        {
+          component: ToastificationContent,
+          props: {
+            title: payload.title,
+            icon: payload.icon || 'CircleCheckFilledIcon',
+            text: payload.text,
+            variant: payload.variant || 'success'
+          }
+        },
+        {
+          toastClassName: 'bg-primary'
         }
-      })
+      )
     },
 
     info(payload) {
-      toast.info({
-        component: ToastificationContent,
-        props: {
-          title: payload.title,
-          icon: payload.icon || 'InfoCircleFilledIcon',
-          text: payload.text,
-          variant: payload.variant || 'info'
+      toast.info(
+        {
+          component: ToastificationContent,
+          props: {
+            title: payload.title,
+            icon: payload.icon || 'InfoCircleFilledIcon',
+            text: payload.text,
+            variant: payload.variant || 'info'
+          }
+        },
+        {
+          toastClassName: 'bg-info'
         }
-      })
+      )
     },
 
     error(payload) {
@@ -47,22 +57,27 @@ export const useToast = defineStore({
       if (!isCanceled && !isTimeout && !isNetworkError) {
         if (
           payload?.error?.response &&
-          payload?.error?.response?.status != 404 &&
-          payload?.error?.response?.status != 401
+          payload?.error?.response?.status !== 404 &&
+          payload?.error?.response?.status !== 401
         ) {
-          toast.error({
-            component: ToastificationContent,
-            props: {
-              title: payload.title || 'Terjadi Kesalahan',
-              icon: payload.icon || 'AlertTriangleFilledIcon',
-              text:
-                payload?.text ||
-                payload.title ||
-                payload?.error?.response?.data?.message ||
-                payload?.error?.message,
-              variant: payload.variant || 'danger'
+          toast.error(
+            {
+              component: ToastificationContent,
+              props: {
+                title: payload.title || 'Terjadi Kesalahan',
+                icon: payload.icon || 'AlertTriangleFilledIcon',
+                text:
+                  payload?.text ||
+                  payload.title ||
+                  payload?.error?.response?.data?.message ||
+                  payload?.error?.message,
+                variant: payload.variant || 'danger'
+              }
+            },
+            {
+              toastClassName: 'bg-danger'
             }
-          })
+          )
         } else if (!isNetworkError) {
           if (payload?.error?.response?.status && payload?.error?.response?.status >= 500) {
             toast.error({
@@ -75,19 +90,24 @@ export const useToast = defineStore({
               }
             })
           } else {
-            toast.error({
-              component: ToastificationContent,
-              props: {
-                title: payload.title || 'Terjadi Kesalahan',
-                icon: payload.icon || 'AlertTriangleFilledIcon',
-                text:
-                  payload?.text ||
-                  payload.title ||
-                  payload?.error?.response?.data?.message ||
-                  payload?.error?.message,
-                variant: payload.variant || 'danger'
+            toast.error(
+              {
+                component: ToastificationContent,
+                props: {
+                  title: payload.title || 'Terjadi Kesalahan',
+                  icon: payload.icon || 'AlertTriangleFilledIcon',
+                  text:
+                    payload?.text ||
+                    payload.title ||
+                    payload?.error?.response?.data?.message ||
+                    payload?.error?.message,
+                  variant: payload.variant || 'danger'
+                }
+              },
+              {
+                toastClassName: 'bg-danger'
               }
-            })
+            )
           }
           throw payload?.error
         }

@@ -37,7 +37,7 @@
         "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
         "title": "Design Factor",
         "menu_key": "master-design-factor",
-        "url": "/design-factor",
+        "url": "/master/design-factor",
         "icon": "PackageIcon",
         "type": "menu",
         "urutan": 0,
@@ -48,8 +48,8 @@
         "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
         "title": "Group Answer",
         "menu_key": "masterlayanan",
-        "url": "/group-answer",
-        "icon": "Book2Icon",
+        "url": "/master/group-answer",
+        "icon": "ClipboardTextIcon",
         "type": "menu",
         "urutan": 1,
         "role_type": "[\"admin\",\"super\"]"
@@ -79,36 +79,14 @@
     "role_type": "[\"admin\",\"customer\",\"super\"]",
     "children": [
       {
-        "id": "f6c0d617-97ba-45bb-a77b-9d007043ba4d",
-        "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
-        "title": "Roles",
-        "menu_key": "manusersrole",
-        "url": "/roles",
-        "icon": "ShieldLockIcon",
-        "type": "menu",
-        "urutan": 1,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
-      },
-      {
-        "id": "ddc47f2a-e362-4f17-8455-fe835e9c7b32",
-        "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
-        "title": "Hak Akses",
-        "menu_key": "manusershakakses",
-        "url": "/hak-akses",
-        "icon": "KeyIcon",
-        "type": "menu",
-        "urutan": 2,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
-      },
-      {
         "id": "5ab4e70f-0ea9-4dd5-acce-f3a3eb78724c",
         "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
         "title": "Users",
         "menu_key": "manusersuser",
-        "url": "/users",
+        "url": "/manajemen-user/users",
         "icon": "UsersIcon",
         "type": "menu",
-        "urutan": 3,
+        "urutan": 1,
         "role_type": "[\"admin\",\"customer\",\"super\"]"
       }
     ]

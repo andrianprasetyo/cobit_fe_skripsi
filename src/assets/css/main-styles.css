@@ -17217,7 +17217,7 @@
   --bs-dark-light: #2a3547;
   --bs-light-gray: #f6f9fc;
   --bs-primary-active: #203058;
-  --bs-secondary-active: #3a98cc;
+  --bs-secondary-active: #EE1E25;
   --bs-success-active: #0fb294;
   --bs-info-active: #427ccc;
   --bs-warning-active: #cc8b19;
@@ -17228,7 +17228,7 @@
   --bs-indigo-active: #520dc2;
   --bs-focus-shadow-rgb: 117, 153, 255;
   --bs-primary-rgb: 32, 48, 88;
-  --bs-secondary-rgb: 93, 135, 255;
+  --bs-secondary-rgb: 238, 30, 37;
   --bs-success-rgb: 19, 222, 185;
   --bs-info-rgb: 83, 155, 255;
   --bs-warning-rgb: 255, 174, 31;

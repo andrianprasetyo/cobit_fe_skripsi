@@ -57,7 +57,10 @@ const handleToggleShowPassword = () => {
 </script>
 
 <template>
-  <label v-if="props.label" :class="props.labelClass" :for="props.id"> {{ props.label }}</label>
+  <div class="d-flex flex-row justify-content-between">
+    <label v-if="props.label" :class="props.labelClass" :for="props.id"> {{ props.label }}</label>
+    <slot name="extra-label" />
+  </div>
 
   <div class="input-group">
     <input v-bind="$attrs" :id="props.id" :type="state.isShowPassword ? 'text' : props.type"
@@ -65,7 +68,7 @@ const handleToggleShowPassword = () => {
       autocomplete="off" />
 
     <template v-if="props.type === 'password'">
-      <div class="input-group-text" @click="handleToggleShowPassword">
+      <div class="input-group-text cursor-pointer" @click="handleToggleShowPassword">
         <TablerIcon :icon="state.isShowPassword ? 'EyeOffIcon' : 'EyeIcon'" />
       </div>
     </template>
