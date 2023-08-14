@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 import appLogoImageRounded from '/assets/logo/logo-msi-full-rounded.webp'
-import appLogoImageOnly from '/assets/logo/logo-msi.png'
+import appLogoImageOnly from '/assets/logo/logo-msi-rounded.png'
 
 export const useAppConfig = defineStore({
   id: 'appConfig',
@@ -19,5 +19,12 @@ export const useAppConfig = defineStore({
     }
   }),
   getters: {},
-  actions: {}
+  actions: {
+    toggleMiniSidebar() {
+      this.layouts.miniSidebar = !this.layouts.miniSidebar
+    }
+  },
+  persist: {
+    enabled: true
+  }
 })

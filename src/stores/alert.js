@@ -39,6 +39,33 @@ export const useAlert = defineStore({
         cancelButtonText: payload?.cancelButtonText || 'Batalkan',
         ...payload
       })
+    },
+
+    /**
+     *
+     * @param {title, text} payload
+     * @returns
+     */
+    loading(payload) {
+      return Swal.fire({
+        title: payload?.title || 'Loading',
+        text: payload?.text || 'Harap Tunggu...',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading()
+        },
+        willClose: () => {
+          Swal.hideLoading()
+        }
+      })
+    },
+
+    /**
+     *
+     * @returns Promise
+     */
+    instance() {
+      return Swal
     }
   }
 })

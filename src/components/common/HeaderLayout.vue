@@ -4,14 +4,15 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import NotificationPopUp from '@/components/common/NotificationPopUp.vue'
 
-
 import { useAuth } from '@/stores/auth'
 import { useAlert } from '@/stores/alert'
+import { useAppConfig } from '@/stores/appConfig'
 
 import { RouterLink } from 'vue-router';
 
 const auth = useAuth();
-const alert = useAlert()
+const alert = useAlert();
+const appConfig = useAppConfig()
 
 const isLoading = ref(false)
 
@@ -20,18 +21,25 @@ const handleLogout = async () => {
     title: "Apakah Yakin Untuk Keluar dari Aplikasi?",
   }).then(async (result) => {
     if (result.isConfirmed) {
+      alert.loading()
       try {
         isLoading.value = true
         const response = await auth.logout()
 
         if (response) {
           isLoading.value = false
+          alert.instance().close()
         }
       } catch (error) {
+        alert.instance().close()
         isLoading.value = false
       }
     }
   })
+}
+
+const handleToggleMiniSidebar = () => {
+  appConfig.toggleMiniSidebar()
 }
 
 </script>
@@ -41,8 +49,9 @@ const handleLogout = async () => {
     <nav class="navbar navbar-expand-lg navbar-light">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link sidebartoggler nav-icon-hover ms-n3 " id="headerCollapse" href="javascript:void(0)">
-            <TablerIcon icon="Menu2Icon" />
+          <a @click="handleToggleMiniSidebar" class="nav-link sidebartoggler nav-icon-hover ms-n3 cursor-pointer"
+            id="headerCollapse">
+            <TablerIcon icon="Menu2Icon" size="24" :class="[appConfig.layouts.miniSidebar ? 'text-secondary' : '']" />
           </a>
         </li>
       </ul>
@@ -54,11 +63,13 @@ const handleLogout = async () => {
       </button>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <div class="d-flex align-items-center justify-content-between">
-          <a href="javascript:void(0)" class="nav-link d-flex d-lg-none align-items-center justify-content-center"
-            type="button" data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar"
-            aria-controls="offcanvasWithBothOptions">
+
+          <!-- Open Drawer Mobile -->
+          <!-- <a class="nav-link d-flex d-lg-none align-items-center justify-content-center" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#mobilenavbar" aria-controls="offcanvasWithBothOptions">
             <TablerIcon icon="AlignJustifiedIcon" />
-          </a>
+          </a> -->
+
           <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
             <li class="nav-item dropdown">
               <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"

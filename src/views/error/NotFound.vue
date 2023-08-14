@@ -1,5 +1,8 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
+
+const route = useRoute()
+
 </script>
 
 <template>
@@ -8,11 +11,9 @@ import { RouterLink } from 'vue-router'
       <div class="row justify-content-center w-100">
         <div class="col-lg-4">
           <div class="text-center">
-            <img
-              src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/backgrounds/errorimg.svg"
-              alt="" class="img-fluid">
-            <h1 class="fw-semibold mb-7 fs-9">Oops!!!</h1>
-            <h4 class="fw-semibold mb-7">Sepertinya halaman yang anda cari tidak ada.</h4>
+            <img :src="route.meta?.background_picture" alt="illustration" width="400" class="img-fluid">
+            <h1 class="fw-semibold mb-7 fs-9 mt-4">Oops!!!</h1>
+            <h4 class="fw-semibold mb-7">Sepertinya halaman yang anda cari <br /> tidak ditemukan.</h4>
             <RouterLink to="/" class="btn btn-primary">
               Kembali ke Halaman Awal
             </RouterLink>

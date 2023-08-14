@@ -17,6 +17,7 @@ body {
   display: block;
   position: absolute;
 }
+
 .loading-logo {
   z-index: 10000;
   position: absolute;
@@ -24,6 +25,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .loading {
   position: absolute;
   top: 60%;
@@ -91,5 +93,25 @@ body {
     -webkit-transform: rotate(1turn);
     transform: rotate(1turn);
     opacity: 1;
+  }
+}
+
+.logo-shining {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  z-index: 10000000000001;
+  background: linear-gradient(
+      to bottom right,
+      #0000 calc(50% - 40px),
+      #fff 50%,
+      #0000 calc(50% + 40px)
+    )
+    bottom right/calc(200% + 80px) calc(200% + 80px) ;
+  animation: ct8 1s infinite;
+}
+@keyframes ct8 {
+  100% {
+    background-position: top left;
   }
 }

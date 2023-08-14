@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-lg-8 d-flex align-items-stretch">
+    <div class="col-lg-12 d-flex align-items-stretch">
       <div class="card w-100 bg-light-info overflow-hidden shadow-none">
         <div class="card-body position-relative">
           <div class="row">
@@ -13,13 +13,11 @@
               </div>
               <div class="d-flex align-items-center">
                 <div class="border-end pe-4 border-muted border-opacity-10">
-                  <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">$2,340<i
-                      class="ti ti-arrow-up-right fs-5 lh-base text-success"></i></h3>
+                  <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">$2,340</h3>
                   <p class="mb-0 text-dark">Today’s Sales</p>
                 </div>
                 <div class="ps-4">
-                  <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">35%<i
-                      class="ti ti-arrow-up-right fs-5 lh-base text-success"></i></h3>
+                  <h3 class="mb-1 fw-semibold fs-8 d-flex align-content-center">35%</h3>
                   <p class="mb-0 text-dark">Overall Performance</p>
                 </div>
               </div>
@@ -29,72 +27,6 @@
                 <img
                   src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/backgrounds/welcome-bg.svg"
                   alt="" class="img-fluid">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-lg-2 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body p-4">
-          <h4 class="fw-semibold">$10,230</h4>
-          <p class="mb-2 fs-3">Expense</p>
-          <div id="expense"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6 col-lg-2 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body p-4">
-          <h4 class="fw-semibold">$65,432</h4>
-          <p class="mb-1 fs-3">Sales</p>
-          <div id="sales" class="sales-chart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">Revenue Updates</h5>
-          <p class="card-subtitle mb-4">Overview of Profit</p>
-          <div class="d-flex align-items-center">
-            <div class="me-4">
-              <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
-              <span class="fs-2">Footware</span>
-            </div>
-            <div>
-              <span class="round-8 bg-secondary rounded-circle me-2 d-inline-block"></span>
-              <span class="fs-2">Fashionware</span>
-            </div>
-          </div>
-          <div id="revenue-chart" class="revenue-chart"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">Sales Overview</h5>
-          <p class="card-subtitle mb-2">Every Month</p>
-          <div id="sales-overview" class="mb-4"></div>
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-              <div class="bg-light-primary rounded-2 me-8 p-8 d-flex align-items-center justify-content-center">
-                <i class="ti ti-grid-dots text-primary fs-6"></i>
-              </div>
-              <div>
-                <h6 class="fw-semibold text-dark fs-4 mb-0">$23,450</h6>
-                <p class="fs-3 mb-0 fw-normal">Profit</p>
-              </div>
-            </div>
-            <div class="d-flex align-items-center">
-              <div class="bg-light-secondary rounded-2 me-8 p-8 d-flex align-items-center justify-content-center">
-                <i class="ti ti-grid-dots text-secondary fs-6"></i>
-              </div>
-              <div>
-                <h6 class="fw-semibold text-dark fs-4 mb-0">$23,450</h6>
-                <p class="fs-3 mb-0 fw-normal">Expance</p>
               </div>
             </div>
           </div>
@@ -112,8 +44,7 @@
                   alt="" class="img-fluid" width="24" height="24">
               </div>
               <div id="sales-two" class="mb-3"></div>
-              <h4 class="mb-1 fw-semibold d-flex align-content-center">$16.5k<i
-                  class="ti ti-arrow-up-right fs-5 text-success"></i></h4>
+              <h4 class="mb-1 fw-semibold d-flex align-content-center">$16.5k</h4>
               <p class="mb-0">Sales</p>
             </div>
           </div>
@@ -127,8 +58,7 @@
                   alt="" class="img-fluid" width="24" height="24">
               </div>
               <div id="growth" class="mb-3"></div>
-              <h4 class="mb-1 fw-semibold d-flex align-content-center">24%<i
-                  class="ti ti-arrow-up-right fs-5 text-success"></i></h4>
+              <h4 class="mb-1 fw-semibold d-flex align-content-center">24%</h4>
               <p class="mb-0">Growth</p>
             </div>
           </div>
@@ -142,10 +72,6 @@
               <div class="d-flex align-items-center mb-3">
                 <h4 class="fw-semibold mb-0 me-8">$6,820</h4>
                 <div class="d-flex align-items-center">
-                  <span
-                    class="me-2 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                    <i class="ti ti-arrow-up-left text-success"></i>
-                  </span>
                   <p class="text-dark me-1 fs-3 mb-0">+9%</p>
                 </div>
               </div>
@@ -161,90 +87,6 @@
             </div>
           </div>
           <div id="monthly-earning"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body">
-          <h5 class="card-title fw-semibold">Weekly Stats</h5>
-          <p class="card-subtitle mb-0">Average sales</p>
-          <div id="weekly-stats" class="mb-4 mt-7"></div>
-          <div class="position-relative">
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <div class="d-flex">
-                <div class="p-6 bg-light-primary rounded-2 me-6 d-flex align-items-center justify-content-center">
-                  <i class="ti ti-grid-dots text-primary fs-6"></i>
-                </div>
-                <div>
-                  <h6 class="mb-1 fs-4 fw-semibold">Top Sales</h6>
-                  <p class="fs-3 mb-0">Johnathan Doe</p>
-                </div>
-              </div>
-              <div class="bg-light-primary badge">
-                <p class="fs-3 text-primary fw-semibold mb-0">+68</p>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <div class="d-flex">
-                <div class="p-6 bg-light-success rounded-2 me-6 d-flex align-items-center justify-content-center">
-                  <i class="ti ti-grid-dots text-success fs-6"></i>
-                </div>
-                <div>
-                  <h6 class="mb-1 fs-4 fw-semibold">Best Seller</h6>
-                  <p class="fs-3 mb-0">Footware</p>
-                </div>
-              </div>
-              <div class="bg-light-success badge">
-                <p class="fs-3 text-success fw-semibold mb-0">+68</p>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex">
-                <div class="p-6 bg-light-danger rounded-2 me-6 d-flex align-items-center justify-content-center">
-                  <i class="ti ti-grid-dots text-danger fs-6"></i>
-                </div>
-                <div>
-                  <h6 class="mb-1 fs-4 fw-semibold">Most Commented</h6>
-                  <p class="fs-3 mb-0">Fashionware</p>
-                </div>
-              </div>
-              <div class="bg-light-danger badge">
-                <p class="fs-3 text-danger fw-semibold mb-0">+68</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body">
-          <div>
-            <h5 class="card-title fw-semibold">Yearly Sales</h5>
-            <p class="card-subtitle mb-0">Every month</p>
-            <div id="salary" class="mb-7 pb-8"></div>
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="bg-light-primary rounded-2 me-8 p-8 d-flex align-items-center justify-content-center">
-                  <i class="ti ti-grid-dots text-primary fs-6"></i>
-                </div>
-                <div>
-                  <p class="fs-3 mb-0 fw-normal">Total Sales</p>
-                  <h6 class="fw-semibold text-dark fs-4 mb-0">$36,358</h6>
-                </div>
-              </div>
-              <div class="d-flex align-items-center">
-                <div class="bg-light rounded-2 me-8 p-8 d-flex align-items-center justify-content-center">
-                  <i class="ti ti-grid-dots text-muted fs-6"></i>
-                </div>
-                <div>
-                  <p class="fs-3 mb-0 fw-normal">Expenses</p>
-                  <h6 class="fw-semibold text-dark fs-4 mb-0">$5,296</h6>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -380,7 +222,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12 col-lg-8 d-flex align-items-stretch">
+    <div class="col-md-12 col-lg-12 d-flex align-items-stretch">
       <div class="card w-100">
         <div class="card-body">
           <div class="d-sm-flex d-block align-items-center justify-content-between mb-3">
@@ -405,7 +247,6 @@
                   <th scope="col">Progress</th>
                   <th scope="col">Priority</th>
                   <th scope="col">Budget</th>
-                  <th scope="col">Chart</th>
                 </tr>
               </thead>
               <tbody class="border-top">
@@ -431,9 +272,7 @@
                   <td>
                     <p class="fs-3 text-dark mb-0">$3.5k</p>
                   </td>
-                  <td>
-                    <div id="table-chart"></div>
-                  </td>
+                  
                 </tr>
                 <tr>
                   <td class="ps-0">
@@ -456,9 +295,6 @@
                   </td>
                   <td>
                     <p class="fs-3 text-dark mb-0">$3.5k</p>
-                  </td>
-                  <td>
-                    <div id="table-chart-1"></div>
                   </td>
                 </tr>
                 <tr>
@@ -483,9 +319,6 @@
                   <td>
                     <p class="fs-3 text-dark mb-0">$3.5k</p>
                   </td>
-                  <td>
-                    <div id="table-chart-2"></div>
-                  </td>
                 </tr>
                 <tr>
                   <td class="ps-0 border-bottom-0">
@@ -508,9 +341,6 @@
                   </td>
                   <td class="border-bottom-0">
                     <p class="fs-3 text-dark mb-0">$3.5k</p>
-                  </td>
-                  <td class="border-bottom-0">
-                    <div id="table-chart-3"></div>
                   </td>
                 </tr>
               </tbody>

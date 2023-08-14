@@ -87,6 +87,11 @@ const setActiveChildrenGroupId = value => {
   }
 }
 
+const resetStateSidebar = () => {
+  stateSidebar.activeGroupId = ''
+  stateSidebar.activeChildrenGroupId = ''
+}
+
 onMounted(() => {
   if (menu && Array.isArray(menu)) {
     menu.map(item => {
@@ -129,6 +134,10 @@ onMounted(() => {
       }
     })
   }
+})
+
+defineExpose({
+  resetStateSidebar
 })
 
 </script>
@@ -175,7 +184,8 @@ onMounted(() => {
                 <!-- <TablerIcon size="14" :icon="children?.icon" class="nav-small-cap-icon fs-4 icon-children" /> -->
 
                 <!-- Static Icons -->
-                <TablerIcon size="8" icon="CircleIcon" class="nav-small-cap-icon fs-4" />
+                <TablerIcon size="8" :icon="isChildrenActiveMenu(children) ? 'CircleFilledIcon' : 'CircleIcon'"
+                  class="nav-small-cap-icon fs-4" />
                 <span class="hide-menu">{{ children?.title }}</span>
               </LinkMenuItem>
 

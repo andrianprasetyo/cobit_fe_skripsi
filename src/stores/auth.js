@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, getActivePinia } from 'pinia'
 
 import AuthServices from '@/services/lib/auth'
 
@@ -96,7 +96,7 @@ export const useAuth = defineStore('auth', {
 
           toast.success({
             title: 'Login Berhasil',
-            text: data?.user?.nama || data?.user?.username
+            text: `Selamat Datang ${data?.user?.nama || data?.user?.username || ''}`
           })
           this.router.push('/dashboard')
         }
@@ -120,11 +120,11 @@ export const useAuth = defineStore('auth', {
     },
 
     async resetState() {
-      this.isAuthenticated = false
-      this.account = null
-      this.access = []
-      this.listRole = []
-      this.menu = []
+      getActivePinia()._s.forEach((store) => store.$reset())
+    },
+
+    async redirectToLogin() {
+      this.router.push('/auth/login')
     }
   },
   persist: {
