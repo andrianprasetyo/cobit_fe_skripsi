@@ -74,7 +74,7 @@ const handleToggleMiniSidebar = () => {
             <li class="nav-item dropdown">
               <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                 aria-expanded="false">
-                <TablerIcon icon="BellRingingIcon" size="20" badge="1" />
+                <TablerIcon icon="BellRingingIcon" size="20" badge="5" />
               </a>
               <NotificationPopUp />
             </li>

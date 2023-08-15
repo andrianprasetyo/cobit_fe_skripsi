@@ -1,0 +1,17 @@
+[
+  {
+    "key": "status-aktif",
+    "label": "Aktif",
+    "value": "active"
+  },
+  {
+    "key": "status-pending",
+    "label": "Menunggu Aktivasi",
+    "value": "pending"
+  },
+  {
+    "key": "status-banned",
+    "label": "Diblokir",
+    "value": "banned"
+  }
+]

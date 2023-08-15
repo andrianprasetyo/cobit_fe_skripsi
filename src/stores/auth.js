@@ -16,7 +16,9 @@ export const useAuth = defineStore('auth', {
     access: [],
     menu: menu,
     listRole: [],
-    isAuthenticated: false
+    isAuthenticated: false,
+    expiresIn: null,
+    loggedInAt: null
   }),
   getters: {
     getIsAuthenticated(state) {
@@ -33,6 +35,12 @@ export const useAuth = defineStore('auth', {
     },
     getListRole(state) {
       return state.listRole
+    },
+    getExpiresIn(state) {
+      return state.expiresIn
+    },
+    getLoggedInAt(state) {
+      return state.loggedInAt
     }
   },
   actions: {
@@ -47,6 +55,12 @@ export const useAuth = defineStore('auth', {
     },
     setMenu(payload) {
       this.menu = payload
+    },
+    setExpiresIn(payload) {
+      this.expiresIn = payload
+    },
+    setLoggedInAt(payload) {
+      this.loggedInAt = payload
     },
 
     async getTokenFromCache() {
@@ -90,6 +104,8 @@ export const useAuth = defineStore('auth', {
           this.account = data?.user
           this.listRole = data?.user?.roles || []
           this.menu = menu
+          this.expiresIn = data.expires_in
+          this.loggedInAt = new Date()
           this.isAuthenticated = true
 
           setCookies({ cookies: { token: data?.access_token }, expires: data?.expires_in })
@@ -102,6 +118,28 @@ export const useAuth = defineStore('auth', {
         }
       } catch (error) {
         toast.error({ error })
+        throw error
+      }
+    },
+
+    async refreshToken() {
+      const toast = useToast()
+      try {
+        const response = await AuthServices.refreshToken()
+
+        if (response) {
+          const data = response?.data
+          this.expiresIn = data.expires_in
+          this.loggedInAt = new Date()
+          this.isAuthenticated = true
+
+          setCookies({ cookies: { token: data?.access_token }, expires: data?.expires_in })
+        }
+      } catch (error) {
+        toast.error({ error })
+        removeAllCookies()
+        this.resetState()
+        this.redirectToLogin()
         throw error
       }
     },

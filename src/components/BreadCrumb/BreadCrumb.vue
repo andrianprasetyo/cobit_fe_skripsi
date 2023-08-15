@@ -17,7 +17,7 @@ const link = computed(() => {
     if (typeof value === 'string') {
       let replaceLink = value.replace(
         /:(\w+)/g,
-        (match, key) => this.$route.params[key] || match
+        (match, key) => route.params[key] || match
       );
 
       return replaceLink;
@@ -44,8 +44,8 @@ const link = computed(() => {
           </nav>
         </div>
         <div class="col-3">
-          <div class="text-center mb-n5">
-            <img src="/assets/images/breadcrumb/ChatBc.png" alt="breadcrumb-image" class="img-fluid mb-n4">
+          <div class="text-center mt-1">
+            <img src="/assets/images/illustrations/teamwork.svg" alt="breadcrumb-image" height="150" class="mb-n4">
           </div>
         </div>
       </div>

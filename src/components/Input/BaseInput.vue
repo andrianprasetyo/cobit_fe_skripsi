@@ -63,14 +63,21 @@ const handleToggleShowPassword = () => {
   </div>
 
   <div class="input-group">
-    <input v-bind="$attrs" :id="props.id" :type="state.isShowPassword ? 'text' : props.type"
+    <textarea v-if="props.type === 'text-area'" v-bind="$attrs" :id="props.id"
       :class="[props.class, props.isInvalid ? 'is-invalid' : '']" :disabled="disabled" v-model="value"
       autocomplete="off" />
 
-    <template v-if="props.type === 'password'">
-      <div class="input-group-text cursor-pointer" @click="handleToggleShowPassword">
-        <TablerIcon :icon="state.isShowPassword ? 'EyeOffIcon' : 'EyeIcon'" />
-      </div>
+    <template v-else>
+      <input v-bind="$attrs" :id="props.id" :type="state.isShowPassword ? 'text' : props.type"
+        :class="[props.class, props.isInvalid ? 'is-invalid' : '']" :disabled="disabled" v-model="value"
+        autocomplete="off" />
+
+      <template v-if="props.type === 'password'">
+        <div class="input-group-text cursor-pointer" @click="handleToggleShowPassword">
+          <TablerIcon :icon="state.isShowPassword ? 'EyeOffIcon' : 'EyeIcon'" />
+        </div>
+      </template>
     </template>
+
   </div>
 </template>

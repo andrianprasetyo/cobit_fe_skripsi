@@ -1,0 +1,14 @@
+[
+  {
+    "key": "group-pilgan",
+    "label": "Pilihan Ganda",
+    "value": "pilgan",
+    "class": "bg-light-primary text-primary"
+  },
+  {
+    "key": "group-persentase",
+    "label": "Persentase",
+    "value": "persentase",
+    "class": "bg-light-info text-info"
+  }
+]

@@ -14,7 +14,7 @@ export const useAppConfig = defineStore({
     layouts: {
       type: 'vertical',
       miniSidebar: false,
-      routerTransition: 'fade',
+      routerTransition: 'zoom-fade',
       customizer: false
     }
   }),

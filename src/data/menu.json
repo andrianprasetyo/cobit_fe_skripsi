@@ -33,23 +33,23 @@
     "role_type": "[\"admin\",\"super\"]",
     "children": [
       {
-        "id": "5383e3c5-21d2-47f0-94d9-c4296c7f86cf",
-        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
-        "title": "Design Factor",
-        "menu_key": "master-design-factor",
-        "url": "/master/design-factor",
-        "icon": "PackageIcon",
-        "type": "menu",
-        "urutan": 0,
-        "role_type": "[\"admin\",\"super\"]"
-      },
-      {
         "id": "98061bf4-3e16-43f1-b645-6cfbedbd7238",
         "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
         "title": "Group Answer",
         "menu_key": "masterlayanan",
         "url": "/master/group-answer",
         "icon": "ClipboardTextIcon",
+        "type": "menu",
+        "urutan": 10,
+        "role_type": "[\"admin\",\"super\"]"
+      },
+      {
+        "id": "5383e3c5-21d2-47f0-94d9-c4296c7f86cf",
+        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
+        "title": "Design Factor",
+        "menu_key": "master-design-factor",
+        "url": "/master/design-factor",
+        "icon": "PackageIcon",
         "type": "menu",
         "urutan": 1,
         "role_type": "[\"admin\",\"super\"]"
