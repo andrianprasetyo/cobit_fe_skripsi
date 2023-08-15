@@ -55,10 +55,10 @@ const filter = ref({
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getListDesignFactor = async ({ limit, page, sortBy, sortType }) => {
+const getListDesignFactor = async ({ limit, page, sortBy, sortType, search }) => {
   try {
     designFactor.loading = true
-    const response = await DesignFactorServices.getListDesignFactor({ limit, page, sortBy, sortType })
+    const response = await DesignFactorServices.getListDesignFactor({ limit, page, sortBy, sortType, search })
 
     if (response) {
       const data = response?.data
@@ -79,6 +79,7 @@ const handleRefresh = () => {
     page: serverOptions.value.page,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
+    search: filter.value.search,
   })
 }
 
@@ -139,6 +140,7 @@ watch(() => [serverOptions.value, filter.value], () => {
     page: serverOptions.value.page,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
+    search: filter.value.search,
   })
 }, { deep: true })
 
@@ -151,15 +153,18 @@ watch(() => [serverOptions.value, filter.value], () => {
     <section>
       <div class="card">
         <div class="card-body">
-          <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
+          <div
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
               <h5 class="card-title fw-semibold">Design Factor</h5>
             </div>
 
-            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput :v-model="filter.search" placeholder="Cari Design Factor" />
+            <div
+              class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+              <SearchInput v-model="filter.search" placeholder="Cari Design Factor" />
 
-              <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Design Factor">
+              <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+                title="Tambah Design Factor">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>

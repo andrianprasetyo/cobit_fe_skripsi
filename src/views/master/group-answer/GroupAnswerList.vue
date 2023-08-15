@@ -73,10 +73,10 @@ const classType = computed(() => {
 
 
 /* --------------------------------- METHODS -------------------------------- */
-const getListGroupAnswer = async ({ limit, page, sortBy, sortType }) => {
+const getListGroupAnswer = async ({ limit, page, sortBy, sortType, search }) => {
   try {
     groupAnswer.loading = true
-    const response = await GroupAnswerServices.getListGroupAnswer({ limit, page, sortBy, sortType })
+    const response = await GroupAnswerServices.getListGroupAnswer({ limit, page, sortBy, sortType, search })
 
     if (response) {
       const data = response?.data
@@ -97,6 +97,7 @@ const handleRefresh = () => {
     page: serverOptions.value.page,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
+    search: filter.value.search,
   })
 }
 
@@ -151,12 +152,13 @@ onMounted(() => {
   getListGroupAnswer({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
 })
 
-watch(() => [serverOptions.value], () => {
+watch(() => [serverOptions.value, filter.value], () => {
   getListGroupAnswer({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
+    search: filter.value.search,
   })
 }, { deep: true })
 
@@ -177,7 +179,7 @@ watch(() => [serverOptions.value], () => {
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput :v-model="filter.search" placeholder="Cari Group Answer" />
+              <SearchInput v-model="filter.search" placeholder="Cari Group Answer" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
                 title="Tambah Group Answer">
