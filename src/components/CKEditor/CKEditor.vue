@@ -16,6 +16,10 @@ const props = defineProps({
     type: String,
     default: 'textarea',
   },
+  isInvalid: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const emit = defineEmits(['update:value'])

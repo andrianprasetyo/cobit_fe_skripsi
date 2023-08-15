@@ -34,4 +34,8 @@ const props = defineProps({
       <div class="text-danger pt-1">{{ props.errors }}</div>
     </div>
   </div>
+
+  <div v-else>
+    <div v-if="typeof props.errors === 'string'" class="text-danger pt-1">{{ props.errors }}</div>
+  </div>
 </template>

@@ -51,13 +51,11 @@ axiosClient.interceptors.response.use(
       return
     })
 
+    console.error('ERROR INTERCEPTORS', error)
+
     const auth = useAuth()
 
     const toast = useToast()
-
-    console.error('ERROR INTERCEPTORS', error)
-
-    const messageTokenExpired = 'User tidak dikenal / Token has expired'
 
     const isNetworkError =
       error?.code === 'ERR_NETWORK' && error?.message?.includes('Network Error')
@@ -66,7 +64,7 @@ axiosClient.interceptors.response.use(
 
     // Check Network
     if (isNetworkError) {
-      toast.topCenter({ title: 'Koneksi Error. Silahkan Cek Koneksi Anda' })
+      toast.topCenter({ title: 'Koneksi Error' })
     }
 
     // Check Timeout
@@ -74,7 +72,7 @@ axiosClient.interceptors.response.use(
       toast.topCenter({ title: 'Aplikasi terlalu lama merespon request' })
     }
 
-    if (error?.response?.status === 401 && error?.response?.data?.message == messageTokenExpired) {
+    if (error?.response?.status === 401) {
       auth.resetState()
       auth.redirectToLogin()
 

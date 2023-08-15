@@ -32,7 +32,7 @@ function userHasMenuAccess(to, from, next) {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: (to, from) => {
-    if (to.path !== from.path) return { x: 0, y: 0 }
+    if (to.path !== from.path) return { top: 0 }
   },
   routes: [
     {
@@ -75,12 +75,97 @@ const router = createRouter({
 
         {
           path: '/master',
-          redirect: '/master/design-factor',
+          redirect: '/master/group-answer',
           children: [
             {
-              name: 'Design Factor',
+              name: 'GroupAnswer',
+              path: '/master/group-answer',
+              component: () => import('@/views/master/group-answer/GroupAnswerList.vue'),
+              meta: {
+                pageTitle: 'Group Answer',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Group Answer',
+                    disabled: true,
+                    href: '/master/group-answer',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahGroupAnswer',
+              path: '/master/group-answer/add',
+              component: () => import('@/views/master/group-answer/GroupAnswerAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Group Answer',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Group Answer',
+                    disabled: false,
+                    href: '/master/group-answer',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Group Answer',
+                    disabled: true,
+                    href: '/master/group-answer/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditGroupAnswer',
+              path: '/master/group-answer/:id/edit',
+              component: () => import('@/views/master/group-answer/GroupAnswerEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Group Answer',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Group Answer',
+                    disabled: false,
+                    href: '/master/group-answer',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Group Answer',
+                    disabled: true,
+                    href: '/master/group-answer/:id/edit',
+                    active: true
+                  }
+                ]
+              }
+            },
+
+            {
+              name: 'DesignFactor',
               path: '/master/design-factor',
-              component: () => import('@/views/master/design-factor/DesignFactor.vue'),
+              component: () => import('@/views/master/design-factor/DesignFactorList.vue'),
               meta: {
                 pageTitle: 'Design Factor',
                 layout: 'AppLayoutAdmin',
@@ -96,6 +181,66 @@ const router = createRouter({
                     text: 'Design Factor',
                     disabled: true,
                     href: '/master/design-factor',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahDesignFactor',
+              path: '/master/design-factor/add',
+              component: () => import('@/views/master/design-factor/DesignFactorAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Design Factor',
+                    disabled: false,
+                    href: '/master/design-factor',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Design Factor',
+                    disabled: true,
+                    href: '/master/design-factor/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditDesignFactor',
+              path: '/master/design-factor/:id/edit',
+              component: () => import('@/views/master/design-factor/DesignFactorEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Design Factor',
+                    disabled: false,
+                    href: '/master/design-factor',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Design Factor',
+                    disabled: true,
+                    href: '/master/design-factor/:id/edit',
                     active: true
                   }
                 ]

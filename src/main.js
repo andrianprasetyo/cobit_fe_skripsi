@@ -12,6 +12,7 @@ import setupSweetAlert from '@/plugins/sweetalert'
 import setupVCalendar from '@/plugins/v-calendar'
 import setupCKEditor from '@/plugins/ckeditor'
 import setupApexCharts from '@/plugins/apexcharts'
+import setupLoadingOverlay from '@/plugins/loading-overlay'
 
 import App from './App.vue'
 import router from './router'
@@ -27,5 +28,6 @@ setupSweetAlert(app)
 setupVCalendar(app)
 setupCKEditor(app)
 setupApexCharts(app)
+setupLoadingOverlay(app)
 
 app.mount('#app')

@@ -23,7 +23,7 @@ const { layouts } = useAppConfig();
 
       <div class="container-fluid">
         <RouterView v-slot="{ route }">
-          <Transition :name="layouts.routerTransition" mode="in-out">
+          <Transition :name="layouts.routerTransition" mode="out-in">
             <component :is="props.Component" :key="route.path" />
           </Transition>
         </RouterView>

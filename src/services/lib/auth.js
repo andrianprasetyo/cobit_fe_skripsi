@@ -11,6 +11,13 @@ export default {
   },
 
   /**
+   * @returns string
+   */
+  refreshToken() {
+    return axiosClient.get('account/token-refresh')
+  },
+
+  /**
    *
    * @returns string
    */
