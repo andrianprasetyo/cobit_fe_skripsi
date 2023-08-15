@@ -16,7 +16,8 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
-  }
+  },
+  ignorePatterns: ['src/assets/*']
   // rules: {
   //   'comma-dangle': 'off',
   //   'prettier/prettier': ['error', { endOfLine: 'off' }]
