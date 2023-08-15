@@ -10,8 +10,9 @@
     "test:unit": "vitest",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "lint": "eslint src/ --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
@@ -50,6 +51,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-cypress": "^2.13.3",
     "eslint-plugin-vue": "^9.15.1",
+    "husky": "^8.0.3",
     "jsdom": "^22.1.0",
     "prettier": "^3.0.0",
     "sass": "^1.65.1",

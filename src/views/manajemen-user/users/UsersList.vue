@@ -142,7 +142,7 @@ onMounted(() => {
   getListRoles()
 })
 
-watch(() => [serverOptions.value, filter], () => {
+watch(() => [serverOptions.value, filter.value], () => {
   getListUsers({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
@@ -162,12 +162,17 @@ watch(() => [serverOptions.value, filter], () => {
     <section>
       <div class="card">
         <div class="card-body">
-          <div class="d-sm-flex d-block align-items-center justify-content-between mb-7">
+          <div
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
               <h5 class="card-title fw-semibold">Daftar Users</h5>
               <!-- <p class="card-subtitle mb-0">Yang Terdaftar</p> -->
             </div>
-            <SearchInput :v-model="filter.search" placeholder="Cari Users" />
+
+            <div
+              class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+              <SearchInput v-model="filter.search" placeholder="Cari Users" />
+            </div>
           </div>
           <DataTable :headers="users.headers" :items="users.data" :loading="users.loading" header-text-direction="center"
             body-text-direction="center" :server-items-length="users.meta.total" v-model:server-options="serverOptions"
