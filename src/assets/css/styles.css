@@ -153,7 +153,6 @@
 .ck .ck-powered-by {
   display: none !important;
 }
-
 /* Width Table */
 /* By Percent */
 .width-10-percent {
@@ -488,4 +487,22 @@
   100% {
     background-position: top left;
   }
+}
+
+.invalid-v-select > .vs__dropdown-toggle {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: var(--vs-search-input-bg);
+  border: 1px solid var(--bs-danger) !important;
+  border-radius: var(--vs-border-radius);
+  display: flex;
+  padding: 0 0 4px;
+  white-space: normal;
+  width: 100%;
+  margin-top: 0;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.45;
 }

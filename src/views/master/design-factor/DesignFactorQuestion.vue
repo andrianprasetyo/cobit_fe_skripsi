@@ -2,7 +2,6 @@
 import { reactive, computed, onMounted } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
-import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
@@ -14,33 +13,23 @@ import GroupAnswerServices from '@/services/lib/group-answer'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
-import { useRouter } from 'vue-router'
+import { useAlert } from '@/stores/alert'
+import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
 import groupAnswerType from '@/data/groupAnswerType.json'
 
+const alert = useAlert()
 const toast = useToast()
+const route = useRoute()
 const router = useRouter()
 const loading = useLoading()
 
-/* ---------------------------- STATE & COMPUTED ---------------------------- */
+/* ---------------------------------- STATE --------------------------------- */
 const formState = reactive({
+  loading: false,
   loadingSubmit: false,
-  nama: '',
-  kode: '',
-  deskripsi: '',
-  questions: [
-    {
-      pertanyaan: '',
-      grup_id: ''
-    }
-  ],
-  df_komponen: [
-    {
-      nama: '',
-      baseline: ''
-    }
-  ],
+  questions: [],
   listGroupAnswer: {
     loading: false,
     data: []
@@ -49,15 +38,6 @@ const formState = reactive({
 
 const rules = computed(() => {
   return {
-    nama: {
-      required: helpers.withMessage('Silahkan isi nama', required),
-    },
-    kode: {
-      required: helpers.withMessage('Silahkan isi kode', required),
-    },
-    deskripsi: {
-      required: helpers.withMessage("Silahkan isi deskripsi", required)
-    },
     questions: {
       $each: helpers.forEach({
         pertanyaan: {
@@ -68,16 +48,6 @@ const rules = computed(() => {
         }
       })
     },
-    df_komponen: {
-      $each: helpers.forEach({
-        nama: {
-          required: helpers.withMessage('Silahkan isi nama', required),
-        },
-        baseline: {
-          required: helpers.withMessage('Silahkan isi baseline', required),
-        }
-      })
-    }
   }
 })
 
@@ -100,6 +70,41 @@ const classType = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
+const getQuestionDesignFactor = async () => {
+  const loader = loading.show()
+
+  try {
+    formState.loading = true
+    const response = await DesignFactorServices.getQuestionAndComponentDesignFactor({ id: route.params?.id })
+
+    if (response) {
+      const data = response?.data;
+
+      const dataQuestion = data?.quisioner || []
+
+      const listQuestion = []
+
+      if (Array.isArray(dataQuestion) && dataQuestion.length) {
+        dataQuestion.map(item => listQuestion.push({
+          id: item?.id,
+          pertanyaan: item?.pertanyaan,
+          grup_id: item?.grup,
+        }))
+
+        formState.questions = listQuestion
+      }
+
+      formState.loading = false
+      loader.hide()
+    }
+
+  } catch (error) {
+    formState.loading = false
+    loader.hide()
+    toast.error({ error })
+  }
+}
+
 const getListGroupAnswer = async ({ limit, page, search }) => {
   try {
     formState.listGroupAnswer.loading = true
@@ -117,33 +122,64 @@ const getListGroupAnswer = async ({ limit, page, search }) => {
   }
 }
 
-const handleTambahQuestion = () => {
-  formState.questions.push({
-    pertanyaan: '',
-    grup_id: ''
-  })
-}
+const deleteQuestion = async ({ id, index }) => {
 
-const handleHapusQuestion = (index) => {
-  const filtered = formState.questions.filter((_, itemIndex) => itemIndex !== index)
-  formState.questions = filtered
-}
+  try {
+    const response = await DesignFactorServices.deleteQuestionDesignFactor({ id })
 
-const handleTambahKomponen = () => {
-  formState.df_komponen.push({
-    nama: '',
-    baseline: ''
-  })
-}
+    if (response) {
+      toast.success({
+        title: 'Hapus Question Design Factor',
+        text: `Berhasil Menghapus Data Question Design Factor`
+      })
 
+      filterQuestion(index)
 
-const handleHapusKomponen = (index) => {
-  const filtered = formState.df_komponen.filter((_, itemIndex) => itemIndex !== index)
-  formState.df_komponen = filtered
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+
 }
 
 const handleBack = () => {
   router.back()
+}
+
+const handleTambahQuestion = () => {
+  formState.questions.push({
+    id: null,
+    pertanyaan: '',
+    grup_id: null,
+  })
+}
+
+const handleHapusQuestion = ({ title, id, index }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menghapus Question ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed && id) {
+      alert.loading()
+      try {
+        const response = await deleteQuestion({ id, index })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    } else if (result.isConfirmed) {
+      filterQuestion(index)
+    }
+  })
+}
+
+const filterQuestion = (index) => {
+  const filtered = formState.questions.filter((_, itemIndex) => itemIndex !== index)
+  formState.questions = filtered
 }
 
 const handleSubmit = async () => {
@@ -154,20 +190,23 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await DesignFactorServices.createDesignFactorWithQuestionAndComponent({
-        df_kode: formState.kode,
-        df_nama: formState.nama,
-        df_deskripsi: formState.deskripsi,
-        question: formState.questions,
-        df_komponen: formState.df_komponen
+      const question = [];
+
+      if (formState.questions.length) {
+        formState.questions.map(item => question.push({ id: item?.id, pertanyaan: item?.pertanyaan, grup_id: item?.grup_id?.id }))
+      }
+
+      const response = await DesignFactorServices.editQuestionDesignFactor({
+        id: route.params?.id,
+        question: question
       })
 
       if (response) {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Tambah Design Factor',
-          text: 'Berhasil Menambahkan Data Design Factor'
+          title: 'Edit Question Design Factor',
+          text: 'Berhasil Mengubah Data Question Design Factor'
         })
         handleBack()
       }
@@ -181,6 +220,7 @@ const handleSubmit = async () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  getQuestionDesignFactor()
   getListGroupAnswer({ limit: 10, page: 1 })
 })
 
@@ -191,36 +231,10 @@ onMounted(() => {
     <BreadCrumb />
 
     <section>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Design Factor</h5>
-
-          <div class="mb-3">
-            <BaseInput id="kode" v-model="v$.kode.$model" label="Kode" placeholder="Masukkan Kode Design Factor"
-              tabindex="1" :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.kode.$errors" />
-          </div>
-
-          <div class="mb-3">
-            <BaseInput id="nama" v-model="v$.nama.$model" label="Nama" placeholder="Masukkan Nama Design Factor"
-              tabindex="2" :isInvalid="v$.nama.$errors?.length" :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.nama.$errors" />
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label" for="deskripsi">Deskripsi</label>
-
-            <CKEditor id="deskripsi" tabindex="3" v-model="v$.deskripsi.$model"
-              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
-            <ErrorMessage v-if="v$.deskripsi.$errors" :errors="v$.deskripsi.$errors" />
-          </div>
-        </div>
-      </div>
-
       <h2 class="fw-bolder mb-3 fs-8 lh-base">Questions</h2>
 
       <template v-if="formState.questions.length">
-        <div v-for="(_, index) in formState.questions" :key="`question-card-${index}`" class="card">
+        <div v-for="(question, index) in formState.questions" :key="`question-card-${index}`" class="card">
           <div class="card-body">
             <div class="mb-9 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
               <div>
@@ -228,7 +242,8 @@ onMounted(() => {
               </div>
 
               <div>
-                <BaseButton @click="handleHapusQuestion(index)" class="btn btn-outline-danger" title="Hapus Question">
+                <BaseButton @click="handleHapusQuestion({ title: question?.pertanyaan, id: question?.id, index: index })"
+                  class="btn btn-outline-danger" title="Hapus Question">
                   <template #icon-left>
                     <TablerIcon icon="TrashIcon" />
                   </template>
@@ -236,13 +251,12 @@ onMounted(() => {
               </div>
             </div>
 
-
             <div class="mb-3">
               <label class="form-label" :for="`question-${index}`">Question</label>
 
-              <CKEditor :id="`question-${index}`" v-model="v$.questions.$model[index].pertanyaan" :tabindex="4 + index"
+              <CKEditor :id="`question-${index}`" v-model="v$.questions.$model[index].pertanyaan" :tabindex="1 + index"
                 :isInvalid="!!v$.questions.$each?.$response?.$errors[index]?.pertanyaan?.length"
-                :disabled="formState.loadingSubmit" />
+                :disabled="formState.loadingSubmit || formState.loading" />
               <ErrorMessage
                 v-if="Array.isArray(v$.questions.$each?.$response?.$errors) && v$.questions.$each?.$response?.$errors.length"
                 :errors="v$.questions.$each?.$response?.$errors[index].pertanyaan" />
@@ -252,9 +266,8 @@ onMounted(() => {
               <label class="form-label" :for="`group-answer-${index}`">Group Answer</label>
 
               <v-select :id="`group-answer-${index}`" :options="formState.listGroupAnswer.data" label="id"
-                :reduce="(option) => option.id" placeholder="Cari dan Pilih Group Answer" :clearable="true"
-                :filterable="false" :searchable="false" v-model="v$.questions.$model[index].grup_id"
-                :disabled="formState.loadingSubmit"
+                placeholder="Cari dan Pilih Group Answer" :clearable="true" :filterable="false" :searchable="false"
+                v-model="v$.questions.$model[index].grup_id" :disabled="formState.loadingSubmit"
                 :class="[!!v$.questions.$each?.$response?.$errors[index]?.grup_id?.length ? 'invalid-v-select' : '']">
                 <template #no-options>
                   Group Answer tidak ditemukan
@@ -303,54 +316,7 @@ onMounted(() => {
         </BaseButton>
       </div>
 
-      <h2 class="fw-bolder my-3 fs-8 lh-base">Komponen</h2>
-
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Tambah Komponen</h5>
-
-          <div class="d-flex flex-column mt-4">
-            <template v-if="formState.df_komponen.length">
-              <div v-for="(_, index) in formState.df_komponen" :key="`df-komponen-${index}`" class="row mb-3">
-                <div class="col-12 col-md-9 mb-2 mb-md-0">
-                  <BaseInput :id="`input-df-komponen-${index}`" :label="`Komponen ${index + 1}`"
-                    v-model="v$.df_komponen.$model[index].nama" placeholder="Masukkan Nama Komponen"
-                    :disabled="formState.loadingSubmit"
-                    :is-invalid="!!v$.df_komponen.$each?.$response?.$errors[index]?.nama?.length" />
-                  <ErrorMessage
-                    v-if="Array.isArray(v$.df_komponen.$each?.$response?.$errors) && v$.df_komponen.$each?.$response?.$errors.length"
-                    :errors="v$.df_komponen.$each?.$response?.$errors[index]?.nama" />
-                </div>
-                <div class="col-12 col-md-2">
-                  <BaseInput :id="`input-df-baseline-${index}`" :label="`Skor Baseline`" type="number"
-                    v-model="v$.df_komponen.$model[index].baseline" placeholder="Masukkan Baseline"
-                    :disabled="formState.loadingSubmit"
-                    :is-invalid="!!v$.df_komponen.$each?.$response?.$errors[index]?.baseline?.length" />
-                  <ErrorMessage
-                    v-if="Array.isArray(v$.df_komponen.$each?.$response?.$errors) && v$.df_komponen.$each?.$response?.$errors.length"
-                    :errors="v$.df_komponen.$each?.$response?.$errors[index]?.baseline" />
-                </div>
-                <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
-                  <BaseButton @click="handleHapusKomponen(index)" class="btn btn-outline-danger w-100"
-                    :class="[v$.df_komponen.$each?.$response?.$errors[index]?.nama?.length || v$.df_komponen.$each?.$response?.$errors[index]?.baseline?.length ? 'mt-1' : 'mt-4']">
-                    <TablerIcon icon="TrashIcon" />
-                  </BaseButton>
-                </div>
-              </div>
-            </template>
-
-            <div class="mt-2 d-flex justify-content-center align-items-center">
-              <BaseButton @click="handleTambahKomponen" title="Tambah Komponen">
-                <template #icon-left>
-                  <TablerIcon icon="PlusIcon" />
-                </template>
-              </BaseButton>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
+      <div class="card mt-4">
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-center">
             <div>
@@ -362,7 +328,7 @@ onMounted(() => {
             </div>
 
             <div>
-              <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
+              <BaseButton @click="handleSubmit" title="Simpan Perubahan" :disabled="formState.loadingSubmit"
                 :is-loading="formState.loadingSubmit">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
@@ -372,8 +338,6 @@ onMounted(() => {
           </div>
         </div>
       </div>
-
-
     </section>
   </div>
 </template>

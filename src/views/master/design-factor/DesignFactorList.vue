@@ -10,7 +10,7 @@ import SearchInput from '@/components/Input/SearchInput.vue'
 import DesignFactorServices from '@/services/lib/design-factor'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
-import { useRouter } from 'vue-router'
+import { useRouter, } from 'vue-router'
 
 const toast = useToast()
 const alert = useAlert()
@@ -106,8 +106,20 @@ const handleNavigateAdd = () => {
   router.push('/master/design-factor/add')
 }
 
+// const handleNavigateToOverview = ({ id }) => {
+//   router.push(`/master/design-factor/${id}/overview`)
+// }
+
 const handleNavigateToEdit = ({ id }) => {
   router.push(`/master/design-factor/${id}/edit`)
+}
+
+const handleNavigateToQuestion = ({ id }) => {
+  router.push(`/master/design-factor/${id}/question`)
+}
+
+const handleNavigateToComponent = ({ id }) => {
+  router.push(`/master/design-factor/${id}/component`)
 }
 
 const handleDelete = ({ title, id }) => {
@@ -197,6 +209,22 @@ watch(() => [serverOptions.value, filter.value], () => {
                   id="dropdownMenuButton" aria-expanded="false" />
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <!-- <li>
+                    <BaseButton @click="handleNavigateToOverview({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
+                      <template #icon-left>
+                        <TablerIcon icon="EyeIcon" />
+                        <span class="ms-2">
+                          Overview
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li> -->
+
                   <li>
                     <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
@@ -210,8 +238,36 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
 
                   <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                    <BaseButton @click="handleNavigateToQuestion({ id: item?.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ClipboardListIcon" />
+                        <span class="ms-2">
+                          Question
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <BaseButton @click="handleNavigateToComponent({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ListDetailsIcon" />
+                        <span class="ms-2">
+                          Komponen
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+
+                  <li>
+                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
                       <template #icon-left>
                         <TablerIcon icon="TrashIcon" />
                         <span class="ms-2">

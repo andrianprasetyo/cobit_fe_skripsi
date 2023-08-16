@@ -42,7 +42,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: true, $scope: true })
+const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 /* --------------------------------- METHODS -------------------------------- */
 const getDetailDesignFactor = async () => {
@@ -120,9 +120,11 @@ onMounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
+          <h5 class="card-title mb-9 fw-semibold">Design Factor</h5>
+
           <div class="mb-3">
             <BaseInput id="kode" v-model="v$.kode.$model" label="Kode" placeholder="Masukkan Kode Design Factor"
-              tabindex="1" :isInvalid="v$.kode.$errors?.length" :disabled="true" />
+              tabindex="1" :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.kode.$errors" />
           </div>
 

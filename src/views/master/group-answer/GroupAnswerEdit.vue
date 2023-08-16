@@ -61,7 +61,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $autoDirty: true })
+const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: false })
 
 const getDetailGroupAnswer = async () => {
   const loader = loading.show()
@@ -262,7 +262,7 @@ onMounted(() => {
       <div class="card">
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
-            <h4 class="fw-semibold mb-8">Jawaban Group Answer</h4>
+            <h5 class="card-title fw-semibold">Jawaban Group Answer</h5>
 
             <div>
               <BaseButton @click="handleRemoveSemuaJawaban" class="btn btn-outline-danger" title="Hapus Semua Jawaban">

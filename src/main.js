@@ -1,6 +1,7 @@
 import '@/assets/css/main-styles.css'
 import '@/assets/css/styles.css'
 import '@/assets/css/pace.css'
+import '@/assets/css/vue-select.css'
 
 import '@/assets/libs/jquery/jquery.min.js'
 import '@/assets/libs/simplebar/simplebar.min.js'
@@ -24,6 +25,7 @@ import setupVCalendar from '@/plugins/v-calendar'
 import setupCKEditor from '@/plugins/ckeditor'
 import setupApexCharts from '@/plugins/apexcharts'
 import setupLoadingOverlay from '@/plugins/loading-overlay'
+import setupVSelect from '@/plugins/v-select'
 
 import App from './App.vue'
 import router from './router'
@@ -40,5 +42,6 @@ setupVCalendar(app)
 setupCKEditor(app)
 setupApexCharts(app)
 setupLoadingOverlay(app)
+setupVSelect(app)
 
 app.mount('#app')

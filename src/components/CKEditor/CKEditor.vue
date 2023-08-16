@@ -36,22 +36,34 @@ const editorData = computed({
     return props.value
   },
   set(value) {
-    emit('update:value', value)
-  }
-})
+    if (value) {
+      emit('update:value', value)
+    }
 
-onMounted(() => {
-  isReady.value = true;
+  }
 })
 
 const onEditorReady = () => {
   isReady.value = true;
 };
+
+onMounted(() => {
+  isReady.value = true;
+})
 </script>
 
 <template>
   <Spinner v-if="!isReady" />
-  <ckeditor v-else ref="baseCKEditor" :editor="editor" v-model="editorData" @ready="onEditorReady" v-bind="$attrs"
-    :config="editorConfigDefault">
-  </ckeditor>
+  <div v-else :class="[isInvalid ? 'border border-1 border-danger invalid-border-radius' : '']">
+    <ckeditor ref="baseCKEditor" :editor="editor" v-model="editorData" @ready="onEditorReady" :tag-name="props.tagName"
+      :config="editorConfigDefault" v-bind="$attrs">
+    </ckeditor>
+  </div>
 </template>
+
+<style scoped>
+.invalid-border-radius {
+  border-radius: 2px !important;
+  z-index: 1000 !important;
+}
+</style>
