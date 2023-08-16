@@ -34,4 +34,4 @@ deploy dev:
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - rsync -rav --delete dist/ msi@10.11.11.17:/home/msi/dev-cobit-fe.millennia-solusi.xyz/
-
+    - ssh msi@10.11.11.17 "ln -s /home/msi/.htaccess /home/msi/ev-cobit-fe.millennia-solusi.xyz/.htaccess"
