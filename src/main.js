@@ -2,9 +2,9 @@ import '@/assets/css/main-styles.css'
 import '@/assets/css/styles.css'
 import '@/assets/css/pace.css'
 
-import '@/assets/libs/jquery/dist/jquery.min.js'
-import '@/assets/libs/simplebar/dist/simplebar.min.js'
-import '@/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js'
+import '@/assets/libs/jquery/jquery.min.js'
+import '@/assets/libs/simplebar/simplebar.min.js'
+import '@/assets/libs/bootstrap/bootstrap.bundle.min.js'
 import '@/assets/libs/pace/pace.min.js'
 
 import '@/assets/js/app.min.js'

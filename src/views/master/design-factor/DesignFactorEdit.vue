@@ -42,7 +42,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: true })
+const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: true, $scope: true })
 
 /* --------------------------------- METHODS -------------------------------- */
 const getDetailDesignFactor = async () => {
