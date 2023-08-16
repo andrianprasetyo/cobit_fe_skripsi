@@ -32,12 +32,28 @@ const isFirstPage = computed(() => dataTable.value?.isFirstPage);
 const isLastPage = computed(() => dataTable.value?.isLastPage);
 
 const nextPage = () => {
+  /* Replace To Query
+   router.replace({
+    query: { ...router.currentRoute.value.query, page: dataTable.value.currentPaginationNumber }
+  })
+  */
+
   dataTable.value.nextPage();
 };
 const prevPage = () => {
+  /* Replace To Query
+   router.replace({
+    query: { ...router.currentRoute.value.query, page: dataTable.value.currentPaginationNumber }
+  })
+  */
   dataTable.value.prevPage();
 };
 const updatePage = (paginationNumber) => {
+  /* Replace To Query
+    router.replace({
+    query: { ...router.currentRoute.value.query, page: paginationNumber }
+  })
+  */
   dataTable.value.updatePage(paginationNumber);
 };
 

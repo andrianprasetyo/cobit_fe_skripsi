@@ -227,7 +227,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
                   <li>
                     <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
                       <template #icon-left>
                         <TablerIcon icon="TrashIcon" />
                         <span class="ms-2">

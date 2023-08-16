@@ -55,7 +55,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: true })
+const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: false })
 
 const handleBack = () => {
   router.back()
@@ -126,7 +126,8 @@ const handleSubmit = async () => {
 
       <div class="card">
         <div class="card-body">
-          <h4 class="fw-semibold mb-8">Jawaban Group Answer</h4>
+          <h5 class="card-title fw-semibold">Jawaban Group Answer</h5>
+          <!-- <p class="card-subtitle mb-0">Subitle</p> -->
 
           <div class="d-flex flex-column mt-4">
             <template v-if="formState.jawaban.length">

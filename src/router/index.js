@@ -245,6 +245,96 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'QuestionDesignFactor',
+              path: '/master/design-factor/:id/question',
+              component: () => import('@/views/master/design-factor/DesignFactorQuestion.vue'),
+              meta: {
+                pageTitle: 'Question Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Design Factor',
+                    disabled: false,
+                    href: '/master/design-factor',
+                    active: false
+                  },
+                  {
+                    text: 'Question Design Factor',
+                    disabled: true,
+                    href: '/master/design-factor/:id/question',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'KomponenDesignFactor',
+              path: '/master/design-factor/:id/component',
+              component: () => import('@/views/master/design-factor/DesignFactorComponent.vue'),
+              meta: {
+                pageTitle: 'Komponen Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Design Factor',
+                    disabled: false,
+                    href: '/master/design-factor',
+                    active: false
+                  },
+                  {
+                    text: 'Komponen Design Factor',
+                    disabled: true,
+                    href: '/master/design-factor/:id/component',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'OverviewDesignFactor',
+              path: '/master/design-factor/:id/overview',
+              component: () => import('@/views/master/design-factor/DesignFactorOverview.vue'),
+              meta: {
+                pageTitle: 'Overview Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Design Factor',
+                    disabled: false,
+                    href: '/master/design-factor',
+                    active: false
+                  },
+                  {
+                    text: 'Overview Design Factor',
+                    disabled: true,
+                    href: '/master/design-factor/:id/overview',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },
