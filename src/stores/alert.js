@@ -17,7 +17,8 @@ export const useAlert = defineStore({
         showCloseButton: true,
         showCancelButton: true,
         confirmButtonColor: '#203058',
-        confirmButtonText: payload?.confirmButtonText || 'Ya!',
+        reverseButtons: true,
+        confirmButtonText: payload?.confirmButtonText || 'Konfirmasi',
         cancelButtonText: payload?.cancelButtonText || 'Batalkan',
         ...payload
       })
@@ -35,7 +36,8 @@ export const useAlert = defineStore({
         showCloseButton: true,
         showCancelButton: true,
         confirmButtonColor: '#203058',
-        confirmButtonText: payload?.confirmButtonText || 'Ya!',
+        reverseButtons: true,
+        confirmButtonText: payload?.confirmButtonText || 'Konfirmasi',
         cancelButtonText: payload?.cancelButtonText || 'Batalkan',
         ...payload
       })

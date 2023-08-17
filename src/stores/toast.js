@@ -116,7 +116,7 @@ export const useToast = defineStore({
 
     topCenter(payload) {
       toast(payload.title || 'Terjadi Kesalahan', {
-        toastClassName: 'bg-dark',
+        toastClassName: 'bg-primary',
         timeout: false,
         position: 'top-center',
         closeOnClick: true,

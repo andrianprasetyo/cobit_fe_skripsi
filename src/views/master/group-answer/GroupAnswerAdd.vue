@@ -7,11 +7,12 @@ import BaseSelect from '@/components/Select/BaseSelect.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
+import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
 
 import GroupAnswerServices from '@/services/lib/group-answer'
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required, helpers, minValue, maxValue } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -34,6 +35,35 @@ const formState = reactive({
   ]
 })
 
+const isJenisPilgan = computed(() => {
+  return formState.jenis === 'pilgan'
+})
+
+const isJenisPersentase = computed(() => {
+  return formState.jenis === 'persentase'
+})
+
+const minBaselineValue = computed(() => {
+  if (isJenisPilgan.value) {
+    return 1
+  } else if (isJenisPersentase.value) {
+    return 0
+  } else {
+    return 0
+  }
+})
+
+const maxBaselineValue = computed(() => {
+  if (isJenisPilgan.value) {
+    /*
+    return formState.jawaban.length
+    */
+    return 100
+  } else {
+    return 100
+  }
+})
+
 const rules = computed(() => {
   return {
     nama: {
@@ -49,6 +79,8 @@ const rules = computed(() => {
         },
         bobot: {
           required: helpers.withMessage('Silahkan isi baseline', required),
+          minValue: helpers.withMessage(`Skor Baseline Min ${minBaselineValue.value}`, minValue(minBaselineValue.value)),
+          maxValue: helpers.withMessage(`Skor Baseline Max ${maxBaselineValue.value}`, maxValue(maxBaselineValue.value))
         }
       })
     }
@@ -157,6 +189,10 @@ const handleSubmit = async () => {
                   </BaseButton>
                 </div>
               </div>
+            </template>
+
+            <template v-else>
+              <NoOptions title="Belum Ada Jawaban Dibuat" />
             </template>
 
             <div class="mt-2 d-flex justify-content-center align-items-center">
