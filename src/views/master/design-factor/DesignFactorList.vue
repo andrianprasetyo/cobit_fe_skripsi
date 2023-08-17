@@ -106,9 +106,9 @@ const handleNavigateAdd = () => {
   router.push('/master/design-factor/add')
 }
 
-// const handleNavigateToOverview = ({ id }) => {
-//   router.push(`/master/design-factor/${id}/overview`)
-// }
+const handleNavigateToOverview = ({ id }) => {
+  router.push(`/master/design-factor/${id}/overview`)
+}
 
 const handleNavigateToEdit = ({ id }) => {
   router.push(`/master/design-factor/${id}/edit`)
@@ -209,7 +209,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   id="dropdownMenuButton" aria-expanded="false" />
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <!-- <li>
+                  <li>
                     <BaseButton @click="handleNavigateToOverview({ id: item?.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
                       <template #icon-left>
@@ -223,7 +223,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
                   <li>
                     <hr class="dropdown-divider">
-                  </li> -->
+                  </li>
 
                   <li>
                     <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"

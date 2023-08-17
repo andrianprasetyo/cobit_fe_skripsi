@@ -8,7 +8,7 @@ export default {
    */
   getListGroupAnswer(payload) {
     return axiosClient.get(
-      `quisioner-grup-jawaban/list?limit=${payload?.limit || 10}&page=${payload?.page || 0}${
+      `quisioner-grup-jawaban/list?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''

@@ -50,6 +50,7 @@ const isActiveCollapsedNav = computed(() => {
   };
 })
 
+/*
 const isChildrenActiveMenu = computed(() => {
   return (children) => {
     const isHasParams = Object.getOwnPropertyNames(route?.params).length > 0
@@ -61,6 +62,19 @@ const isChildrenActiveMenu = computed(() => {
     } else {
       isIncluded = currentRoutePath.value.endsWith(children?.url)
     }
+
+    if (isIncluded) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+})
+*/
+
+const isChildrenActiveMenu = computed(() => {
+  return (children) => {
+    let isIncluded = currentRoutePath.value.startsWith(children?.url);
 
     if (isIncluded) {
       return true;
@@ -100,8 +114,7 @@ onMounted(() => {
       if (children && Array.isArray(children)) {
         for (let i in children) {
           let currentActiveChildren = currentRoutePath.value
-            .toString()
-            == children[i]?.url;
+            .toString().startsWith(children[i]?.url)
 
           if (currentActiveChildren) {
             stateSidebar.activeGroupId = children[i]?.parent_id;
@@ -123,8 +136,6 @@ onMounted(() => {
                 if (!this.activeChildrenGroupId) {
                   stateSidebar.activeChildrenGroupId = children[i]?.id;
                 }
-
-                stateSidebar.activeSubChildrenGroupId = subChildren[indexSub]?.parent_id;
 
                 return
               }

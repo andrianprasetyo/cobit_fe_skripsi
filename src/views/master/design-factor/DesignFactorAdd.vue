@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
+import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -7,6 +8,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
+import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
 
 import DesignFactorServices from '@/services/lib/design-factor'
 import GroupAnswerServices from '@/services/lib/group-answer'
@@ -29,12 +31,7 @@ const formState = reactive({
   nama: '',
   kode: '',
   deskripsi: '',
-  questions: [
-    {
-      pertanyaan: '',
-      grup_id: ''
-    }
-  ],
+  questions: [],
   df_komponen: [
     {
       nama: '',
@@ -43,7 +40,8 @@ const formState = reactive({
   ],
   listGroupAnswer: {
     loading: false,
-    data: []
+    data: [],
+    dropdownOptions: []
   }
 })
 
@@ -110,6 +108,8 @@ const getListGroupAnswer = async ({ limit, page, search }) => {
 
       formState.listGroupAnswer.data = data?.list || []
       formState.listGroupAnswer.loading = false
+
+      handleTambahQuestion()
     }
   } catch (error) {
     formState.listGroupAnswer.loading = false
@@ -117,16 +117,40 @@ const getListGroupAnswer = async ({ limit, page, search }) => {
   }
 }
 
+const handleSearchQuestion = debounce(async ({ search, index }) => {
+  try {
+    formState.listGroupAnswer.dropdownOptions[index].loading = true
+    const response = await GroupAnswerServices.getListGroupAnswer({ search })
+
+    if (response) {
+      const data = response?.data
+      formState.listGroupAnswer.dropdownOptions[index].loading = false
+      formState.listGroupAnswer.dropdownOptions[index].data = data?.list || []
+    }
+  } catch (error) {
+    formState.listGroupAnswer.dropdownOptions[index].loading = false
+    toast.error({ error })
+  }
+}, 500)
+
 const handleTambahQuestion = () => {
   formState.questions.push({
     pertanyaan: '',
     grup_id: ''
+  })
+
+  formState.listGroupAnswer.dropdownOptions.push({
+    loading: false,
+    data: formState.listGroupAnswer.data
   })
 }
 
 const handleHapusQuestion = (index) => {
   const filtered = formState.questions.filter((_, itemIndex) => itemIndex !== index)
   formState.questions = filtered
+
+  const filteredDropdown = formState.listGroupAnswer.dropdownOptions.filter((_, itemIndex) => itemIndex !== index)
+  formState.listGroupAnswer.dropdownOptions = filteredDropdown
 }
 
 const handleTambahKomponen = () => {
@@ -135,7 +159,6 @@ const handleTambahKomponen = () => {
     baseline: ''
   })
 }
-
 
 const handleHapusKomponen = (index) => {
   const filtered = formState.df_komponen.filter((_, itemIndex) => itemIndex !== index)
@@ -251,30 +274,30 @@ onMounted(() => {
             <div class="mb-3">
               <label class="form-label" :for="`group-answer-${index}`">Group Answer</label>
 
-              <v-select :id="`group-answer-${index}`" :options="formState.listGroupAnswer.data" label="id"
+              <v-select :id="`group-answer-${index}`" @search="(search) => handleSearchQuestion({ search, index })"
+                :loading="formState.listGroupAnswer.dropdownOptions[index].loading"
+                :options="formState.listGroupAnswer.dropdownOptions[index].data" label="id"
                 :reduce="(option) => option.id" placeholder="Cari dan Pilih Group Answer" :clearable="true"
-                :filterable="false" :searchable="false" v-model="v$.questions.$model[index].grup_id"
-                :disabled="formState.loadingSubmit"
+                :filterable="false" v-model="v$.questions.$model[index].grup_id" :disabled="formState.loadingSubmit"
                 :class="[!!v$.questions.$each?.$response?.$errors[index]?.grup_id?.length ? 'invalid-v-select' : '']">
                 <template #no-options>
                   Group Answer tidak ditemukan
                 </template>
 
                 <template #option="option">
-                  <div class="d-flex flex-row">
+                  <div class="d-flex flex-row align-items-center py-1">
                     <span class="me-2 fw-bold">
                       {{ option.nama }}
                     </span>
 
-                    <span class="mb-1 badge rounded-pill font-medium text-capitalize fw-bold"
-                      :class="classType(option.jenis)">
+                    <span class="badge rounded-pill font-medium text-capitalize fw-bold" :class="classType(option.jenis)">
                       {{ labelType(option.jenis) }}
                     </span>
                   </div>
                 </template>
 
                 <template #selected-option="option">
-                  <div class="d-flex flex-row">
+                  <div class="d-flex flex-row align-items-center py-1">
                     <span class="me-2 fw-bold">
                       {{ option.nama }}
                     </span>
@@ -293,6 +316,10 @@ onMounted(() => {
             </div>
           </div>
         </div>
+      </template>
+
+      <template v-else>
+        <NoOptions title="Belum Ada Question Dibuat" />
       </template>
 
       <div class="mt-2 d-flex justify-content-center align-items-center">
@@ -337,6 +364,10 @@ onMounted(() => {
                   </BaseButton>
                 </div>
               </div>
+            </template>
+
+            <template v-else>
+              <NoOptions title="Belum Ada Komponen Dibuat" />
             </template>
 
             <div class="mt-2 d-flex justify-content-center align-items-center">

@@ -1,11 +1,15 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
+import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
+import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
+
+import DesignFactorHeader from '@/views/master/design-factor/components/DesignFactorHeader.vue'
 
 import DesignFactorServices from '@/services/lib/design-factor'
 import GroupAnswerServices from '@/services/lib/group-answer'
@@ -32,7 +36,8 @@ const formState = reactive({
   questions: [],
   listGroupAnswer: {
     loading: false,
-    data: []
+    data: [],
+    dropdownOptions: []
   }
 })
 
@@ -83,17 +88,27 @@ const getQuestionDesignFactor = async () => {
       const dataQuestion = data?.quisioner || []
 
       const listQuestion = []
+      const listDropdown = []
 
       if (Array.isArray(dataQuestion) && dataQuestion.length) {
-        dataQuestion.map(item => listQuestion.push({
-          id: item?.id,
-          pertanyaan: item?.pertanyaan,
-          grup_id: item?.grup,
-        }))
+        dataQuestion.map(item => {
+          listQuestion.push({
+            id: item?.id,
+            pertanyaan: item?.pertanyaan,
+            grup_id: item?.grup,
+          })
+
+          listDropdown.push({
+            loading: false,
+            data: formState.listGroupAnswer.data || []
+          })
+        })
 
         formState.questions = listQuestion
+        formState.listGroupAnswer.dropdownOptions = listDropdown
       }
 
+      formState.detail = data
       formState.loading = false
       loader.hide()
     }
@@ -115,12 +130,31 @@ const getListGroupAnswer = async ({ limit, page, search }) => {
 
       formState.listGroupAnswer.data = data?.list || []
       formState.listGroupAnswer.loading = false
+
+      return data
     }
   } catch (error) {
     formState.listGroupAnswer.loading = false
     toast.error({ error })
+    throw error
   }
 }
+
+const handleSearchQuestion = debounce(async ({ search, index }) => {
+  try {
+    formState.listGroupAnswer.dropdownOptions[index].loading = true
+    const response = await GroupAnswerServices.getListGroupAnswer({ search })
+
+    if (response) {
+      const data = response?.data
+      formState.listGroupAnswer.dropdownOptions[index].loading = false
+      formState.listGroupAnswer.dropdownOptions[index].data = data?.list || []
+    }
+  } catch (error) {
+    formState.listGroupAnswer.dropdownOptions[index].loading = false
+    toast.error({ error })
+  }
+}, 500)
 
 const deleteQuestion = async ({ id, index }) => {
 
@@ -154,6 +188,11 @@ const handleTambahQuestion = () => {
     pertanyaan: '',
     grup_id: null,
   })
+
+  formState.listGroupAnswer.dropdownOptions.push({
+    loading: false,
+    data: formState.listGroupAnswer.data
+  })
 }
 
 const handleHapusQuestion = ({ title, id, index }) => {
@@ -180,6 +219,9 @@ const handleHapusQuestion = ({ title, id, index }) => {
 const filterQuestion = (index) => {
   const filtered = formState.questions.filter((_, itemIndex) => itemIndex !== index)
   formState.questions = filtered
+
+  const filteredDropdown = formState.listGroupAnswer.dropdownOptions.filter((_, itemIndex) => itemIndex !== index)
+  formState.listGroupAnswer.dropdownOptions = filteredDropdown
 }
 
 const handleSubmit = async () => {
@@ -220,8 +262,9 @@ const handleSubmit = async () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  getQuestionDesignFactor()
-  getListGroupAnswer({ limit: 10, page: 1 })
+  getListGroupAnswer({ limit: 10, page: 1 }).then(() => {
+    getQuestionDesignFactor()
+  })
 })
 
 </script>
@@ -231,6 +274,8 @@ onMounted(() => {
     <BreadCrumb />
 
     <section>
+      <DesignFactorHeader :nama="formState.detail?.nama" :deskripsi="formState.detail?.deskripsi" />
+
       <h2 class="fw-bolder mb-3 fs-8 lh-base">Questions</h2>
 
       <template v-if="formState.questions.length">
@@ -265,8 +310,10 @@ onMounted(() => {
             <div class="mb-3">
               <label class="form-label" :for="`group-answer-${index}`">Group Answer</label>
 
-              <v-select :id="`group-answer-${index}`" :options="formState.listGroupAnswer.data" label="id"
-                placeholder="Cari dan Pilih Group Answer" :clearable="true" :filterable="false" :searchable="false"
+              <v-select :id="`group-answer-${index}`" @search="(search) => handleSearchQuestion({ search, index })"
+                :options="formState.listGroupAnswer.dropdownOptions[index].data"
+                :loading="formState.listGroupAnswer.dropdownOptions[index].loading" label="id"
+                placeholder="Cari dan Pilih Group Answer" :clearable="true" :filterable="false"
                 v-model="v$.questions.$model[index].grup_id" :disabled="formState.loadingSubmit"
                 :class="[!!v$.questions.$each?.$response?.$errors[index]?.grup_id?.length ? 'invalid-v-select' : '']">
                 <template #no-options>
@@ -306,6 +353,10 @@ onMounted(() => {
             </div>
           </div>
         </div>
+      </template>
+
+      <template v-else>
+        <NoOptions title="Belum Ada Question Dibuat" />
       </template>
 
       <div class="mt-2 d-flex justify-content-center align-items-center">

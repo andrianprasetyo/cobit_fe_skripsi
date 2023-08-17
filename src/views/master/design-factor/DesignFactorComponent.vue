@@ -6,6 +6,9 @@ import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
+import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
+
+import DesignFactorHeader from '@/views/master/design-factor/components/DesignFactorHeader.vue'
 
 import DesignFactorServices from '@/services/lib/design-factor'
 
@@ -26,6 +29,7 @@ const loading = useLoading()
 const formState = reactive({
   loadingSubmit: false,
   loading: false,
+  detail: {},
   df_komponen: [
   ],
 })
@@ -73,6 +77,7 @@ const getComponentDesignFactor = async () => {
         formState.df_komponen = listComponent
       }
 
+      formState.detail = data
       formState.loading = false
       loader.hide()
     }
@@ -186,6 +191,8 @@ onMounted(() => {
     <BreadCrumb />
 
     <section>
+      <DesignFactorHeader :nama="formState.detail?.nama" :deskripsi="formState.detail?.deskripsi" />
+
       <div class="card">
         <div class="card-body">
           <h5 class="card-title mb-9 fw-semibold">Komponen</h5>
@@ -221,6 +228,10 @@ onMounted(() => {
               </div>
 
             </div>
+          </template>
+
+          <template v-else>
+            <NoOptions title="Belum Ada Komponen Dibuat" />
           </template>
 
           <div class="mt-2 d-flex justify-content-center align-items-center">

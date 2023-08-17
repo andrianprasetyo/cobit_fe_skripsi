@@ -8,7 +8,7 @@ export default {
    */
   getListDesignFactor(payload) {
     return axiosClient.get(
-      `design-faktor/list?limit=${payload?.limit || 10}&page=${payload?.page || 0}${
+      `design-faktor/list?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
