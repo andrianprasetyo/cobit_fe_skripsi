@@ -142,6 +142,24 @@
     url('/assets/fonts/jakarta-sans/PlusJakartaSans-ExtraBoldItalic.ttf') format('truetype');
 }
 
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family:
+    'Plus Jakarta Sans',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+}
+
 .container-loading-logo {
   display: flex;
   justify-content: center;

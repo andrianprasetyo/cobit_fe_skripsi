@@ -1,12 +1,9 @@
 <script setup>
 import { RouterView, useRoute } from 'vue-router'
-import { useAppConfig } from '@/stores/appConfig'
 
 const route = useRoute()
 
 const props = defineProps(['Component']);
-
-const { layouts } = useAppConfig()
 
 </script>
 
@@ -30,7 +27,7 @@ const { layouts } = useAppConfig()
           <!-- Content -->
           <div class="col-xl-5 col-xxl-4">
             <RouterView v-slot="{ route }">
-              <Transition :name="layouts.routerTransition" mode="in-out">
+              <Transition name="fade" mode="out-in">
                 <component :is="props.Component" :key="route.path" />
               </Transition>
             </RouterView>

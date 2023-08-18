@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, computed } from 'vue'
 import { RouterLink } from 'vue-router'
+
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
@@ -67,7 +68,7 @@ const onSubmit = async () => {
 
       <h2 class="mb-3 fs-7 fw-bolder lh-base">Selamat Datang <br />
         di {{ app.appName }} 👋</h2>
-      <p class=" mb-9">Silakan masuk ke akun Anda</p>
+      <p class="mb-9">Silakan masuk ke akun Anda</p>
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
           <BaseInput id="username" label="Username" v-model="v$.username.$model" placeholder="Masukkan Username"
@@ -80,7 +81,7 @@ const onSubmit = async () => {
             :disabled="formState.isLoading">
 
             <template #extra-label>
-              <RouterLink to="/auth/forgot-password" class="text-primary fw-medium d-none">
+              <RouterLink to="/auth/forgot-password" class="text-primary fw-medium">
                 Lupa Password ?
               </RouterLink>
             </template>
@@ -88,7 +89,7 @@ const onSubmit = async () => {
           <ErrorMessage :errors="v$.password.$errors" />
         </div>
         <div class="mt-4">
-          <BaseButton type="submit" title="Sign In" class="btn btn-primary w-100 py-2" :isLoading="formState.isLoading"
+          <BaseButton type="submit" title="Login" class="btn btn-primary w-100 py-2" :isLoading="formState.isLoading"
             :disabled="formState.isLoading" />
         </div>
       </form>
