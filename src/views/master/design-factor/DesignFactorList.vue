@@ -200,7 +200,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-deskripsi="item">
-              <div class="width-300px text-truncate" v-html="item.item?.deskripsi" />
+              <div class="width-300px text-truncate text-break d-inline-block truncate-html" v-html="item.item?.deskripsi" />
             </template>
 
             <template #item-action="item">
