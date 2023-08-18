@@ -96,7 +96,7 @@ const handleToggleMiniSidebar = () => {
                     <img src="/assets/images/profile/user-1.jpg" class="rounded-circle" width="80" height="80" alt="" />
                     <div class="ms-3">
                       <h5 class="mb-1 fs-3">{{ auth?.account?.nama }}</h5>
-                      <span class="mb-1 d-block text-dark">{{ auth?.account?.role?.role?.nama }}</span>
+                      <span class="mb-1 d-block text-dark">{{ auth?.account?.roleaktif?.role?.nama }}</span>
                       <p v-if="auth?.account?.email" class="mb-0 d-flex text-dark align-items-center gap-2">
                         <TablerIcon icon="MailIcon" /> {{ auth?.account?.email }}
                       </p>

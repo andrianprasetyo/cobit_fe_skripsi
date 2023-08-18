@@ -385,6 +385,40 @@ const router = createRouter({
             background_picture: '/assets/images/illustrations/discussion.svg',
             requiredAuth: false
           }
+        },
+        {
+          name: 'ForgotPassword',
+          path: '/auth/forgot-password',
+          component: () => import('@/views/auth/forgot-password/AuthForgotPassword.vue'),
+          meta: {
+            pageTitle: 'Lupa Password',
+            layout: 'AppLayoutAuth',
+            background_picture: '/assets/images/illustrations/no-data.svg',
+            requiredAuth: false
+          }
+        },
+        {
+          name: 'ForgotPasswordVerify',
+          path: '/auth/forgot-password/verify',
+          component: () =>
+            import('@/views/auth/forgot-password/verify/AuthForgotPasswordVerify.vue'),
+          meta: {
+            pageTitle: 'Verifikasi Kode',
+            layout: 'AppLayoutAuth',
+            background_picture: '/assets/images/illustrations/making-choice.svg',
+            requiredAuth: false
+          }
+        },
+        {
+          name: 'ForgotPasswordReset',
+          path: '/auth/forgot-password/reset',
+          component: () => import('@/views/auth/forgot-password/reset/AuthForgotPasswordReset.vue'),
+          meta: {
+            pageTitle: 'Reset Password',
+            layout: 'AppLayoutAuth',
+            background_picture: '/assets/images/illustrations/woman-choice-document.svg',
+            requiredAuth: false
+          }
         }
       ]
     }
