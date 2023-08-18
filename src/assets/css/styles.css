@@ -506,3 +506,13 @@
   font-weight: 400;
   line-height: 1.45;
 }
+
+.truncate-html {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-height: 20px;
+}

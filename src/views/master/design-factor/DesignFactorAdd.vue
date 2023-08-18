@@ -35,6 +35,7 @@ const formState = reactive({
   df_komponen: [
     {
       nama: '',
+      deskripsi: '',
       baseline: ''
     }
   ],
@@ -73,6 +74,9 @@ const rules = computed(() => {
         },
         baseline: {
           required: helpers.withMessage('Silahkan isi baseline', required),
+        },
+        deskripsi: {
+          required: helpers.withMessage('Silahkan isi deskripsi', required),
         }
       })
     }
@@ -334,21 +338,36 @@ onMounted(() => {
 
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Tambah Komponen</h5>
+          <div class="border-bottom pb-3">
+            <h5 class="card-title fw-semibold">Tambah Komponen</h5>
+          </div>
 
           <div class="d-flex flex-column mt-4">
             <template v-if="formState.df_komponen.length">
-              <div v-for="(_, index) in formState.df_komponen" :key="`df-komponen-${index}`" class="row mb-3">
+              <div v-for="(_, index) in formState.df_komponen" :key="`df-komponen-${index}`" class="row border-bottom"
+                :class="[index > 0 ? 'py-5' : 'pb-5']">
+                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-9">
+                  <h5 class="fw-semibold">Komponen {{ index + 1 }}</h5>
+
+                  <div>
+                    <BaseButton @click="handleHapusKomponen(index)" class="btn btn-outline-danger" title="Hapus Komponen">
+                      <template #icon-left>
+                        <TablerIcon icon="TrashIcon" />
+                      </template>
+                    </BaseButton>
+                  </div>
+                </div>
+
                 <div class="col-12 col-md-9 mb-2 mb-md-0">
-                  <BaseInput :id="`input-df-komponen-${index}`" :label="`Komponen ${index + 1}`"
-                    v-model="v$.df_komponen.$model[index].nama" placeholder="Masukkan Nama Komponen"
-                    :disabled="formState.loadingSubmit"
+                  <BaseInput :id="`input-df-komponen-${index}`" label="Nama" v-model="v$.df_komponen.$model[index].nama"
+                    placeholder="Masukkan Nama Komponen" :disabled="formState.loadingSubmit"
                     :is-invalid="!!v$.df_komponen.$each?.$response?.$errors[index]?.nama?.length" />
                   <ErrorMessage
                     v-if="Array.isArray(v$.df_komponen.$each?.$response?.$errors) && v$.df_komponen.$each?.$response?.$errors.length"
                     :errors="v$.df_komponen.$each?.$response?.$errors[index]?.nama" />
                 </div>
-                <div class="col-12 col-md-2">
+
+                <div class="col-12 col-md-3">
                   <BaseInput :id="`input-df-baseline-${index}`" :label="`Skor Baseline`" type="number"
                     v-model="v$.df_komponen.$model[index].baseline" placeholder="Masukkan Baseline"
                     :disabled="formState.loadingSubmit"
@@ -357,11 +376,24 @@ onMounted(() => {
                     v-if="Array.isArray(v$.df_komponen.$each?.$response?.$errors) && v$.df_komponen.$each?.$response?.$errors.length"
                     :errors="v$.df_komponen.$each?.$response?.$errors[index]?.baseline" />
                 </div>
-                <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
+
+                <!-- Button Delete -->
+                <!-- <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
                   <BaseButton @click="handleHapusKomponen(index)" class="btn btn-outline-danger w-100"
                     :class="[v$.df_komponen.$each?.$response?.$errors[index]?.nama?.length || v$.df_komponen.$each?.$response?.$errors[index]?.baseline?.length ? 'mt-1' : 'mt-4']">
                     <TablerIcon icon="TrashIcon" />
                   </BaseButton>
+                </div> -->
+
+                <div class="col-12 mt-3">
+                  <label class="form-label" :for="`komponen-deskripsi-${index}`">Deskripsi</label>
+
+                  <CKEditor :id="`komponen-deskripsi-${index}`" v-model="v$.df_komponen.$model[index].deskripsi"
+                    :isInvalid="!!v$.df_komponen.$each?.$response?.$errors[index]?.deskripsi?.length"
+                    :disabled="formState.loadingSubmit" />
+                  <ErrorMessage
+                    v-if="Array.isArray(v$.df_komponen.$each?.$response?.$errors) && v$.df_komponen.$each?.$response?.$errors.length"
+                    :errors="v$.df_komponen.$each?.$response?.$errors[index]?.deskripsi" />
                 </div>
               </div>
             </template>
@@ -370,7 +402,7 @@ onMounted(() => {
               <NoOptions title="Belum Ada Komponen Dibuat" />
             </template>
 
-            <div class="mt-2 d-flex justify-content-center align-items-center">
+            <div class="mt-5 d-flex justify-content-center align-items-center">
               <BaseButton @click="handleTambahKomponen" title="Tambah Komponen">
                 <template #icon-left>
                   <TablerIcon icon="PlusIcon" />
@@ -393,7 +425,8 @@ onMounted(() => {
             </div>
 
             <div>
-              <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
+              <BaseButton @click="handleSubmit" title="Simpan"
+                :disabled="formState.loadingSubmit || !formState.questions.length || !formState.df_komponen.length"
                 :is-loading="formState.loadingSubmit">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />

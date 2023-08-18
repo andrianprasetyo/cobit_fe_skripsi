@@ -85,29 +85,24 @@ onMounted(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Question Array -->
-                  <!-- <template v-if="Array.isArray(quisioner?.quisioner) && quisioner?.quisioner.length">
-                  <tr v-for="(item, index) in quisioner?.quisioner" :key="`komponen-${index}`">
-                    {{ item?.title }}
-                  </tr>
-                </template>
-                 -->
-
-                  <tr>
-                    <td>
-                      <div class="d-flex align-items-center">
-                        {{ quisioner?.quisioner?.title }}
-                      </div>
-                    </td>
-                    <template v-if="Array.isArray(quisioner.grup.jawabans) && quisioner.grup.jawabans.length">
-                      <td v-for="(_, index) in quisioner.grup.jawabans" :key="`answer-${index}`">
-                        <div class="form-check form-check-inline d-flex justify-content-center align-items-center">
-                          <input class="form-check-input primary check-outline outline-primary" type="radio"
-                            :id="`radio-${index}`" :name="`radio-${quisioner?.quisioner?.title}`" :checked="false">
+                  <template v-if="Array.isArray(designFactor.detail?.komponen) && designFactor.detail?.komponen?.length">
+                    <tr v-for="(komponen, indexKomponen) in designFactor.detail?.komponen"
+                      :key="`komponen-answer-${indexKomponen}`">
+                      <td>
+                        <div class="d-flex align-items-center">
+                          {{ komponen?.nama }}
                         </div>
                       </td>
-                    </template>
-                  </tr>
+                      <template v-if="Array.isArray(quisioner.grup.jawabans) && quisioner.grup.jawabans.length">
+                        <td v-for="(_, index) in quisioner.grup.jawabans" :key="`answer-${index}`">
+                          <div class="form-check form-check-inline d-flex justify-content-center align-items-center">
+                            <input class="form-check-input primary check-outline outline-primary" type="radio"
+                              :id="`radio-${index}-${indexKomponen}`" :name="`radio-${indexKomponen}`" :checked="false">
+                          </div>
+                        </td>
+                      </template>
+                    </tr>
+                  </template>
                 </tbody>
               </table>
 

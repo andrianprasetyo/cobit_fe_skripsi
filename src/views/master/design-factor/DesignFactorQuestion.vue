@@ -379,8 +379,8 @@ onMounted(() => {
             </div>
 
             <div>
-              <BaseButton @click="handleSubmit" title="Simpan Perubahan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit">
+              <BaseButton @click="handleSubmit" title="Simpan Perubahan"
+                :disabled="formState.loadingSubmit || !formState.questions.length" :is-loading="formState.loadingSubmit">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>
