@@ -16,5 +16,32 @@ export default {
         payload?.role ? `&role=${payload?.role}` : ''
       }`
     )
+  },
+
+  /**
+   *
+   * @param {id} payload
+   * @returns
+   */
+  getDetailUsers(payload) {
+    return axiosClient.get(`users/detail/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {nama, username, email, divisi, posisi, role_id} payload
+   * @returns
+   */
+  createUsers(payload) {
+    return axiosClient.post(`users/add`, payload)
+  },
+
+  /**
+   *
+   * @param {id, status} payload
+   * @returns
+   */
+  editUsers(payload) {
+    return axiosClient.put(`users/edit/${payload?.id}`, payload)
   }
 }

@@ -53,6 +53,17 @@
         "type": "menu",
         "urutan": 1,
         "role_type": "[\"admin\",\"super\"]"
+      },
+      {
+        "id": "5383e3c5-21d2-47f0-94d9-23dawdawd32323",
+        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
+        "title": "Domain",
+        "menu_key": "master-domain",
+        "url": "/master/domain",
+        "icon": "PackageIcon",
+        "type": "menu",
+        "urutan": 2,
+        "role_type": "[\"admin\",\"super\"]"
       }
     ]
   },
@@ -85,6 +96,17 @@
         "menu_key": "manusersuser",
         "url": "/manajemen-user/users",
         "icon": "UsersIcon",
+        "type": "menu",
+        "urutan": 1,
+        "role_type": "[\"admin\",\"customer\",\"super\"]"
+      },
+      {
+        "id": "ddc47f2a-e362-4f17-8455-fe835e9c7b32",
+        "parent_id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
+        "title": "Roles",
+        "menu_key": "manusersroles",
+        "url": "/manajemen-user/roles",
+        "icon": "KeyIcon",
         "type": "menu",
         "urutan": 1,
         "role_type": "[\"admin\",\"customer\",\"super\"]"

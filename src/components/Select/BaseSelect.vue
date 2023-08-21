@@ -40,6 +40,14 @@ const props = defineProps({
   options: {
     type: Array,
     default: () => []
+  },
+  optionsLabel: {
+    type: String,
+    default: 'label'
+  },
+  optionsValue: {
+    type: String,
+    default: 'value'
   }
 })
 
@@ -71,8 +79,9 @@ const value = computed({
       <slot v-if="slots['options']" name="options" />
 
       <template v-else-if="!slots['options'] && Array.isArray(props.options) && props.options.length">
-        <option v-for="(item, index) in props.options" :key="`base-select-${index}-${props.id}`" :value="item?.value">
-          {{ item?.label }}
+        <option v-for="(item, index) in props.options" :key="`base-select-${index}-${props.id}`"
+          :value="item[props.optionsValue]">
+          {{ item[props.optionsLabel] }}
         </option>
       </template>
     </select>
