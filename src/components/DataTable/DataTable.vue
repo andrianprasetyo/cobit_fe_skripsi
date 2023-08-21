@@ -102,7 +102,6 @@ const updateRowsPerPageSelect = (e) => {
                 {{ item }}
               </option>
             </template>
-
           </select> -->
         </div>
 

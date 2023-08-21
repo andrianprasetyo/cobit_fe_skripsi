@@ -309,7 +309,7 @@ onMounted(() => {
             <template v-if="formState.jawaban.length">
               <div v-for="(jawaban, index) in formState.jawaban" :key="`jawaban-${index}`" class="row mb-3">
                 <div class="col-12 col-md-9 mb-2 mb-md-0">
-                  <BaseInput :id="`input-jawaban-${index}`" :label="`Jawaban ${index + 1}`"
+                  <BaseInput :id="`input-jawaban-${index}`" :label="`Jawaban ${isJenisPilgan ? index + 1 : ''}`"
                     v-model="v$.jawaban.$model[index].nama" placeholder="Masukkan Jawaban" :tabindex="3 + (index + 1)"
                     :disabled="formState.loadingSubmit || formState.loading"
                     :is-invalid="!!v$.jawaban.$each?.$response?.$errors[index]?.nama?.length" />
@@ -340,7 +340,8 @@ onMounted(() => {
               <NoOptions title="Belum Ada Jawaban Dibuat" />
             </template>
 
-            <div class="mt-2 d-flex justify-content-center align-items-center">
+            <div v-if="(isJenisPersentase && !formState.jawaban.length) || isJenisPilgan"
+              class="mt-2 d-flex justify-content-center align-items-center">
               <BaseButton @click="handleTambahJawaban" title="Tambah Jawaban">
                 <template #icon-left>
                   <TablerIcon icon="PlusIcon" />

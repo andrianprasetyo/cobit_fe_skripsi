@@ -30,7 +30,7 @@ const formState = reactive({
   jawaban: [
     {
       nama: '',
-      bobot: ''
+      bobot: '',
     }
   ]
 })
@@ -81,7 +81,7 @@ const rules = computed(() => {
           required: helpers.withMessage('Silahkan isi baseline', required),
           minValue: helpers.withMessage(`Skor Baseline Min ${minBaselineValue.value}`, minValue(minBaselineValue.value)),
           maxValue: helpers.withMessage(`Skor Baseline Max ${maxBaselineValue.value}`, maxValue(maxBaselineValue.value))
-        }
+        },
       })
     }
   }
@@ -101,7 +101,7 @@ const handleRemoveJawaban = (index) => {
 const handleTambahJawaban = () => {
   formState.jawaban.push({
     nama: '',
-    bobot: ''
+    bobot: '',
   })
 }
 
@@ -153,6 +153,8 @@ const handleSubmit = async () => {
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.jenis.$errors" />
           </div>
+
+
         </div>
       </div>
 
@@ -164,8 +166,9 @@ const handleSubmit = async () => {
           <div class="d-flex flex-column mt-4">
             <template v-if="formState.jawaban.length">
               <div v-for="(_, index) in formState.jawaban" :key="`jawaban-${index}`" class="row mb-3">
+
                 <div class="col-12 col-md-9 mb-2 mb-md-0">
-                  <BaseInput :id="`input-jawaban-${index}`" :label="`Jawaban ${index + 1}`"
+                  <BaseInput :id="`input-jawaban-${index}`" :label="`Jawaban ${isJenisPilgan ? index + 1 : ''}`"
                     v-model="v$.jawaban.$model[index].nama" placeholder="Masukkan Jawaban" :tabindex="3 + (index + 1)"
                     :disabled="formState.loadingSubmit"
                     :isInvalid="!!v$.jawaban.$each?.$response?.$errors[index]?.nama?.length" />
@@ -173,6 +176,7 @@ const handleSubmit = async () => {
                     v-if="Array.isArray(v$.jawaban.$each?.$response?.$errors) && v$.jawaban.$each?.$response?.$errors.length"
                     :errors="v$.jawaban.$each?.$response?.$errors[index].nama" />
                 </div>
+
                 <div class="col-12 col-md-2">
                   <BaseInput :id="`input-baseline-${index}`" :label="`Skor Baseline`" type="number"
                     v-model="v$.jawaban.$model[index].bobot" placeholder="Masukkan Baseline" :tabindex="3 + (index + 1)"
@@ -182,6 +186,7 @@ const handleSubmit = async () => {
                     v-if="Array.isArray(v$.jawaban.$each?.$response?.$errors) && v$.jawaban.$each?.$response?.$errors.length"
                     :errors="v$.jawaban.$each?.$response?.$errors[index].bobot" />
                 </div>
+
                 <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
                   <BaseButton @click="handleRemoveJawaban(index)" class="btn btn-outline-danger w-100"
                     :class="[v$.jawaban.$each?.$response?.$errors[index]?.name?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']">
@@ -195,7 +200,8 @@ const handleSubmit = async () => {
               <NoOptions title="Belum Ada Jawaban Dibuat" />
             </template>
 
-            <div class="mt-2 d-flex justify-content-center align-items-center">
+            <div v-if="(isJenisPersentase && !formState.jawaban.length) || isJenisPilgan"
+              class="mt-2 d-flex justify-content-center align-items-center">
               <BaseButton @click="handleTambahJawaban" title="Tambah Jawaban">
                 <template #icon-left>
                   <TablerIcon icon="PlusIcon" />

@@ -68,7 +68,15 @@ onMounted(() => {
       <template v-if="Array.isArray(designFactor.detail?.quisioner) && designFactor.detail?.quisioner.length">
         <div v-for="(quisioner, index) in designFactor.detail?.quisioner" :key="`card-${index}`" class="card">
           <div class="card-body">
-            <h5 class="card-title mb-9 fw-semibold d-flex flex-row" v-html="`${index + 1}. ${quisioner?.pertanyaan}`" />
+            <div class="mb-9 d-flex flex-column">
+              <ol>
+                <li>
+                  <div v-if="quisioner?.pertanyaan" v-html="quisioner?.pertanyaan"></div>
+                </li>
+              </ol>
+
+              <div v-if="quisioner?.grup?.deskripsi" v-html="quisioner?.grup?.deskripsi" />
+            </div>
 
             <div class="table-responsive rounded-2 mb-4">
               <table class="table border text-nowrap mb-0 align-middle">
@@ -89,9 +97,7 @@ onMounted(() => {
                     <tr v-for="(komponen, indexKomponen) in designFactor.detail?.komponen"
                       :key="`komponen-answer-${indexKomponen}`">
                       <td>
-                        <div class="d-flex align-items-center">
-                          {{ komponen?.nama }}
-                        </div>
+                        <div v-if="komponen?.deskripsi" v-html="komponen?.deskripsi" />
                       </td>
                       <template v-if="Array.isArray(quisioner.grup.jawabans) && quisioner.grup.jawabans.length">
                         <td v-for="(_, index) in quisioner.grup.jawabans" :key="`answer-${index}`">

@@ -598,6 +598,37 @@ const router = createRouter({
               }
             }
           ]
+        },
+
+        {
+          path: '/project',
+          redirect: '/project/assessment',
+          children: [
+            {
+              name: 'Assessment',
+              path: '/project/assessment',
+              component: () => import('@/views/project/assessment/AssessmentList.vue'),
+              meta: {
+                pageTitle: 'Assessment',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asessment',
+                    disabled: true,
+                    href: '/project/assessment',
+                    active: true
+                  }
+                ]
+              }
+            }
+          ]
         }
       ]
     },
