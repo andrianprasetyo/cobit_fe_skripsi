@@ -5,8 +5,8 @@ import Spinner from '@/components/Loading/LoadingSpinner.vue';
 import ckEditorConfig from '@/utils/ckEditorConfig';
 
 const props = defineProps({
-  value: {
-    type: String,
+  modelValue: {
+    type: [Number, String]
   },
   editorConfig: {
     type: Object,
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:value'])
+const emit = defineEmits(['update:modelValue'])
 
 const isReady = ref(false);
 const editor = ref(ClassicEditor);
@@ -33,11 +33,11 @@ const editorConfigDefault = computed(() => ({
 
 const editorData = computed({
   get() {
-    return props.value
+    return props.modelValue
   },
   set(value) {
     if (value) {
-      emit('update:value', value)
+      emit('update:modelValue', value)
     }
 
   }
@@ -55,7 +55,7 @@ onMounted(() => {
 <template>
   <Spinner v-if="!isReady" />
   <div v-else :class="[isInvalid ? 'border border-1 border-danger invalid-border-radius' : '']">
-    <ckeditor ref="baseCKEditor" :editor="editor" v-model="editorData" @ready="onEditorReady" :tag-name="props.tagName"
+    <ckeditor :editor="editor" v-model="editorData" @ready="onEditorReady" :tag-name="props.tagName"
       :config="editorConfigDefault" v-bind="$attrs">
     </ckeditor>
   </div>

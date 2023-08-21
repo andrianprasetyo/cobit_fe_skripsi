@@ -95,9 +95,15 @@ onMounted(() => {
                       </td>
                       <template v-if="Array.isArray(quisioner.grup.jawabans) && quisioner.grup.jawabans.length">
                         <td v-for="(_, index) in quisioner.grup.jawabans" :key="`answer-${index}`">
-                          <div class="form-check form-check-inline d-flex justify-content-center align-items-center">
+                          <div v-if="quisioner?.grup.jenis === 'pilgan'"
+                            class="form-check form-check-inline d-flex justify-content-center align-items-center">
                             <input class="form-check-input primary check-outline outline-primary" type="radio"
                               :id="`radio-${index}-${indexKomponen}`" :name="`radio-${indexKomponen}`" :checked="false">
+                          </div>
+
+                          <div class="d-flex justify-content-center" v-if="quisioner?.grup.jenis === 'persentase'">
+                            <input class="form-control w-50" type="number" :id="`input-${index}-${indexKomponen}`"
+                              :name="`input-${indexKomponen}`" />
                           </div>
                         </td>
                       </template>

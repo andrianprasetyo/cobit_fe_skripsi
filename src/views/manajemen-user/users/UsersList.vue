@@ -10,10 +10,11 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import UsersServices from '@/services/lib/users'
 import RolesServices from '@/services/lib/roles'
 import { useToast } from '@/stores/toast';
+import { useRouter } from 'vue-router'
 
 import statusUserType from '@/data/statusUserType.json'
 
-
+const router = useRouter()
 const toast = useToast()
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -136,6 +137,14 @@ const getListRoles = async () => {
   }
 }
 
+const handleNavigateToEdit = ({ id }) => {
+  router.push({ path: `/manajemen-user/users/${id}/edit` })
+}
+
+const handleNavigateAdd = () => {
+  router.push({ path: "/manajemen-user/users/add" })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListUsers({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
@@ -172,6 +181,13 @@ watch(() => [serverOptions.value, filter.value], () => {
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
               <SearchInput v-model="filter.search" placeholder="Cari Users" />
+
+              <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
+                title="Tambah Users">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="PlusIcon" />
+                </template>
+              </BaseButton>
             </div>
           </div>
           <DataTable :headers="users.headers" :items="users.data" :loading="users.loading" header-text-direction="center"
@@ -250,14 +266,15 @@ watch(() => [serverOptions.value, filter.value], () => {
               </span>
             </template>
 
-            <template #item-action>
+            <template #item-action="item">
               <div class="dropdown dropstart">
                 <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                   id="dropdownMenuButton" aria-expanded="false" />
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />
 

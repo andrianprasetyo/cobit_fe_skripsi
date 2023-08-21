@@ -4,11 +4,11 @@ export default {
   /**
    *
    * @param {limit, page, search, sortBy, sortType} payload
-   * @returns Array
+   * @returns
    */
-  getListRoles(payload) {
+  getListDomain(payload) {
     return axiosClient.get(
-      `roles/list?limit=${payload?.limit || 10}&page=${payload?.page || 0}${
+      `domain/list?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
@@ -21,25 +21,26 @@ export default {
    * @param {id} payload
    * @returns
    */
-  getDetailRoles(payload) {
-    return axiosClient.get(`roles/detail/${payload?.id}`)
-  },
-
-  /**
-   * @param {nama} payload
-   * @returns
-   */
-  createRoles(payload) {
-    return axiosClient.post(`roles/add`, payload)
+  getDetailDomain(payload) {
+    return axiosClient.get(`domain/detail/${payload?.id}`)
   },
 
   /**
    *
-   * @param {id, nama, deskripsi, aktif} payload
+   * @param { kode, deskripsi } payload
    * @returns
    */
-  editRoles(payload) {
-    return axiosClient.put(`roles/edit/${payload?.id}`, payload)
+  createDomain(payload) {
+    return axiosClient.post(`domain/add`, payload)
+  },
+
+  /**
+   *
+   * @param {id, kode, deskripsi} payload
+   * @returns
+   */
+  editDomain(payload) {
+    return axiosClient.put(`domain/edit/${payload?.id}`, payload)
   },
 
   /**
@@ -47,7 +48,7 @@ export default {
    * @param {id} payload
    * @returns
    */
-  deleteRoles(payload) {
-    return axiosClient.delete(`roles/remove/${payload?.id}`)
+  deleteDomain(payload) {
+    return axiosClient.delete(`domain/remove/${payload?.id}`)
   }
 }

@@ -335,6 +335,91 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+
+            {
+              name: 'Domain',
+              path: '/master/domain',
+              component: () => import('@/views/master/domain/DomainList.vue'),
+              meta: {
+                pageTitle: 'Domain',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Domain',
+                    disabled: true,
+                    href: '/master/domain',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahDomain',
+              path: '/master/domain/add',
+              component: () => import('@/views/master/domain/DomainAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Domain',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Domain',
+                    disabled: false,
+                    href: '/master/domain',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Domain',
+                    disabled: true,
+                    href: '/master/domain/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditDomain',
+              path: '/master/domain/:id/edit',
+              component: () => import('@/views/master/domain/DomainEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Domain',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Domain',
+                    disabled: false,
+                    href: '/master/domain',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Domain',
+                    disabled: true,
+                    href: '/master/domain/:id/edit',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },
@@ -362,6 +447,151 @@ const router = createRouter({
                     text: 'Users',
                     disabled: true,
                     href: '/manajemen-user/users',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahUsers',
+              path: '/manajemen-user/users/add',
+              component: () => import('@/views/manajemen-user/users/UsersAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Users',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Manajemen User',
+                    disabled: false,
+                    href: '/manajemen-user',
+                    active: false
+                  },
+                  {
+                    text: 'Users',
+                    disabled: false,
+                    href: '/manajemen-user/users',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Users',
+                    disabled: true,
+                    href: '/manajemen-user/users/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditUsers',
+              path: '/manajemen-user/users/:id/edit',
+              component: () => import('@/views/manajemen-user/users/UsersEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Users',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Manajemen User',
+                    disabled: false,
+                    href: '/manajemen-user',
+                    active: false
+                  },
+                  {
+                    text: 'Users',
+                    disabled: false,
+                    href: '/manajemen-user/users',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Users',
+                    disabled: true,
+                    href: '/manajemen-user/users/:id/edit',
+                    active: true
+                  }
+                ]
+              }
+            },
+
+            {
+              name: 'Roles',
+              path: '/manajemen-user/roles',
+              component: () => import('@/views/manajemen-user/roles/RolesList.vue'),
+              meta: {
+                pageTitle: 'Roles',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Manajemen User',
+                    disabled: false,
+                    href: '/manajemen-user',
+                    active: false
+                  },
+                  {
+                    text: 'Roles',
+                    disabled: true,
+                    href: '/manajemen-user/roles',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahRoles',
+              path: '/manajemen-user/roles/add',
+              component: () => import('@/views/manajemen-user/roles/RolesAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Roles',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Manajemen User',
+                    disabled: false,
+                    href: '/manajemen-user',
+                    active: false
+                  },
+                  {
+                    text: 'Roles',
+                    disabled: false,
+                    href: '/manajemen-user/roles',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Roles',
+                    disabled: true,
+                    href: '/manajemen-user/roles/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditRoles',
+              path: '/manajemen-user/roles/:id/edit',
+              component: () => import('@/views/manajemen-user/roles/RolesEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Roles',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Manajemen User',
+                    disabled: false,
+                    href: '/manajemen-user',
+                    active: false
+                  },
+                  {
+                    text: 'Roles',
+                    disabled: false,
+                    href: '/manajemen-user/roles',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Roles',
+                    disabled: true,
+                    href: '/manajemen-user/roles/:id/edit',
                     active: true
                   }
                 ]
