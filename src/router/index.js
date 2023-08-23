@@ -627,6 +627,66 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'TambahAssessment',
+              path: '/project/assessment/add',
+              component: () => import('@/views/project/assessment/AssessmentAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Assessment',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Assessment',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Assessment',
+                    disabled: true,
+                    href: '/project/assessment/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'DetailAssessment',
+              path: '/project/assessment/:id/detail',
+              component: () => import('@/views/project/assessment/AssessmentDetail.vue'),
+              meta: {
+                pageTitle: 'Detail Assessment',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Assessment',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Detail Assessment',
+                    disabled: true,
+                    href: '/project/assessment/:id/detail',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         }

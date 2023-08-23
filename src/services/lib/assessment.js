@@ -22,7 +22,7 @@ export default {
    * @returns
    */
   getDetailAssessment(payload) {
-    return axiosClient.put(`assessment/detail/${payload?.id}`)
+    return axiosClient.get(`assesment/detail/${payload?.id}`)
   },
 
   /**
@@ -41,5 +41,29 @@ export default {
    */
   deleteAssessment(payload) {
     return axiosClient.delete(`assesment/remove/${payload?.id}`)
+  },
+
+  /**
+   *
+   * @param {id, email} payload
+   * @returns
+   */
+  inviteResponden(payload) {
+    return axiosClient.post(`assesment/responden/invite`, payload)
+  },
+
+  /**
+   *
+   * @param {id, file} data
+   * @returns
+   */
+  inviteRespondenByExcel(data) {
+    return axiosClient('assesment/responden/invite-by-excel', {
+      method: 'POST',
+      data: data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }

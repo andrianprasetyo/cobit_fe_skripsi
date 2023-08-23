@@ -21,7 +21,6 @@ import setupPortal from '@/plugins/portal-vue'
 import setupEasyLightbox from '@/plugins/easy-lightbox'
 import setupToast from '@/plugins/toastification'
 import setupSweetAlert from '@/plugins/sweetalert'
-import setupVCalendar from '@/plugins/v-calendar'
 import setupCKEditor from '@/plugins/ckeditor'
 import setupApexCharts from '@/plugins/apexcharts'
 import setupLoadingOverlay from '@/plugins/loading-overlay'
@@ -38,7 +37,6 @@ setupPortal(app)
 setupEasyLightbox(app)
 setupToast(app)
 setupSweetAlert(app)
-setupVCalendar(app)
 setupCKEditor(app)
 setupApexCharts(app)
 setupLoadingOverlay(app)

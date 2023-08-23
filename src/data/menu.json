@@ -145,17 +145,6 @@
         "type": "menu",
         "urutan": 1,
         "role_type": "[\"admin\",\"customer\",\"super\"]"
-      },
-      {
-        "id": "7973c2ba-8038-4f95-8005-e2be2b841d8a",
-        "parent_id": "1d8f2806-e1d7-4a98-8aeb-63f6f8043737",
-        "title": "Quisioner",
-        "menu_key": "assessment-quisioner",
-        "url": "/project/quisioner",
-        "icon": "FileDescriptionIcon",
-        "type": "menu",
-        "urutan": 2,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
       }
     ]
   }
