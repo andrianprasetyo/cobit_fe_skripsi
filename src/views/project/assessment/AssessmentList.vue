@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, onMounted, watch } from 'vue'
+import { reactive, ref, onMounted, watch, computed } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
@@ -10,7 +10,7 @@ import SearchInput from '@/components/Input/SearchInput.vue'
 import AssessmentServices from '@/services/lib/assessment'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
-import { useRouter, } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const toast = useToast()
 const alert = useAlert()
@@ -26,12 +26,19 @@ const assessment = reactive({
     sortable: true
   }, {
     text: 'Organisasi',
-    value: 'nama',
+    value: 'organisasi',
+  }, {
+    text: 'Periode Assessment',
+    value: 'start_date',
+  }, {
+    text: 'Status',
+    value: 'status',
     sortable: true
   }, {
     text: 'Action',
     value: 'action'
-  }],
+  },
+  ],
   meta: {
     current_page: 1,
     per_page: 10,
@@ -49,6 +56,20 @@ const serverOptions = ref({
 
 const filter = ref({
   search: ''
+})
+
+const classStatus = computed(() => {
+  return value => {
+    if (value === 'ongoing') {
+      return 'bg-light-primary text-primary'
+    } else if (value === 'completed') {
+      return 'bg-light-success text-success'
+    } else if (value === 'unstart') {
+      return 'bg-light-info text-info'
+    } else {
+      return ''
+    }
+  }
 })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -119,7 +140,11 @@ const handleDelete = ({ title, id }) => {
 }
 
 const handleNavigateAdd = () => {
-  router.push('/assessment/assessment/add')
+  router.push('/project/assessment/add')
+}
+
+const handleNavigateDetail = ({ id }) => {
+  router.push({ path: `/project/assessment/${id}/detail` })
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -167,6 +192,36 @@ watch(() => [serverOptions.value, filter.value], () => {
 
           <DataTable :headers="assessment.headers" :items="assessment.data" :loading="assessment.loading"
             :server-items-length="assessment.meta.total" v-model:server-options="serverOptions" fixed-header>
+            <template #header-status="header">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ header.item.text }}
+              </div>
+            </template>
+
+            <template #item-organisasi="item">
+              <div class="d-flex w-100">
+                {{ item.item?.organisasi?.nama }}
+              </div>
+            </template>
+
+            <template #item-start_date="item">
+              <div v-if="item.item?.start_date" class="d-flex w-100">
+                {{ item.item?.start_date }} - {{ item.item?.end_date }}
+              </div>
+
+              <div v-else>
+                Belum Ditentukan
+              </div>
+            </template>
+
+            <template #item-status="item">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                <span class="badge rounded-pill font-medium text-capitalize fw-bold"
+                  :class="classStatus(item?.item?.status)">
+                  {{ item?.item?.status }}
+                </span>
+              </div>
+            </template>
 
             <template #item-action="item">
               <div class="dropdown dropstart">
@@ -174,6 +229,43 @@ watch(() => [serverOptions.value, filter.value], () => {
                   id="dropdownMenuButton" aria-expanded="false" />
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li>
+                    <BaseButton @click="handleNavigateDetail({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="EyeIcon" />
+                        <span class="ms-2">
+                          Detail
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li>
+                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="SendIcon" />
+                        <span class="ms-2">
+                          Undang Responden
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+                  <li>
+                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ClipboardDataIcon" />
+                        <span class="ms-2">
+                          Lihat Hasil Quisioner
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
                   <li>
                     <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">

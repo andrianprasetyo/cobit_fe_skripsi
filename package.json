@@ -17,9 +17,9 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
-    "@popperjs/core": "^2.11.8",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.3",
+    "@vuepic/vue-datepicker": "^6.0.1",
     "@vueuse/core": "^10.3.0",
     "apexcharts": "^3.41.1",
     "axios": "^1.4.0",
@@ -30,7 +30,6 @@
     "pinia": "^2.1.4",
     "pinia-plugin-persistedstate": "^3.2.0",
     "portal-vue": "^3.0.0-beta.0",
-    "v-calendar": "^3.0.3",
     "vue": "^3.3.4",
     "vue-easy-lightbox": "^1.16.0",
     "vue-loading-overlay": "^6.0.3",

@@ -11,11 +11,17 @@ import RolesServices from '@/services/lib/roles'
 
 import { useToast } from '@/stores/toast';
 import { useRouter } from 'vue-router'
+
+/*
 import { useAlert } from '@/stores/alert'
+*/
 
 const router = useRouter()
 const toast = useToast()
+
+/*
 const alert = useAlert()
+*/
 
 /* ---------------------------------- STATE --------------------------------- */
 const roles = reactive({
@@ -100,6 +106,7 @@ const getListRoles = async ({ limit, page, sortBy, sortType, search }) => {
   }
 }
 
+/*
 const handleRefresh = () => {
   getListRoles({
     limit: serverOptions.value.rowsPerPage,
@@ -129,6 +136,7 @@ const deleteRoles = async ({ id }) => {
   }
 }
 
+
 const handleDelete = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menghapus ${title}`
@@ -147,14 +155,17 @@ const handleDelete = ({ title, id }) => {
     }
   })
 }
+*/
 
 const handleNavigateToEdit = ({ id }) => {
   router.push({ path: `/manajemen-user/roles/${id}/edit` })
 }
 
+/*
 const handleNavigateAdd = () => {
   router.push({ path: "/manajemen-user/roles/add" })
 }
+*/
 
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -191,12 +202,12 @@ watch(() => [serverOptions.value, filter.value], () => {
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
               <SearchInput v-model="filter.search" placeholder="Cari Roles" />
 
-              <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
+              <!-- <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
                 title="Tambah Roles">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
-              </BaseButton>
+              </BaseButton> -->
             </div>
           </div>
 
@@ -246,7 +257,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                     </BaseButton>
                   </li>
 
-                  <li>
+                  <!-- <li>
                     <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
                       <template #icon-left>
@@ -256,7 +267,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                         </span>
                       </template>
                     </BaseButton>
-                  </li>
+                  </li> -->
                 </ul>
               </div>
             </template>

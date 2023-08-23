@@ -32,4 +32,6 @@ const layout = computed(() => {
   <router-view v-slot="{ Component }">
     <component :is="layoutComponents[layout]" :Component="Component" />
   </router-view>
+
+  <portal-target name="modal" multiple> </portal-target>
 </template>
