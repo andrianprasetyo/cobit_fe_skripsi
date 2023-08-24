@@ -68,7 +68,7 @@ const handleToggleShowPassword = () => {
       autocomplete="off" />
 
     <template v-else>
-      <input v-bind="$attrs" :id="props.id" :type="state.isShowPassword ? 'text' : props.type"
+      <input v-bind="$attrs" :id="props.id" :type="state.isShowPassword ? 'text' : props.type" 
         :class="[props.class, props.isInvalid ? 'is-invalid' : '']" :disabled="disabled" v-model="value"
         autocomplete="off" />
 

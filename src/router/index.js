@@ -39,6 +39,7 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       component: () => import('@/views/error/NotFound.vue'),
       meta: {
+        pageTitle: 'Halaman Tidak Ditemukan',
         layout: 'AppLayoutBlank',
         requiredAuth: false,
         background_picture: '/assets/images/illustrations/not-found.svg'
@@ -689,6 +690,99 @@ const router = createRouter({
               }
             }
           ]
+        },
+
+        {
+          path: '/quisioner',
+          redirect: '/quisioner/responden',
+          children: [
+            {
+              name: 'Quisioner',
+              path: '/quisioner/responden',
+              component: () => import('@/views/quisioner/responden/QuisionerResponden.vue'),
+              meta: {
+                pageTitle: 'Quisioner',
+                layout: 'AppLayoutBoxed',
+                background_picture: '/assets/images/illustrations/discussion.svg',
+                requiredAuth: false,
+                breadcrumb: [
+                  {
+                    text: 'Quisioner',
+                    disabled: false,
+                    href: '/quisioner',
+                    active: false
+                  },
+                  {
+                    text: 'Quisioner Responden',
+                    disabled: true,
+                    href: '/quisioner/responden',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'Question',
+              path: '/quisioner/responden/question',
+              component: () => import('@/views/quisioner/responden/question/QuestionResponden.vue'),
+              meta: {
+                pageTitle: 'Question',
+                layout: 'AppLayoutBoxed',
+                background_picture: '/assets/images/illustrations/discussion.svg',
+                requiredAuth: false,
+                breadcrumb: [
+                  {
+                    text: 'Quisioner',
+                    disabled: false,
+                    href: '/quisioner',
+                    active: false
+                  },
+                  {
+                    text: 'Quisioner Responden',
+                    disabled: false,
+                    href: '/quisioner/responden',
+                    active: false
+                  },
+                  {
+                    text: 'Quisioner Question',
+                    disabled: true,
+                    href: '/quisioner/question',
+                    active: true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      path: '/account',
+      redirect: '/account/setting',
+      children: [
+        {
+          name: 'Setting',
+          path: '/account/setting',
+          component: () => import('@/views/account/setting/AccountSetting.vue'),
+          meta: {
+            pageTitle: 'Setting',
+            layout: 'AppLayoutAdmin',
+            requiredAuth: true,
+            breadcrumbs: [
+              {
+                text: 'Account',
+                disabled: false,
+                href: '/account',
+                active: false
+              },
+              {
+                text: 'Setting',
+                disabled: true,
+                href: '/account/setting',
+                active: true
+              }
+            ]
+          }
         }
       ]
     },
@@ -749,9 +843,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = useAuth()
 
-  auth.getTokenFromCache()
-
   const isRequiredAuth = to.matched.some((record) => record?.meta?.requiredAuth)
+
+  if (isRequiredAuth) {
+    auth.getTokenFromCache()
+  }
 
   if (isRequiredAuth && !auth.isAuthenticated) {
     return next({ path: '/auth/login' })

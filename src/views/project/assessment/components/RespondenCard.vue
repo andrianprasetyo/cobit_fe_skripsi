@@ -1,17 +1,26 @@
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted, ref, watch } from 'vue'
 
 import DataTable from '@/components/DataTable/DataTable.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
+import SearchInput from '@/components/Input/SearchInput.vue'
 
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
+import ModalHasilQuisioner from '@/views/project/assessment/components/ModalHasilQuisioner.vue'
+
+import RespondenServices from '@/services/lib/responden'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useToast } from '@/stores/toast'
+import { useRoute } from 'vue-router'
 
-
+const toast = useToast()
 const assessment = useAssessmentStore()
+const route = useRoute()
 
+
+/* ---------------------------- STATE & COMPUTED ---------------------------- */
 const responden = reactive({
   loading: false,
   data: [],
@@ -41,23 +50,46 @@ const responden = reactive({
     total: 0,
     total_page: 0
   },
-  isShowModalInviteResponden: false
+  isShowModalInviteResponden: false,
+  isShowModalHasilQuisioner: false,
 })
+
+const serverOptions = ref({
+  page: 1,
+  rowsPerPage: 10,
+  sortBy: '',
+  sortType: '',
+});
+
+const filter = ref({
+  search: ''
+})
+
 
 const classStatus = computed(() => {
   return value => {
-    if (value === 'ongoing') {
+    const isOngoing = value === 'ongoing'
+    const isCompleted = value === 'completed' || value === 'done'
+    const isUnstart = value === 'unstart'
+    const isPending = value === 'pending'
+
+
+    if (isOngoing) {
       return 'bg-light-primary text-primary'
-    } else if (value === 'completed') {
+    } else if (isCompleted) {
       return 'bg-light-success text-success'
-    } else if (value === 'unstart') {
+    } else if (isUnstart) {
       return 'bg-light-info text-info'
+    } else if (isPending) {
+      return 'bg-light-warning text-warning'
     } else {
-      return ''
+      return 'bg-dark text-white'
     }
   }
 })
 
+
+/* --------------------------------- METHODS -------------------------------- */
 const toggleModalInviteResponden = () => {
   responden.isShowModalInviteResponden = !responden.isShowModalInviteResponden
 
@@ -65,6 +97,57 @@ const toggleModalInviteResponden = () => {
     assessment.setSeletedAssessment(assessment.detail)
   }
 }
+
+const toggleModalHasilQuisioner = () => {
+  responden.isShowModalHasilQuisioner = !responden.isShowModalHasilQuisioner
+
+  if (responden.isShowModalHasilQuisioner) {
+    assessment.setSeletedAssessment(assessment.detail)
+  }
+}
+
+const getListResponden = async ({ limit, page, sortBy, sortType, search, assesment_id }) => {
+  try {
+    responden.loading = true
+    const response = await RespondenServices.getListResponden({ limit, page, sortBy, sortType, search, assesment_id })
+
+    if (response) {
+      const data = response?.data
+
+      responden.data = data?.list || []
+      responden.meta = data?.meta
+      responden.loading = false
+    }
+  } catch (error) {
+    responden.loading = false
+    toast.error({ error })
+  }
+}
+
+const handleRefresh = () => {
+  getListResponden({
+    limit: serverOptions.value.rowsPerPage,
+    page: serverOptions.value.page,
+    sortBy: serverOptions.value.sortBy,
+    sortType: serverOptions.value.sortType,
+    search: filter.value.search,
+  })
+}
+
+/* ---------------------------------- HOOKS --------------------------------- */
+onMounted(() => {
+  getListResponden({ limit: 10, page: 1, assesment_id: route.params?.id })
+})
+
+watch(() => [serverOptions.value, filter.value], () => {
+  getListResponden({
+    limit: serverOptions.value.rowsPerPage,
+    page: serverOptions.value.page,
+    sortBy: serverOptions.value.sortBy,
+    sortType: serverOptions.value.sortType,
+    search: filter.value.search,
+  })
+}, { deep: true })
 
 </script>
 
@@ -79,13 +162,17 @@ const toggleModalInviteResponden = () => {
 
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-          <BaseButton @click="toggleModalInviteResponden" class="btn btn-primary" title="Undang Responden">
+          <SearchInput v-model="filter.search" placeholder="Cari Assessment" />
+
+          <BaseButton @click="toggleModalInviteResponden" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+            title="Undang Responden">
             <template #icon-left>
               <TablerIcon size="16" icon="SendIcon" class="me-2" />
             </template>
           </BaseButton>
 
-          <BaseButton class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Lihat Hasil Quisioner">
+          <BaseButton @click="toggleModalHasilQuisioner" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+            title="Lihat Hasil Quisioner">
             <template #icon-left>
               <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
             </template>
@@ -95,7 +182,7 @@ const toggleModalInviteResponden = () => {
       </div>
 
       <DataTable :headers="responden.headers" :items="responden.data" :loading="responden.loading"
-        :server-items-length="responden.meta.total" fixed-header>
+        :server-items-length="responden.meta.total" v-model:server-options="serverOptions" fixed-header>
 
         <template #header-status="header">
           <div class="d-flex justify-content-center align-items-center w-100">
@@ -103,6 +190,35 @@ const toggleModalInviteResponden = () => {
           </div>
         </template>
 
+        <template #item-nama="item">
+          <div v-if="item.item?.nama" class="d-flex w-100">
+            {{ item.item?.nama }}
+          </div>
+
+          <div v-else>
+            -
+          </div>
+        </template>
+
+        <template #item-divisi="item">
+          <div v-if="item.item?.divisi" class="d-flex w-100">
+            {{ item.item?.divisi }}
+          </div>
+
+          <div v-else>
+            -
+          </div>
+        </template>
+
+        <template #item-jabatan="item">
+          <div v-if="item.item?.jabatan" class="d-flex w-100">
+            {{ item.item?.jabatan }}
+          </div>
+
+          <div v-else>
+            -
+          </div>
+        </template>
 
         <template #item-status="item">
           <div class="d-flex justify-content-center align-items-center w-100">
@@ -112,15 +228,17 @@ const toggleModalInviteResponden = () => {
           </div>
         </template>
 
-        <template #item-action>
-          <div class="dropdown dropstart">
+        <template #item-action="item">
+          <div v-if="item.item?.status === 'done'" class="dropdown dropstart">
+            <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+              id="dropdownMenuButton" aria-expanded="false" />
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li>
                 <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                   <template #icon-left>
-                    <TablerIcon icon="EyeIcon" />
+                    <TablerIcon icon="ClipboardDataIcon" />
                     <span class="ms-2">
-                      Undang Kembali
+                      Lihat Hasil Quisioner
                     </span>
                   </template>
                 </BaseButton>
@@ -131,6 +249,10 @@ const toggleModalInviteResponden = () => {
       </DataTable>
     </div>
 
-    <ModalInviteResponden :is-show="responden.isShowModalInviteResponden" @close="toggleModalInviteResponden" />
+    <ModalInviteResponden :is-show="responden.isShowModalInviteResponden" @close="toggleModalInviteResponden"
+      @refresh="handleRefresh" />
+
+    <ModalHasilQuisioner :is-show="responden.isShowModalHasilQuisioner" @close="toggleModalHasilQuisioner"
+      @refresh="handleRefresh" />
   </div>
 </template>
