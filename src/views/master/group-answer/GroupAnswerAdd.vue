@@ -43,7 +43,7 @@ const isJenisPersentase = computed(() => {
   return formState.jenis === 'persentase'
 })
 
-const minBaselineValue = computed(() => {
+const minBobotValue = computed(() => {
   if (isJenisPilgan.value) {
     return 1
   } else if (isJenisPersentase.value) {
@@ -53,7 +53,7 @@ const minBaselineValue = computed(() => {
   }
 })
 
-const maxBaselineValue = computed(() => {
+const maxBobotValue = computed(() => {
   if (isJenisPilgan.value) {
     /*
     return formState.jawaban.length
@@ -78,9 +78,9 @@ const rules = computed(() => {
           required: helpers.withMessage('Silahkan isi jawaban', required),
         },
         bobot: {
-          required: helpers.withMessage('Silahkan isi baseline', required),
-          minValue: helpers.withMessage(`Skor Baseline Min ${minBaselineValue.value}`, minValue(minBaselineValue.value)),
-          maxValue: helpers.withMessage(`Skor Baseline Max ${maxBaselineValue.value}`, maxValue(maxBaselineValue.value))
+          required: helpers.withMessage('Silahkan isi bobot', required),
+          minValue: helpers.withMessage(`Bobot Min ${minBobotValue.value}`, minValue(minBobotValue.value)),
+          maxValue: helpers.withMessage(`Bobot Max ${maxBobotValue.value}`, maxValue(maxBobotValue.value))
         },
       })
     }
@@ -178,8 +178,8 @@ const handleSubmit = async () => {
                 </div>
 
                 <div class="col-12 col-md-2">
-                  <BaseInput :id="`input-baseline-${index}`" :label="`Skor Baseline`" type="number"
-                    v-model="v$.jawaban.$model[index].bobot" placeholder="Masukkan Baseline" :tabindex="3 + (index + 1)"
+                  <BaseInput :id="`input-Bobot-${index}`" :label="`Bobot`" type="number"
+                    v-model="v$.jawaban.$model[index].bobot" placeholder="Masukkan Bobot" :tabindex="3 + (index + 1)"
                     :disabled="formState.loadingSubmit"
                     :isInvalid="!!v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length" />
                   <ErrorMessage

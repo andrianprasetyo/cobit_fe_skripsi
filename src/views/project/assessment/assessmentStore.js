@@ -15,6 +15,10 @@ export const useAssessmentStore = defineStore('assessment', {
   getters: {
     getSelectedAssessment(state) {
       return state.selectedAssessment
+    },
+
+    getDetail(state) {
+      return state.detail
     }
   },
   actions: {
@@ -66,6 +70,38 @@ export const useAssessmentStore = defineStore('assessment', {
         toast.error({ error })
         throw error
       }
+    },
+
+    async inviteRespondenByExcel(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const formData = new FormData()
+
+        formData.append('id', payload?.id)
+        formData.append('file', payload?.file)
+
+        const response = await AssessmentServices.inviteRespondenByExcel(formData)
+
+        if (response) {
+          toast.success({
+            title: 'Undang Responden',
+            text: 'Berhasil Mengundang Responden'
+          })
+          loader.hide()
+
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    resetState(){
+      this.$reset()
     }
   }
 })

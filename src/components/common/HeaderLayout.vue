@@ -103,13 +103,13 @@ const handleToggleMiniSidebar = () => {
                     </div>
                   </div>
                   <div class="message-body border-bottom">
-                    <RouterLink to="/account/profile" class="py-8 px-7 mt-8 d-flex align-items-center">
+                    <RouterLink to="/account/setting" class="py-8 px-7 mt-8 d-flex align-items-center">
                       <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
-                        <TablerIcon size="24" icon="UserIcon" />
+                        <TablerIcon size="24" icon="SettingsIcon" />
                       </span>
                       <div class="w-75 d-inline-block v-middle ps-3">
-                        <h6 class="mb-1 bg-hover-primary fw-semibold"> My Profile </h6>
-                        <span class="d-block text-dark">Lihat Detail Profile</span>
+                        <h6 class="mb-1 bg-hover-primary fw-semibold"> Pengaturan </h6>
+                        <span class="d-block text-dark">Pengaturan Akun</span>
                       </div>
                     </RouterLink>
                   </div>

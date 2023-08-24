@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
@@ -39,6 +39,10 @@ onMounted(() => {
   assessment.getDetailAssessment({ id: route.params?.id })
 })
 
+onUnmounted(() => {
+  assessment.resetState()
+})
+
 </script>
 
 <template>
@@ -47,25 +51,31 @@ onMounted(() => {
 
     <section>
       <div class="row">
-        <OverviewCard heading="Assessment">
+        <OverviewCard heading="Assessment" :class="['col-12 col-md-12']">
           <template #icon>
             <TablerIcon icon="ClipboardTextIcon" size="36" class="text-primary" />
           </template>
 
           <template #body>
             <div class="d-flex flex-column">
-              <span class="fs-2 mb-1">Nama: {{ assessment.detail?.nama }}</span>
-              <div class="fs-2 mb-1 d-flex flex-row flex-wrap align-items-center">
-                <span>Deskripsi:</span>
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>
+                  Nama:
+                </span>
 
-                <div class="ms-1" v-html="assessment.detail?.deskripsi || ' - '" />
+                <div>{{ assessment.detail?.nama }}</div>
               </div>
 
-              <div class="fs-2 mb-1 d-flex flex-row flex-wrap align-items-center">
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>Deskripsi:</span>
+
+                <div v-html="assessment.detail?.deskripsi || ' - '" />
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
                 <span>Status:</span>
 
-                <span class="ms-1 badge rounded-pill text-capitalize fw-bold"
-                  :class="classStatus(assessment.detail?.status)">
+                <span class="badge rounded-pill text-capitalize fw-bold" :class="classStatus(assessment.detail?.status)">
                   {{ assessment.detail?.status }}
                 </span>
               </div>
@@ -79,8 +89,15 @@ onMounted(() => {
 
           <template #body>
             <div class="d-flex flex-column">
-              <span class="fs-2 mb-1">Nama: {{ assessment.detail?.organisasi?.nama }}</span>
-              <div class="fs-2 mb-1 d-flex flex-row flex-wrap align-items-center">
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>
+                  Nama:
+                </span>
+
+                <div>{{ assessment.detail?.organisasi?.nama }}</div>
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
                 <span>Deskripsi:</span>
 
                 <div v-html="assessment.detail?.organisasi?.deskripsi || ' - '" />
@@ -95,10 +112,37 @@ onMounted(() => {
 
           <template #body>
             <div class="d-flex flex-column">
-              <span class="fs-2 mb-1">Nama: </span>
-              <span class="fs-2 mb-1">Email: </span>
-              <span class="fs-2 mb-1">Divisi: </span>
-              <span class="fs-2 mb-1">Jabatan: </span>
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>
+                  Nama:
+                </span>
+
+                <div>{{ assessment.detail?.pic?.nama }}</div>
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>
+                  Email:
+                </span>
+
+                <div>{{ assessment.detail?.pic?.email }}</div>
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>
+                  Divisi:
+                </span>
+
+                <div>{{ assessment.detail?.pic?.divisi }}</div>
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span>
+                  Jabatan:
+                </span>
+
+                <div>{{ assessment.detail?.pic?.posisi }}</div>
+              </div>
             </div>
           </template>
         </OverviewCard>

@@ -17348,7 +17348,7 @@
   --bs-warning-text-emphasis: #ffce79;
   --bs-danger-text-emphasis: #fcb8a6;
   --bs-light-text-emphasis: var(--bs-light);
-  --bs-dark-text-emphasis: #dfe5ef;
+  --bs-dark-text-emphasis: var(--bs-gray-300);
   --bs-primary-bg-subtle: #131b33;
   --bs-secondary-bg-subtle: #0f2633;
   --bs-success-bg-subtle: #042c25;
@@ -19392,7 +19392,7 @@ progress {
   color: var(--bs-muted);
   background-color: transparent;
   background-clip: padding-box;
-  border: var(--bs-border-width) solid #dfe5ef;
+  border: var(--bs-border-width) solid var(--bs-gray-300);
   appearance: none;
   border-radius: 7px;
   box-shadow: unset;
@@ -19549,7 +19549,7 @@ textarea.form-control-lg {
   background-repeat: no-repeat;
   background-position: right 16px center;
   background-size: 16px 12px;
-  border: var(--bs-border-width) solid #dfe5ef;
+  border: var(--bs-border-width) solid var(--bs-gray-300);
   border-radius: 7px;
   box-shadow: unset;
   transition:
@@ -19629,7 +19629,7 @@ textarea.form-control-lg {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border: 1.25px solid #dfe5ef;
+  border: 1.25px solid var(--bs-gray-300);
   appearance: none;
   print-color-adjust: exact;
 }
@@ -19638,6 +19638,7 @@ textarea.form-control-lg {
 }
 .form-check-input[type='radio'] {
   border-radius: 50%;
+  border: var(--bs-border-width) solid var(--bs-gray-400);
 }
 .form-check-input:active {
   filter: brightness(90%);
@@ -21255,10 +21256,10 @@ fieldset:disabled .btn {
   color: var(--bs-dropdown-link-color);
 }
 .dropdown-menu-dark {
-  --bs-dropdown-color: #dfe5ef;
+  --bs-dropdown-color: var(--bs-gray-300);
   --bs-dropdown-bg: #343a40;
   --bs-dropdown-border-color: var(--bs-border-color-translucent);
-  --bs-dropdown-link-color: #dfe5ef;
+  --bs-dropdown-link-color: var(--bs-gray-300);
   --bs-dropdown-link-hover-color: #fff;
   --bs-dropdown-divider-bg: var(--bs-border-color-translucent);
   --bs-dropdown-link-hover-bg: rgba(255, 255, 255, 0.15);
@@ -21929,7 +21930,7 @@ fieldset:disabled .btn {
 }
 .navbar-dark,
 .navbar[data-bs-theme='dark'] {
-  --bs-navbar-color: #dfe5ef;
+  --bs-navbar-color: var(--bs-gray-300);
   --bs-navbar-hover-color: var(--bs-primary);
   --bs-navbar-disabled-color: rgba(255, 255, 255, 0.25);
   --bs-navbar-active-color: #fff;
@@ -37697,17 +37698,17 @@ a.jp-playlist-current:before {
   padding-right: 0.625rem;
   font-size: 0.765625rem;
   border-radius: 5px;
-  border-color: #dfe5ef;
+  border-color: var(--bs-gray-300);
 }
 .table-responsive .dataTables_wrapper .dataTables_filter input {
   padding: 0.25rem 0.5rem;
   font-size: 0.765625rem;
   border-radius: 5px;
-  border: 1px solid #dfe5ef;
+  border: 1px solid var(--bs-gray-300);
 }
 .table-responsive .dataTables_wrapper .dataTables_paginate .paginate_button {
   padding: 6px 12px;
-  border: 1px solid #dfe5ef;
+  border: 1px solid var(--bs-gray-300);
 }
 .table-responsive .dataTables_wrapper .dataTables_paginate .paginate_button .previous {
   border-radius: 7px 0 0 7px;
@@ -43945,7 +43946,7 @@ table.footable thead tr.footable-filtering th ul.dropdown-menu li .checkbox labe
   border: none;
   font-family: 'Plus Jakarta Sans', sans-serif;
   border-radius: 0;
-  border-bottom: 1px solid #dfe5ef;
+  border-bottom: 1px solid var(--bs-gray-300);
 }
 .floating-labels .form-control:focus {
   box-shadow: none;

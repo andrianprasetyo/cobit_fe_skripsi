@@ -15,7 +15,7 @@ const props = defineProps({
             <slot name="icon" />
           </span>
           <div class="ms-4">
-            <h4 class="card-title text-dark">{{ props.heading }}</h4>
+            <h4 class="card-title text-dark mb-3">{{ props.heading }}</h4>
             <slot name="body" />
           </div>
         </div>

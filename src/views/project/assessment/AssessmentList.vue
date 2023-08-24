@@ -11,6 +11,7 @@ import AssessmentServices from '@/services/lib/assessment'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useRouter } from 'vue-router'
+import { formatDateMoments } from '@/utils/momentDateFormat'
 
 const toast = useToast()
 const alert = useAlert()
@@ -69,6 +70,12 @@ const classStatus = computed(() => {
     } else {
       return ''
     }
+  }
+})
+
+const formatDate = computed(() => {
+  return value => {
+    return formatDateMoments({ value: value?.value, format: 'MMMM YYYY' })
   }
 })
 
@@ -206,7 +213,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <template #item-start_date="item">
               <div v-if="item.item?.start_date" class="d-flex w-100">
-                {{ item.item?.start_date }} - {{ item.item?.end_date }}
+                {{ formatDate({ value: item.item?.start_date }) }}
               </div>
 
               <div v-else>

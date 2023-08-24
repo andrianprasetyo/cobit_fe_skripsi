@@ -69,11 +69,11 @@ onMounted(() => {
         <div v-for="(quisioner, index) in designFactor.detail?.quisioner" :key="`card-${index}`" class="card">
           <div class="card-body">
             <div class="mb-9 d-flex flex-column">
-              <ol>
-                <li>
-                  <div v-if="quisioner?.pertanyaan" v-html="quisioner?.pertanyaan"></div>
-                </li>
-              </ol>
+
+              <div class="d-flex align-items-start">
+                <h5 class="fw-semibold me-2">{{ index + 1 }}. </h5>
+                <div v-if="quisioner?.pertanyaan" v-html="quisioner?.pertanyaan"></div>
+              </div>
 
               <div v-if="quisioner?.grup?.deskripsi" v-html="quisioner?.grup?.deskripsi" />
             </div>
@@ -122,7 +122,6 @@ onMounted(() => {
           </div>
         </div>
       </template>
-
 
       <div class="card mt-4">
         <div class="card-body">

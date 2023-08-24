@@ -14,12 +14,17 @@ const AppLayoutBlank = defineAsyncComponent({
   loader: () => import('@/layouts/AppLayoutBlank.vue')
 })
 
+const AppLayoutBoxed = defineAsyncComponent({
+  loader: () => import('@/layouts/AppLayoutBoxed.vue')
+})
+
 const route = useRoute()
 
 const layoutComponents = {
   AppLayoutAdmin,
   AppLayoutAuth,
-  AppLayoutBlank
+  AppLayoutBlank,
+  AppLayoutBoxed
 }
 
 const layout = computed(() => {
@@ -33,5 +38,5 @@ const layout = computed(() => {
     <component :is="layoutComponents[layout]" :Component="Component" />
   </router-view>
 
-  <portal-target name="modal" multiple> </portal-target>
+  <portal-target name="modal" :multiple="true"></portal-target>
 </template>

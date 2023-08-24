@@ -2,6 +2,7 @@
 import { reactive, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
+import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import BaseSelect from '@/components/Select/BaseSelect.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
@@ -10,8 +11,10 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import { useVuelidate } from "@vuelidate/core";
 import { helpers, required, requiredIf, email } from "@vuelidate/validators";
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useAppConfig } from '@/stores/appConfig'
 
 const assessment = useAssessmentStore()
+const appConfig = useAppConfig()
 
 const props = defineProps({
   isShow: {
@@ -20,13 +23,15 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['close'])
+const emits = defineEmits(['close', 'refresh'])
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const formState = reactive({
   loadingSubmit: false,
   inviteBy: '',
   emails: [],
+  file: null,
+  filename: '',
   inviteByList: [
     {
       label: 'Kirim Lewat Email',
@@ -47,6 +52,17 @@ const rules = computed(() => {
     emails: {
       requiredIf: helpers.withMessage('Silahkan alamat email yang ingin diundang', requiredIf(formState.inviteBy === 'email')),
     },
+    file: {
+      requiredIf: helpers.withMessage('Silahkan upload file excel yang sudah diisi', requiredIf(formState.inviteBy === 'excel')),
+      fileExtension: helpers.withMessage('File yang diizinkan hanya .xlsx', value => {
+        if (!value) return true; // Allow no file to be selected
+
+        const allowedExtensions = ['xlsx']; // Add your allowed extensions here
+        const fileExtension = value.name.split('.').pop().toLowerCase();
+
+        return allowedExtensions.includes(fileExtension);
+      })
+    }
   }
 })
 
@@ -61,8 +77,24 @@ const dropdownEmailShouldOpen = (VueSelect) => {
   }
 }
 
+const handleChangeFile = (event) => {
+  const files = event?.target?.files
+
+  if (files && files?.length) {
+    const file = files[0]
+    formState.file = file
+    formState.filename = file.name
+
+    v$.value.file.$touch()
+  }
+}
+
 const handleClose = () => {
   emits('close', true)
+}
+
+const handleRefreshList = () => {
+  emits('refresh')
 }
 
 const inviteRespondenByEmail = async () => {
@@ -73,7 +105,25 @@ const inviteRespondenByEmail = async () => {
     if (response) {
       formState.loadingSubmit = false
       v$.value.$reset()
+      handleClose()
+      handleRefreshList()
+    }
+  } catch (error) {
+    formState.loadingSubmit = false
+  }
+}
 
+const inviteRespondenByExcel = async () => {
+  try {
+    formState.loadingSubmit = true
+
+    const response = await assessment.inviteRespondenByExcel({ id: assessment?.selectedAssessment?.id, file: formState?.file })
+
+    if (response) {
+      formState.loadingSubmit = false
+      v$.value.$reset()
+      handleClose()
+      handleRefreshList()
     }
   } catch (error) {
     formState.loadingSubmit = false
@@ -83,6 +133,8 @@ const inviteRespondenByEmail = async () => {
 const handleSubmit = () => {
   if (formState.inviteBy === 'email') {
     inviteRespondenByEmail()
+  } else if (formState.inviteBy === 'excel') {
+    inviteRespondenByExcel()
   }
 }
 
@@ -126,6 +178,40 @@ const handleSubmit = () => {
           <ErrorMessage :errors="v$.emails.$errors" />
         </div>
       </template>
+
+      <template v-if="formState.inviteBy === 'excel'">
+        <hr />
+
+        <div class="mb-3">
+          <BaseInput id="input-file-excel" type="file" label="File" accept=".xlsx" :isInvalid="!!v$.file.$errors?.length"
+            :disabled="formState.loadingSubmit" @change="handleChangeFile">
+
+            <template #extra-label>
+              <div class="d-flex align-items-center mb-1 badge font-medium bg-light-primary text-primary">
+                <TablerIcon icon="DownloadIcon" class="me-1 text-primary" size="14" />
+
+                <a class="link-primary fw-bold"
+                  :href="`${appConfig.app.appHostDownload}sample/template-invite-respondent`">
+                  Download Template
+                </a>
+              </div>
+
+            </template>
+
+          </BaseInput>
+
+          <div class="mt-1">
+            <small>
+              <span class="text-danger fw-bold">Perhatian!</span> Mohon <span class="fw-bold">Pastikan
+                File</span> Yang Diupload sudah menggunakan template yang disediakan.
+            </small>
+          </div>
+
+
+          <ErrorMessage :errors="v$.file.$errors" />
+        </div>
+      </template>
+
     </template>
 
     <template #footer>
