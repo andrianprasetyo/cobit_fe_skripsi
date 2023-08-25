@@ -79,5 +79,6 @@ const handleToggleShowPassword = () => {
       </template>
     </template>
 
+    <slot name="extra-input-group" />
   </div>
 </template>

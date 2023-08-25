@@ -10,7 +10,7 @@ import SearchInput from '@/components/Input/SearchInput.vue'
 import DesignFactorServices from '@/services/lib/design-factor'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
-import { useRouter, } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const toast = useToast()
 const alert = useAlert()

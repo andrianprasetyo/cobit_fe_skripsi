@@ -702,8 +702,8 @@ const router = createRouter({
               component: () => import('@/views/quisioner/responden/QuisionerResponden.vue'),
               meta: {
                 pageTitle: 'Quisioner',
-                layout: 'AppLayoutBoxed',
-                background_picture: '/assets/images/illustrations/discussion.svg',
+                layout: 'AppLayoutSideView',
+                background_picture: '/assets/images/illustrations/man-choice-document.svg',
                 requiredAuth: false,
                 breadcrumb: [
                   {
@@ -727,8 +727,8 @@ const router = createRouter({
               component: () => import('@/views/quisioner/responden/question/QuestionResponden.vue'),
               meta: {
                 pageTitle: 'Question',
-                layout: 'AppLayoutBoxed',
-                background_picture: '/assets/images/illustrations/discussion.svg',
+                layout: 'AppLayoutSideView',
+                background_picture: '/assets/images/illustrations/people-discussion-online.svg',
                 requiredAuth: false,
                 breadcrumb: [
                   {
@@ -747,6 +747,44 @@ const router = createRouter({
                     text: 'Quisioner Question',
                     disabled: true,
                     href: '/quisioner/question',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'QuestionFinish',
+              path: '/quisioner/responden/question/finish',
+              component: () =>
+                import('@/views/quisioner/responden/question/QuestionRespondenFinish.vue'),
+              meta: {
+                pageTitle: 'Question Selesai',
+                layout: 'AppLayoutBoxed',
+                background_picture: '/assets/images/illustrations/paperwork.svg',
+                requiredAuth: false,
+                breadcrumb: [
+                  {
+                    text: 'Quisioner',
+                    disabled: false,
+                    href: '/quisioner',
+                    active: false
+                  },
+                  {
+                    text: 'Quisioner Responden',
+                    disabled: false,
+                    href: '/quisioner/responden',
+                    active: false
+                  },
+                  {
+                    text: 'Quisioner Question',
+                    disabled: false,
+                    href: '/quisioner/responden/question',
+                    active: false
+                  },
+                  {
+                    text: 'Quisioner Question Selesai',
+                    disabled: true,
+                    href: '/quisioner/responden/question/finish',
                     active: true
                   }
                 ]

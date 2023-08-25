@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
-import { RouterLink, useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -11,11 +11,10 @@ import QuisionerServices from '@/services/lib/quisioner'
 
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
-import { useAppConfig } from '@/stores/appConfig'
 import { useToast } from '@/stores/toast'
 import { useQuisionerStore } from '@/views/quisioner/quisionerStore'
+import { formatDateMoments } from '@/utils/momentDateFormat'
 
-const { app } = useAppConfig()
 const router = useRouter()
 const route = useRoute()
 const toast = useToast()
@@ -47,6 +46,12 @@ const rules = computed(() => {
 })
 
 const v$ = useVuelidate(rules, formState, { $autoDirty: false })
+
+const formatDate = computed(() => {
+  return value => {
+    return formatDateMoments({ value: value?.value, format: 'MMMM YYYY' })
+  }
+})
 
 /* --------------------------------- METHODS -------------------------------- */
 const getDetailQuisionerRespondenByCode = async () => {
@@ -126,54 +131,58 @@ onMounted(() => {
 
 <template>
   <div>
-    <RouterLink to="/" class="text-nowrap logo-img text-center d-block mb-4 w-100">
-      <div class="d-flex flex-column justify-content-center align-items-center">
-        <img :src="app.appLogoImage" width="180" alt="logo" />
+    <div v-if="formState.loading">
+      <div class="vh-100 d-flex align-items-center justify-content-center">
+        <LoadingSpinner />
       </div>
-    </RouterLink>
+    </div>
 
-    <template v-if="formState.loading">
-      <LoadingSpinner />
-    </template>
+    <div v-else class="card">
+      <div class="card-body">
+        <h2 class="mb-3 fs-7 fw-bolder lh-base text-center">Selamat Datang 👋<br />
+          di Assessment {{ formState?.detail?.assesment?.nama }} <br /> {{ formState?.detail?.assesment?.organisasi?.nama
+          }} - Periode {{ formatDate({ value: formState.detail?.assesment?.organisasi?.start_date }) }}
+        </h2>
 
-    <template v-else>
-      <h2 class="mb-3 fs-7 fw-bolder lh-base text-center">Selamat Datang <br />
-        di {{ formState?.detail?.assesment?.nama }} - {{ formState?.detail?.assesment?.organisasi?.nama }} 👋
-      </h2>
+        <div class="d-flex justify-content-center mx-0 mx-md-3">
+          <div class="card-subtitle mb-0" v-html="formState?.detail?.assesment?.deskripsi" />
+        </div>
 
-      <div class="d-flex justify-content-center mx-0 mx-md-3">
-        <div class="card-subtitle mb-0" v-html="formState?.detail?.assesment?.deskripsi" />
+        <hr />
+
+        <div class="row">
+          <p class="mb-9 text-center">Sebelum mulai quisioner, Silahkan isi dengan data diri anda terlebih dahulu</p>
+
+          <div class="col-12 mb-3">
+            <BaseInput id="email" label="Email" v-model="formState.email" placeholder="Masukkan Email" :disabled="true" />
+          </div>
+
+          <div class="col-12 mb-3">
+            <BaseInput id="nama" label="Nama" v-model="v$.nama.$model" placeholder="Masukkan Nama"
+              :isInvalid="v$.nama.$errors?.length" tabindex="1" :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.nama.$errors" />
+          </div>
+
+          <div class="col-12 col-md-6 mb-3">
+            <BaseInput id="divisi" label="Divisi" v-model="v$.divisi.$model" placeholder="Masukkan Divisi"
+              :isInvalid="v$.divisi.$errors?.length" tabindex="2" :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.divisi.$errors" />
+          </div>
+
+          <div class="col-12 col-md-6 mb-3">
+            <BaseInput id="jabatan" label="Jabatan" v-model="v$.jabatan.$model" placeholder="Masukkan Jabatan"
+              :isInvalid="v$.jabatan.$errors?.length" tabindex="3" :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.jabatan.$errors" />
+          </div>
+
+        </div>
+
+        <div class="mt-4">
+          <BaseButton @click="onSubmit" title="Mulai Quisioner" class="btn btn-primary w-100 py-2"
+            :isLoading="formState.loadingSubmit" :disabled="formState.loadingSubmit" />
+        </div>
       </div>
-
-      <hr />
-
-      <div class="mb-3">
-        <BaseInput id="email" label="Email" v-model="formState.email" placeholder="Masukkan Email" :disabled="true" />
-      </div>
-
-      <div class="mb-3">
-        <BaseInput id="nama" label="Nama" v-model="v$.nama.$model" placeholder="Masukkan Nama"
-          :isInvalid="v$.nama.$errors?.length" tabindex="1" :disabled="formState.loadingSubmit" />
-        <ErrorMessage :errors="v$.nama.$errors" />
-      </div>
-
-      <div class="mb-3">
-        <BaseInput id="divisi" label="Divisi" v-model="v$.divisi.$model" placeholder="Masukkan Divisi"
-          :isInvalid="v$.divisi.$errors?.length" tabindex="2" :disabled="formState.loadingSubmit" />
-        <ErrorMessage :errors="v$.divisi.$errors" />
-      </div>
-
-      <div class="mb-3">
-        <BaseInput id="jabatan" label="Jabatan" v-model="v$.jabatan.$model" placeholder="Masukkan Jabatan"
-          :isInvalid="v$.jabatan.$errors?.length" tabindex="3" :disabled="formState.loadingSubmit" />
-        <ErrorMessage :errors="v$.jabatan.$errors" />
-      </div>
-
-      <div class="mt-4">
-        <BaseButton @click="onSubmit" title="Mulai" class="btn btn-primary w-100 py-2"
-          :isLoading="formState.loadingSubmit" :disabled="formState.loadingSubmit" />
-      </div>
-    </template>
+    </div>
 
   </div>
 </template>
