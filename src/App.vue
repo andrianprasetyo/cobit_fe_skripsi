@@ -18,13 +18,18 @@ const AppLayoutBoxed = defineAsyncComponent({
   loader: () => import('@/layouts/AppLayoutBoxed.vue')
 })
 
+const AppLayoutSideView = defineAsyncComponent({
+  loader: () => import('@/layouts/AppLayoutSideView.vue')
+})
+
 const route = useRoute()
 
 const layoutComponents = {
   AppLayoutAdmin,
   AppLayoutAuth,
   AppLayoutBlank,
-  AppLayoutBoxed
+  AppLayoutBoxed,
+  AppLayoutSideView
 }
 
 const layout = computed(() => {
