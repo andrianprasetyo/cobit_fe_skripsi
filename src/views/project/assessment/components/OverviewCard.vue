@@ -7,10 +7,10 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="col-12 col-md-6 col-lg-4" v-bind="$attrs">
+  <div class="col-12 col-md-12" v-bind="$attrs">
     <div class="card rounded-3">
       <div class="card-body">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-baseline">
           <span class="flex-shrink-0">
             <slot name="icon" />
           </span>

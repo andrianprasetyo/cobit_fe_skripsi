@@ -63,7 +63,7 @@ const router = createRouter({
             pageTitle: 'Dashboard',
             layout: 'AppLayoutAdmin',
             requiredAuth: true,
-            breadcrumbs: [
+            breadcrumb: [
               {
                 text: 'Dashboard',
                 disabled: false,
@@ -806,7 +806,7 @@ const router = createRouter({
             pageTitle: 'Setting',
             layout: 'AppLayoutAdmin',
             requiredAuth: true,
-            breadcrumbs: [
+            breadcrumb: [
               {
                 text: 'Account',
                 disabled: false,
