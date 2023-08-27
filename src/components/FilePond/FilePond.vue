@@ -28,6 +28,7 @@ const props = defineProps({
   },
 })
 
+const slots = defineSlots()
 
 const FilePond = vueFilePond(
   FilePondPluginImagePreview,
@@ -38,7 +39,7 @@ const FilePond = vueFilePond(
 
 <template>
   <div>
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row justify-content-between" :class="[slots['extra-label'] ? 'mb-3' : '']">
       <label v-if="props.label" :class="props.labelClass"> {{ props.label }}</label>
       <slot name="extra-label" />
     </div>

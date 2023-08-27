@@ -8,11 +8,11 @@ import BaseTab from '@/components/Tab/BaseTab.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 
 const TabProfile = defineAsyncComponent({
-  loader: () => import('@/views/account/setting/components/TabProfile.vue')
+  loader: () => import('@/views/account/settings/components/TabProfile.vue')
 })
 
 const TabChangePassword = defineAsyncComponent({
-  loader: () => import('@/views/account/setting/components/TabChangePassword.vue')
+  loader: () => import('@/views/account/settings/components/TabChangePassword.vue')
 })
 
 const router = useRouter()
