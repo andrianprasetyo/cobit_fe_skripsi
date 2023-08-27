@@ -6,16 +6,19 @@ import DataTable from '@/components/DataTable/DataTable.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
+import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useRouter } from 'vue-router'
 import { formatDateMoments } from '@/utils/momentDateFormat'
+import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
+const assessmentStore = useAssessmentStore()
 
 /* ---------------------------------- STATE --------------------------------- */
 const assessment = reactive({
@@ -45,7 +48,8 @@ const assessment = reactive({
     per_page: 10,
     total: 0,
     total_page: 0
-  }
+  },
+  isShowModalInviteResponden: false,
 })
 
 const serverOptions = ref({
@@ -95,6 +99,14 @@ const getListAssessment = async ({ limit, page, sortBy, sortType, search }) => {
   } catch (error) {
     assessment.loading = false
     toast.error({ error })
+  }
+}
+
+const toggleModalInviteResponden = ({ item }) => {
+  assessment.isShowModalInviteResponden = !assessment.isShowModalInviteResponden
+
+  if (assessment.isShowModalInviteResponden) {
+    assessmentStore.setSeletedAssessment(item)
   }
 }
 
@@ -148,6 +160,10 @@ const handleDelete = ({ title, id }) => {
 
 const handleNavigateAdd = () => {
   router.push('/project/assessment/add')
+}
+
+const handleNavigateEdit = ({ id }) => {
+  router.push({ path: `/project/assessment/${id}/edit` })
 }
 
 const handleNavigateDetail = ({ id }) => {
@@ -242,7 +258,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
-                          Detail
+                          Lihat Detail
                         </span>
                       </template>
                     </BaseButton>
@@ -251,7 +267,19 @@ watch(() => [serverOptions.value, filter.value], () => {
                     <hr class="dropdown-divider">
                   </li>
                   <li>
-                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="EditIcon" />
+                        <span class="ms-2">
+                          Edit
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+                  <li>
+                    <BaseButton @click="toggleModalInviteResponden({ item: item?.item })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="SendIcon" />
                         <span class="ms-2">
@@ -260,7 +288,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </template>
                     </BaseButton>
                   </li>
-                  <li>
+
+                  <!-- <li>
                     <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="ClipboardDataIcon" />
@@ -269,7 +298,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                         </span>
                       </template>
                     </BaseButton>
-                  </li>
+                  </li> -->
+
                   <li>
                     <hr class="dropdown-divider">
                   </li>
@@ -291,5 +321,8 @@ watch(() => [serverOptions.value, filter.value], () => {
         </div>
       </div>
     </section>
+
+    <ModalInviteResponden :is-show="assessment.isShowModalInviteResponden"
+      @close="toggleModalInviteResponden({ item: null })" />
   </div>
 </template>

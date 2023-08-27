@@ -1,12 +1,14 @@
 <script setup>
 import { reactive, computed } from 'vue'
-
-import BaseButton from '@/components/Button/BaseButton.vue'
+/*
 import BaseInput from '@/components/Input/BaseInput.vue'
+*/
+import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import BaseSelect from '@/components/Select/BaseSelect.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
+import FilePond from '@/components/FilePond/FilePond.vue'
 
 import { useVuelidate } from "@vuelidate/core";
 import { helpers, required, requiredIf, email } from "@vuelidate/validators";
@@ -32,6 +34,7 @@ const formState = reactive({
   emails: [],
   file: null,
   filename: '',
+  files: [],
   inviteByList: [
     {
       label: 'Kirim Lewat Email',
@@ -52,6 +55,7 @@ const rules = computed(() => {
     emails: {
       requiredIf: helpers.withMessage('Silahkan alamat email yang ingin diundang', requiredIf(formState.inviteBy === 'email')),
     },
+    /*
     file: {
       requiredIf: helpers.withMessage('Silahkan upload file excel yang sudah diisi', requiredIf(formState.inviteBy === 'excel')),
       fileExtension: helpers.withMessage('File yang diizinkan hanya .xlsx', value => {
@@ -63,7 +67,19 @@ const rules = computed(() => {
         return allowedExtensions.includes(fileExtension);
       })
     }
+    */
+    files: {
+      requiredIf: helpers.withMessage('Silahkan upload file excel yang sudah diisi', requiredIf(formState.inviteBy === 'email')),
+    }
   }
+})
+
+const isInviteByEmail = computed(() => {
+  return formState.inviteBy === 'email'
+})
+
+const isInviteByExcel = computed(() => {
+  return formState.inviteBy === 'excel'
 })
 
 const v$ = useVuelidate(rules, formState, { $autoDirty: false })
@@ -77,6 +93,7 @@ const dropdownEmailShouldOpen = (VueSelect) => {
   }
 }
 
+/*
 const handleChangeFile = (event) => {
   const files = event?.target?.files
 
@@ -86,6 +103,17 @@ const handleChangeFile = (event) => {
     formState.filename = file.name
 
     v$.value.file.$touch()
+  }
+}
+*/
+
+const onUpdateFiles = (files) => {
+  if (files && files?.length) {
+    const listFile = []
+    files.map((item) => listFile.push(item.file))
+    formState.files = listFile
+  } else {
+    formState.files = []
   }
 }
 
@@ -117,7 +145,12 @@ const inviteRespondenByExcel = async () => {
   try {
     formState.loadingSubmit = true
 
-    const response = await assessment.inviteRespondenByExcel({ id: assessment?.selectedAssessment?.id, file: formState?.file })
+    let payload = {
+      id: assessment?.selectedAssessment?.id,
+      file: formState?.files.length ? formState.files[0] : null
+    }
+
+    const response = await assessment.inviteRespondenByExcel(payload)
 
     if (response) {
       formState.loadingSubmit = false
@@ -183,7 +216,23 @@ const handleSubmit = () => {
         <hr />
 
         <div class="mb-3">
-          <BaseInput id="input-file-excel" type="file" label="File" accept=".xlsx" :isInvalid="!!v$.file.$errors?.length"
+          <FilePond id="input-file-excel" label="File" name="file-excel"
+            accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            :files="formState.files" v-on:updatefiles="onUpdateFiles">
+            <template #extra-label>
+              <div class="d-flex align-items-center mb-1 badge font-medium bg-light-primary text-primary">
+                <TablerIcon icon="DownloadIcon" class="me-1 text-primary" size="14" />
+
+                <a class="link-primary fw-bold"
+                  :href="`${appConfig.app.appHostDownload}sample/template-invite-respondent`">
+                  Download Template
+                </a>
+              </div>
+
+            </template>
+          </FilePond>
+
+          <!-- <BaseInput id="input-file-excel" type="file" label="File" accept=".xlsx" :isInvalid="!!v$.file.$errors?.length"
             :disabled="formState.loadingSubmit" @change="handleChangeFile">
 
             <template #extra-label>
@@ -198,7 +247,7 @@ const handleSubmit = () => {
 
             </template>
 
-          </BaseInput>
+          </BaseInput> -->
 
           <div class="mt-1">
             <small>
@@ -208,14 +257,15 @@ const handleSubmit = () => {
           </div>
 
 
-          <ErrorMessage :errors="v$.file.$errors" />
+          <ErrorMessage :errors="v$.files.$errors" />
         </div>
       </template>
 
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
+      <BaseButton @click="handleSubmit" title="Simpan"
+        :disabled="formState.loadingSubmit || (isInviteByEmail && !formState.emails.length) || (isInviteByExcel && !formState.files.length)"
         :is-loading="formState.loadingSubmit">
         <template #icon-left>
           <TablerIcon icon="DeviceFloppyIcon" />

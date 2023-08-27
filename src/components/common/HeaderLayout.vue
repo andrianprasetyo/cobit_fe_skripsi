@@ -107,7 +107,7 @@ const handleToggleMiniSidebar = () => {
                     </div>
                   </div>
                   <div class="message-body border-bottom">
-                    <RouterLink to="/account/setting" class="py-8 px-7 mt-8 d-flex align-items-center">
+                    <RouterLink to="/account/settings" class="py-8 px-7 mt-8 d-flex align-items-center">
                       <span class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
                         <TablerIcon size="24" icon="SettingsIcon" />
                       </span>

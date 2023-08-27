@@ -688,6 +688,36 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'EditAssessment',
+              path: '/project/assessment/:id/edit',
+              component: () => import('@/views/project/assessment/AssessmentEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Assessment',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Assessment',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Assessment',
+                    disabled: true,
+                    href: '/project/assessment/:id/edit',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },
@@ -796,14 +826,14 @@ const router = createRouter({
     },
     {
       path: '/account',
-      redirect: '/account/setting',
+      redirect: '/account/settings',
       children: [
         {
-          name: 'Setting',
-          path: '/account/setting',
-          component: () => import('@/views/account/setting/AccountSetting.vue'),
+          name: 'Settings',
+          path: '/account/settings',
+          component: () => import('@/views/account/settings/AccountSettings.vue'),
           meta: {
-            pageTitle: 'Setting',
+            pageTitle: 'Settings',
             layout: 'AppLayoutAdmin',
             requiredAuth: true,
             breadcrumb: [
@@ -816,7 +846,7 @@ const router = createRouter({
               {
                 text: 'Setting',
                 disabled: true,
-                href: '/account/setting',
+                href: '/account/settings',
                 active: true
               }
             ]

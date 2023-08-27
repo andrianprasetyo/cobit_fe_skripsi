@@ -38,6 +38,8 @@ export const useAssessmentStore = defineStore('assessment', {
 
           this.detail = data
           loader.hide()
+
+          return response
         }
       } catch (error) {
         loader.hide()

@@ -36,6 +36,15 @@ export default {
 
   /**
    *
+   * @param {id, asessment, deskripsi} payload
+   * @returns
+   */
+  editAssessment(payload) {
+    return axiosClient.put(`assesment/edit/${payload?.id}`, payload)
+  },
+
+  /**
+   *
    * @param {id} payload
    * @returns
    */
