@@ -11,13 +11,15 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import QuisionerServices from '@/services/lib/quisioner'
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, minValue, maxValue } from "@vuelidate/validators";
+import { required, helpers, minValue } from "@vuelidate/validators";
 import { ValidateEach } from '@vuelidate/components'
 
 import { useToast } from '@/stores/toast'
 import { useQuisionerStore } from '@/views/quisioner/quisionerStore'
 import { useRouter } from 'vue-router'
+import { useAlert } from '@/stores/alert'
 
+const alert = useAlert()
 const router = useRouter()
 const toast = useToast()
 const quesioner = useQuisionerStore()
@@ -32,11 +34,11 @@ const questions = reactive({
   data: [],
   meta: {
     total: 0,
-  }
+  },
 })
 
 const navigation = reactive({
-  currentQuestion: 1
+  currentQuestion: 2
 })
 
 const isLastQuestion = computed(() => {
@@ -60,19 +62,35 @@ const progressPercentage = computed(() => {
 })
 
 const rulesPilihanGanda = computed(() => {
-  return {
-    hasil: {
-      // required: helpers.withMessage('Silahkan pilih salah satu jawaban', !required),
+  return ({ indexQuestion, indexKomponen }) => {
+    return {
+      hasil: {
+        required: helpers.withMessage('Silahkan pilih salah satu jawaban', () => {
+          const indexChecked = questions.data[indexQuestion]?.komponen[indexKomponen].jawabans.findIndex(item => item?.hasil)
+          return indexChecked !== -1 ? true : false
+        })
+      }
     }
   }
 })
 
 const rulesPersentase = computed(() => {
-  return {
-    hasil: {
-      required: helpers.withMessage('Silahkan isi jawaban', required),
-      minValue: helpers.withMessage("Nilai Bobot minimal 1", minValue(1)),
-      maxValue: helpers.withMessage("Nilai Bobot maksimal 100", maxValue(100))
+  return ({ indexQuestion }) => {
+    return {
+      hasil: {
+        required: helpers.withMessage('Silahkan isi persentase', required),
+        minValue: helpers.withMessage("Nilai Bobot minimal 1", minValue(1)),
+        mustBe100: helpers.withMessage("Nilai Bobot Keseluruhan jika dijumlahkan harus 100", () => {
+          let sum = 0
+          questions.data[indexQuestion]?.komponen?.map((komponen) => {
+            komponen.jawabans.reduce((acc, value) => {
+              acc += value.hasil
+              sum += acc
+            }, 0)
+          })
+          return sum === 100
+        })
+      },
     }
   }
 })
@@ -114,10 +132,13 @@ const saveJawaban = async ({ isLastQuestion = false }) => {
 
       scrollToTop()
 
+
+      return response
     }
   } catch (error) {
     questions.loadingSubmit = false
     toast.error({ error })
+    throw error
   }
 }
 
@@ -129,6 +150,7 @@ const finishQuisioner = async () => {
     if (response) {
       questions.loadingSubmit = false
       handleNavigateFinish()
+      alert.instance().close()
     }
   } catch (error) {
     questions.loadingSubmit = false
@@ -147,30 +169,48 @@ const scrollToTop = () => {
   scrollbar.scrollTo(scrollToOptions)
 }
 
-const handleChangeBobot = ({ event, indexQuestion, indexKomponen, indexJawaban, bobot }) => {
-  const isChecked = event?.target?.checked
+const handleChangeHasil = ({ indexQuestion, indexKomponen, bobot }) => {
   const data = questions.data
 
-  if (isChecked) {
-    data[indexQuestion].komponen[indexKomponen].jawabans[indexJawaban].hasil = bobot
-    questions.data = data
-  } else {
-    data[indexQuestion].komponen[indexKomponen].jawabans[indexJawaban].hasil = null
-    questions.data = data
-  }
+  data[indexQuestion].komponen[indexKomponen].jawabans.forEach((jawaban) => {
+    if (jawaban.bobot !== bobot) {
+      jawaban.hasil = null;
+    } else {
+      jawaban.hasil = bobot
+    }
+  });
 
-
+  questions.data = data
 }
 
 const handleNext = async () => {
   const result = await v$.value.$validate()
   if (result) {
+    saveJawaban({ isLastQuestion: false })
+  }
+}
 
-    saveJawaban({ isLastQuestion: isLastQuestion.value })
+const handleFinish = async () => {
+  const result = await v$.value.$validate()
 
-    if (isLastQuestion.value) {
-      finishQuisioner()
-    }
+  if (result) {
+    alert.info({
+      title: `Apakah Anda Yakin untuk Menyelesaikan Quisioner?`
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        alert.loading()
+        try {
+          const response = await saveJawaban({ isLastQuestion: true })
+
+          if (response) {
+            finishQuisioner()
+          }
+        } catch (error) {
+          alert.instance().close()
+        }
+
+      }
+    })
   }
 }
 
@@ -218,16 +258,15 @@ watch(() => [navigation], () => {
 
               <div>
                 <span class="badge bg-light-primary text-primary fw-semibold fs-3 mt-2 mt-md-0">
-                  {{ progressPercentage(question?.sorting ? question?.sorting - 1 : indexQuestion) }}%
+                  {{ progressPercentage(navigation.currentQuestion - 1) }}%
                 </span>
               </div>
             </div>
 
             <div class="progress mt-2 mt-md-0">
               <div class="progress-bar progress-bar-striped bg-primary progress-bar-animated" role="progressbar"
-                :aria-valuenow="question?.sorting ? question?.sorting - 1 : indexQuestion" aria-valuemin="1"
-                :aria-valuemax="questions.meta.total"
-                :style="`width: ${progressPercentage(question?.sorting ? question?.sorting - 1 : indexQuestion)}%`">
+                :aria-valuenow="navigation.currentQuestion - 1" aria-valuemin="1" :aria-valuemax="questions.meta.total"
+                :style="`width: ${progressPercentage(navigation.currentQuestion - 1)}%`">
               </div>
             </div>
 
@@ -240,17 +279,13 @@ watch(() => [navigation], () => {
               <table class="table border text-nowrap mb-0 align-middle">
                 <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary">
                   <tr>
-                    <th class="width-300px"></th>
-                    <template v-if="Array.isArray(question?.komponen) && question?.komponen.length">
-                      <template
-                        v-if="Array.isArray(question?.komponen[0]?.jawabans) && question?.komponen[0]?.jawabans?.length">
-                        <th v-for="(jawaban, indexJawaban) in question.komponen[0].jawabans"
-                          :key="`jawaban-${indexJawaban}`">
-                          <div class="text-center">
-                            {{ jawaban?.jawaban }}
-                          </div>
-                        </th>
-                      </template>
+                    <th class="width-250px"></th>
+                    <template v-if="Array.isArray(question?.grup?.jawabans) && question?.grup?.jawabans.length">
+                      <th v-for="(jawaban, indexJawaban) in question?.grup?.jawabans" :key="`jawaban-${indexJawaban}`">
+                        <div class="text-center">
+                          {{ jawaban?.jawaban }}
+                        </div>
+                      </th>
                     </template>
                   </tr>
                 </thead>
@@ -260,29 +295,25 @@ watch(() => [navigation], () => {
                       <td>
                         <div class="d-flex flex-wrap">
                           <div v-if="komponen?.deskripsi" v-html="komponen?.deskripsi"
-                            class="width-300px text-break text-wrap" />
+                            class="width-250px text-break text-wrap" />
                         </div>
                       </td>
                       <template v-if="Array.isArray(komponen?.jawabans) && komponen?.jawabans.length">
                         <!-- If Jenis Pilihan Ganda -->
                         <template v-if="question?.grup?.jenis === 'pilgan'">
                           <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
-                            :state="jawaban" :rules="rulesPilihanGanda">
+                            :state="jawaban" :rules="rulesPilihanGanda({ indexJawaban, indexKomponen, indexQuestion })"
+                            :index="indexKomponen">
                             <template #default="{ v }">
                               <td>
-                                <!-- <pre>
-                                  {{ v.hasil.$model }}
-                                </pre> -->
                                 <div
                                   class="form-check form-check-inline d-flex justify-content-center align-items-center">
                                   <input type="radio" class="form-check-input primary check-outline outline-primary"
-                                    :checked="!!v.hasil.$model"
-                                    @change="$event => handleChangeBobot({ event: $event, bobot: jawaban?.bobot, indexJawaban, indexKomponen, indexQuestion })"
+                                    :class="[v?.hasil?.$errors?.length ? 'is-invalid' : '']" :checked="!!jawaban.hasil"
                                     :id="`radio-${indexJawaban}-${indexKomponen}`"
+                                    @change="handleChangeHasil({ bobot: jawaban?.bobot, indexJawaban, indexKomponen, indexQuestion })"
                                     :name="`radio-komponen-${indexKomponen}`" />
                                 </div>
-
-                                <ErrorMessage :errors="v.hasil.$errors" />
                               </td>
                             </template>
                           </ValidateEach>
@@ -291,13 +322,15 @@ watch(() => [navigation], () => {
                         <!-- Else If Jenis Persentasi -->
                         <template v-else-if="question?.grup?.jenis === 'persentase'">
                           <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
-                            :state="jawaban" :rules="rulesPersentase">
+                            :state="jawaban" :rules="rulesPersentase({ indexJawaban, indexKomponen, indexQuestion })"
+                            :index="indexKomponen">
                             <template #default="{ v }">
                               <td>
                                 <div class="d-flex flex-column justify-content-center ">
                                   <BaseInput :id="`input-${indexJawaban}-${indexKomponen}`" class="form-control w-25"
-                                    type="number" :min="1" :max="jawaban?.bobot || 100" :name="`input-${indexKomponen}`"
-                                    v-model="v.hasil.$model" :is-invalid="!!v.hasil?.$errors?.length">
+                                    type="number" :min="1" :max="100" :name="`input-${indexKomponen}`"
+                                    placeholder="Silakan isi persentase" v-model="v.hasil.$model"
+                                    :is-invalid="!!v.hasil?.$errors?.length">
                                     <template #extra-input-group>
                                       <div class="input-group-text">
                                         <TablerIcon icon="PercentageIcon" />
@@ -309,7 +342,6 @@ watch(() => [navigation], () => {
                                 </div>
                               </td>
                             </template>
-
                           </ValidateEach>
                         </template>
                       </template>
@@ -334,7 +366,7 @@ watch(() => [navigation], () => {
         </div>
 
         <div>
-          <BaseButton v-if="isLastQuestion" @click="handleNext" class="btn btn-success mt-2 mt-md-0"
+          <BaseButton v-if="isLastQuestion" @click="handleFinish" class="btn btn-success mt-2 mt-md-0"
             title="Simpan dan Selesaikan" :disabled="questions.loadingSubmit" :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="CheckboxIcon" />

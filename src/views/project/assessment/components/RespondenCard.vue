@@ -71,7 +71,7 @@ const classStatus = computed(() => {
     const isOngoing = value === 'ongoing'
     const isCompleted = value === 'completed' || value === 'done'
     const isUnstart = value === 'unstart'
-    const isPending = value === 'pending'
+    const isPending = value === 'pending' || value === 'diundang'
 
 
     if (isOngoing) {

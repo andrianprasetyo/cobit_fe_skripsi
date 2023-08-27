@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import NotificationPopUp from '@/components/common/NotificationPopUp.vue'
+import BaseAvatar from '@/components/Avatar/BaseAvatar.vue'
 
 import { useAuth } from '@/stores/auth'
 import { useAlert } from '@/stores/alert'
@@ -83,7 +84,8 @@ const handleToggleMiniSidebar = () => {
                 aria-expanded="false">
                 <div class="d-flex align-items-center">
                   <div class="user-profile-img">
-                    <img src="/assets/images/profile/user-1.jpg" class="rounded-circle" width="35" height="35" alt="" />
+                    <BaseAvatar :source="`${appConfig.app.appHostMedia}${auth.account?.avatar?.path}`" width="35"
+                      height="35" />
                   </div>
                 </div>
               </a>
@@ -93,7 +95,9 @@ const handleToggleMiniSidebar = () => {
                     <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
                   </div>
                   <div class="d-flex align-items-center py-9 mx-7 border-bottom">
-                    <img src="/assets/images/profile/user-1.jpg" class="rounded-circle" width="80" height="80" alt="" />
+                    <BaseAvatar :source="`${appConfig.app.appHostMedia}${auth.account?.avatar?.path}`" width="80"
+                      height="80" />
+
                     <div class="ms-3">
                       <h5 class="mb-1 fs-3">{{ auth?.account?.nama }}</h5>
                       <span class="mb-1 d-block text-dark">{{ auth?.account?.roleaktif?.role?.nama }}</span>
@@ -109,7 +113,7 @@ const handleToggleMiniSidebar = () => {
                       </span>
                       <div class="w-75 d-inline-block v-middle ps-3">
                         <h6 class="mb-1 bg-hover-primary fw-semibold"> Pengaturan </h6>
-                        <span class="d-block text-dark">Pengaturan Akun</span>
+                        <span class="d-block text-dark">Pengaturan Account</span>
                       </div>
                     </RouterLink>
                   </div>

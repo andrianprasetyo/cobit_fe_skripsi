@@ -6,7 +6,7 @@ export default {
    * @returns object
    */
   getMyAccount() {
-    return axiosClient.post('account/me')
+    return axiosClient.get('account/me')
   },
 
   /**

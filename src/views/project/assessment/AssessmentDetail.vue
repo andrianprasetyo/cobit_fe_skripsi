@@ -75,9 +75,13 @@ onUnmounted(() => {
               <div class="fs-2 mb-1 d-flex flex-column">
                 <span>Status:</span>
 
-                <span class="badge rounded-pill text-capitalize fw-bold" :class="classStatus(assessment.detail?.status)">
-                  {{ assessment.detail?.status }}
-                </span>
+                <div>
+                  <span class="badge rounded-pill text-capitalize fw-bold"
+                    :class="classStatus(assessment.detail?.status)">
+                    {{ assessment.detail?.status }}
+                  </span>
+
+                </div>
               </div>
             </div>
           </template>
