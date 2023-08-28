@@ -64,6 +64,17 @@
         "type": "menu",
         "urutan": 2,
         "role_type": "[\"admin\",\"super\"]"
+      },
+      {
+        "id": "5ab4e70f-0ea9-4dd5-acce-324ddffasdasd",
+        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
+        "title": "Organisasi",
+        "menu_key": "master-organisasi",
+        "url": "/master/organisasi",
+        "icon": "BuildingCommunityIcon",
+        "type": "menu",
+        "urutan": 3,
+        "role_type": "[\"admin\",\"customer\",\"super\"]"
       }
     ]
   },
@@ -139,7 +150,7 @@
         "id": "5ab4e70f-0ea9-4dd5-acce-f3a3eb78724c",
         "parent_id": "1d8f2806-e1d7-4a98-8aeb-63f6f8043737",
         "title": "Assessment",
-        "menu_key": "assessment",
+        "menu_key": "project-assessment",
         "url": "/project/assessment",
         "icon": "ReportAnalyticsIcon",
         "type": "menu",

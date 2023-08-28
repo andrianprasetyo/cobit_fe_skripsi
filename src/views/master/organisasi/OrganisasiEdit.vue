@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, onMounted, onUnmounted } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -8,33 +8,30 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
 
-import AssessmentServices from '@/services/lib/assessment'
+import OrganisasiServices from '@/services/lib/organisasi'
 
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
-
 
 const toast = useToast()
-const route = useRoute()
 const router = useRouter()
+const route = useRoute()
 const loading = useLoading()
-const assessment = useAssessmentStore()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const formState = reactive({
   loadingSubmit: false,
-  assessment: '',
-  deskripsi: '',
+  nama: '',
+  deskripsi: ''
 })
 
 const rules = computed(() => {
   return {
-    assessment: {
-      required: helpers.withMessage('Silahkan isi nama assessment', required),
+    nama: {
+      required: helpers.withMessage('Silahkan isi nama', required),
     },
     deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
@@ -44,6 +41,30 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
+/* --------------------------------- METHODS -------------------------------- */
+const getDetailOrganisasi = async () => {
+  const loader = loading.show()
+
+  try {
+    formState.loading = true
+    const response = await OrganisasiServices.getDetailOrganisasi({ id: route.params?.id })
+
+    if (response) {
+      const data = response?.data;
+
+      formState.nama = data?.nama
+      formState.deskripsi = data?.deskripsi
+
+      formState.loading = false
+      loader.hide()
+    }
+
+  } catch (error) {
+    formState.loading = false
+    loader.hide()
+    toast.error({ error })
+  }
+}
 
 const handleBack = () => {
   router.back()
@@ -57,18 +78,18 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await AssessmentServices.editAssessment({
+      const response = await OrganisasiServices.editOrganisasi({
         id: route.params?.id,
-        nama: formState.assessment,
-        deskripsi: formState.deskripsi,
+        nama: formState.nama,
+        deskripsi: formState.deskripsi
       })
 
       if (response) {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Edit Assessment',
-          text: 'Berhasil Mengubah Data Assessment'
+          title: 'Edit Organisasi',
+          text: 'Berhasil Mengubah Data Organisasi'
         })
         handleBack()
       }
@@ -80,19 +101,9 @@ const handleSubmit = async () => {
   }
 }
 
-
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  assessment.getDetailAssessment({ id: route.params?.id }).then((response) => {
-    const data = response?.data
-
-    formState.assessment = data?.nama || ''
-    formState.deskripsi = data?.deskripsi || ''
-  })
-})
-
-onUnmounted(() => {
-  assessment.resetState()
+  getDetailOrganisasi()
 })
 
 </script>
@@ -104,20 +115,20 @@ onUnmounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Assessment</h5>
+          <h5 class="card-title mb-9 fw-semibold">Organisasi</h5>
 
           <div class="mb-3">
-            <BaseInput id="assessment" v-model="v$.assessment.$model" label="Nama Assessment"
-              placeholder="Masukkan Nama Assessment" tabindex="1" :isInvalid="v$.assessment.$errors?.length"
-              :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.assessment.$errors" />
+            <BaseInput id="nama" v-model="v$.nama.$model" label="Nama" placeholder="Masukkan Nama" tabindex="1"
+              :isInvalid="v$.nama.$errors?.length" :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.nama.$errors" />
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="deskripsi">Deskripsi Asessment</label>
+            <label class="form-label" for="deskripsi">Deskripsi</label>
 
-            <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model"
+            <CKEditor id="deskripsi" v-model="v$.deskripsi.$model" tabindex="2"
               :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
+
             <ErrorMessage :errors="v$.deskripsi.$errors" />
           </div>
         </div>

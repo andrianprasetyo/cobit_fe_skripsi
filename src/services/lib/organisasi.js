@@ -14,5 +14,41 @@ export default {
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
       }`
     )
+  },
+
+  /**
+   *
+   * @param {id} payload
+   * @returns
+   */
+  getDetailOrganisasi(payload) {
+    return axiosClient.get(`organisasi/detail/${payload?.id}`)
+  },
+
+  /**
+   *
+   * @param {nama, deskripsi} payload
+   * @returns
+   */
+  createOrganisasi(payload) {
+    return axiosClient.post(`organisasi/add`, payload)
+  },
+
+  /**
+   *
+   * @param {id, nama, deskripsi} payload
+   * @returns
+   */
+  editOrganisasi(payload) {
+    return axiosClient.put(`organisasi/edit/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {id} payload
+   * @returns
+   */
+  deleteOrganisasi(payload) {
+    return axiosClient.delete(`organisasi/remove/${payload?.id}`)
   }
 }
