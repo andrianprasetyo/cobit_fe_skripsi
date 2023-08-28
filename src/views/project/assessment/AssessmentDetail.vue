@@ -63,7 +63,7 @@ onUnmounted(() => {
                   Nama:
                 </span>
 
-                <div>{{ assessment.detail?.nama }}</div>
+                <div>{{ assessment.detail?.nama || '-' }}</div>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
@@ -98,7 +98,7 @@ onUnmounted(() => {
                   Nama:
                 </span>
 
-                <div>{{ assessment.detail?.organisasi?.nama }}</div>
+                <div>{{ assessment.detail?.organisasi?.nama || '-' }}</div>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
@@ -121,7 +121,7 @@ onUnmounted(() => {
                   Nama:
                 </span>
 
-                <div>{{ assessment.detail?.pic?.nama }}</div>
+                <div>{{ assessment.detail?.pic?.nama || "-" }}</div>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
@@ -129,7 +129,7 @@ onUnmounted(() => {
                   Email:
                 </span>
 
-                <div>{{ assessment.detail?.pic?.email }}</div>
+                <div>{{ assessment.detail?.pic?.email || '-' }}</div>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
@@ -137,7 +137,7 @@ onUnmounted(() => {
                   Divisi:
                 </span>
 
-                <div>{{ assessment.detail?.pic?.divisi }}</div>
+                <div>{{ assessment.detail?.pic?.divisi || '-' }}</div>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
@@ -145,7 +145,7 @@ onUnmounted(() => {
                   Jabatan:
                 </span>
 
-                <div>{{ assessment.detail?.pic?.posisi }}</div>
+                <div>{{ assessment.detail?.pic?.posisi || '-' }}</div>
               </div>
             </div>
           </template>
