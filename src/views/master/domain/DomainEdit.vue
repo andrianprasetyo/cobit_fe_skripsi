@@ -6,7 +6,10 @@ import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
+
+/*
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
+*/
 
 import DomainServices from '@/services/lib/domain'
 
@@ -123,12 +126,19 @@ onMounted(() => {
           </div>
 
           <div class="mb-3">
+            <BaseInput id="ket" type="text-area" v-model="v$.ket.$model" label="Deskripsi"
+              placeholder="Masukkan Deskripsi Domain" tabindex="2" rows="4" :isInvalid="v$.ket.$errors?.length"
+              :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.ket.$errors" />
+          </div>
+
+          <!-- <div class="mb-3">
             <label class="form-label" for="ket">Deskripsi</label>
 
             <CKEditor id="ket" v-model="v$.ket.$model" tabindex="2" :isInvalid="!!v$.ket.$errors?.length"
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.ket.$errors" />
-          </div>
+          </div> -->
 
           <div class="d-flex flex-column flex-md-row align-items-center mt-5">
             <div>

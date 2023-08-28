@@ -1,8 +1,10 @@
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, computed } from 'vue'
+import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
+import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 // import BaseButton from '@/components/Button/BaseButton.vue'
 // import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
@@ -11,7 +13,6 @@ import ReportServices from '@/services/lib/report'
 import { useToast } from '@/stores/toast'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
-import { computed } from 'vue'
 
 const toast = useToast()
 const route = useRoute()
@@ -19,6 +20,7 @@ const loading = useLoading()
 
 /* ---------------------------------- STATE --------------------------------- */
 const report = reactive({
+  loadingSubmit: false,
   loading: false,
   data: null
 })
@@ -27,6 +29,20 @@ const report = reactive({
 const concludedScope = computed(() => {
   return ({ refinedScope, adjustment }) => {
     return refinedScope + adjustment
+  }
+})
+
+const suggessCapabilityLevel = computed(() => {
+  return value => {
+    if (value >= 75) {
+      return 4
+    } else if (value >= 50) {
+      return 3
+    } else if (value >= 25) {
+      return 2
+    } else {
+      return 1
+    }
   }
 })
 
@@ -54,11 +70,32 @@ const getReportCanvasAssessment = async () => {
   }
 }
 
+const handleChangeAdjustment = debounce(async ({ id, nilai, suggesstedCapabilityLevel, indexHasil }) => {
+  const loader = loading.show()
+  try {
+    report.loadingSubmit = true
+    const response = await ReportServices.setAdjustmentCanvasAssessment({ id, nilai, suggesstedCapabilityLevel })
+
+    if (response) {
+      const data = report.data
+      data.hasil[indexHasil].assesmentcanvas.adjustment = nilai
+      report.data = data
+
+      loader.hide()
+
+      report.loadingSubmit = false
+    }
+  } catch (error) {
+    loader.hide()
+    report.loadingSubmit = false
+    toast.error({ error })
+  }
+}, 500)
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getReportCanvasAssessment()
 })
-
 
 </script>
 
@@ -79,8 +116,7 @@ onMounted(() => {
                   <th colspan="5" class="bg-primary text-white text-center border-0 rounded-top-3 rounded-start-0">
                     Step 2: Determine the initial scope of the Governance System
                   </th>
-                  <th colspan="7"
-                    class="bg-light-dark text-white text-center border-0 rounded-bottom-0 rounded-start-0 rounded-top-3 ">
+                  <th colspan="7" class="bg-light-dark text-white text-center border-0 rounded-bottom-0 rounded-start-3 ">
                     Step 3: Refine the scope of the Governance System
                   </th>
                   <th colspan="6" class="bg-light-primary text-primary text-center border-0">
@@ -227,7 +263,7 @@ onMounted(() => {
                         </td>
 
                         <!-- Domain Step 2 -->
-                        <td v-if="indexAssessmentHasil >= 4">
+                        <td v-if="indexAssessmentHasil >= 4" class="text-center">
                           {{ assessmentHasil?.relative_importance }}
                         </td>
                       </template>
@@ -236,7 +272,15 @@ onMounted(() => {
                       {{ hasil?.assesmentcanvas?.step3_init_value }}
                     </td>
                     <td>
-                      <BaseInput :id="`adjustment-${indexHasil}`" type="number" v-model="hasil.assesmentcanvas.adjustment"
+                      <BaseInput :id="`adjustment-${indexHasil}`" type="number" @input="$event => handleChangeAdjustment({
+                        id: hasil.assesmentcanvas.id,
+                        nilai: parseInt($event?.target?.value || 0),
+                        event: $event, indexHasil,
+                        suggesstedCapabilityLevel: suggessCapabilityLevel(concludedScope({
+                          refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
+                            hasil.assesmentcanvas.adjustment
+                        }))
+                      })" :model-value="report.data.hasil[indexHasil].assesmentcanvas.adjustment"
                         placeholder="Masukkan Nilai Adjustment (Jika Perlu)" />
                     </td>
                     <td>
@@ -250,7 +294,10 @@ onMounted(() => {
                       }) }}
                     </td>
                     <td class="text-center bg-light-primary text-primary">
-                      {{ hasil?.assesmentcanvas?.suggest_capability_level }}
+                      {{ suggessCapabilityLevel(concludedScope({
+                        refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
+                          hasil.assesmentcanvas.adjustment
+                      })) }}
                     </td>
                     <td class="text-center">
                       {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
@@ -259,6 +306,14 @@ onMounted(() => {
                       <BaseInput :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
                         placeholder="Masukkan Alasan (Jika Ada)" />
                     </td>
+                  </tr>
+                </template>
+
+                <template v-else>
+                  <tr>
+                    <th colspan="20">
+                      <NoData />
+                    </th>
                   </tr>
                 </template>
               </tbody>
