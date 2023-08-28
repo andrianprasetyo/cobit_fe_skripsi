@@ -421,6 +421,91 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+
+            {
+              name: 'Organisasi',
+              path: '/master/organisasi',
+              component: () => import('@/views/master/organisasi/OrganisasiList.vue'),
+              meta: {
+                pageTitle: 'Organisasi',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Organisasi',
+                    disabled: true,
+                    href: '/master/organisasi',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahOrganisasi',
+              path: '/master/organisasi/add',
+              component: () => import('@/views/master/organisasi/OrganisasiAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Organisasi',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Organisasi',
+                    disabled: false,
+                    href: '/master/organisasi',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Organisasi',
+                    disabled: true,
+                    href: '/master/organisasi/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditOrganisasi',
+              path: '/master/organisasi/:id/edit',
+              component: () => import('@/views/master/organisasi/OrganisasiEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Organisasi',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Organisasi',
+                    disabled: false,
+                    href: '/master/organisasi',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Organisasi',
+                    disabled: true,
+                    href: '/master/organisasi/:id/edit',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },

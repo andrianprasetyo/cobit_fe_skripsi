@@ -38,7 +38,7 @@ const questions = reactive({
 })
 
 const navigation = reactive({
-  currentQuestion: 2
+  currentQuestion: 1
 })
 
 const isLastQuestion = computed(() => {
