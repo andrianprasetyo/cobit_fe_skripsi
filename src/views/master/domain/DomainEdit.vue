@@ -24,7 +24,7 @@ const loading = useLoading()
 const formState = reactive({
   loadingSubmit: false,
   kode: '',
-  deskripsi: '',
+  ket: '',
 })
 
 const rules = computed(() => {
@@ -32,7 +32,7 @@ const rules = computed(() => {
     kode: {
       required: helpers.withMessage('Silahkan isi kode', required),
     },
-    deskripsi: {
+    ket: {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
     },
   }
@@ -52,7 +52,7 @@ const getDetailDomain = async () => {
       const data = response?.data;
 
       formState.kode = data?.kode
-      formState.deskripsi = data?.deskripsi
+      formState.ket = data?.ket || ''
 
       formState.loading = false
       loader.hide()
@@ -80,7 +80,7 @@ const handleSubmit = async () => {
       const response = await DomainServices.editDomain({
         id: route.params?.id,
         kode: formState.kode,
-        deskripsi: formState.deskripsi
+        ket: formState.ket
       })
 
       if (response) {
@@ -123,11 +123,11 @@ onMounted(() => {
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="deskripsi">Deskripsi</label>
+            <label class="form-label" for="ket">Deskripsi</label>
 
-            <CKEditor id="deskripsi" type="text-area" v-model="v$.deskripsi.$model" tabindex="2"
-              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.deskripsi.$errors" />
+            <CKEditor id="ket" v-model="v$.ket.$model" tabindex="2" :isInvalid="!!v$.ket.$errors?.length"
+              :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.ket.$errors" />
           </div>
 
           <div class="d-flex flex-column flex-md-row align-items-center mt-5">

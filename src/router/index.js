@@ -803,6 +803,36 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'ReportAssessment',
+              path: '/project/assessment/:id/report',
+              component: () => import('@/views/project/assessment/AssessmentReport.vue'),
+              meta: {
+                pageTitle: 'Report Assessment',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Assessment',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Report Assessment',
+                    disabled: true,
+                    href: '/project/assessment/:id/report',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },

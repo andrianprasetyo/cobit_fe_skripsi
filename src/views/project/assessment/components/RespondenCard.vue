@@ -7,17 +7,17 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
-import ModalHasilQuisioner from '@/views/project/assessment/components/ModalHasilQuisioner.vue'
 
 import RespondenServices from '@/services/lib/responden'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useToast } from '@/stores/toast'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const toast = useToast()
 const assessment = useAssessmentStore()
 const route = useRoute()
+const router = useRouter()
 
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
@@ -51,7 +51,6 @@ const responden = reactive({
     total_page: 0
   },
   isShowModalInviteResponden: false,
-  isShowModalHasilQuisioner: false,
 })
 
 const serverOptions = ref({
@@ -98,12 +97,8 @@ const toggleModalInviteResponden = () => {
   }
 }
 
-const toggleModalHasilQuisioner = () => {
-  responden.isShowModalHasilQuisioner = !responden.isShowModalHasilQuisioner
-
-  if (responden.isShowModalHasilQuisioner) {
-    assessment.setSeletedAssessment(assessment.detail)
-  }
+const handleNavigateToHasil = () => {
+  router.push({ path: `/project/assessment/${route.params?.id}/report` })
 }
 
 const getListResponden = async ({ limit, page, sortBy, sortType, search, assesment_id }) => {
@@ -171,7 +166,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
           </BaseButton>
 
-          <BaseButton @click="toggleModalHasilQuisioner" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+          <BaseButton @click="handleNavigateToHasil" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
             title="Lihat Hasil Quisioner">
             <template #icon-left>
               <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
@@ -250,9 +245,6 @@ watch(() => [serverOptions.value, filter.value], () => {
     </div>
 
     <ModalInviteResponden :is-show="responden.isShowModalInviteResponden" @close="toggleModalInviteResponden"
-      @refresh="handleRefresh" />
-
-    <ModalHasilQuisioner :is-show="responden.isShowModalHasilQuisioner" @close="toggleModalHasilQuisioner"
       @refresh="handleRefresh" />
   </div>
 </template>

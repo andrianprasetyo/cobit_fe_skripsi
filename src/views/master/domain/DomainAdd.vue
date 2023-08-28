@@ -23,7 +23,7 @@ const loading = useLoading()
 const formState = reactive({
   loadingSubmit: false,
   kode: '',
-  deskripsi: '',
+  ket: '',
 })
 
 const rules = computed(() => {
@@ -31,8 +31,8 @@ const rules = computed(() => {
     kode: {
       required: helpers.withMessage('Silahkan isi kode', required),
     },
-    deskripsi: {
-      required: helpers.withMessage("Silahkan isi deskripsi", required)
+    ket: {
+      required: helpers.withMessage("Silahkan isi ket", required)
     },
   }
 })
@@ -53,7 +53,7 @@ const handleSubmit = async () => {
 
       const response = await DomainServices.createDomain({
         kode: formState.kode,
-        deskripsi: formState.deskripsi
+        ket: formState.ket
       })
 
       if (response) {
@@ -91,11 +91,11 @@ const handleSubmit = async () => {
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="deskripsi">Deskripsi</label>
+            <label class="form-label" for="ket">Deskripsi</label>
 
-            <CKEditor id="deskripsi" type="text-area" v-model="v$.deskripsi.$model" tabindex="2"
-              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.deskripsi.$errors" />
+            <CKEditor id="ket" type="text-area" v-model="v$.ket.$model" tabindex="2" :isInvalid="!!v$.ket.$errors?.length"
+              :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.ket.$errors" />
           </div>
 
           <div class="d-flex flex-column flex-md-row align-items-center mt-5">

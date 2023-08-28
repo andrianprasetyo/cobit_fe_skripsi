@@ -224,7 +224,7 @@ const handleSubmit = () => {
                 <TablerIcon icon="DownloadIcon" class="me-1 text-primary" size="14" />
 
                 <a class="link-primary fw-bold"
-                  :href="`${appConfig.app.appHostDownload}sample/template-invite-respondent`">
+                  :href="`${appConfig.app.appHostDownload}sample/template-invite-respondent`" target="_blank">
                   Download Template
                 </a>
               </div>
