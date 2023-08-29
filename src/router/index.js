@@ -805,9 +805,39 @@ const router = createRouter({
               }
             },
             {
+              name: 'SummaryAssessment',
+              path: '/project/assessment/:id/summary',
+              component: () => import('@/views/project/assessment/AssessmentSummary.vue'),
+              meta: {
+                pageTitle: 'Summary Assessment',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Assessment',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Summary Assessment',
+                    disabled: true,
+                    href: '/project/assessment/:id/summary',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
               name: 'ReportAssessment',
               path: '/project/assessment/:id/report',
-              component: () => import('@/views/project/assessment/AssessmentReport.vue'),
+              component: () => import('@/views/project/assessment/report/AssessmentReport.vue'),
               meta: {
                 pageTitle: 'Report Assessment',
                 layout: 'AppLayoutAdmin',
@@ -959,7 +989,7 @@ const router = createRouter({
                 active: false
               },
               {
-                text: 'Setting',
+                text: 'Settings',
                 disabled: true,
                 href: '/account/settings',
                 active: true

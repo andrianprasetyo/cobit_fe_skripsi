@@ -184,9 +184,6 @@ onMounted(() => {
 
 <template>
   <div>
-    <pre>
-      {{ formState.isNewAvatar }}
-    </pre>
     <div class="row">
       <div class="col-12 col-md-4 d-flex align-items-stretch">
         <div class="card w-100 position-relative overflow-hidden">

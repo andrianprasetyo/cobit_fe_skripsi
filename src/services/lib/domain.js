@@ -50,5 +50,27 @@ export default {
    */
   deleteDomain(payload) {
     return axiosClient.delete(`domain/remove/${payload?.id}`)
+  },
+
+  /**
+   *
+   * @param {limit, page, assessment_id} payload
+   * @returns
+   */
+  getSummaryGamo(payload) {
+    return axiosClient.get(
+      `domain/assesment/list?limit=${payload?.limit || 10}&page=${
+        payload?.page || 1
+      }&assesment_id=${payload?.assessment_id}`
+    )
+  },
+
+  /**
+   *
+   * @param {id} payload
+   * @returns
+   */
+  exportSummaryGamo(payload) {
+    return axiosClient.get(`domain/assesment/download?id=${payload?.id}`)
   }
 }

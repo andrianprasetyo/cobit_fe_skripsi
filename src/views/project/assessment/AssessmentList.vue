@@ -8,6 +8,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
+import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 import OrganisasiServices from '@/services/lib/organisasi'
@@ -53,6 +54,7 @@ const assessment = reactive({
     total_page: 0
   },
   isShowModalInviteResponden: false,
+  isShowModalSummaryGamo: false,
 })
 
 const organisasi = reactive({
@@ -77,7 +79,7 @@ const serverOptions = ref({
 
 const filter = ref({
   search: '',
-  organisasi: ''
+  organisasi_id: ''
 })
 
 const classStatus = computed(() => {
@@ -100,11 +102,21 @@ const formatDate = computed(() => {
   }
 })
 
+const isStatusCompleted = computed(() => {
+  return value => {
+    if (value === 'completed') {
+      return true
+    } else {
+      return false
+    }
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
-const getListAssessment = async ({ limit, page, sortBy, sortType, search, organisasi }) => {
+const getListAssessment = async ({ limit, page, sortBy, sortType, search, organisasi_id }) => {
   try {
     assessment.loading = true
-    const response = await AssessmentServices.getListAssessment({ limit, page, sortBy, sortType, search, organisasi })
+    const response = await AssessmentServices.getListAssessment({ limit, page, sortBy, sortType, search, organisasi_id })
 
     if (response) {
       const data = response?.data
@@ -145,6 +157,14 @@ const toggleModalInviteResponden = ({ item }) => {
   }
 }
 
+const toggleModalSummaryGamo = ({ item }) => {
+  assessment.isShowModalSummaryGamo = !assessment.isShowModalSummaryGamo
+
+  if (assessment.isShowModalSummaryGamo) {
+    assessmentStore.setSeletedAssessment(item)
+  }
+}
+
 const handleRefresh = () => {
   getListAssessment({
     limit: serverOptions.value.rowsPerPage,
@@ -153,6 +173,27 @@ const handleRefresh = () => {
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
   })
+}
+
+const selesaikanAsessment = async ({ id }) => {
+  try {
+    const response = await AssessmentServices.setStatusAssessment({ id, status: 'completed' })
+
+    if (response) {
+      toast.success({
+        title: 'Ubah Status Assessment',
+        text: `Berhasil Mengubah Status Assessment`
+      })
+
+      handleRefresh()
+
+      return response
+    }
+
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
 }
 
 const deleteAssessment = async ({ id }) => {
@@ -205,6 +246,29 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/detail` })
 }
 
+const handleNavigateReport = ({ id }) => {
+  router.push({ path: `/project/assessment/${id}/report` })
+}
+
+const handleSelesaikanAssessment = ({ title, id }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await selesaikanAsessment({ id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
 const handleSearchOrganisasi = debounce(async ({ search }) => {
   try {
     organisasi.loading = true
@@ -236,7 +300,7 @@ watch(() => [serverOptions.value, filter.value], () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
-    organisasi: filter.value.organisasi
+    organisasi_id: filter.value.organisasi_id
   })
 }, { deep: true })
 
@@ -280,7 +344,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
                 <div class="filter-menu filter-status-menu mt-2" v-if="isShowFilterOrganisasi">
                   <v-select id="filter-organisasi" @search="(search) => handleSearchOrganisasi({ search })"
-                    :filterable="false" :options="organisasi.data" v-model="filter.organisasi"
+                    :filterable="false" :options="organisasi.data" v-model="filter.organisasi_id"
                     :disabled="organisasi.loading" label="nama" :reduce="organisasi => organisasi?.id"
                     :loading="organisasi.loading" placeholder="Cari Organisasi" :select-on-key-codes="[]" :tabindex="4">
                     <template #no-options>
@@ -350,62 +414,98 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
-                          Lihat Detail
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li>
-                    <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                  <li>
-                    <BaseButton @click="toggleModalInviteResponden({ item: item?.item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="SendIcon" />
-                        <span class="ms-2">
-                          Undang Responden
+                          Lihat Detail Assessment
                         </span>
                       </template>
                     </BaseButton>
                   </li>
 
-                  <!-- <li>
-                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                  <li>
+                    <BaseButton @click="toggleModalSummaryGamo({ item: item?.item })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="ClipboardDataIcon" />
                         <span class="ms-2">
-                          Lihat Hasil Quisioner
+                          Lihat Summary GAMO
                         </span>
                       </template>
                     </BaseButton>
-                  </li> -->
+                  </li>
 
                   <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                    <BaseButton @click="handleNavigateReport({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
-                        <TablerIcon icon="TrashIcon" />
+                        <TablerIcon icon="ChartHistogramIcon" />
                         <span class="ms-2">
-                          Hapus
+                          Lihat Report Assessment
                         </span>
                       </template>
                     </BaseButton>
                   </li>
+
+                  <template v-if="!isStatusCompleted(item?.item?.status)">
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
+                          <span class="ms-2">
+                            Edit Assessment
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <li>
+                      <BaseButton @click="toggleModalInviteResponden({ item: item?.item })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="SendIcon" />
+                          <span class="ms-2">
+                            Undang Responden
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <li>
+                      <BaseButton @click="handleSelesaikanAssessment({ title: item?.item?.nama, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
+                        <template #icon-left>
+                          <TablerIcon icon="CheckboxIcon" />
+                          <span class="ms-2">
+                            Selesaikan Assessment
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <!-- <li>
+                      <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="ClipboardDataIcon" />
+                          <span class="ms-2">
+                            Lihat Hasil Quisioner
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li> -->
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        <template #icon-left>
+                          <TablerIcon icon="TrashIcon" />
+                          <span class="ms-2">
+                            Hapus
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </template>
                 </ul>
               </div>
             </template>
@@ -416,5 +516,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
     <ModalInviteResponden :is-show="assessment.isShowModalInviteResponden"
       @close="toggleModalInviteResponden({ item: null })" />
+
+    <ModalSummaryGamo :is-show="assessment.isShowModalSummaryGamo" @close="toggleModalSummaryGamo({ item: null })" />
   </div>
 </template>

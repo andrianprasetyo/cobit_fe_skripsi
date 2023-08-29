@@ -1,6 +1,5 @@
 <script setup>
 import { reactive, onMounted, computed } from 'vue'
-import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -71,32 +70,55 @@ const getReportCanvasAssessment = async () => {
   }
 }
 
-const handleChangeAdjustment = debounce(async ({ id, nilai, suggesstedCapabilityLevel, indexHasil }) => {
+const setHasilCanvasAssessment = async () => {
   const loader = loading.show()
+
   try {
-    report.loadingSubmit = true
-    const response = await ReportServices.setAdjustmentCanvasAssessment({ id, nilai, suggesstedCapabilityLevel })
+    report.loading = true
+    const response = await ReportServices.setHasilCanvasAssessment({ id: route.params?.id })
 
     if (response) {
-      const data = report.data
-      data.hasil[indexHasil].assesmentcanvas.adjustment = nilai
-      report.data = data
-
+      report.loading = false
       loader.hide()
-
-      report.loadingSubmit = false
+      getReportCanvasAssessment()
     }
+
   } catch (error) {
+    report.loading = false
     loader.hide()
-    report.loadingSubmit = false
     toast.error({ error })
   }
-}, 500)
+}
+
+const onSubmitAdjustment = async () => {
+  const loader = loading.show()
+
+  try {
+    report.loadingSubmit = true
+    const response = await ReportServices.setAdjustmentCanvasAssessment({ assement_id: route.params?.id, data: report.data })
+
+    if (response) {
+      toast.success({
+        title: 'Data Adjustment',
+        text: 'Berhasil Menyimpan Data Adjustment'
+      })
+
+      report.loadingSubmit = false
+      loader.hide()
+    }
+
+  } catch (error) {
+    report.loadingSubmit = false
+    loader.hide()
+    toast.error({ error })
+  }
+}
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getReportCanvasAssessment()
 })
+
 
 </script>
 
@@ -108,14 +130,26 @@ onMounted(() => {
       <div class="card">
         <div class="card-body">
           <div class="d-flex flex-row justify-content-between align-items-center">
-            <h5 class="card-title mb-9 fw-semibold">Report / Hasil Assessment</h5>
+            <h5 class="card-title mb-9 fw-semibold">Summary Assessment</h5>
 
-            <div>
-              <BaseButton @click="getReportCanvasAssessment" title="Refresh" :disabled="report.loading">
+            <div
+              class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+              <BaseButton @click="setHasilCanvasAssessment" class="btn btn-outline-primary" title="Refresh Data"
+                :disabled="report.loading">
                 <template #icon-left>
                   <TablerIcon icon="RefreshIcon" />
                 </template>
               </BaseButton>
+
+              <BaseButton @click="onSubmitAdjustment" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+                title="Simpan Perubahan" :disabled="report.loading || report.loadingSubmit"
+                :is-loading="report.loadingSubmit">
+                <template #icon-left>
+                  <TablerIcon icon="DeviceFloppyIcon" />
+                </template>
+              </BaseButton>
+
+
             </div>
           </div>
 
@@ -230,7 +264,8 @@ onMounted(() => {
                   <tr>
                     <th class="width-250px">Weight</th>
                     <template v-if="Array.isArray(report.data?.weight) && report.data?.weight.length">
-                      <template v-for="(_, indexWeight) in report.data?.weight" :key="`${indexWeight}-${weight?.id}`">
+                      <template v-for="(weight, indexWeight) in report.data?.weight"
+                        :key="`${indexWeight}-${weight?.id}`">
                         <th v-if="indexWeight <= 3" class="text-center">
                           <div>
                             <BaseInput :id="`weight-${indexWeight}`" class="text-center form-control" type="number"
@@ -287,20 +322,13 @@ onMounted(() => {
                         {{ hasil?.assesmentcanvas?.step3_init_value }}
                       </td>
                       <td>
-                        <BaseInput :id="`adjustment-${indexHasil}`" class="text-center form-control" type="number" @input="$event => handleChangeAdjustment({
-                          id: hasil.assesmentcanvas.id,
-                          nilai: parseInt($event?.target?.value || 0),
-                          event: $event, indexHasil,
-                          suggesstedCapabilityLevel: suggessCapabilityLevel(concludedScope({
-                            refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
-                              hasil.assesmentcanvas.adjustment
-                          }))
-                        })" :model-value="report.data.hasil[indexHasil].assesmentcanvas.adjustment"
+                        <BaseInput :id="`adjustment-${indexHasil}`" class="text-center form-control" type="number"
+                          v-model="report.data.hasil[indexHasil].assesmentcanvas.adjustment"
                           placeholder="Masukkan Nilai Adjustment (Jika Perlu)" />
                       </td>
                       <td>
-                        <BaseInput :id="`reason-adjustment-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
-                          placeholder="Masukkan Alasan (Jika Ada)" />
+                        <BaseInput :id="`reason-adjustment-${indexHasil}`"
+                          v-model="hasil.assesmentcanvas.reason_adjustment" placeholder="Masukkan Alasan (Jika Ada)" />
                       </td>
                       <td class="text-center bg-light fw-bold">
                         {{ concludedScope({
