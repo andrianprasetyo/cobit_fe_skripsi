@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, ref, onMounted, watch, computed } from 'vue'
+import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
@@ -9,6 +10,8 @@ import SearchInput from '@/components/Input/SearchInput.vue'
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
+import OrganisasiServices from '@/services/lib/organisasi'
+
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useRouter } from 'vue-router'
@@ -52,6 +55,19 @@ const assessment = reactive({
   isShowModalInviteResponden: false,
 })
 
+const organisasi = reactive({
+  loading: false,
+  data: [],
+  meta: {
+    current_page: 1,
+    per_page: 10,
+    total: 0,
+    total_page: 0
+  },
+})
+
+const isShowFilterOrganisasi = ref(false)
+
 const serverOptions = ref({
   page: 1,
   rowsPerPage: 10,
@@ -60,7 +76,8 @@ const serverOptions = ref({
 });
 
 const filter = ref({
-  search: ''
+  search: '',
+  organisasi: ''
 })
 
 const classStatus = computed(() => {
@@ -84,10 +101,10 @@ const formatDate = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getListAssessment = async ({ limit, page, sortBy, sortType, search }) => {
+const getListAssessment = async ({ limit, page, sortBy, sortType, search, organisasi }) => {
   try {
     assessment.loading = true
-    const response = await AssessmentServices.getListAssessment({ limit, page, sortBy, sortType, search })
+    const response = await AssessmentServices.getListAssessment({ limit, page, sortBy, sortType, search, organisasi })
 
     if (response) {
       const data = response?.data
@@ -98,6 +115,24 @@ const getListAssessment = async ({ limit, page, sortBy, sortType, search }) => {
     }
   } catch (error) {
     assessment.loading = false
+    toast.error({ error })
+  }
+}
+
+const getListOrganisasi = async ({ limit, page, search }) => {
+  try {
+    organisasi.loading = true
+    const response = await OrganisasiServices.getListOrganisasi({ limit, page, search })
+
+    if (response) {
+      const data = response?.data
+
+      organisasi.data = data?.list || []
+      organisasi.meta = data?.meta
+      organisasi.loading = false
+    }
+  } catch (error) {
+    organisasi.loading = false
     toast.error({ error })
   }
 }
@@ -170,9 +205,28 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/detail` })
 }
 
+const handleSearchOrganisasi = debounce(async ({ search }) => {
+  try {
+    organisasi.loading = true
+    const response = await OrganisasiServices.getListOrganisasi({ limit: 10, page: 1, search })
+
+    if (response) {
+      const data = response?.data
+
+      organisasi.data = data?.list || []
+      organisasi.loading = false
+    }
+
+  } catch (error) {
+    organisasi.loading = false
+    toast.error({ error })
+  }
+}, 500)
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
+  getListOrganisasi({ limit: 10, page: 1 })
 })
 
 watch(() => [serverOptions.value, filter.value], () => {
@@ -182,6 +236,7 @@ watch(() => [serverOptions.value, filter.value], () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    organisasi: filter.value.organisasi
   })
 }, { deep: true })
 
@@ -215,6 +270,43 @@ watch(() => [serverOptions.value, filter.value], () => {
 
           <DataTable :headers="assessment.headers" :items="assessment.data" :loading="assessment.loading"
             :server-items-length="assessment.meta.total" v-model:server-options="serverOptions" fixed-header>
+            <template #header-organisasi="header">
+              <div class="filter-column w-100">
+                {{ header.item.text }}
+
+                <TablerIcon icon="FilterCogIcon" class="ms-1 cursor-pointer"
+                  :class="[isShowFilterOrganisasi ? 'text-secondary' : '']"
+                  @click.stop="isShowFilterOrganisasi = !isShowFilterOrganisasi" />
+
+                <div class="filter-menu filter-status-menu mt-2" v-if="isShowFilterOrganisasi">
+                  <v-select id="filter-organisasi" @search="(search) => handleSearchOrganisasi({ search })"
+                    :filterable="false" :options="organisasi.data" v-model="filter.organisasi"
+                    :disabled="organisasi.loading" label="nama" :reduce="organisasi => organisasi?.id"
+                    :loading="organisasi.loading" placeholder="Cari Organisasi" :select-on-key-codes="[]" :tabindex="4">
+                    <template #no-options>
+                      Tidak ada Organisasi Ditemukan
+                    </template>
+
+                    <template #option="option">
+                      <div class="d-flex flex-row align-items-center py-1">
+                        <span class="me-2 fw-bold">
+                          {{ option.nama }}
+                        </span>
+                      </div>
+                    </template>
+
+                    <template #selected-option="option">
+                      <div class="d-flex flex-row align-items-center py-1">
+                        <span class="me-2 fw-bold">
+                          {{ option.nama }}
+                        </span>
+                      </div>
+                    </template>
+                  </v-select>
+                </div>
+              </div>
+            </template>
+
             <template #header-status="header">
               <div class="d-flex justify-content-center align-items-center w-100">
                 {{ header.item.text }}

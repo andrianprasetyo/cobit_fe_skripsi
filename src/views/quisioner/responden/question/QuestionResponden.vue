@@ -37,12 +37,8 @@ const questions = reactive({
   },
 })
 
-const navigation = reactive({
-  currentQuestion: 1
-})
-
 const isLastQuestion = computed(() => {
-  if (navigation.currentQuestion === questions.meta.total) {
+  if (quesioner.question.currentQuestion === questions.meta.total) {
     return true
   } else {
     return false
@@ -109,7 +105,11 @@ const getListQuestion = async ({ id, question }) => {
       questions.data = data?.list || []
       questions.meta = data?.meta
 
-      navigation.currentQuestion = data?.meta?.current_page
+      quesioner.$patch({
+        question: {
+          currentQuestion: data?.meta?.current_page || 1
+        }
+      })
       questions.loading = false
     }
   } catch (error) {
@@ -127,11 +127,14 @@ const saveJawaban = async ({ isLastQuestion = false }) => {
       questions.loadingSubmit = false
 
       if (!isLastQuestion) {
-        navigation.currentQuestion = navigation.currentQuestion + 1
+        quesioner.$patch({
+          question: {
+            currentQuestion: quesioner.question.currentQuestion + 1
+          }
+        })
       }
 
       scrollToTop()
-
 
       return response
     }
@@ -151,6 +154,11 @@ const finishQuisioner = async () => {
       questions.loadingSubmit = false
       handleNavigateFinish()
       alert.instance().close()
+      quesioner.$patch({
+        question: {
+          currentQuestion: 1
+        }
+      })
     }
   } catch (error) {
     questions.loadingSubmit = false
@@ -163,10 +171,11 @@ const scrollToTop = () => {
 
   const scrollToOptions = {
     top: 0,
-    behavior: 'smooth'
+    behavior: 'smooth',
+    block: 'start'
   };
 
-  scrollbar.scrollTo(scrollToOptions)
+  scrollbar.scrollIntoView(scrollToOptions)
 }
 
 const handleChangeHasil = ({ indexQuestion, indexKomponen, bobot }) => {
@@ -215,8 +224,12 @@ const handleFinish = async () => {
 }
 
 const handleBack = async () => {
-  if (navigation.currentQuestion > 0) {
-    navigation.currentQuestion = navigation.currentQuestion - 1
+  if (quesioner.question.currentQuestion > 0) {
+    quesioner.$patch({
+      question: {
+        currentQuestion: quesioner.question.currentQuestion - 1
+      }
+    })
   }
 
   scrollToTop()
@@ -228,12 +241,12 @@ const handleNavigateFinish = () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  getListQuestion({ id: quesioner?.responden?.id, question: navigation.currentQuestion })
+  getListQuestion({ id: quesioner?.responden?.id, question: quesioner.question.currentQuestion })
 })
 
-watch(() => [navigation], () => {
+watch(() => [quesioner.question.currentQuestion], () => {
   getListQuestion({
-    id: quesioner?.responden?.id, question: navigation.currentQuestion
+    id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
   })
 }, { deep: true })
 
@@ -258,15 +271,16 @@ watch(() => [navigation], () => {
 
               <div>
                 <span class="badge bg-light-primary text-primary fw-semibold fs-3 mt-2 mt-md-0">
-                  {{ progressPercentage(navigation.currentQuestion - 1) }}%
+                  {{ progressPercentage(quesioner.question.currentQuestion - 1) }}%
                 </span>
               </div>
             </div>
 
             <div class="progress mt-2 mt-md-0">
               <div class="progress-bar progress-bar-striped bg-primary progress-bar-animated" role="progressbar"
-                :aria-valuenow="navigation.currentQuestion - 1" aria-valuemin="1" :aria-valuemax="questions.meta.total"
-                :style="`width: ${progressPercentage(navigation.currentQuestion - 1)}%`">
+                :aria-valuenow="quesioner.question.currentQuestion - 1" aria-valuemin="1"
+                :aria-valuemax="questions.meta.total"
+                :style="`width: ${progressPercentage(quesioner.question.currentQuestion - 1)}%`">
               </div>
             </div>
 
@@ -357,7 +371,7 @@ watch(() => [navigation], () => {
 
       <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
         <div>
-          <BaseButton v-if="navigation && navigation.currentQuestion > 1" @click="handleBack" title="Sebelumnya"
+          <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Sebelumnya"
             class="btn btn-outline-primary">
             <template #icon-left>
               <TablerIcon icon="ChevronLeftIcon" />
