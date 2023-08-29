@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 import AssessmentServices from '@/services/lib/assessment'
+import ReportServices from '@/services/lib/report'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from '@/stores/toast'
@@ -10,7 +11,11 @@ const loading = useLoading()
 export const useAssessmentStore = defineStore('assessment', {
   state: () => ({
     selectedAssessment: null,
-    detail: null
+    detail: null,
+    reportChart: {
+      nonAdjustment: null,
+      adjustment: null
+    }
   }),
   getters: {
     getSelectedAssessment(state) {
@@ -19,11 +24,27 @@ export const useAssessmentStore = defineStore('assessment', {
 
     getDetail(state) {
       return state.detail
+    },
+
+    getReportChartNonAdjustment(state) {
+      return state.reportChart.nonAdjustment
+    },
+
+    getReportChartAdjustment(state) {
+      return state.reportChart.adjustment
     }
   },
   actions: {
     setSeletedAssessment(payload) {
       this.selectedAssessment = payload
+    },
+
+    setReportChartNonAdjustment(payload) {
+      this.reportChart.nonAdjustment = payload
+    },
+
+    setReportChartAdjustment(payload) {
+      this.reportChart.adjustment = payload
     },
 
     async getDetailAssessment(payload) {
@@ -102,7 +123,55 @@ export const useAssessmentStore = defineStore('assessment', {
       }
     },
 
-    resetState(){
+    async getReportChartNonAdjustmentAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await ReportServices.getReportChartNonAdjustmentAssessment({
+          assessment_id: payload?.assessment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.reportChart.nonAdjustment = data
+          loader.hide()
+
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getReportChartAdjustmentAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await ReportServices.getReportChartAdjustmentAssessment({
+          assessment_id: payload?.assessment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.reportChart.adjustment = data
+          loader.hide()
+
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    resetState() {
       this.$reset()
     }
   }

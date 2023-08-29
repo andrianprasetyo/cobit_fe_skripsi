@@ -7,18 +7,21 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
+import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
 
 import RespondenServices from '@/services/lib/responden'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useToast } from '@/stores/toast'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const toast = useToast()
 const assessment = useAssessmentStore()
 const route = useRoute()
-const router = useRouter()
 
+/*
+const router = useRouter()
+*/
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const responden = reactive({
@@ -51,6 +54,7 @@ const responden = reactive({
     total_page: 0
   },
   isShowModalInviteResponden: false,
+  isShowModalSummaryGamo: false
 })
 
 const serverOptions = ref({
@@ -97,8 +101,12 @@ const toggleModalInviteResponden = () => {
   }
 }
 
-const handleNavigateToHasil = () => {
-  router.push({ path: `/project/assessment/${route.params?.id}/report` })
+const toggleModalSummaryGamo = () => {
+  responden.isShowModalSummaryGamo = !responden.isShowModalSummaryGamo
+
+  if (responden.isShowModalSummaryGamo) {
+    assessment.setSeletedAssessment(assessment.detail)
+  }
 }
 
 const getListResponden = async ({ limit, page, sortBy, sortType, search, assesment_id }) => {
@@ -155,7 +163,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           <h5 class="card-title fw-semibold">Responden</h5>
         </div>
 
-        <div
+        <div v-if="assessment?.detail?.status !== 'completed'"
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <SearchInput v-model="filter.search" placeholder="Cari Assessment" />
 
@@ -166,8 +174,8 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
           </BaseButton>
 
-          <BaseButton @click="handleNavigateToHasil" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Lihat Hasil Quisioner">
+          <BaseButton @click="toggleModalSummaryGamo" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+            title="Lihat Summary GAMO">
             <template #icon-left>
               <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
             </template>
@@ -223,7 +231,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           </div>
         </template>
 
-        <template #item-action="item">
+        <!-- <template #item-action="item">
           <div v-if="item.item?.status === 'done'" class="dropdown dropstart">
             <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
               id="dropdownMenuButton" aria-expanded="false" />
@@ -240,11 +248,13 @@ watch(() => [serverOptions.value, filter.value], () => {
               </li>
             </ul>
           </div>
-        </template>
+        </template> -->
       </DataTable>
     </div>
 
     <ModalInviteResponden :is-show="responden.isShowModalInviteResponden" @close="toggleModalInviteResponden"
       @refresh="handleRefresh" />
+
+    <ModalSummaryGamo :is-show="responden.isShowModalSummaryGamo" @close="toggleModalSummaryGamo" />
   </div>
 </template>

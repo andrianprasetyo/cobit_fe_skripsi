@@ -113,7 +113,7 @@ const handleToggleMiniSidebar = () => {
                       </span>
                       <div class="w-75 d-inline-block v-middle ps-3">
                         <h6 class="mb-1 bg-hover-primary fw-semibold"> Pengaturan </h6>
-                        <span class="d-block text-dark">Pengaturan Account</span>
+                        <span class="d-block text-dark">Pengaturan Akun</span>
                       </div>
                     </RouterLink>
                   </div>

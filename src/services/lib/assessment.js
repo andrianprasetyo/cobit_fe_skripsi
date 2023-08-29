@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {limit, page, search, sortBy, sortType, organisasi} payload
+   * @param {limit, page, search, sortBy, sortType, organisasi_id} payload
    * @returns
    */
   getListAssessment(payload) {
@@ -12,7 +12,7 @@ export default {
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
-      }${payload?.organisasi ? `&organisasi=${payload?.organisasi}` : ''}`
+      }${payload?.organisasi_id ? `&organisasi_id=${payload?.organisasi_id}` : ''}`
     )
   },
 
@@ -74,5 +74,14 @@ export default {
         'Content-Type': 'multipart/form-data'
       }
     })
+  },
+
+  /**
+   *
+   * @param {id, status} payload
+   * @returns
+   */
+  setStatusAssessment(payload) {
+    return axiosClient.put(`assesment/set-status/${payload?.id}`, payload)
   }
 }
