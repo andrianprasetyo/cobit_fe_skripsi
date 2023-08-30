@@ -8,7 +8,7 @@ build dev:
   only: 
   - dev
   script:
-    - npm install --progress=false
+    - npm install 
     - npm run build
   artifacts:
     expire_in: 1 day
