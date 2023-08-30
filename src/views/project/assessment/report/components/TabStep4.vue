@@ -18,7 +18,7 @@ const chartOptions = reactive({
       top: 1
     }
   },
-  
+
 })
 
 const route = useRoute()
@@ -36,8 +36,8 @@ onMounted(() => {
     <div class="card-body">
       <h5 class="card-title fw-semibold">Step 4: Conclude the Scope of the Governance System</h5>
 
-      <ApexChartsRadar :categories="assessmentStore.reportChart.adjustment?.categories || []" :options="chartOptions"
-        :series="assessmentStore.reportChart.adjustment?.series" />
+      <ApexChartsRadar :height="1000" :categories="assessmentStore.reportChart.adjustment?.categories || []"
+        :options="chartOptions" :series="assessmentStore.reportChart.adjustment?.series || []" />
     </div>
   </div>
 </template>

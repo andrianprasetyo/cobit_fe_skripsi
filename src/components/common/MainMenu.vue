@@ -170,7 +170,8 @@ defineExpose({
           <LinkMenuItem v-if="isHasURL(menuItem)" :to="menuItem?.url || '-'" class="sidebar-link"
             :class="[isHasChildren(menuItem?.children) ? 'has-arrow' : '', isActiveNav(menuItem) ? 'active' : '']"
             @click="setActiveGroupId('')">
-            <TablerIcon size=" 21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4" />
+            <TablerIcon size=" 21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4"
+              :class="[isActiveNav(menuItem) ? 'text-secondary' : '']" />
             <span class="hide-menu">{{ menuItem?.title }}</span>
           </LinkMenuItem>
 
@@ -179,7 +180,8 @@ defineExpose({
           <a v-else class="sidebar-link has-arrow cursor-pointer"
             :class="[isActiveCollapsedNav(menuItem?.children) ? 'active' : '']" aria-expanded="false"
             @click="setActiveGroupId(menuItem?.id)">
-            <TablerIcon size="21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4" />
+            <TablerIcon size="21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4"
+              :class="[isActiveCollapsedNav(menuItem?.children) ? 'text-secondary' : '']" />
             <span class="hide-menu">{{ menuItem?.title }}</span>
           </a>
 
@@ -196,7 +198,7 @@ defineExpose({
 
                 <!-- Static Icons -->
                 <TablerIcon size="8" :icon="isChildrenActiveMenu(children) ? 'CircleFilledIcon' : 'CircleIcon'"
-                  class="nav-small-cap-icon fs-4" />
+                  class="nav-small-cap-icon fs-4" :class="[isChildrenActiveMenu(children) ? 'text-secondary' : '']" />
                 <span class="hide-menu">{{ children?.title }}</span>
               </LinkMenuItem>
 

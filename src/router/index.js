@@ -903,7 +903,7 @@ const router = createRouter({
               meta: {
                 pageTitle: 'Question',
                 layout: 'AppLayoutSideView',
-                background_picture: '/assets/images/illustrations/people-discussion-online.svg',
+                background_picture: '/assets/images/illustrations/teamwork-activity.svg',
                 requiredAuth: false,
                 breadcrumb: [
                   {
