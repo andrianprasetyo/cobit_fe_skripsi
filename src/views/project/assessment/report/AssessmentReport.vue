@@ -95,8 +95,8 @@ onUnmounted(() => {
               :class="[tab === 'gamo' ? 'active' : '']" id="pills-gamo-tab" role="tab" aria-controls="pills-gamo"
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
-                <TablerIcon icon="ChartInfographicIcon" class="me-2" />
-                <span class="d-none d-md-block">Governance and Management Objectives</span>
+                <TablerIcon icon="SquareNumber1Icon" class="me-2" />
+                <span class="d-none d-md-block width-150px text-truncate">Governance and Management Objectives</span>
               </div>
             </BaseButton>
           </li>
@@ -106,8 +106,8 @@ onUnmounted(() => {
               :class="[tab === 'step2' ? 'active' : '']" id="pills-step2-tab" role="tab" aria-controls="pills-step2"
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
-                <TablerIcon icon="ChartInfographicIcon" class="me-2" />
-                <span class="d-none d-md-block">Step 2</span>
+                <TablerIcon icon="SquareNumber2Icon" class="me-2" />
+                <span class="d-none d-md-block width-150px text-truncate">Determine the initial scope of the Governance System</span>
               </div>
             </BaseButton>
           </li>
@@ -117,22 +117,22 @@ onUnmounted(() => {
               :class="[tab === 'step3' ? 'active' : '']" id="pills-step3-tab" role="tab" aria-controls="pills-step3"
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
-                <TablerIcon icon="ChartInfographicIcon" class="me-2" />
-                <span class="d-none d-md-block">Step 3</span>
+                <TablerIcon icon="SquareNumber3Icon" class="me-2" />
+                <span class="d-none d-md-block width-150px text-truncate">Refine the scope of the Governance System</span>
               </div>
             </BaseButton>
           </li>
-          <!-- <li class="nav-item" role="presentation">
+          <li class="nav-item" role="presentation">
             <BaseButton @click="handleClickView('step4')"
               class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
               :class="[tab === 'step4' ? 'active' : '']" id="pills-step4-tab" role="tab" aria-controls="pills-step4"
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
-                <TablerIcon icon="ChartInfographicIcon" class="me-2" />
-                <span class="d-none d-md-block">Step 4</span>
+                <TablerIcon icon="SquareNumber4Icon" class="me-2" />
+                <span class="d-none d-md-block width-150px text-truncate">Conclude the Scope of the Governance System</span>
               </div>
             </BaseButton>
-          </li> -->
+          </li>
         </template>
 
         <template #tab-content>

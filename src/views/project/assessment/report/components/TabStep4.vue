@@ -1,20 +1,24 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
 
-import ApexChartsBar from '@/components/ApexCharts/ApexChartsBar.vue'
+import ApexChartsRadar from '@/components/ApexCharts/ApexChartsRadar.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 import { useRoute } from 'vue-router'
 
 const chartOptions = reactive({
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      columnWidth: '50%',
-      borderRadius: 2,
-    },
+  chart: {
+    height: 400,
+    type: 'radar',
+    dropShadow: {
+      enabled: true,
+      blur: 1,
+      left: 1,
+      top: 1
+    }
   },
+  
 })
 
 const route = useRoute()
@@ -32,8 +36,8 @@ onMounted(() => {
     <div class="card-body">
       <h5 class="card-title fw-semibold">Step 4: Conclude the Scope of the Governance System</h5>
 
-      <ApexChartsBar :categories="assessmentStore.reportChart.adjustment?.categories || []" :options="chartOptions"
-        :series="assessmentStore.reportChart.adjustment?.series?.step_2" />
+      <ApexChartsRadar :categories="assessmentStore.reportChart.adjustment?.categories || []" :options="chartOptions"
+        :series="assessmentStore.reportChart.adjustment?.series" />
     </div>
   </div>
 </template>

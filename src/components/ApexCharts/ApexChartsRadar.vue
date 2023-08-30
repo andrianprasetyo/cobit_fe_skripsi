@@ -1,10 +1,10 @@
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 
 const props = defineProps({
   type: {
     type: [String],
-    default: 'bar'
+    default: 'radar'
   },
   height: {
     type: [String, Number],
@@ -30,29 +30,25 @@ const props = defineProps({
 
 const defaultOptions = reactive({
   chart: {
-    type: "bar",
-    fontFamily: "Plus Jakarta Sans",
+    type: "radar",
+    fontFamily: `inherit`,
   },
   dataLabels: {
     enabled: false,
-  },
-  plotOptions: {
-    bar: {
-      columnWidth: '50%',
-      borderRadius: 2,
-    },
   },
   legend: {
     show: true,
     position: 'bottom',
     horizontalAlign: 'center'
   },
-  fill: {
-    opacity: 1
-  },
   stroke: {
-    show: true,
-    colors: ['transparent']
+    width: 2
+  },
+  fill: {
+    opacity: 0.1
+  },
+  markers: {
+    size: 0
   },
   noData: {
     text: "Tidak Ada Data Ditampilkan",
@@ -65,35 +61,24 @@ const defaultOptions = reactive({
       fontFamily: "Plus Jakarta Sans"
     }
   },
-  yaxis: {
-    labels: {
-      show: true,
-      align: 'right',
-      minWidth: 0,
-      maxWidth: 160,
-      style: {
-        colors: [],
-        fontSize: '8px',
-        fontFamily: 'inherit',
-        fontWeight: 400,
-        cssClass: 'apexcharts-yaxis-label',
-      },
-      offsetX: 0,
-      offsetY: 0,
-      rotate: 0,
+  xaxis: {
+    axisBorder: {
+      show: true
     },
+    axisTicks: {
+      show: false
+    }
   },
 })
 
 const chartOptions = computed(() => {
   return ({
-    ...defaultOptions, ...props.options,
-    colors: props.colors,
-    xaxis: {
+    ...defaultOptions, ...props.options, colors: props.colors, xaxis: {
       categories: props.categories,
-    },
+    }
   })
 })
+
 
 </script>
 
