@@ -3,18 +3,18 @@ import { reactive, computed, onMounted, defineAsyncComponent } from 'vue'
 
 import Spinner from '@/components/Loading/LoadingSpinner.vue'
 
-import AuthServices from '@/services/lib/auth'
+import AccountServices from '@/services/lib/account'
 
 import { useAppConfig } from '@/stores/appConfig'
 import { useToast } from '@/stores/toast'
 import { useRoute } from 'vue-router'
 
 const ValidToken = defineAsyncComponent({
-  loader: () => import('@/views/auth/forgot-password/verify/components/ValidToken.vue')
+  loader: () => import('@/views/account/verify/components/ValidToken.vue')
 })
 
 const InvalidToken = defineAsyncComponent({
-  loader: () => import('@/views/auth/forgot-password/verify/components/InvalidToken.vue')
+  loader: () => import('@/views/account/verify/components/InvalidToken.vue')
 })
 
 const VerifyComponent = {
@@ -29,6 +29,7 @@ const route = useRoute()
 const verifyState = reactive({
   isLoading: false,
   isInvalid: false,
+  data: null
 })
 
 const token = computed(() => {
@@ -43,12 +44,15 @@ const showVerifyComponent = computed(() => {
   }
 })
 
-const verifyForgotPassword = async () => {
+const verifyToken = async () => {
   try {
     verifyState.isLoading = true
-    const response = await AuthServices.verifyResetPassword({ token: token.value })
+    const response = await AccountServices.verifyToken({ token: token.value })
 
     if (response) {
+      const data = response?.data
+
+      verifyState.data = data
       verifyState.isLoading = false
     }
   } catch (error) {
@@ -59,7 +63,7 @@ const verifyForgotPassword = async () => {
 }
 
 onMounted(() => {
-  verifyForgotPassword()
+  verifyToken()
 })
 
 </script>
@@ -78,7 +82,7 @@ onMounted(() => {
       </template>
 
       <template v-else>
-        <component :is="VerifyComponent[showVerifyComponent]" />
+        <component :is="VerifyComponent[showVerifyComponent]" :data="verifyState.data" />
       </template>
     </div>
   </div>
