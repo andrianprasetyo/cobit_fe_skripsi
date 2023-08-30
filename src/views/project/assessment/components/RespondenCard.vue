@@ -9,19 +9,21 @@ import SearchInput from '@/components/Input/SearchInput.vue'
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
 import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
 
+import AssessmentServices from '@/services/lib/assessment'
 import RespondenServices from '@/services/lib/responden'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useToast } from '@/stores/toast'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useAlert } from '@/stores/alert'
+import { useAppConfig } from '@/stores/appConfig'
 
 const toast = useToast()
 const assessment = useAssessmentStore()
 const route = useRoute()
-
-/*
+const alert = useAlert()
 const router = useRouter()
-*/
+const appConfig = useAppConfig()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const responden = reactive({
@@ -66,6 +68,10 @@ const serverOptions = ref({
 
 const filter = ref({
   search: ''
+})
+
+const isAssessmentDone = computed(() => {
+  return assessment?.detail?.status === 'completed'
 })
 
 
@@ -134,7 +140,95 @@ const handleRefresh = () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    assesment_id: route.params?.id
   })
+}
+
+const deleteResponden = async ({ id }) => {
+  try {
+    const response = await RespondenServices.deleteResponden({ id })
+
+    if (response) {
+      toast.success({
+        title: 'Hapus Responden',
+        text: `Berhasil Menghapus Data Responden`
+      })
+      handleRefresh()
+
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
+const handleDeleteResponden = ({ title, id }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menghapus ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await deleteResponden({ id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
+const handleNavigateReport = () => {
+  router.push(`/project/assessment/${route.params?.id}/report`)
+}
+
+const selesaikanAsessment = async ({ id }) => {
+  try {
+    const response = await AssessmentServices.setStatusAssessment({ id, status: 'completed' })
+
+    if (response) {
+      toast.success({
+        title: 'Ubah Status Assessment',
+        text: `Berhasil Mengubah Status Assessment`
+      })
+
+      assessment.getDetailAssessment({ id })
+
+      return response
+    }
+
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
+const handleSelesaikanAssessment = () => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menyelesaikan Assessment`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await selesaikanAsessment({ id: route.params?.id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
+const exportResponden = async () => {
+  const url = `${appConfig.app.appHost}responden/users/download?id=${route.params?.id}`
+  window.open(url, '_blank');
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -149,6 +243,7 @@ watch(() => [serverOptions.value, filter.value], () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    assesment_id: route.params?.id
   })
 }, { deep: true })
 
@@ -163,23 +258,80 @@ watch(() => [serverOptions.value, filter.value], () => {
           <h5 class="card-title fw-semibold">Responden</h5>
         </div>
 
-        <div v-if="assessment?.detail?.status !== 'completed'"
+        <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-          <SearchInput v-model="filter.search" placeholder="Cari Assessment" />
+          <SearchInput v-model="filter.search" placeholder="Cari Responden" />
 
-          <BaseButton @click="toggleModalInviteResponden" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Undang Responden">
-            <template #icon-left>
-              <TablerIcon size="16" icon="SendIcon" class="me-2" />
+          <BaseButton class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Action" data-bs-toggle="dropdown"
+            id="dropdownMenuMore" aria-expanded="false">
+            <template #icon-right>
+              <TablerIcon icon="DotsIcon" class="ms-2" />
             </template>
           </BaseButton>
 
-          <BaseButton @click="toggleModalSummaryGamo" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Lihat Summary GAMO">
-            <template #icon-left>
-              <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuMore">
+
+
+            <li v-if="!isAssessmentDone">
+              <BaseButton @click="toggleModalInviteResponden"
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Undang Responden">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="SendIcon" class="me-2" />
+                </template>
+              </BaseButton>
+            </li>
+
+            <li v-if="!isAssessmentDone">
+              <BaseButton @click="exportResponden" class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
+                title="Export Responden">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="FileExportIcon" class="me-2" />
+                </template>
+              </BaseButton>
+            </li>
+
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+
+            <li>
+              <BaseButton @click="toggleModalSummaryGamo"
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Summary GAMO">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
+                </template>
+              </BaseButton>
+            </li>
+
+            <li>
+              <BaseButton @click="handleNavigateReport"
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report Assessment">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="ChartHistogramIcon" class="me-2" />
+                </template>
+              </BaseButton>
+            </li>
+
+            <template v-if="!isAssessmentDone">
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <BaseButton @click="handleSelesaikanAssessment"
+                  class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
+                  <template #icon-left>
+                    <TablerIcon icon="CheckboxIcon" />
+                    <span class="ms-2">
+                      Selesaikan Assessment
+                    </span>
+                  </template>
+                </BaseButton>
+              </li>
             </template>
-          </BaseButton>
+          </ul>
+
+
         </div>
 
       </div>
@@ -231,24 +383,40 @@ watch(() => [serverOptions.value, filter.value], () => {
           </div>
         </template>
 
-        <!-- <template #item-action="item">
-          <div v-if="item.item?.status === 'done'" class="dropdown dropstart">
-            <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-              id="dropdownMenuButton" aria-expanded="false" />
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li>
-                <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                  <template #icon-left>
-                    <TablerIcon icon="ClipboardDataIcon" />
-                    <span class="ms-2">
-                      Lihat Hasil Quisioner
-                    </span>
-                  </template>
-                </BaseButton>
-              </li>
-            </ul>
-          </div>
-        </template> -->
+        <template #item-action="item">
+          <template v-if="!isAssessmentDone">
+
+            <div v-if="item.item?.status === 'diundang'" class="dropdown dropstart">
+              <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+                id="dropdownMenuButton" aria-expanded="false" />
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li>
+                  <BaseButton
+                    @click="handleDeleteResponden({ title: item.item?.nama || item.item?.email, id: item.item?.id })"
+                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                    <template #icon-left>
+                      <TablerIcon icon="TrashIcon" />
+                      <span class="ms-2">
+                        Hapus Responden
+                      </span>
+                    </template>
+                  </BaseButton>
+                </li>
+
+                <!-- <li>
+                  <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    <template #icon-left>
+                      <TablerIcon icon="ClipboardDataIcon" />
+                      <span class="ms-2">
+                        Lihat Hasil Quisioner
+                      </span>
+                    </template>
+                  </BaseButton>
+                </li> -->
+              </ul>
+            </div>
+          </template>
+        </template>
       </DataTable>
     </div>
 

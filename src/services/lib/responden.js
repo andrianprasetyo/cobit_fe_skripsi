@@ -14,5 +14,14 @@ export default {
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
       }${payload?.assesment_id ? `&assesment_id=${payload?.assesment_id}` : ''}`
     )
+  },
+
+  /**
+   *
+   * @param {id} payload
+   * @returns
+   */
+  deleteResponden(payload) {
+    return axiosClient.delete(`responden/remove/${payload?.id}`)
   }
 }

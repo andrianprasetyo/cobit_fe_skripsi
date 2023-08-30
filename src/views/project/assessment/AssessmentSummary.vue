@@ -11,11 +11,12 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ReportServices from '@/services/lib/report'
 
 import { useToast } from '@/stores/toast'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
 const toast = useToast()
 const route = useRoute()
+const router = useRouter()
 const loading = useLoading()
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -70,6 +71,7 @@ const getReportCanvasAssessment = async () => {
   }
 }
 
+/*
 const setHasilCanvasAssessment = async () => {
   const loader = loading.show()
 
@@ -89,6 +91,7 @@ const setHasilCanvasAssessment = async () => {
     toast.error({ error })
   }
 }
+*/
 
 const onSubmitAdjustment = async () => {
   const loader = loading.show()
@@ -114,6 +117,10 @@ const onSubmitAdjustment = async () => {
   }
 }
 
+const handleBack = () => {
+  router.back()
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getReportCanvasAssessment()
@@ -134,7 +141,7 @@ onMounted(() => {
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <BaseButton @click="setHasilCanvasAssessment" class="btn btn-outline-primary" title="Refresh Data"
+              <BaseButton @click="getReportCanvasAssessment" class="btn btn-outline-primary" title="Refresh Data"
                 :disabled="report.loading">
                 <template #icon-left>
                   <TablerIcon icon="RefreshIcon" />
@@ -262,14 +269,18 @@ onMounted(() => {
 
                   <!-- Weight -->
                   <tr>
-                    <th class="width-250px">Weight</th>
-                    <template v-if="Array.isArray(report.data?.weight) && report.data?.weight.length">
-                      <template v-for="(weight, indexWeight) in report.data?.weight"
-                        :key="`${indexWeight}-${weight?.id}`">
+                    <th class="">
+                      <div class="width-250px d-flex align-items-center mb-2">
+                        Weight
+                      </div>
+                    </th>
+                    <template v-if="Array.isArray(report.data?.df) && report.data?.df.length">
+                      <template v-for="(weightDf, indexWeight) in report.data.df" :key="`${indexWeight}-${weightDf?.id}`">
                         <th v-if="indexWeight <= 3" class="text-center">
                           <div>
                             <BaseInput :id="`weight-${indexWeight}`" class="text-center form-control" type="number"
-                              placeholder="Masukkan Weight" v-model="report.data.weight[indexWeight].weight" />
+                              placeholder="Masukkan Weight"
+                              v-model="report.data.df[indexWeight].assesmentweight.weight" />
                           </div>
 
                         </th>
@@ -277,7 +288,8 @@ onMounted(() => {
                         <th v-if="indexWeight >= 4" class="text-center">
                           <div>
                             <BaseInput :id="`weight-${indexWeight}`" class="text-center form-control"
-                              placeholder="Masukkan Weight" v-model="report.data.weight[indexWeight].weight" />
+                              placeholder="Masukkan Weight"
+                              v-model="report.data.df[indexWeight].assesmentweight.weight" />
                           </div>
                         </th>
                       </template>
@@ -363,6 +375,20 @@ onMounted(() => {
               </table>
             </div>
           </template>
+        </div>
+      </div>
+
+      <div class="card mt-4">
+        <div class="card-body">
+          <div class="d-flex flex-column flex-md-row align-items-center">
+            <div>
+              <BaseButton @click="handleBack" class="btn btn-outline-primary me-0 me-md-3 mb-2 mb-md-0" title="Kembali">
+                <template #icon-left>
+                  <TablerIcon icon="ChevronLeftIcon" />
+                </template>
+              </BaseButton>
+            </div>
+          </div>
         </div>
       </div>
     </section>

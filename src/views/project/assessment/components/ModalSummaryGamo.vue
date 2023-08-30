@@ -38,6 +38,9 @@ const summary = reactive({
     text: 'Target Capability Level',
     value: 'suggest_capability_level',
   }, {
+    text: 'Agreed Target Capability Level',
+    value: 'aggreed_capability_level'
+  }, {
     text: 'Assessment',
     value: 'assessment'
   }
@@ -169,6 +172,12 @@ watch(() => [serverOptions.value, props.isShow], () => {
           </div>
         </template>
 
+        <template #header-aggreed_capability_level="header">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            {{ header.item.text }}
+          </div>
+        </template>
+
         <template #header-assessment="header">
           <div class="d-flex justify-content-center align-items-center w-100">
             {{ header.item.text }}
@@ -185,6 +194,12 @@ watch(() => [serverOptions.value, props.isShow], () => {
         <template #item-suggest_capability_level="item">
           <div class="d-flex justify-content-center align-items-center w-100">
             {{ item.item.suggest_capability_level }}
+          </div>
+        </template>
+
+        <template #item-aggreed_capability_level="item">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            {{ item.item.aggreed_capability_level }}
           </div>
         </template>
 

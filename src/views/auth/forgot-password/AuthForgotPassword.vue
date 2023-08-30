@@ -83,7 +83,7 @@ const onSubmit = async () => {
 
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
-          <BaseInput id="email" label="Email" v-model="v$.email.$model" placeholder="Masukkan Username"
+          <BaseInput id="email" label="Email" v-model="v$.email.$model" placeholder="Masukkan Email"
             :isInvalid="v$.email.$errors?.length" tabindex="1" :disabled="formState.isLoading" />
           <ErrorMessage :errors="v$.email.$errors" />
         </div>
