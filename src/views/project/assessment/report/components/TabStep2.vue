@@ -11,8 +11,80 @@ const chartOptions = reactive({
   plotOptions: {
     bar: {
       horizontal: true,
-      columnWidth: '50%',
       borderRadius: 2,
+      endingShape: 'rounded',
+      columnWidth: '70%',
+      barHeight: '70%',
+      distributed: false,
+      rangeBarOverlap: true,
+      rangeBarGroupRows: false,
+      hideZeroBarsWhenGrouped: false,
+      isDumbbell: false,
+      dumbbellColors: undefined,
+      isFunnel: false,
+      isFunnel3d: true,
+      colors: {
+        ranges: [{
+          from: -100,
+          to: -1,
+          color: '#EE1E25'
+        }, {
+          from: 1,
+          to: 100,
+          color: '#203058'
+        }],
+        backgroundBarColors: [],
+        backgroundBarOpacity: 1,
+        backgroundBarRadius: 0,
+      },
+      dataLabels: {
+        position: 'top',
+        maxItems: 100,
+        hideOverflowingLabels: true,
+        orientation: 'horizontal',
+        total: {
+          enabled: false,
+          formatter: undefined,
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            color: '#373d3f',
+            fontSize: '12px',
+            fontFamily: undefined,
+            fontWeight: 600
+          }
+        }
+      }
+    }
+  },
+  grid: {
+    show: true,
+    borderColor: '#dfe5ef',
+    strokeDashArray: 0,
+    position: 'back',
+    xaxis: {
+      lines: {
+        show: false
+      }
+    },
+    yaxis: {
+      lines: {
+        show: true
+      }
+    },
+    row: {
+      colors: undefined,
+      opacity: 0.5
+    },
+    column: {
+      colors: undefined,
+      opacity: 0.5
+    },
+    padding: {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
     },
   },
 })
@@ -22,7 +94,7 @@ const assessmentStore = useAssessmentStore()
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  if(!assessmentStore.reportChart.nonAdjustment?.series?.step_2){
+  if (!assessmentStore.reportChart.nonAdjustment?.series?.step_2) {
     assessmentStore.getReportChartNonAdjustmentAssessment({ assessment_id: route.params?.id })
   }
 })
