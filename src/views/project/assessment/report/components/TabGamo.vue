@@ -119,7 +119,7 @@ onMounted(() => {
           </div>
         </template>
 
-        <template #header-assessment="header">
+        <template #header-aggreed_capability_level="header">
           <div class="d-flex justify-content-center align-items-center w-100">
             {{ header.item.text }}
           </div>

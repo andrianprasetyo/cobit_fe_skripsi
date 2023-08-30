@@ -107,7 +107,7 @@ onUnmounted(() => {
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber2Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Determine the initial scope of the Governance System</span>
+                <span class="d-none d-md-block width-150px text-truncate">Step 2 : Determine the initial scope of the Governance System</span>
               </div>
             </BaseButton>
           </li>
@@ -118,7 +118,7 @@ onUnmounted(() => {
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber3Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Refine the scope of the Governance System</span>
+                <span class="d-none d-md-block width-150px text-truncate">Step 3 : Refine the scope of the Governance System</span>
               </div>
             </BaseButton>
           </li>
@@ -129,7 +129,7 @@ onUnmounted(() => {
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber4Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Conclude the Scope of the Governance System</span>
+                <span class="d-none d-md-block width-150px text-truncate">Step 4 : Conclude the Scope of the Governance System</span>
               </div>
             </BaseButton>
           </li>

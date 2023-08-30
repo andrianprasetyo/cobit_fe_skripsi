@@ -2,8 +2,11 @@
 import { ref } from 'vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
-import NotificationPopUp from '@/components/common/NotificationPopUp.vue'
 import BaseAvatar from '@/components/Avatar/BaseAvatar.vue'
+
+/*
+import NotificationPopUp from '@/components/common/NotificationPopUp.vue'
+*/
 
 import { useAuth } from '@/stores/auth'
 import { useAlert } from '@/stores/alert'
@@ -72,13 +75,16 @@ const handleToggleMiniSidebar = () => {
           </a> -->
 
           <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
-            <li class="nav-item dropdown">
+            <!-- Notification -->
+            <!-- <li class="nav-item dropdown">
               <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <TablerIcon icon="BellRingingIcon" size="20" badge="5" />
               </a>
               <NotificationPopUp />
-            </li>
+            </li> -->
+
+            <!-- Avatar -->
             <li class="nav-item dropdown">
               <a class="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
                 aria-expanded="false">

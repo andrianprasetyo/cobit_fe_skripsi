@@ -70,7 +70,17 @@ const getListRoles = async () => {
     if (response) {
       const data = response?.data
 
-      formState.roles.data = data.list || []
+      const listRoles = []
+
+      if (Array.isArray(data?.list) && data?.list?.length) {
+        data?.list.map(item => {
+          if (item?.code !== 'eksternal') {
+            listRoles.push(item)
+          }
+        })
+      }
+
+      formState.roles.data = listRoles
       formState.roles.loading = false
     }
   } catch (error) {
