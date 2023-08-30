@@ -3,6 +3,25 @@ import 'moment/dist/locale/id'
 
 moment.locale('id')
 
+export function greeting() {
+  const currentTime = moment().utcOffset('+07:00')
+  const currentHour = currentTime.hour()
+
+  let greeting
+
+  if (currentHour >= 6 && currentHour < 12) {
+    greeting = 'Selamat Pagi'
+  } else if (currentHour > 12 && currentHour < 15) {
+    greeting = 'Selamat Siang'
+  } else if (currentHour > 15 && currentHour < 18) {
+    greeting = 'Selamat Sore'
+  } else {
+    greeting = 'Selamat Malam'
+  }
+
+  return greeting
+}
+
 export function dateToNow({ date }) {
   if (typeof date == 'string') {
     let d = moment(date, "YYYY-MM-DD'T'HH:mm:ss.SSS'Z'").startOf('minute').fromNow()

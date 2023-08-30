@@ -31,7 +31,7 @@ const props = defineProps({
 const defaultOptions = reactive({
   chart: {
     type: "bar",
-    fontFamily: "Plus Jakarta Sans",
+    fontFamily: "inherit",
   },
   dataLabels: {
     enabled: false,
@@ -72,8 +72,6 @@ const defaultOptions = reactive({
       minWidth: 0,
       maxWidth: 160,
       style: {
-        colors: [],
-        fontSize: '8px',
         fontFamily: 'inherit',
         fontWeight: 400,
         cssClass: 'apexcharts-yaxis-label',

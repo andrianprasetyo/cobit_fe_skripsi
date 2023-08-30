@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, watch, computed, ref } from 'vue'
+import { reactive, onMounted, watch, computed, ref, onUnmounted } from 'vue'
 
 import DesignFactorHeader from '@/views/quisioner/responden/question/components/DesignFactorHeader.vue'
 import LoadingSpinner from '@/components/Loading/LoadingSpinner.vue'
@@ -7,6 +7,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
+import BaseAlert from '@/components/Alert/BaseAlert.vue'
 
 import QuisionerServices from '@/services/lib/quisioner'
 
@@ -244,6 +245,14 @@ onMounted(() => {
   getListQuestion({ id: quesioner?.responden?.id, question: quesioner.question.currentQuestion })
 })
 
+onUnmounted(() => {
+  quesioner.$patch({
+    question: {
+      currentQuestion: 1
+    }
+  })
+})
+
 watch(() => [quesioner.question.currentQuestion], () => {
   getListQuestion({
     id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
@@ -284,85 +293,100 @@ watch(() => [quesioner.question.currentQuestion], () => {
               </div>
             </div>
 
+            <div v-if="v$.$errors.length" class="mt-4">
+              <BaseAlert variant="danger">
+                <strong>Perhatian.</strong> Terdapat beberapa pertanyaan yang belum sesuai jawabannya ataupun belum anda
+                jawab.
+              </BaseAlert>
+            </div>
+
             <div class="mt-4 d-flex">
               <h5 class="fw-semibold me-2 align-items-start">{{ question?.sorting }}.</h5>
               <div v-if="question?.pertanyaan" v-html="question?.pertanyaan" />
             </div>
 
+
+
             <div class="table-responsive rounded-2 mb-4 mt-4">
-              <table class="table border text-nowrap mb-0 align-middle">
-                <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary">
-                  <tr>
-                    <th class="width-250px"></th>
-                    <template v-if="Array.isArray(question?.grup?.jawabans) && question?.grup?.jawabans.length">
-                      <th v-for="(jawaban, indexJawaban) in question?.grup?.jawabans" :key="`jawaban-${indexJawaban}`">
-                        <div class="text-center">
-                          {{ jawaban?.jawaban }}
-                        </div>
-                      </th>
-                    </template>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-if="Array.isArray(question?.komponen) && question?.komponen?.length">
-                    <tr v-for="(komponen, indexKomponen) in question?.komponen" :key="`komponen-answer-${indexKomponen}`">
-                      <td>
-                        <div class="d-flex flex-wrap">
-                          <div v-if="komponen?.deskripsi" v-html="komponen?.deskripsi"
-                            class="width-250px text-break text-wrap" />
-                        </div>
-                      </td>
-                      <template v-if="Array.isArray(komponen?.jawabans) && komponen?.jawabans.length">
-                        <!-- If Jenis Pilihan Ganda -->
-                        <template v-if="question?.grup?.jenis === 'pilgan'">
-                          <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
-                            :state="jawaban" :rules="rulesPilihanGanda({ indexJawaban, indexKomponen, indexQuestion })"
-                            :index="indexKomponen">
-                            <template #default="{ v }">
-                              <td>
-                                <div
-                                  class="form-check form-check-inline d-flex justify-content-center align-items-center">
-                                  <input type="radio" class="form-check-input primary check-outline outline-primary"
-                                    :class="[v?.hasil?.$errors?.length ? 'is-invalid' : '']" :checked="!!jawaban.hasil"
-                                    :id="`radio-${indexJawaban}-${indexKomponen}`"
-                                    @change="handleChangeHasil({ bobot: jawaban?.bobot, indexJawaban, indexKomponen, indexQuestion })"
-                                    :name="`radio-komponen-${indexKomponen}`" />
-                                </div>
-                              </td>
-                            </template>
-                          </ValidateEach>
-                        </template>
-
-                        <!-- Else If Jenis Persentasi -->
-                        <template v-else-if="question?.grup?.jenis === 'persentase'">
-                          <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
-                            :state="jawaban" :rules="rulesPersentase({ indexJawaban, indexKomponen, indexQuestion })"
-                            :index="indexKomponen">
-                            <template #default="{ v }">
-                              <td>
-                                <div class="d-flex flex-column justify-content-center ">
-                                  <BaseInput :id="`input-${indexJawaban}-${indexKomponen}`" class="form-control w-25"
-                                    type="number" :min="1" :max="100" :name="`input-${indexKomponen}`"
-                                    placeholder="Silakan isi persentase" v-model="v.hasil.$model"
-                                    :is-invalid="!!v.hasil?.$errors?.length">
-                                    <template #extra-input-group>
-                                      <div class="input-group-text">
-                                        <TablerIcon icon="PercentageIcon" />
-                                      </div>
-                                    </template>
-                                  </BaseInput>
-
-                                  <ErrorMessage :errors="v.hasil.$errors" />
-                                </div>
-                              </td>
-                            </template>
-                          </ValidateEach>
-                        </template>
+              <div class="mh-100vh">
+                <table class="table border text-nowrap mb-0 align-middle">
+                  <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary position-sticky top-0">
+                    <tr>
+                      <th class="width-250px align-middle"></th>
+                      <template v-if="Array.isArray(question?.grup?.jawabans) && question?.grup?.jawabans.length">
+                        <th v-for="(jawaban, indexJawaban) in question?.grup?.jawabans" :key="`jawaban-${indexJawaban}`"
+                          class="width-125px align-middle">
+                          <div class="d-flex flex-wrap">
+                            <span class="width-100px text-break text-wrap text-center">
+                              {{ jawaban?.jawaban }}
+                            </span>
+                          </div>
+                        </th>
                       </template>
                     </tr>
-                  </template>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <template v-if="Array.isArray(question?.komponen) && question?.komponen?.length">
+                      <tr v-for="(komponen, indexKomponen) in question?.komponen"
+                        :key="`komponen-answer-${indexKomponen}`">
+                        <td>
+                          <div class="d-flex flex-wrap">
+                            <div v-if="komponen?.deskripsi" v-html="komponen?.deskripsi"
+                              class="width-250px text-break text-wrap" />
+                          </div>
+                        </td>
+                        <template v-if="Array.isArray(komponen?.jawabans) && komponen?.jawabans.length">
+                          <!-- If Jenis Pilihan Ganda -->
+                          <template v-if="question?.grup?.jenis === 'pilgan'">
+                            <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
+                              :state="jawaban" :rules="rulesPilihanGanda({ indexJawaban, indexKomponen, indexQuestion })"
+                              :index="indexKomponen">
+                              <template #default="{ v }">
+                                <td>
+                                  <div
+                                    class="form-check form-check-inline d-flex justify-content-center align-items-center">
+                                    <input type="radio" class="form-check-input primary check-outline outline-primary"
+                                      :class="[v?.hasil?.$errors?.length ? 'is-invalid' : '']" :checked="!!jawaban.hasil"
+                                      :id="`radio-${indexJawaban}-${indexKomponen}`"
+                                      @change="handleChangeHasil({ bobot: jawaban?.bobot, indexJawaban, indexKomponen, indexQuestion })"
+                                      :name="`radio-komponen-${indexKomponen}`" />
+                                  </div>
+                                </td>
+                              </template>
+                            </ValidateEach>
+                          </template>
+
+                          <!-- Else If Jenis Persentasi -->
+                          <template v-else-if="question?.grup?.jenis === 'persentase'">
+                            <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
+                              :state="jawaban" :rules="rulesPersentase({ indexJawaban, indexKomponen, indexQuestion })"
+                              :index="indexKomponen">
+                              <template #default="{ v }">
+                                <td>
+                                  <div class="d-flex flex-column justify-content-center ">
+                                    <BaseInput :id="`input-${indexJawaban}-${indexKomponen}`" class="form-control w-25"
+                                      type="number" :min="1" :max="100" :name="`input-${indexKomponen}`"
+                                      placeholder="Silakan isi persentase" v-model="v.hasil.$model"
+                                      :is-invalid="!!v.hasil?.$errors?.length">
+                                      <template #extra-input-group>
+                                        <div class="input-group-text">
+                                          <TablerIcon icon="PercentageIcon" />
+                                        </div>
+                                      </template>
+                                    </BaseInput>
+
+                                    <ErrorMessage :errors="v.hasil.$errors" />
+                                  </div>
+                                </td>
+                              </template>
+                            </ValidateEach>
+                          </template>
+                        </template>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -398,5 +422,3 @@ watch(() => [quesioner.question.currentQuestion], () => {
     </template>
   </div>
 </template>
-
-<style></style>

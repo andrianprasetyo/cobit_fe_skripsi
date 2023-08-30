@@ -11,7 +11,7 @@ const chartOptions = reactive({
   plotOptions: {
     bar: {
       horizontal: true,
-      borderRadius: 2,
+      borderRadius: 3,
       endingShape: 'rounded',
       columnWidth: '70%',
       barHeight: '70%',
@@ -37,25 +37,15 @@ const chartOptions = reactive({
         backgroundBarOpacity: 1,
         backgroundBarRadius: 0,
       },
-      dataLabels: {
-        position: 'top',
-        maxItems: 100,
-        hideOverflowingLabels: true,
-        orientation: 'horizontal',
-        total: {
-          enabled: false,
-          formatter: undefined,
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            color: '#373d3f',
-            fontSize: '12px',
-            fontFamily: undefined,
-            fontWeight: 600
-          }
-        }
-      }
     }
+  },
+  dataLabels: {
+    enabled: true,
+    style: {
+      fontSize: '12px',
+      fontFamily: 'inherit',
+      fontWeight: 'bold',
+    },
   },
   grid: {
     show: true,
@@ -64,12 +54,12 @@ const chartOptions = reactive({
     position: 'back',
     xaxis: {
       lines: {
-        show: false
+        show: true
       }
     },
     yaxis: {
       lines: {
-        show: true
+        show: false
       }
     },
     row: {
@@ -85,6 +75,23 @@ const chartOptions = reactive({
       right: 0,
       bottom: 0,
       left: 0
+    },
+  },
+  yaxis: {
+    labels: {
+      show: true,
+      align: 'right',
+      minWidth: 0,
+      maxWidth: 160,
+      style: {
+        fontSize: 10,
+        fontFamily: 'inherit',
+        fontWeight: 400,
+        cssClass: 'apexcharts-yaxis-label',
+      },
+      offsetX: 0,
+      offsetY: 0,
+      rotate: 0,
     },
   },
 })
@@ -106,8 +113,8 @@ onMounted(() => {
     <div class="card-body">
       <h5 class="card-title fw-semibold">Step 2: Determine the initial scope of the Governance System</h5>
 
-      <ApexChartsBar :categories="assessmentStore.reportChart.nonAdjustment?.categories || []" :options="chartOptions"
-        :series="assessmentStore.reportChart.nonAdjustment?.series?.step_2" />
+      <ApexChartsBar :height="1000" :categories="assessmentStore.reportChart.nonAdjustment?.categories || []"
+        :options="chartOptions" :series="assessmentStore.reportChart.nonAdjustment?.series?.step_2 || []" />
     </div>
   </div>
 </template>
