@@ -996,9 +996,32 @@ const router = createRouter({
               }
             ]
           }
+        },
+        {
+          name: 'AccountVerify',
+          path: '/account/verify',
+          component: () => import('@/views/account/verify/AccountVerify.vue'),
+          meta: {
+            pageTitle: 'Verifikasi',
+            layout: 'AppLayoutAuth',
+            background_picture: '/assets/images/illustrations/teamwork-talking.svg',
+            requiredAuth: false
+          }
+        },
+        {
+          name: 'AccountSetPassword',
+          path: '/account/set-password',
+          component: () => import('@/views/account/set-password/AccountSetPassword.vue'),
+          meta: {
+            pageTitle: 'Konfigurasi Password',
+            layout: 'AppLayoutAuth',
+            background_picture: '/assets/images/illustrations/woman-configuring.svg',
+            requiredAuth: false
+          }
         }
       ]
     },
+
     {
       path: '/auth',
       redirect: '/auth/login',

@@ -5,7 +5,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
-import AuthServices from '@/services/lib/auth'
+import AccountServices from '@/services/lib/account'
 
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, minLength, sameAs } from "@vuelidate/validators";
@@ -64,6 +64,10 @@ const token = computed(() => {
   return route?.query?.token
 })
 
+const idUser = computed(() => {
+  return route?.query?.id
+})
+
 const v$ = useVuelidate(rules, formState, { $autoDirty: false })
 
 const handleNavigateToLogin = () => {
@@ -75,7 +79,8 @@ const handleNavigateToLogin = () => {
 const onSubmit = async () => {
   try {
     formState.isLoading = true
-    const response = await AuthServices.resetNewPassword({
+    const response = await AccountServices.aktivasiToken({
+      id: idUser.value,
       token: token.value,
       password: formState.password,
       password_confirmation: formState.password_confirmation
@@ -85,8 +90,8 @@ const onSubmit = async () => {
       formState.isLoading = false
 
       toast.success({
-        title: "Reset Password Berhasil",
-        text: `Silahkan Login Menggunakan Password Baru`,
+        title: "Konfigurasi Password Berhasil",
+        text: `Silahkan Login Menggunakan Akun Yang Telah Didaftarkan`,
       })
 
       handleNavigateToLogin()
@@ -108,29 +113,29 @@ const onSubmit = async () => {
         </div>
       </div>
 
-      <h2 class="mb-3 fs-7 fw-bolder lh-base">Reset Password &nbsp;🔑</h2>
+      <h2 class="mb-3 fs-7 fw-bolder lh-base">Konfigurasi Password Akun &nbsp;🔑</h2>
 
       <p class="mb-9">
-        Masukkan kata sandi baru yang ingin anda gunakan.
+        Masukkan kata sandi yang ingin anda gunakan.
       </p>
 
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
-          <BaseInput id="password" type="password" label="Password Baru" v-model="v$.password.$model"
-            placeholder="Masukkan Password Baru" :isInvalid="v$.password.$errors?.length" tabindex="1"
+          <BaseInput id="password" type="password" label="Password" v-model="v$.password.$model"
+            placeholder="Masukkan Password" :isInvalid="v$.password.$errors?.length" tabindex="1"
             :disabled="formState.isLoading" />
           <ErrorMessage :errors="v$.password.$errors" />
         </div>
 
         <div class="mb-3">
-          <BaseInput id="password_confirmation" type="password" label="Konfirmasi Password Baru"
-            v-model="v$.password_confirmation.$model" placeholder="Masukkan Konfirmasi Password Baru"
+          <BaseInput id="password_confirmation" type="password" label="Konfirmasi Password"
+            v-model="v$.password_confirmation.$model" placeholder="Masukkan Konfirmasi Password"
             :isInvalid="v$.password_confirmation.$errors?.length" tabindex="2" :disabled="formState.isLoading" />
           <ErrorMessage :errors="v$.password_confirmation.$errors" />
         </div>
 
         <div class="mt-4">
-          <BaseButton type="submit" title="Reset Password" class="btn btn-primary w-100 py-2"
+          <BaseButton type="submit" title="Simpan Password" class="btn btn-primary w-100 py-2"
             :isLoading="formState.isLoading" :disabled="formState.isLoading" />
         </div>
       </form>
