@@ -167,20 +167,32 @@ watch(() => [serverOptions.value, props.isShow], () => {
       <DataTable :headers="summary.headers" :items="summary.data" :loading="summary.loading"
         :server-items-length="summary.meta.total" v-model:server-options="serverOptions" fixed-header>
         <template #header-suggest_capability_level="header">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ header.item.text }}
+          <div class="d-flex justify-content-center align-items-center width-100px align-middle">
+            <div class="d-flex flex-wrap">
+              <span class="width-100px text-break text-wrap text-center">
+                {{ header.item.text }}
+              </span>
+            </div>
           </div>
         </template>
 
         <template #header-aggreed_capability_level="header">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ header.item.text }}
+          <div class="d-flex justify-content-center align-items-center width-100px align-middle">
+            <div class="d-flex flex-wrap">
+              <span class="width-100px text-break text-wrap text-center">
+                {{ header.item.text }}
+              </span>
+            </div>
           </div>
         </template>
 
         <template #header-assessment="header">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ header.item.text }}
+          <div class="d-flex justify-content-center align-items-center width-100px align-middle">
+            <div class="d-flex flex-wrap">
+              <span class="width-100px text-break text-wrap text-center">
+                {{ header.item.text }}
+              </span>
+            </div>
           </div>
         </template>
 
@@ -192,14 +204,22 @@ watch(() => [serverOptions.value, props.isShow], () => {
         </template>
 
         <template #item-suggest_capability_level="item">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ item.item.suggest_capability_level }}
+          <div class="d-flex justify-content-center align-items-center width-100px align-middle">
+            <div class="d-flex flex-wrap">
+              <span class="width-100px text-break text-wrap text-center">
+                {{ item.item.suggest_capability_level }}
+              </span>
+            </div>
           </div>
         </template>
 
         <template #item-aggreed_capability_level="item">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ item.item.aggreed_capability_level }}
+          <div class="d-flex justify-content-center align-items-center width-100px align-middle">
+            <div class="d-flex flex-wrap">
+              <span class="width-100px tzext-break text-wrap text-center">
+                {{ item.item.aggreed_capability_level }}
+              </span>
+            </div>
           </div>
         </template>
 

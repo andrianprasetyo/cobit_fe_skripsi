@@ -116,18 +116,15 @@ const dropdownOrganisasiShouldOpen = (VueSelect) => {
 
 const handleSearchOrganisasi = debounce(async ({ search }) => {
   try {
-    listOrganisasi.loading = true
     const response = await OrganisasiServices.getListOrganisasi({ limit: 10, page: 1, search })
 
     if (response) {
       const data = response?.data
 
       listOrganisasi.data = data?.list || []
-      listOrganisasi.loading = false
     }
 
   } catch (error) {
-    listOrganisasi.loading = false
     toast.error({ error })
   }
 }, 500)
@@ -244,8 +241,8 @@ onMounted(() => {
 
             <v-select id="organisasi_nama" @search="(search) => handleSearchOrganisasi({ search })" :filterable="false"
               :options="listOrganisasi.data" v-model="formState.organisasi" :disabled="formState.loadingSubmit"
-              label="nama" :loading="listOrganisasi.loading" placeholder="Cari atau Buat Organisasi Baru"
-              :select-on-key-codes="[]" :class="{ 'invalid-v-select': v$.organisasi_nama.$errors?.length }"
+              label="nama" placeholder="Cari atau Buat Organisasi Baru" :select-on-key-codes="[]"
+              :class="{ 'invalid-v-select': v$.organisasi_nama.$errors?.length }"
               :dropdown-should-open="dropdownOrganisasiShouldOpen" :tabindex="4">
               <template #no-options="option">
                 <a class="cursor-pointer" @click="handleAddOrganisasi({ value: option.search })">
