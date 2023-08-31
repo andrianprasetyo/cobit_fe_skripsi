@@ -1,9 +1,11 @@
 <script setup>
+/*
 const props = defineProps({
   heading: {
     type: String,
   },
 })
+*/
 </script>
 
 <template>
@@ -14,8 +16,7 @@ const props = defineProps({
           <span class="flex-shrink-0">
             <slot name="icon" />
           </span>
-          <div class="ms-4">
-            <h4 class="card-title text-dark mb-3">{{ props.heading }}</h4>
+          <div class="ms-4 w-100">
             <slot name="body" />
           </div>
         </div>

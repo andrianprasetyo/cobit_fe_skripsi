@@ -77,7 +77,7 @@ watch(() => [selectedAssessment.value], () => {
     <div
       class="mb-4 d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
       <div class="w-100 mb-3 mb-md-0">
-        <h5 class="card-title fw-semibold">Chart Rekapitulasi</h5>
+        <h5 class="card-title fw-semibold">Rekapitulasi Responden</h5>
         <p class="card-subtitle mb-0">Berdasarkan Assessment</p>
       </div>
 

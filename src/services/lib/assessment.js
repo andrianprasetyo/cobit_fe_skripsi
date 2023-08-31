@@ -83,5 +83,14 @@ export default {
    */
   setStatusAssessment(payload) {
     return axiosClient.put(`assesment/set-status/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {pic_nama, pic_email, pic_divisi, pic_jabatan} payload
+   * @returns
+   */
+  editPic(payload) {
+    return axiosClient.put(`assesment/pic/edit/${payload?.id}`, payload)
   }
 }

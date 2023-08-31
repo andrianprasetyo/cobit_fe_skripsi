@@ -40,7 +40,7 @@
         "url": "/master/group-answer",
         "icon": "ClipboardTextIcon",
         "type": "menu",
-        "urutan": 10,
+        "urutan": 0,
         "role_type": "[\"administrator\"]"
       },
       {
