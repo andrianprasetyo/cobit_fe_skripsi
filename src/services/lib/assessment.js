@@ -92,5 +92,5 @@ export default {
    */
   editPic(payload) {
     return axiosClient.put(`assesment/pic/edit/${payload?.id}`, payload)
-  }
+  },
 }

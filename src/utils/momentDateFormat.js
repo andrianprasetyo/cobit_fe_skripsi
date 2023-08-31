@@ -9,8 +9,6 @@ export function greeting() {
 
   let greeting
 
-  console.log('currentHour', currentHour)
-
   if (currentHour >= 6 && currentHour <= 12) {
     greeting = 'Selamat Pagi'
   } else if (currentHour >= 12 && currentHour <= 15) {

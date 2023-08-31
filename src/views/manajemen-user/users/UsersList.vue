@@ -9,13 +9,15 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 
 import UsersServices from '@/services/lib/users'
 import RolesServices from '@/services/lib/roles'
-import { useToast } from '@/stores/toast';
+import { useToast } from '@/stores/toast'
+import { useAlert } from '@/stores/alert'
 import { useRouter } from 'vue-router'
 
 import statusUserType from '@/data/statusUserType.json'
 
 const router = useRouter()
 const toast = useToast()
+const alert = useAlert()
 
 /* ---------------------------------- STATE --------------------------------- */
 const users = reactive({
@@ -137,12 +139,63 @@ const getListRoles = async () => {
   }
 }
 
+const sendEmailReaktivasi = async ({ id }) => {
+  try {
+    const response = await UsersServices.sendEmailReaktivasi({ id })
+
+    if (response) {
+      toast.success({
+        title: 'Kirim Email Reaktivasi',
+        text: `Berhasil Mengirim Email Reaktivasi`
+      })
+      handleRefresh()
+
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
+
+const handleRefresh = () => {
+  getListUsers({
+    limit: serverOptions.value.rowsPerPage,
+    page: serverOptions.value.page,
+    sortBy: serverOptions.value.sortBy,
+    sortType: serverOptions.value.sortType,
+    status: filter.value.status,
+    role: filter.value.role,
+    search: filter.value.search
+  })
+}
+
 const handleNavigateToEdit = ({ id }) => {
   router.push({ path: `/manajemen-user/users/${id}/edit` })
 }
 
 const handleNavigateAdd = () => {
   router.push({ path: "/manajemen-user/users/add" })
+}
+
+const handleSendReaktivasi = ({ title, id }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Mengirim Email Re-Aktivasi ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await sendEmailReaktivasi({ id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -280,6 +333,19 @@ watch(() => [serverOptions.value, filter.value], () => {
 
                         <span class="ms-2">
                           Edit
+                        </span>
+                      </template>
+
+                    </BaseButton>
+                  </li>
+                  <li v-if="item.item?.status === 'pending'">
+                    <BaseButton @click="handleSendReaktivasi({ title: item.item?.email, id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="SendIcon" />
+
+                        <span class="ms-2">
+                          Kirim Ulang Email Aktivasi
                         </span>
                       </template>
 
