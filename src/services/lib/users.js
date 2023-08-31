@@ -43,5 +43,14 @@ export default {
    */
   editUsers(payload) {
     return axiosClient.put(`users/edit/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {id} payload
+   * @returns
+   */
+  sendEmailReaktivasi(payload) {
+    return axiosClient.put(`assesment/pic/reaktifasi/${payload?.id}`)
   }
 }

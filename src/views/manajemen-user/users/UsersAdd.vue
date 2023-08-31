@@ -17,7 +17,7 @@ import { useToast } from '@/stores/toast'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
-import statusUserType from '@/data/statusUserType.json'
+import statusUserTypeNonPending from '@/data/statusUserTypeNonPending.json'
 
 const toast = useToast()
 const router = useRouter()
@@ -172,7 +172,7 @@ onMounted(() => {
 
           <div class="mb-3">
             <BaseSelect id="status" v-model="v$.status.$model" label="Status" tabindex="5" default-option="Pilih Status"
-              :options="statusUserType" :isInvalid="!!v$.status.$errors?.length"
+              :options="statusUserTypeNonPending" :isInvalid="!!v$.status.$errors?.length"
               :disabled="formState.loadingSubmit || formState.loading">
             </BaseSelect>
             <ErrorMessage :errors="v$.status.$errors" />
