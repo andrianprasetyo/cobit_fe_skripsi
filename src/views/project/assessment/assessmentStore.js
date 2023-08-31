@@ -15,7 +15,8 @@ export const useAssessmentStore = defineStore('assessment', {
     reportChart: {
       nonAdjustment: null,
       adjustment: null
-    }
+    },
+    reportSummary: null
   }),
   getters: {
     getSelectedAssessment(state) {
@@ -32,6 +33,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     getReportChartAdjustment(state) {
       return state.reportChart.adjustment
+    },
+
+    getReportSummary(state) {
+      return state.summary
     }
   },
   actions: {
@@ -162,6 +167,30 @@ export const useAssessmentStore = defineStore('assessment', {
           this.reportChart.adjustment = data
           loader.hide()
 
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getReportCanvasAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await ReportServices.getReportCanvasAssessment({
+          assessment_id: payload?.assessment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.reportSummary = data
+
+          loader.hide()
           return response
         }
       } catch (error) {

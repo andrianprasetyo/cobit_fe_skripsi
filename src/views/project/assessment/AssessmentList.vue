@@ -271,18 +271,15 @@ const handleSelesaikanAssessment = ({ title, id }) => {
 
 const handleSearchOrganisasi = debounce(async ({ search }) => {
   try {
-    organisasi.loading = true
     const response = await OrganisasiServices.getListOrganisasi({ limit: 10, page: 1, search })
 
     if (response) {
       const data = response?.data
 
       organisasi.data = data?.list || []
-      organisasi.loading = false
     }
 
   } catch (error) {
-    organisasi.loading = false
     toast.error({ error })
   }
 }, 500)

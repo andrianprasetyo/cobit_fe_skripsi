@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch, ref, onMounted } from 'vue'
+import { reactive, watch, ref, onMounted, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
@@ -28,6 +28,9 @@ const summary = reactive({
   }, {
     text: 'Target Capability Adjustment',
     value: 'aggreed_capability_level'
+  }, {
+    text: 'Assessment',
+    value: 'assessment'
   }
   ],
   meta: {
@@ -44,6 +47,28 @@ const serverOptions = ref({
   sortBy: '',
   sortType: '',
 });
+
+
+/* -------------------------------- COMPUTED -------------------------------- */
+const isNeedAssessment = computed(() => {
+  return value => {
+    if (value >= 3) {
+      return 'Ya'
+    } else {
+      return "Tidak"
+    }
+  }
+})
+
+const classIsNeedAssessment = computed(() => {
+  return value => {
+    if (value >= 3) {
+      return 'bg-light-success text-success'
+    } else {
+      return 'bg-light-danger text-danger'
+    }
+  }
+})
 
 /* --------------------------------- METHODS -------------------------------- */
 const getSummaryGamo = async ({ limit, page, assessment_id }) => {
@@ -125,6 +150,12 @@ onMounted(() => {
           </div>
         </template>
 
+        <template #header-assessment="header">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            {{ header.item.text }}
+          </div>
+        </template>
+
         <template #item-kode="item">
           <div class="d-flex flex-column">
             <div v-if="item.item?.kode" class="width-250px text-break text-wrap fw-bold" v-html="item.item?.kode" />
@@ -141,6 +172,15 @@ onMounted(() => {
         <template #item-aggreed_capability_level="item">
           <div class="d-flex justify-content-center align-items-center w-100">
             {{ item.item.aggreed_capability_level }}
+          </div>
+        </template>
+
+        <template #item-assessment="item">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            <span class="badge rounded-pill font-medium text-capitalize fw-bold"
+              :class="classIsNeedAssessment(item.item.aggreed_capability_level)">
+              {{ isNeedAssessment(item.item.aggreed_capability_level) }}
+            </span>
           </div>
         </template>
       </DataTable>
