@@ -61,7 +61,7 @@ onMounted(() => {
       </template>
     </SummaryCard>
 
-    <SummaryCard label="Jumlah User" variant="primary" :value="assessment.data?.pic" :is-loading="assessment.loading">
+    <SummaryCard label="Jumlah User PIC" variant="primary" :value="assessment.data?.pic" :is-loading="assessment.loading">
       <template #icon>
         <TablerIcon icon="UsersIcon" />
       </template>

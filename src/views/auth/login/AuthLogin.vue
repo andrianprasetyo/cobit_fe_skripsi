@@ -7,7 +7,7 @@ import BaseInput from '@/components/Input/BaseInput.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required, helpers, email, or, minLength } from "@vuelidate/validators";
 
 import { useAuth } from '@/stores/auth'
 import { useAppConfig } from '@/stores/appConfig'
@@ -25,7 +25,8 @@ const formState = reactive({
 const rules = computed(() => {
   return {
     username: {
-      required: helpers.withMessage('Silahkan isi username', required),
+      required: helpers.withMessage('Silahkan isi username atau alamat email', required),
+      email: helpers.withMessage('Username atau Alamat email tidak valid', or(email, minLength(3)))
     },
     password: {
       required: helpers.withMessage("Silahkan isi password", required)
@@ -33,7 +34,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $autoDirty: true })
+const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 const onSubmit = async () => {
   const result = await v$.value.$validate()
@@ -71,8 +72,9 @@ const onSubmit = async () => {
       <p class="mb-9">Silakan masuk ke akun Anda</p>
       <form @submit.prevent="onSubmit">
         <div class="mb-3">
-          <BaseInput id="username" label="Username" v-model="v$.username.$model" placeholder="Masukkan Username"
-            :isInvalid="v$.username.$errors?.length" tabindex="1" :disabled="formState.isLoading" />
+          <BaseInput id="username" label="Username atau Email" v-model="v$.username.$model"
+            placeholder="Masukkan Username atau Email" :isInvalid="v$.username.$errors?.length" tabindex="1"
+            :disabled="formState.isLoading" />
           <ErrorMessage :errors="v$.username.$errors" />
         </div>
         <div class="mb-3">

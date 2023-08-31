@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
@@ -7,6 +7,7 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
 import OverviewCard from '@/views/project/assessment/components/OverviewCard.vue'
 import RespondenCard from '@/views/project/assessment/components/RespondenCard.vue'
+import ModalEditPIC from '@/views/project/assessment/components/ModalEditPIC.vue'
 
 import { useRoute, useRouter } from 'vue-router'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
@@ -14,6 +15,8 @@ import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 const route = useRoute()
 const router = useRouter()
 const assessment = useAssessmentStore()
+
+const isShowModalEditPIC = ref(false)
 
 const classStatus = computed(() => {
   return value => {
@@ -34,6 +37,14 @@ const handleBack = () => {
   router.back()
 }
 
+const toggleModalEditPIC = () => {
+  isShowModalEditPIC.value = !isShowModalEditPIC.value
+}
+
+const handleRefresh = () => {
+  assessment.getDetailAssessment({ id: route.params?.id })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   assessment.getDetailAssessment({ id: route.params?.id })
@@ -51,15 +62,16 @@ onUnmounted(() => {
 
     <section>
       <div class="row">
-        <OverviewCard heading="Assessment" :class="['col-12 col-md-12']">
+        <OverviewCard>
           <template #icon>
             <TablerIcon icon="ClipboardTextIcon" size="36" class="text-primary" />
           </template>
 
           <template #body>
+            <h4 class="card-title text-dark mb-3">Assessment</h4>
             <div class="d-flex flex-column">
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>
+                <span class="fw-bolder">
                   Nama:
                 </span>
 
@@ -67,13 +79,13 @@ onUnmounted(() => {
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>Deskripsi:</span>
+                <span class="fw-bolder">Deskripsi:</span>
 
                 <div v-html="assessment.detail?.deskripsi || ' - '" />
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>Status:</span>
+                <span class="fw-bolder">Status:</span>
 
                 <div>
                   <span class="badge rounded-pill text-capitalize fw-bold"
@@ -92,9 +104,10 @@ onUnmounted(() => {
           </template>
 
           <template #body>
+            <h4 class="card-title text-dark mb-3">Organisasi</h4>
             <div class="d-flex flex-column">
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>
+                <span class="fw-bolder">
                   Nama:
                 </span>
 
@@ -102,22 +115,33 @@ onUnmounted(() => {
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>Deskripsi:</span>
+                <span class="fw-bolder">Deskripsi:</span>
 
                 <div v-html="assessment.detail?.organisasi?.deskripsi || ' - '" />
               </div>
             </div>
           </template>
         </OverviewCard>
-        <OverviewCard heading="PIC">
+        <OverviewCard>
           <template #icon>
             <TablerIcon icon="UserCheckIcon" size="36" class="text-primary" />
           </template>
 
           <template #body>
+            <div class="mb-3 d-flex flex-row justify-content-between align-items-center">
+              <h4 class="card-title text-dark">PIC</h4>
+
+              <BaseButton v-if="assessment.detail?.pic?.status === 'pending'" @click="toggleModalEditPIC"
+                title="Edit PIC">
+                <template #icon-right>
+                  <TablerIcon icon="EditIcon" class="ms-1" />
+                </template>
+              </BaseButton>
+            </div>
+
             <div class="d-flex flex-column">
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>
+                <span class="fw-bolder">
                   Nama:
                 </span>
 
@@ -125,7 +149,7 @@ onUnmounted(() => {
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>
+                <span class="fw-bolder">
                   Email:
                 </span>
 
@@ -133,7 +157,7 @@ onUnmounted(() => {
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>
+                <span class="fw-bolder">
                   Divisi:
                 </span>
 
@@ -141,7 +165,7 @@ onUnmounted(() => {
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span>
+                <span class="fw-bolder">
                   Jabatan:
                 </span>
 
@@ -168,5 +192,7 @@ onUnmounted(() => {
         </div>
       </div>
     </section>
+
+    <ModalEditPIC :is-show="isShowModalEditPIC" @close="toggleModalEditPIC" @refresh="handleRefresh" />
   </div>
 </template>

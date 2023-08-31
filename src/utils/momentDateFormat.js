@@ -9,11 +9,13 @@ export function greeting() {
 
   let greeting
 
-  if (currentHour >= 6 && currentHour < 12) {
+  console.log('currentHour', currentHour)
+
+  if (currentHour >= 6 && currentHour <= 12) {
     greeting = 'Selamat Pagi'
-  } else if (currentHour > 12 && currentHour < 15) {
+  } else if (currentHour >= 12 && currentHour <= 15) {
     greeting = 'Selamat Siang'
-  } else if (currentHour > 15 && currentHour < 18) {
+  } else if (currentHour >= 15 && currentHour <= 18) {
     greeting = 'Selamat Sore'
   } else {
     greeting = 'Selamat Malam'
