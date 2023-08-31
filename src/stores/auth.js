@@ -8,6 +8,8 @@ import { useToast } from '@/stores/toast'
 
 import { getCookies, removeAllCookies, setCookies } from '@/utils/cookies'
 
+import { filterMenu } from '@/utils/filterMenuByRoleType'
+
 import menu from '@/data/menu.json'
 
 export const useAuth = defineStore('auth', {
@@ -103,10 +105,16 @@ export const useAuth = defineStore('auth', {
           const data = response?.data
           this.account = data?.user
           this.listRole = data?.user?.roles || []
-          this.menu = menu
           this.expiresIn = data.expires_in
           this.loggedInAt = new Date()
           this.isAuthenticated = true
+
+          const filteredMenu = filterMenu({
+            menuData: menu,
+            role_type: data?.user?.roleaktif?.role?.code
+          })
+
+          this.menu = filteredMenu
 
           setCookies({ cookies: { token: data?.access_token }, expires: data?.expires_in })
 

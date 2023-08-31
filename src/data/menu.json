@@ -8,7 +8,7 @@
     "icon": "SmartHomeIcon",
     "type": "menu",
     "urutan": 0,
-    "role_type": "[\"admin\",\"legal\",\"customer\",\"finance\",\"director\",\"sales\",\"super\",\"verifier\"]"
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
   },
   {
     "id": "68170d81-6ff6-4490-9ac9-a465a8874b63",
@@ -19,7 +19,7 @@
     "icon": null,
     "type": "menu",
     "urutan": 2,
-    "role_type": "[\"admin\",\"super\"]"
+    "role_type": "[\"administrator\"]"
   },
   {
     "id": "98061b78-a961-4910-8756-d0e2161458bd",
@@ -30,7 +30,7 @@
     "icon": "AssemblyIcon",
     "type": "menu",
     "urutan": 3,
-    "role_type": "[\"admin\",\"super\"]",
+    "role_type": "[\"administrator\"]",
     "children": [
       {
         "id": "98061bf4-3e16-43f1-b645-6cfbedbd7238",
@@ -41,7 +41,7 @@
         "icon": "ClipboardTextIcon",
         "type": "menu",
         "urutan": 10,
-        "role_type": "[\"admin\",\"super\"]"
+        "role_type": "[\"administrator\"]"
       },
       {
         "id": "5383e3c5-21d2-47f0-94d9-c4296c7f86cf",
@@ -52,7 +52,7 @@
         "icon": "PackageIcon",
         "type": "menu",
         "urutan": 1,
-        "role_type": "[\"admin\",\"super\"]"
+        "role_type": "[\"administrator\"]"
       },
       {
         "id": "5383e3c5-21d2-47f0-94d9-23dawdawd32323",
@@ -63,7 +63,7 @@
         "icon": "PackageIcon",
         "type": "menu",
         "urutan": 2,
-        "role_type": "[\"admin\",\"super\"]"
+        "role_type": "[\"administrator\"]"
       },
       {
         "id": "5ab4e70f-0ea9-4dd5-acce-324ddffasdasd",
@@ -74,7 +74,7 @@
         "icon": "BuildingCommunityIcon",
         "type": "menu",
         "urutan": 3,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
+        "role_type": "[\"administrator\"]"
       }
     ]
   },
@@ -87,7 +87,7 @@
     "icon": null,
     "type": "menu",
     "urutan": 4,
-    "role_type": "[\"admin\",\"customer\",\"super\"]"
+    "role_type": "[\"administrator\"]"
   },
   {
     "id": "99e7a126-b3bd-46e6-aa25-5bfb5d030af8",
@@ -98,7 +98,7 @@
     "icon": "UsersIcon",
     "type": "menu",
     "urutan": 5,
-    "role_type": "[\"admin\",\"customer\",\"super\"]",
+    "role_type": "[\"administrator\"]",
     "children": [
       {
         "id": "5ab4e70f-0ea9-4dd5-acce-f3a3eb78724c",
@@ -109,7 +109,7 @@
         "icon": "UsersIcon",
         "type": "menu",
         "urutan": 1,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
+        "role_type": "[\"administrator\"]"
       },
       {
         "id": "ddc47f2a-e362-4f17-8455-fe835e9c7b32",
@@ -120,7 +120,7 @@
         "icon": "KeyIcon",
         "type": "menu",
         "urutan": 1,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
+        "role_type": "[\"administrator\"]"
       }
     ]
   },
@@ -133,7 +133,7 @@
     "icon": null,
     "type": "menu",
     "urutan": 6,
-    "role_type": "[\"admin\",\"customer\",\"super\"]"
+    "role_type": "[\"administrator\"]"
   },
   {
     "id": "1d8f2806-e1d7-4a98-8aeb-63f6f8043737",
@@ -144,7 +144,7 @@
     "icon": "ReportAnalyticsIcon",
     "type": "menu",
     "urutan": 7,
-    "role_type": "[\"admin\",\"customer\",\"super\"]",
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]",
     "children": [
       {
         "id": "5ab4e70f-0ea9-4dd5-acce-f3a3eb78724c",
@@ -155,7 +155,7 @@
         "icon": "ReportAnalyticsIcon",
         "type": "menu",
         "urutan": 1,
-        "role_type": "[\"admin\",\"customer\",\"super\"]"
+        "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
       }
     ]
   }

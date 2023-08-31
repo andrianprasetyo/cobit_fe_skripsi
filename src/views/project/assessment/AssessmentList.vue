@@ -349,16 +349,16 @@ watch(() => [serverOptions.value, filter.value], () => {
                     </template>
 
                     <template #option="option">
-                      <div class="d-flex flex-row align-items-center py-1">
-                        <span class="me-2 fw-bold">
+                      <div class="d-flex flex-row align-items-center py-1 width-150px">
+                        <span class="me-2 fw-bold text-truncate">
                           {{ option.nama }}
                         </span>
                       </div>
                     </template>
 
                     <template #selected-option="option">
-                      <div class="d-flex flex-row align-items-center py-1">
-                        <span class="me-2 fw-bold">
+                      <div class="d-flex flex-row align-items-center py-1 width-150px ">
+                        <span class="me-2 fw-bold text-truncate">
                           {{ option.nama }}
                         </span>
                       </div>
@@ -381,8 +381,8 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-start_date="item">
-              <div v-if="item.item?.start_date" class="d-flex w-100">
-                {{ formatDate({ value: item.item?.start_date }) }}
+              <div v-if="item.item?.tahun" class="d-flex w-100">
+                {{ formatDate({ value: item.item?.tahun }) }}
               </div>
 
               <div v-else>
