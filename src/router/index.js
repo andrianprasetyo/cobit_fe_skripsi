@@ -807,7 +807,7 @@ const router = createRouter({
             {
               name: 'SummaryAssessment',
               path: '/project/assessment/:id/summary',
-              component: () => import('@/views/project/assessment/AssessmentSummary.vue'),
+              component: () => import('@/views/project/assessment/summary/AssessmentSummary.vue'),
               meta: {
                 pageTitle: 'Summary Assessment',
                 layout: 'AppLayoutAdmin',

@@ -231,6 +231,11 @@ const exportResponden = async () => {
   window.open(url, '_blank');
 }
 
+const exportHasilQuisioner = async () => {
+  const url = `${appConfig.app.appHost}responden/quisioner/download?id=${route.params?.id}`
+  window.open(url, '_blank');
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListResponden({ limit: 10, page: 1, assesment_id: route.params?.id })
@@ -270,8 +275,6 @@ watch(() => [serverOptions.value, filter.value], () => {
           </BaseButton>
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuMore">
-
-
             <li v-if="!isAssessmentDone">
               <BaseButton @click="toggleModalInviteResponden"
                 class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Undang Responden">
@@ -281,7 +284,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               </BaseButton>
             </li>
 
-            <li v-if="!isAssessmentDone">
+            <li>
               <BaseButton @click="exportResponden" class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
                 title="Export Responden">
                 <template #icon-left>
@@ -291,9 +294,17 @@ watch(() => [serverOptions.value, filter.value], () => {
             </li>
 
             <li>
-              <hr class="dropdown-divider">
+              <BaseButton @click="exportHasilQuisioner"
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Export Hasil Quisioner">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="CheckupListIcon" class="me-2" />
+                </template>
+              </BaseButton>
             </li>
 
+            <li>
+              <hr class="dropdown-divider">
+            </li>
 
             <li>
               <BaseButton @click="toggleModalSummaryGamo"
