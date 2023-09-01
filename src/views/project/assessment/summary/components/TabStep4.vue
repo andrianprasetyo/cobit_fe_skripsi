@@ -142,10 +142,7 @@ const suggessCapabilityLevel = computed(() => {
                     {{ hasil?.assesmentcanvas?.suggest_capability_level }}
                   </td>
                   <td class="text-center">
-                    {{ suggessCapabilityLevel(concludedScope({
-                      refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
-                        hasil.assesmentcanvas.adjustment
-                    })) }}
+                    {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
                   </td>
                   <td class="text-center">
                     <BaseInput :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
