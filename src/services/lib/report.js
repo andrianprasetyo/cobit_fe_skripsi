@@ -12,7 +12,7 @@ export default {
 
   /**
    *
-   * @param {id, nilai} payload
+   * @param {assement_id, data} payload
    * @returns
    */
   setAdjustmentCanvasAssessment(payload) {

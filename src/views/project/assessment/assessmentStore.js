@@ -16,7 +16,7 @@ export const useAssessmentStore = defineStore('assessment', {
       nonAdjustment: null,
       adjustment: null
     },
-    reportSummary: null
+    reportCanvasSummary: null
   }),
   getters: {
     getSelectedAssessment(state) {
@@ -35,8 +35,8 @@ export const useAssessmentStore = defineStore('assessment', {
       return state.reportChart.adjustment
     },
 
-    getReportSummary(state) {
-      return state.summary
+    getReportCanvasSummary(state) {
+      return state.reportCanvasSummary
     }
   },
   actions: {
@@ -188,7 +188,33 @@ export const useAssessmentStore = defineStore('assessment', {
         if (response) {
           const data = response?.data
 
-          this.reportSummary = data
+          this.reportCanvasSummary = data
+
+          loader.hide()
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async setAdjustmentCanvasAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await ReportServices.setAdjustmentCanvasAssessment({
+          assement_id: payload.assement_id,
+          data: payload.data
+        })
+
+        if (response) {
+          toast.success({
+            title: 'Data Adjustment',
+            text: 'Berhasil Menyimpan Data Adjustment'
+          })
 
           loader.hide()
           return response
