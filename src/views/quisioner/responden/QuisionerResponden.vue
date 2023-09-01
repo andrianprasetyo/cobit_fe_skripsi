@@ -49,7 +49,7 @@ const v$ = useVuelidate(rules, formState, { $autoDirty: false })
 
 const formatDate = computed(() => {
   return value => {
-    return formatDateMoments({ value: value?.value, format: 'MMMM YYYY' })
+    return formatDateMoments({ value: value?.value, format: 'DD MMMM YYYY' })
   }
 })
 
@@ -148,10 +148,11 @@ onMounted(() => {
     <div v-else class="row col-12 offset-md-1 col-md-9">
       <div class="card">
         <div class="card-body">
-          <h2 class="mb-3 fs-7 fw-bolder lh-base text-center">Selamat Datang 👋<br />
-            di Assessment {{ formState?.detail?.assesment?.nama }} <br /> {{
-              formState?.detail?.assesment?.organisasi?.nama
-            }} - Periode {{ formatDate({ value: formState.detail?.assesment?.organisasi?.start_date }) }}
+          <h2 class="mb-3 fs-7 fw-bolder lh-base text-center">
+            Selamat Datang 👋<br />
+            di {{ formState?.detail?.assesment?.nama }}<br />
+            {{ formState?.detail?.assesment?.organisasi?.nama}}<br />
+            Periode <br />{{ formatDate({ value: formState.detail?.assesment?.start_date }) }} s/d {{ formatDate({ value: formState.detail?.assesment?.end_date }) }}
           </h2>
 
           <div class="d-flex justify-content-center mx-0 mx-md-3">
@@ -161,7 +162,7 @@ onMounted(() => {
           <hr />
 
           <div class="row">
-            <p class="mb-9 text-center">Sebelum mulai quisioner, Silahkan isi dengan data diri anda terlebih dahulu</p>
+            <p class="mb-9 text-center">Sebelum mulai Kuesioner, Silahkan isi dengan data diri anda terlebih dahulu</p>
 
             <div class="col-12 mb-3">
               <BaseInput id="email" label="Email" v-model="formState.email" placeholder="Masukkan Email"
@@ -189,7 +190,7 @@ onMounted(() => {
           </div>
 
           <div class="mt-4">
-            <BaseButton @click="onSubmit" title="Mulai Quisioner" class="btn btn-primary w-100 py-2"
+            <BaseButton @click="onSubmit" title="Mulai Kuesioner" class="btn btn-primary w-100 py-2"
               :isLoading="formState.loadingSubmit" :disabled="formState.loadingSubmit" />
           </div>
         </div>

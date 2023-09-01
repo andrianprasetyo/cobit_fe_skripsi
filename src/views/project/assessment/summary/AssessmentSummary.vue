@@ -95,27 +95,30 @@ onMounted(() => {
     <section>
       <div class="card">
 
-        <div class="d-flex flex-row justify-content-between align-items-center">
-          <h5 class="card-title mb-3 mb-md-0 fw-semibold">Summary Assessment</h5>
+        <div class="card-header bg-white">
+          <div class="d-flex flex-row justify-content-between align-items-center">
+            <h5 class="card-title mb-3 mb-md-0 fw-semibold">Summary Assessment</h5>
 
-          <div
-            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-            <BaseButton @click="getReportCanvasAssessment" class="btn btn-outline-primary" title="Refresh Data"
-              :disabled="state.loadingSubmit">
-              <template #icon-left>
-                <TablerIcon icon="RefreshIcon" />
-              </template>
-            </BaseButton>
+            <div
+              class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+              <BaseButton @click="getReportCanvasAssessment" class="btn btn-outline-primary" title="Refresh Data"
+                :disabled="state.loadingSubmit">
+                <template #icon-left>
+                  <TablerIcon icon="RefreshIcon" />
+                </template>
+              </BaseButton>
 
-            <BaseButton @click="onSubmitAdjustment" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-              title="Simpan Perubahan" :disabled="state.loadingSubmit" :is-loading="state.loadingSubmit">
-              <template #icon-left>
-                <TablerIcon icon="DeviceFloppyIcon" />
-              </template>
-            </BaseButton>
+              <BaseButton @click="onSubmitAdjustment" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+                title="Simpan Perubahan" :disabled="state.loadingSubmit" :is-loading="state.loadingSubmit">
+                <template #icon-left>
+                  <TablerIcon icon="DeviceFloppyIcon" />
+                </template>
+              </BaseButton>
 
+            </div>
           </div>
         </div>
+
 
         <BaseTab>
           <template #tab-navigation>

@@ -27,7 +27,7 @@ const { app } = useAppConfig()
 
       <!-- Content -->
       <div class="col-12 col-lg-9 vh-100 overflow-y-scroll">
-        <div class="bg-body p-3 p-md-5">
+        <div class="bg-body p-0 p-md-3">
           <RouterView v-slot="{ route }">
             <Transition name="fade" mode="out-in">
               <component :is="props.Component" :key="route.path" />

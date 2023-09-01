@@ -13,7 +13,7 @@ const props = defineProps({
     default: false
   },
   title: {
-    type: String,
+    type: [String, Number],
   },
   access: {
     type: Array

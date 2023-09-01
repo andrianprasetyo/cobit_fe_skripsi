@@ -14,6 +14,7 @@ import QuisionerServices from '@/services/lib/quisioner'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, minValue } from "@vuelidate/validators";
 import { ValidateEach } from '@vuelidate/components'
+import { formatDateMoments } from '@/utils/momentDateFormat'
 
 import { useToast } from '@/stores/toast'
 import { useQuisionerStore } from '@/views/quisioner/quisionerStore'
@@ -33,6 +34,8 @@ const questions = reactive({
   loading: false,
   loadingSubmit: false,
   data: [],
+  loadingNavigation: false,
+  navigation: [],
   meta: {
     total: 0,
   },
@@ -92,6 +95,12 @@ const rulesPersentase = computed(() => {
   }
 })
 
+const formatDate = computed(() => {
+  return value => {
+    return formatDateMoments({ value: value?.value })
+  }
+})
+
 const v$ = useVuelidate()
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -119,6 +128,23 @@ const getListQuestion = async ({ id, question }) => {
   }
 }
 
+const getNavigationQuestion = async ({ assesment_id, responden_id }) => {
+  try {
+    questions.loadingNavigation = true
+    const response = await QuisionerServices.getNavigationQuestion({ assesment_id, responden_id })
+
+    if (response) {
+      const data = response?.data
+
+      questions.navigation = data?.pertanyaan || []
+      questions.loadingNavigation = false
+    }
+  } catch (error) {
+    questions.loadingNavigation = false
+    toast.error({ error })
+  }
+}
+
 const saveJawaban = async ({ isLastQuestion = false }) => {
   try {
     questions.loadingSubmit = true
@@ -134,7 +160,6 @@ const saveJawaban = async ({ isLastQuestion = false }) => {
           }
         })
       }
-
       scrollToTop()
 
       return response
@@ -205,7 +230,7 @@ const handleFinish = async () => {
 
   if (result) {
     alert.info({
-      title: `Apakah Anda Yakin untuk Menyelesaikan Quisioner?`
+      title: `Apakah Anda Yakin untuk Menyelesaikan Kuesioner?`
     }).then(async (result) => {
       if (result.isConfirmed) {
         alert.loading()
@@ -240,9 +265,20 @@ const handleNavigateFinish = () => {
   router.replace({ path: '/quisioner/responden/question/finish' })
 }
 
+const handleClickNavigation = ({ number }) => {
+  quesioner.$patch({
+    question: {
+      currentQuestion: number
+    }
+  })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  getListQuestion({ id: quesioner?.responden?.id, question: quesioner.question.currentQuestion })
+  Promise.all([
+    getListQuestion({ id: quesioner?.responden?.id, question: quesioner.question.currentQuestion }),
+    getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
+  ])
 })
 
 onUnmounted(() => {
@@ -254,9 +290,12 @@ onUnmounted(() => {
 })
 
 watch(() => [quesioner.question.currentQuestion], () => {
-  getListQuestion({
-    id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
-  })
+  Promise.all([
+    getListQuestion({
+      id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
+    }),
+    getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id }),
+  ])
 }, { deep: true })
 
 </script>
@@ -270,13 +309,50 @@ watch(() => [quesioner.question.currentQuestion], () => {
     </template>
 
     <template v-else-if="!questions.loading && Array.isArray(questions.data) && questions.data.length">
+      <div class="card bg-primary">
+        <div class="card-body text-white">
+          <div class="d-flex flex-column flex-md-row align-items-md-center">
+            <div class="ms-0">
+              <h4 class="mb-1 text-white fs-6">{{ quesioner.responden.assesment?.nama }}</h4>
+              <span class="text-white-50">
+                {{ formatDate({ value: quesioner.responden.assesment?.start_date }) }}
+                s/d
+                {{ formatDate({ value: quesioner.responden.assesment?.end_date }) }}
+              </span>
+            </div>
+            <div class="ms-md-auto mt-3 mt-md-0">
+              <h2 class="fs-7 mb-0 text-white">
+                {{ quesioner.responden?.assesment?.organisasi?.nama }}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div v-for="(question, indexQuestion) in questions.data" :key="`${question?.id}-${indexQuestion}`">
         <DesignFactorHeader :nama="question?.nama" :deskripsi="question?.deskripsi" />
 
         <div class="card">
+          <div v-if="Array.isArray(questions.navigation) && questions.navigation.length" class="card-header">
+            <div class="d-flex flex-row flex-wrap gap-3">
+              <template v-for="(item, index) in questions.navigation" :key="`navigation-${index}`">
+                <BaseButton @click="handleClickNavigation({ number: item?.urutan })" class="btn btn-navigation-question"
+                  :class="{
+                    'btn-success': item?.terisi && item.urutan !== quesioner.question.currentQuestion,
+                    'btn-primary': item?.urutan === quesioner.question.currentQuestion,
+                    'btn-outline-dark': !item?.terisi && item?.urutan !== quesioner.question.currentQuestion
+                  }" :title="item?.urutan"
+                  :disabled="!item?.terisi && (item.urutan !== quesioner.question.currentQuestion)" />
+              </template>
+            </div>
+          </div>
+
           <div class="card-body">
             <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3">
-              <h6 class="mb-1 fs-4 fw-semibold">Pertanyaan ke {{ question?.sorting }} dari {{ questions.meta.total }}</h6>
+              <h6 class="mb-1 fs-4 fw-semibold">
+                Pertanyaan ke {{ quesioner.question.currentQuestion }}
+                dari {{ questions.meta.total }}
+              </h6>
 
               <div>
                 <span class="badge bg-light-primary text-primary fw-semibold fs-3 mt-2 mt-md-0">
@@ -301,7 +377,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
             </div>
 
             <div class="mt-4 d-flex">
-              <h5 class="fw-semibold me-2 align-items-start">{{ question?.sorting }}.</h5>
+              <h5 class="fw-semibold me-2 align-items-start">{{ quesioner.question.currentQuestion }}.</h5>
               <div v-if="question?.pertanyaan" v-html="question?.pertanyaan" />
             </div>
 
@@ -310,11 +386,11 @@ watch(() => [quesioner.question.currentQuestion], () => {
                 <table class="table border text-nowrap mb-0 align-middle">
                   <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary position-sticky top-0">
                     <tr>
-                      <th class="width-250px align-middle"></th>
+                      <th class="width-200px align-middle"></th>
                       <template v-if="Array.isArray(question?.grup?.jawabans) && question?.grup?.jawabans.length">
                         <th v-for="(jawaban, indexJawaban) in question?.grup?.jawabans" :key="`jawaban-${indexJawaban}`"
-                          class="width-125px align-middle">
-                          <div class="d-flex flex-wrap">
+                          class="width-100px align-middle">
+                          <div class="d-flex flex-wrap justify-content-center ">
                             <span class="width-100px text-break text-wrap text-center">
                               {{ jawaban?.jawaban }}
                             </span>
@@ -330,7 +406,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
                         <td>
                           <div class="d-flex flex-wrap">
                             <div v-if="komponen?.deskripsi" v-html="komponen?.deskripsi"
-                              class="width-250px text-break text-wrap" />
+                              class="width-200px text-break text-wrap" />
                           </div>
                         </td>
                         <template v-if="Array.isArray(komponen?.jawabans) && komponen?.jawabans.length">
@@ -420,3 +496,12 @@ watch(() => [quesioner.question.currentQuestion], () => {
     </template>
   </div>
 </template>
+
+<style scoped>
+.btn-navigation-question {
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 12px !important;
+  padding: 5px !important;
+}
+</style>
