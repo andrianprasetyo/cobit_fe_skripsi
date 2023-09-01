@@ -14,7 +14,7 @@ const concludedScope = computed(() => {
   }
 })
 
-
+/*
 const suggessCapabilityLevel = computed(() => {
   return value => {
     if (value >= 75) {
@@ -28,6 +28,7 @@ const suggessCapabilityLevel = computed(() => {
     }
   }
 })
+*/
 
 </script>
 
@@ -138,10 +139,7 @@ const suggessCapabilityLevel = computed(() => {
                     }) }}
                   </td>
                   <td class="text-center bg-light fw-bold">
-                    {{ suggessCapabilityLevel(concludedScope({
-                      refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
-                        hasil.assesmentcanvas.adjustment
-                    })) }}
+                    {{ hasil?.assesmentcanvas?.suggest_capability_level }}
                   </td>
                   <td class="text-center">
                     {{ suggessCapabilityLevel(concludedScope({
