@@ -9,9 +9,9 @@ export function greeting() {
 
   let greeting
 
-  if (currentHour >= 6 && currentHour <= 12) {
+  if (currentHour >= 4 && currentHour <= 10) {
     greeting = 'Selamat Pagi'
-  } else if (currentHour >= 12 && currentHour <= 15) {
+  } else if (currentHour >= 10 && currentHour <= 15) {
     greeting = 'Selamat Siang'
   } else if (currentHour >= 15 && currentHour <= 18) {
     greeting = 'Selamat Sore'

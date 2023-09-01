@@ -305,8 +305,6 @@ watch(() => [quesioner.question.currentQuestion], () => {
               <div v-if="question?.pertanyaan" v-html="question?.pertanyaan" />
             </div>
 
-
-
             <div class="table-responsive rounded-2 mb-4 mt-4">
               <div class="mh-100vh">
                 <table class="table border text-nowrap mb-0 align-middle">
