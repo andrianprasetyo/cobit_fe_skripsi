@@ -295,7 +295,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <li>
               <BaseButton @click="exportHasilQuisioner"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Export Hasil Quisioner">
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Export Hasil Kuesioner">
                 <template #icon-left>
                   <TablerIcon size="16" icon="CheckupListIcon" class="me-2" />
                 </template>

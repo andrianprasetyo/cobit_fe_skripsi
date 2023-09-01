@@ -43,6 +43,12 @@ export const useAuth = defineStore('auth', {
     },
     getLoggedInAt(state) {
       return state.loggedInAt
+    },
+    getIsAdministrator(state) {
+      return state.account?.roleaktif?.role?.code === 'administrator'
+    },
+    getIsEksternal(state) {
+      return state.account?.roleaktif?.role?.code === 'eksternal'
     }
   },
   actions: {

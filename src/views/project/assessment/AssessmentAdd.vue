@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
@@ -16,9 +16,11 @@ import OrganisasiServices from '@/services/lib/organisasi'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, requiredIf, email } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
+import { useAuth } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
+const auth = useAuth()
 const toast = useToast()
 const router = useRouter()
 const loading = useLoading()
@@ -29,7 +31,8 @@ const formState = reactive({
   loadingSubmit: false,
   assessment: '',
   deskripsi: '',
-  tahun: '',
+  start_date: '',
+  end_date: '',
   pic_nama: '',
   pic_email: '',
   pic_divisi: '',
@@ -53,8 +56,11 @@ const rules = computed(() => {
     deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
     },
-    tahun: {
-      required: helpers.withMessage("Silahkan pilih tahun", required)
+    start_date: {
+      required: helpers.withMessage("Silahkan tanggal mulai", required)
+    },
+    end_date: {
+      required: helpers.withMessage("Silahkan tanggal selesai", required)
     },
     pic_nama: {
       required: helpers.withMessage("Silahkan isi nama PIC", required)
@@ -73,7 +79,7 @@ const rules = computed(() => {
       requiredIf: helpers.withMessage("Silahkan isi nama organisasi", requiredIf(!formState.organisasi_id))
     },
     organisasi_deskripsi: {
-      required: helpers.withMessage("Silahkan isi deskripsi organisasi", required)
+      required: helpers.withMessage("Silahkan isi deskripsi organisasi", requiredIf(!formState.organisasi_id))
     }
   }
 })
@@ -151,20 +157,23 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const tahun = new Date(formState?.tahun?.year, formState?.tahun?.month - 1)
-
-      const formattedTahun = `${tahun.getFullYear()}-${(tahun.getMonth() + 1).toString().padStart(2, '0')}`;
-
       let payload = {
         asessment: formState.assessment,
         deskripsi: formState.deskripsi,
-        tahun: formattedTahun,
+        start_date: formState.start_date,
+        end_date: formState.end_date,
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
         pic_divisi: formState.pic_divisi,
         pic_jabatan: formState.pic_jabatan,
-        organisasi_nama: formState.organisasi_nama,
-        organisasi_deskripsi: formState.organisasi_deskripsi,
+      }
+
+      if (formState.organisasi_nama) {
+        payload.organisasi_nama = formState.organisasi_nama
+      }
+
+      if (formState.organisasi_deskripsi) {
+        payload.organisasi_deskripsi = formState.organisasi_deskripsi
       }
 
       if (formState.organisasi_id) {
@@ -190,12 +199,46 @@ const handleSubmit = async () => {
   }
 }
 
+const setDefaultPIC = ({ nama, email, divisi, jabatan }) => {
+  formState.pic_nama = nama
+  formState.pic_email = email
+  formState.pic_divisi = divisi
+  formState.pic_jabatan = jabatan
+}
+
+const setDefaultOrganisasi = ({ organisasi_id }) => {
+  formState.organisasi_id = organisasi_id
+}
+
+const handleResetPIC = () => {
+  formState.pic_nama = ''
+  formState.pic_email = ''
+  formState.pic_jabatan = ''
+  formState.pic_divisi = ''
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 /*
 onMounted(() => {
   getListOrganisasi({ limit: 10, page: 1 })
 })
 */
+
+onMounted(() => {
+  if (auth.getIsEksternal) {
+    setDefaultPIC({
+      nama: auth.account?.nama,
+      email: auth.account?.email,
+      divisi: auth.account?.divisi,
+      jabatan: auth.account?.posisi
+    })
+
+    setDefaultOrganisasi({
+      organisasi_id: auth.account?.organisasi?.id
+    })
+  }
+})
+
 
 </script>
 
@@ -223,16 +266,27 @@ onMounted(() => {
             <ErrorMessage v-if="v$.deskripsi.$errors" :errors="v$.deskripsi.$errors" />
           </div>
 
-          <div class="mb-3">
-            <DateInput uid="tahun" v-model="v$.tahun.$model" label="Periode / Tahun" locale="id" month-picker
-              placeholder="Silahkan Pilih Tahun" :disabled="formState.loadingSubmit" tabindex="3"
-              :isInvalid="v$.tahun.$errors?.length" />
-            <ErrorMessage :errors="v$.tahun.$errors" />
+          <div class="row mb-3">
+            <div class="col-12 col-md-6">
+              <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai"
+                :disabled="formState.loadingSubmit" tabindex="3" :isInvalid="v$.start_date.$errors?.length"
+                :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.start_date.$errors" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <DateInput uid="end_date" v-model="v$.end_date.$model" label="Tanggal Selesai" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Selesai"
+                :disabled="formState.loadingSubmit || !formState.start_date" tabindex="4"
+                :isInvalid="v$.end_date.$errors?.length" :min-date="formState.start_date" :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.end_date.$errors" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card">
+      <div v-if="auth.getIsAdministrator" class="card">
         <div class="card-body">
           <h5 class="card-title mb-9 fw-semibold">Organisasi</h5>
 
@@ -243,7 +297,7 @@ onMounted(() => {
               :options="listOrganisasi.data" v-model="formState.organisasi" :disabled="formState.loadingSubmit"
               label="nama" placeholder="Cari atau Buat Organisasi Baru" :select-on-key-codes="[]"
               :class="{ 'invalid-v-select': v$.organisasi_nama.$errors?.length }"
-              :dropdown-should-open="dropdownOrganisasiShouldOpen" :tabindex="4">
+              :dropdown-should-open="dropdownOrganisasiShouldOpen" :tabindex="5">
               <template #no-options="option">
                 <a class="cursor-pointer" @click="handleAddOrganisasi({ value: option.search })">
                   Tambahkan Organisasi <span class="fw-bold">{{ option.search }}</span>
@@ -282,7 +336,7 @@ onMounted(() => {
           <div class="mb-3">
             <label class="form-label" for="organisasi_deskripsi">Deskripsi Organisasi</label>
 
-            <CKEditor id="organisasi_deskripsi" tabindex="5" v-model="v$.organisasi_deskripsi.$model"
+            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model"
               :isInvalid="!!v$.organisasi_deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage v-if="v$.organisasi_deskripsi.$errors" :errors="v$.organisasi_deskripsi.$errors" />
           </div>
@@ -291,29 +345,38 @@ onMounted(() => {
 
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">PIC</h5>
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+            <h5 class="card-title mb-9 fw-semibold">PIC</h5>
+
+            <BaseButton v-if="formState.pic_nama" @click="handleResetPIC" class="btn btn-outline-primary"
+              title="Reset PIC">
+              <template #icon-right>
+                <TablerIcon icon="RefreshIcon" />
+              </template>
+            </BaseButton>
+          </div>
 
           <div class="mb-3">
             <BaseInput id="pic_nama" v-model="v$.pic_nama.$model" label="Nama PIC" placeholder="Masukkan Nama PIC"
-              tabindex="6" :isInvalid="v$.pic_nama.$errors?.length" :disabled="formState.loadingSubmit" />
+              tabindex="7" :isInvalid="v$.pic_nama.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.pic_nama.$errors" />
           </div>
 
           <div class="mb-3">
             <BaseInput id="pic_email" v-model="v$.pic_email.$model" label="Email PIC" placeholder="Masukkan Email PIC"
-              tabindex="7" :isInvalid="v$.pic_email.$errors?.length" :disabled="formState.loadingSubmit" />
+              tabindex="8" :isInvalid="v$.pic_email.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.pic_email.$errors" />
           </div>
 
           <div class="mb-3">
             <BaseInput id="pic_divisi" v-model="v$.pic_divisi.$model" label="Divisi PIC" placeholder="Masukkan Divisi PIC"
-              tabindex="8" :isInvalid="v$.pic_divisi.$errors?.length" :disabled="formState.loadingSubmit" />
+              tabindex="9" :isInvalid="v$.pic_divisi.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.pic_divisi.$errors" />
           </div>
 
           <div class="mb-3">
             <BaseInput id="pic_jabatan" v-model="v$.pic_jabatan.$model" label="Jabatan PIC"
-              placeholder="Masukkan Jabatan PIC" tabindex="9" :isInvalid="v$.pic_jabatan.$errors?.length"
+              placeholder="Masukkan Jabatan PIC" tabindex="10" :isInvalid="v$.pic_jabatan.$errors?.length"
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.pic_jabatan.$errors" />
           </div>

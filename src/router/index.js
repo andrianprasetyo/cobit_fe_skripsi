@@ -339,11 +339,11 @@ const router = createRouter({
             },
 
             {
-              name: 'Domain',
-              path: '/master/domain',
-              component: () => import('@/views/master/domain/DomainList.vue'),
+              name: 'GAMO',
+              path: '/master/gamo',
+              component: () => import('@/views/master/gamo/GamoList.vue'),
               meta: {
-                pageTitle: 'Domain',
+                pageTitle: 'Governance and Management Objectives (GAMO)',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -354,20 +354,20 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Domain',
+                    text: 'Governance and Management Objectives (GAMO)',
                     disabled: true,
-                    href: '/master/domain',
+                    href: '/master/gamo',
                     active: true
                   }
                 ]
               }
             },
             {
-              name: 'TambahDomain',
-              path: '/master/domain/add',
-              component: () => import('@/views/master/domain/DomainAdd.vue'),
+              name: 'TambahGAMO',
+              path: '/master/gamo/add',
+              component: () => import('@/views/master/gamo/GamoAdd.vue'),
               meta: {
-                pageTitle: 'Tambah Domain',
+                pageTitle: 'Tambah Governance and Management Objectives (GAMO)',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -378,26 +378,26 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Domain',
+                    text: 'Governance and Management Objectives (GAMO)',
                     disabled: false,
-                    href: '/master/domain',
+                    href: '/master/gamo',
                     active: false
                   },
                   {
-                    text: 'Tambah Domain',
+                    text: 'Tambah Governance and Management Objectives (GAMO)',
                     disabled: true,
-                    href: '/master/domain/add',
+                    href: '/master/gamo/add',
                     active: true
                   }
                 ]
               }
             },
             {
-              name: 'EditDomain',
-              path: '/master/domain/:id/edit',
-              component: () => import('@/views/master/domain/DomainEdit.vue'),
+              name: 'EditGAMO',
+              path: '/master/gamo/:id/edit',
+              component: () => import('@/views/master/gamo/GamoEdit.vue'),
               meta: {
-                pageTitle: 'Edit Domain',
+                pageTitle: 'Edit Governance and Management Objectives (GAMO)',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -408,15 +408,15 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Domain',
+                    text: 'Governance and Management Objectives (GAMO)',
                     disabled: false,
-                    href: '/master/domain',
+                    href: '/master/gamo',
                     active: false
                   },
                   {
-                    text: 'Edit Domain',
+                    text: 'Edit Governance and Management Objectives (GAMO)',
                     disabled: true,
-                    href: '/master/domain/:id/edit',
+                    href: '/master/gamo/:id/edit',
                     active: true
                   }
                 ]

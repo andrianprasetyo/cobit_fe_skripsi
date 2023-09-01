@@ -30,6 +30,17 @@ export default {
 
   /**
    *
+   * @param {assessment_id, responden_id} payload
+   * @returns
+   */
+  getNavigationQuestion(payload) {
+    return axiosClient.get(
+      `quisioner/responden/navigation/list?assesment_id=${payload?.assesment_id}&responden_id=${payload?.responden_id}`
+    )
+  },
+
+  /**
+   *
    * @param {hasil} payload
    * @returns
    */

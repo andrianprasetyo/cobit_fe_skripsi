@@ -82,7 +82,7 @@ onMounted(() => {
               <table class="table border text-nowrap mb-0 align-middle">
                 <thead class="text-primary">
                   <tr>
-                    <th>Komponen</th>
+                    <th></th>
                     <template v-if="Array.isArray(quisioner.grup.jawabans) && quisioner.grup.jawabans.length">
                       <th v-for="(jawaban, index) in quisioner.grup.jawabans" :key="`jawaban-${index}`">
                         <div class="text-center">

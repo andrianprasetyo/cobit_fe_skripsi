@@ -98,7 +98,7 @@ const classStatus = computed(() => {
 
 const formatDate = computed(() => {
   return value => {
-    return formatDateMoments({ value: value?.value, format: 'MMMM YYYY' })
+    return formatDateMoments({ value: value?.value })
   }
 })
 
@@ -381,8 +381,8 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-start_date="item">
-              <div v-if="item.item?.tahun" class="d-flex w-100">
-                {{ formatDate({ value: item.item?.tahun }) }}
+              <div v-if="item.item?.start_date" class="d-flex w-100">
+                {{ formatDate({ value: item.item?.start_date }) }} s/d {{ formatDate({ value: item.item?.end_date }) }}
               </div>
 
               <div v-else>

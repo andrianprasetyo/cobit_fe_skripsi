@@ -5,6 +5,7 @@ import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+import DateInput from '@/components/Input/DateInput.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
 
@@ -29,6 +30,8 @@ const formState = reactive({
   loadingSubmit: false,
   assessment: '',
   deskripsi: '',
+  start_date: '',
+  end_date: ''
 })
 
 const rules = computed(() => {
@@ -38,6 +41,12 @@ const rules = computed(() => {
     },
     deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
+    },
+    start_date: {
+      required: helpers.withMessage("Silahkan tanggal mulai", required)
+    },
+    end_date: {
+      required: helpers.withMessage("Silahkan tanggal selesai", required)
     },
   }
 })
@@ -61,6 +70,8 @@ const handleSubmit = async () => {
         id: route.params?.id,
         nama: formState.assessment,
         deskripsi: formState.deskripsi,
+        start_date: formState.start_date,
+        end_date: formState.end_date
       })
 
       if (response) {
@@ -88,6 +99,8 @@ onMounted(() => {
 
     formState.assessment = data?.nama || ''
     formState.deskripsi = data?.deskripsi || ''
+    formState.start_date = data?.start_date || ''
+    formState.end_date = data?.end_date || ''
   })
 })
 
@@ -119,6 +132,23 @@ onUnmounted(() => {
             <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model"
               :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.deskripsi.$errors" />
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-6">
+              <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai"
+                :disabled="formState.loadingSubmit" tabindex="3" :isInvalid="v$.start_date.$errors?.length" :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.start_date.$errors" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <DateInput uid="end_date" v-model="v$.end_date.$model" label="Tanggal Selesai" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Selesai"
+                :disabled="formState.loadingSubmit || !formState.start_date" tabindex="4"
+                :isInvalid="v$.end_date.$errors?.length" :min-date="formState.start_date" :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.end_date.$errors" />
+            </div>
           </div>
         </div>
       </div>

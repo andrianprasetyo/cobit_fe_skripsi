@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -16,11 +16,10 @@ import DomainServices from '@/services/lib/domain'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
 const toast = useToast()
-const route = useRoute()
 const router = useRouter()
 const loading = useLoading()
 
@@ -36,37 +35,12 @@ const rules = computed(() => {
       required: helpers.withMessage('Silahkan isi kode', required),
     },
     ket: {
-      required: helpers.withMessage("Silahkan isi deskripsi", required)
+      required: helpers.withMessage("Silahkan isi ket", required)
     },
   }
 })
 
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
-
-/* --------------------------------- METHODS -------------------------------- */
-const getDetailDomain = async () => {
-  const loader = loading.show()
-
-  try {
-    formState.loading = true
-    const response = await DomainServices.getDetailDomain({ id: route.params?.id })
-
-    if (response) {
-      const data = response?.data;
-
-      formState.kode = data?.kode
-      formState.ket = data?.ket || ''
-
-      formState.loading = false
-      loader.hide()
-    }
-
-  } catch (error) {
-    formState.loading = false
-    loader.hide()
-    toast.error({ error })
-  }
-}
 
 const handleBack = () => {
   router.back()
@@ -80,8 +54,7 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await DomainServices.editDomain({
-        id: route.params?.id,
+      const response = await DomainServices.createDomain({
         kode: formState.kode,
         ket: formState.ket
       })
@@ -90,8 +63,8 @@ const handleSubmit = async () => {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Edit Domain',
-          text: 'Berhasil Mengubah Data Domain'
+          title: 'Tambah Governance and Management Objectives (GAMO)',
+          text: 'Berhasil Menambah Data Governance and Management Objectives (GAMO)'
         })
         handleBack()
       }
@@ -103,11 +76,6 @@ const handleSubmit = async () => {
   }
 }
 
-/* ---------------------------------- HOOKS --------------------------------- */
-onMounted(() => {
-  getDetailDomain()
-})
-
 </script>
 
 <template>
@@ -117,17 +85,17 @@ onMounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Domain</h5>
+          <h5 class="card-title mb-9 fw-semibold">Governance and Management Objectives</h5>
 
           <div class="mb-3">
             <BaseInput id="kode" v-model="v$.kode.$model" label="Kode" placeholder="Masukkan Kode Domain" tabindex="1"
-              :isInvalid="v$.kode.$errors?.length" :disabled="true" />
+              :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.kode.$errors" />
           </div>
 
           <div class="mb-3">
             <BaseInput id="ket" type="text-area" v-model="v$.ket.$model" label="Deskripsi"
-              placeholder="Masukkan Deskripsi Domain" tabindex="2" rows="4" :isInvalid="v$.ket.$errors?.length"
+              placeholder="Masukkan Deskripsi" tabindex="2" rows="4" :isInvalid="v$.ket.$errors?.length"
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.ket.$errors" />
           </div>
@@ -135,7 +103,7 @@ onMounted(() => {
           <!-- <div class="mb-3">
             <label class="form-label" for="ket">Deskripsi</label>
 
-            <CKEditor id="ket" v-model="v$.ket.$model" tabindex="2" :isInvalid="!!v$.ket.$errors?.length"
+            <CKEditor id="ket" type="text-area" v-model="v$.ket.$model" tabindex="2" :isInvalid="!!v$.ket.$errors?.length"
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.ket.$errors" />
           </div> -->

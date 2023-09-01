@@ -87,8 +87,8 @@ const deleteDomain = async ({ id }) => {
 
     if (response) {
       toast.success({
-        title: 'Hapus Domain',
-        text: `Berhasil Menghapus Data Domain`
+        title: 'Hapus Governance and Management Objectives (GAMO)',
+        text: `Berhasil Menghapus Data Governance and Management Objectives (GAMO)`
       })
       handleRefresh()
 
@@ -120,11 +120,11 @@ const handleDelete = ({ title, id }) => {
 }
 
 const handleNavigateToEdit = ({ id }) => {
-  router.push(`/master/domain/${id}/edit`)
+  router.push(`/master/gamo/${id}/edit`)
 }
 
 const handleNavigateAdd = () => {
-  router.push('/master/domain/add')
+  router.push('/master/gamo/add')
 }
 
 
@@ -155,15 +155,15 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Domain</h5>
+              <h5 class="card-title fw-semibold">Governance and Management Objectives</h5>
             </div>
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput v-model="filter.search" placeholder="Cari Domain" />
+              <SearchInput v-model="filter.search" placeholder="Cari GAMO" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
-                title="Tambah Domain">
+                title="Tambah GAMO">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>

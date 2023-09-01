@@ -96,8 +96,9 @@ const onSubmit = async () => {
     </h2>
 
     <p class="mb-2">
-      Anda telah diundang menjadi <strong>User</strong> <span v-if="props.data?.organisasi?.nama">di {{
-        props.data?.organisasi?.nama }}</span>.
+      Anda telah diundang menjadi <strong>{{ !props.data?.internal ? 'User PIC' : 'User Internal' }}</strong> <span
+        v-if="props.data?.organisasi?.nama">di {{
+          props.data?.organisasi?.nama }}</span>.
     </p>
 
     <p class="mb-7">
