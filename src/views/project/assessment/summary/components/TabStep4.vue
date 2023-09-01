@@ -14,6 +14,7 @@ const concludedScope = computed(() => {
   }
 })
 
+
 const suggessCapabilityLevel = computed(() => {
   return value => {
     if (value >= 75) {
@@ -40,6 +41,13 @@ const suggessCapabilityLevel = computed(() => {
           <thead class="position-sticky top-0 bg-white" style="z-index: 5 !important;">
             <tr>
               <th class="width-200px align-middle">Design Factor</th>
+              <th class="bg-primary text-white border-0 width-250px align-middle">
+                <div class="d-flex flex-wrap">
+                  <div class="width-225px text-break text-wrap text-center">
+                    Refined Scope: Governance/Management Objectives Score
+                  </div>
+                </div>
+              </th>
               <th class="width-150px align-middle border-0">
                 <div class="d-flex flex-wrap">
                   <div class="width-125px text-break text-wrap text-center">
@@ -89,6 +97,7 @@ const suggessCapabilityLevel = computed(() => {
               <th>
                 <div class="width-250px d-flex align-items-center mb-2">Weight</div>
               </th>
+              <th colspan="1" class="bg-primary border-0 width-250px" />
               <th colspan="2" class="border-0 width-250px" />
               <th colspan="2" class="bg-primary" />
               <th colspan="2" class="border-0 width-250px" />
@@ -108,6 +117,11 @@ const suggessCapabilityLevel = computed(() => {
                 </td>
                 <template v-if="Array.isArray(hasil?.assesmenthasil) && hasil?.assesmenthasil?.length">
                   <!-- Domain Section 3 -->
+                  <td class="bg-light fw-bold border-0 width-250px text-center">
+                    <span :class="[hasil?.assesmentcanvas?.step3_init_value < 0 ? 'text-danger' : 'text-primary']">
+                      {{ hasil?.assesmentcanvas?.step3_init_value }}
+                    </span>
+                  </td>
                   <td>
                     <BaseInput :id="`adjustment-${indexHasil}`" class="text-center form-control" type="number"
                       v-model="assessment.reportCanvasSummary.hasil[indexHasil].assesmentcanvas.adjustment"
@@ -130,7 +144,10 @@ const suggessCapabilityLevel = computed(() => {
                     })) }}
                   </td>
                   <td class="text-center">
-                    {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
+                    {{ suggessCapabilityLevel(concludedScope({
+                      refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
+                        hasil.assesmentcanvas.adjustment
+                    })) }}
                   </td>
                   <td class="text-center">
                     <BaseInput :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
