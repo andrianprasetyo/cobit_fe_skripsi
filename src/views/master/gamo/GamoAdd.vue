@@ -88,7 +88,7 @@ const handleSubmit = async () => {
           <h5 class="card-title mb-9 fw-semibold">Governance and Management Objectives</h5>
 
           <div class="mb-3">
-            <BaseInput id="kode" v-model="v$.kode.$model" label="Kode" placeholder="Masukkan Kode Domain" tabindex="1"
+            <BaseInput id="kode" v-model="v$.kode.$model" label="Kode" placeholder="Masukkan Kode GAMO" tabindex="1"
               :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.kode.$errors" />
           </div>
