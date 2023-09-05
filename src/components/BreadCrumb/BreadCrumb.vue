@@ -45,7 +45,8 @@ const link = computed(() => {
         </div>
         <div class="col-3">
           <div class="text-center mt-1">
-            <img src="/assets/images/illustrations/teamwork.svg" alt="breadcrumb-image" height="150" class="mb-n4">
+            <img src="/assets/images/illustrations/teamwork.svg" alt="breadcrumb-image" height="150"
+              class="mb-0 mb-md-n4 d-none d-md-block">
           </div>
         </div>
       </div>

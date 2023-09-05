@@ -142,7 +142,7 @@ watch(() => [serverOptions.value, props.isShow], () => {
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-4">
         <div>
           <h4>
-            Daftar Summary
+            Daftar GAMO
           </h4>
         </div>
 

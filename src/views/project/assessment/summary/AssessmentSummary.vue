@@ -104,7 +104,7 @@ onMounted(() => {
 
         <div class="card-header bg-white">
           <div class="d-flex flex-row justify-content-between align-items-center">
-            <h5 class="card-title mb-3 mb-md-0 fw-semibold">Summary Assessment</h5>
+            <h5 class="card-title mb-3 mb-md-0 fw-semibold">Summary GAMO</h5>
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">

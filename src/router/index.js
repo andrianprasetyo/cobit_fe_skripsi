@@ -422,6 +422,74 @@ const router = createRouter({
                 ]
               }
             },
+            {
+              name: 'CapabilityLevel',
+              path: '/master/gamo/:id/capability-level',
+              component: () =>
+                import('@/views/master/gamo/capability-level/CapabilityLevelList.vue'),
+              meta: {
+                pageTitle: 'Capability Level',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Governance and Management Objectives (GAMO)',
+                    disabled: false,
+                    href: '/master/gamo',
+                    active: false
+                  },
+                  {
+                    text: 'Capability Level',
+                    disabled: true,
+                    href: '/master/gamo/:id/capability-level',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahCapabilityLevel',
+              path: '/master/gamo/:id/capability-level/add',
+              component: () =>
+                import('@/views/master/gamo/capability-level/CapabilityLevelAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Capability Level',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Governance and Management Objectives (GAMO)',
+                    disabled: false,
+                    href: '/master/gamo',
+                    active: false
+                  },
+                  {
+                    text: 'Capability Level',
+                    disabled: false,
+                    href: '/master/gamo/:id/capability-level',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Capability Level',
+                    disabled: true,
+                    href: '/master/gamo/:id/capability-level/add',
+                    active: true
+                  }
+                ]
+              }
+            },
 
             {
               name: 'Organisasi',
@@ -725,7 +793,7 @@ const router = createRouter({
               path: '/project/assessment',
               component: () => import('@/views/project/assessment/AssessmentList.vue'),
               meta: {
-                pageTitle: 'Assessment',
+                pageTitle: 'Asesmen',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -736,7 +804,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Asessment',
+                    text: 'Asesmen',
                     disabled: true,
                     href: '/project/assessment',
                     active: true
@@ -745,11 +813,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'TambahAssessment',
+              name: 'TambahAsesmen',
               path: '/project/assessment/add',
               component: () => import('@/views/project/assessment/AssessmentAdd.vue'),
               meta: {
-                pageTitle: 'Tambah Assessment',
+                pageTitle: 'Tambah Asesmen',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -760,13 +828,13 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Assessment',
+                    text: 'Asesmen',
                     disabled: false,
                     href: '/project/assessment',
                     active: false
                   },
                   {
-                    text: 'Tambah Assessment',
+                    text: 'Tambah Asesmen',
                     disabled: true,
                     href: '/project/assessment/add',
                     active: true
@@ -775,11 +843,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'DetailAssessment',
+              name: 'DetailAsesmen',
               path: '/project/assessment/:id/detail',
               component: () => import('@/views/project/assessment/AssessmentDetail.vue'),
               meta: {
-                pageTitle: 'Detail Assessment',
+                pageTitle: 'Detail Asesmen',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -790,13 +858,13 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Assessment',
+                    text: 'Asesmen',
                     disabled: false,
                     href: '/project/assessment',
                     active: false
                   },
                   {
-                    text: 'Detail Assessment',
+                    text: 'Detail Asesmen',
                     disabled: true,
                     href: '/project/assessment/:id/detail',
                     active: true
@@ -805,11 +873,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'EditAssessment',
+              name: 'EditAsesmen',
               path: '/project/assessment/:id/edit',
               component: () => import('@/views/project/assessment/AssessmentEdit.vue'),
               meta: {
-                pageTitle: 'Edit Assessment',
+                pageTitle: 'Edit Asesmen',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -820,13 +888,13 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Assessment',
+                    text: 'Asesmen',
                     disabled: false,
                     href: '/project/assessment',
                     active: false
                   },
                   {
-                    text: 'Edit Assessment',
+                    text: 'Edit Asesmen',
                     disabled: true,
                     href: '/project/assessment/:id/edit',
                     active: true
@@ -835,11 +903,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'SummaryAssessment',
+              name: 'SummaryGAMO',
               path: '/project/assessment/:id/summary',
               component: () => import('@/views/project/assessment/summary/AssessmentSummary.vue'),
               meta: {
-                pageTitle: 'Summary Assessment',
+                pageTitle: 'Summary GAMO',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -850,13 +918,13 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Assessment',
+                    text: 'Asesmen',
                     disabled: false,
                     href: '/project/assessment',
                     active: false
                   },
                   {
-                    text: 'Summary Assessment',
+                    text: 'Summary GAMO',
                     disabled: true,
                     href: '/project/assessment/:id/summary',
                     active: true
@@ -865,11 +933,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'ReportAssessment',
+              name: 'ReportGAMO',
               path: '/project/assessment/:id/report',
               component: () => import('@/views/project/assessment/report/AssessmentReport.vue'),
               meta: {
-                pageTitle: 'Report Assessment',
+                pageTitle: 'Report GAMO',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -880,13 +948,13 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Assessment',
+                    text: 'Asesmen',
                     disabled: false,
                     href: '/project/assessment',
                     active: false
                   },
                   {
-                    text: 'Report Assessment',
+                    text: 'Report GAMO',
                     disabled: true,
                     href: '/project/assessment/:id/report',
                     active: true

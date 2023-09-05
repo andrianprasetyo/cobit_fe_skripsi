@@ -98,7 +98,7 @@ const onSubmit = async () => {
       <div class="card-body">
         <h5 class="card-title fw-semibold">Change Password</h5>
         <p class="card-subtitle mb-4">
-          Untuk mengubah kata sandi Anda, Silakan isi dan lengkapi form dibawah ini
+          Untuk mengubah password Anda, Silakan isi dan lengkapi form dibawah ini
         </p>
 
         <form @submit.prevent="onSubmit">

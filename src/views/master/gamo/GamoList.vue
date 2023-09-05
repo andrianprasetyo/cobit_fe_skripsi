@@ -123,6 +123,10 @@ const handleNavigateToEdit = ({ id }) => {
   router.push(`/master/gamo/${id}/edit`)
 }
 
+const handleNavigateToCapabilityLevel = ({ id }) => {
+  router.push(`/master/gamo/${id}/capability-level`)
+}
+
 const handleNavigateAdd = () => {
   router.push('/master/gamo/add')
 }
@@ -204,6 +208,20 @@ watch(() => [serverOptions.value, filter.value], () => {
                         </span>
                       </template>
                     </BaseButton>
+                  </li>
+                  <li>
+                    <BaseButton @click="handleNavigateToCapabilityLevel({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ChartBarIcon" />
+                        <span class="ms-2">
+                          Capability Level
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
                   </li>
                   <li>
                     <BaseButton @click="handleDelete({ title: item?.item?.kode, id: item?.item?.id })"

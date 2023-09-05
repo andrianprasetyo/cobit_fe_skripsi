@@ -8,7 +8,6 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
-import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 import OrganisasiServices from '@/services/lib/organisasi'
@@ -36,7 +35,7 @@ const assessment = reactive({
     text: 'Organisasi',
     value: 'organisasi',
   }, {
-    text: 'Periode Assessment',
+    text: 'Periode Asesmen',
     value: 'start_date',
   }, {
     text: 'Periode Kuesioner',
@@ -57,7 +56,6 @@ const assessment = reactive({
     total_page: 0
   },
   isShowModalInviteResponden: false,
-  isShowModalSummaryGamo: false,
 })
 
 const organisasi = reactive({
@@ -160,14 +158,6 @@ const toggleModalInviteResponden = ({ item }) => {
   }
 }
 
-const toggleModalSummaryGamo = ({ item }) => {
-  assessment.isShowModalSummaryGamo = !assessment.isShowModalSummaryGamo
-
-  if (assessment.isShowModalSummaryGamo) {
-    assessmentStore.setSeletedAssessment(item)
-  }
-}
-
 const handleRefresh = () => {
   getListAssessment({
     limit: serverOptions.value.rowsPerPage,
@@ -249,11 +239,6 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/detail` })
 }
 
-const handleNavigateReport = ({ id, item }) => {
-  assessmentStore.selectedAssessment = item
-  router.push({ path: `/project/assessment/${id}/report` })
-}
-
 const handleSelesaikanAssessment = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
@@ -317,15 +302,15 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Assessment</h5>
+              <h5 class="card-title fw-semibold">Asesmen</h5>
             </div>
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput v-model="filter.search" placeholder="Cari Assessment" />
+              <SearchInput v-model="filter.search" placeholder="Cari Asesmen" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Assessment">
+                title="Tambah Asesmen">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -396,7 +381,10 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <template #item-start_date_quisioner="item">
               <div v-if="item.item?.start_date_quisioner" class="d-flex w-100">
-                {{ formatDate({ value: item.item?.start_date_quisioner }) }} s/d {{ formatDate({ value: item.item?.end_date_quisioner }) }}
+                {{ formatDate({ value: item.item?.start_date_quisioner }) }} s/d {{ formatDate({
+                  value:
+                    item.item?.end_date_quisioner
+                }) }}
               </div>
 
               <div v-else>
@@ -425,31 +413,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
-                          Lihat Detail Assessment
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <li>
-                    <BaseButton @click="toggleModalSummaryGamo({ item: item?.item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ClipboardDataIcon" />
-                        <span class="ms-2">
-                          Lihat Summary GAMO
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <li>
-                    <BaseButton @click="handleNavigateReport({ id: item?.item?.id, item: item.item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ChartHistogramIcon" />
-                        <span class="ms-2">
-                          Lihat Report Assessment
+                          Lihat Detail Asesmen
                         </span>
                       </template>
                     </BaseButton>
@@ -465,7 +429,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <template #icon-left>
                           <TablerIcon icon="EditIcon" />
                           <span class="ms-2">
-                            Edit Assessment
+                            Edit Asesmen
                           </span>
                         </template>
                       </BaseButton>
@@ -487,7 +451,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <template #icon-left>
                           <TablerIcon icon="CheckboxIcon" />
                           <span class="ms-2">
-                            Selesaikan Assessment
+                            Selesaikan Asesmen
                           </span>
                         </template>
                       </BaseButton>
@@ -527,7 +491,5 @@ watch(() => [serverOptions.value, filter.value], () => {
 
     <ModalInviteResponden :is-show="assessment.isShowModalInviteResponden"
       @close="toggleModalInviteResponden({ item: null })" />
-
-    <ModalSummaryGamo :is-show="assessment.isShowModalSummaryGamo" @close="toggleModalSummaryGamo({ item: null })" />
   </div>
 </template>

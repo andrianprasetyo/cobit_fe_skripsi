@@ -79,7 +79,7 @@ onUnmounted(() => {
           </template>
 
           <template #body>
-            <h4 class="card-title text-dark mb-3">Assessment</h4>
+            <h4 class="card-title text-dark mb-3">Asesmen</h4>
             <div class="d-flex flex-column">
               <div class="fs-2 mb-1 d-flex flex-column">
                 <span class="fw-bolder">
@@ -96,7 +96,7 @@ onUnmounted(() => {
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">Periode Assessment:</span>
+                <span class="fw-bolder">Periode Asesmen:</span>
 
                 <div v-if="assessment.detail?.start_date">
                   {{ formatDate({ value: assessment.detail?.start_date }) }} s/d {{ formatDate({
