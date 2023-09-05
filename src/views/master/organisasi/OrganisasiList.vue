@@ -135,6 +135,10 @@ const handleNavigateEdit = ({ id }) => {
   router.push({ path: `/master/organisasi/${id}/edit` })
 }
 
+const handleNavigateDivisiDanJabatan = ({ id }) => {
+  router.push({ path: `/master/organisasi/${id}/divisi-dan-jabatan` })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListOrganisasi({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
@@ -203,6 +207,22 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <TablerIcon icon="EditIcon" />
                         <span class="ms-2">
                           Edit
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+
+                  <li>
+                    <BaseButton @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="SubtaskIcon" />
+                        <span class="ms-2">
+                          Lihat Daftar Divisi & Jabatan
                         </span>
                       </template>
                     </BaseButton>

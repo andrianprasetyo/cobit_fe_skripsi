@@ -74,3 +74,11 @@ export function getNextDateByNumber({ value, number }) {
     return moment(value).day(number)
   }
 }
+
+export function isBetween({ date, start_date, end_date }) {
+  if (typeof date !== 'string' || typeof start_date !== 'string' || typeof end_date !== 'string') {
+    return
+  }
+
+  return moment(date).isBetween(start_date, end_date)
+}

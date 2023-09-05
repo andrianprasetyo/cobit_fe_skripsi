@@ -98,7 +98,7 @@ const handleToggleMiniSidebar = () => {
               <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop1">
                 <div class="profile-dropdown position-relative" data-simplebar>
                   <div class="py-3 px-7 pb-0">
-                    <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
+                    <h5 class="mb-0 fs-5 fw-semibold">Profil User</h5>
                   </div>
                   <div class="d-flex align-items-center py-9 mx-7 border-bottom">
                     <BaseAvatar :source="`${appConfig.app.appHostMedia}${auth.account?.avatar?.path}`" width="80"

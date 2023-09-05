@@ -220,7 +220,7 @@ onMounted(() => {
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title fw-semibold">Detail Profile</h5>
+            <h5 class="card-title fw-semibold">Detail Profil</h5>
             <p class="card-subtitle mb-4">
               Untuk mengubah detail pribadi Anda, Silakan isi dan lengkapi form dibawah ini
             </p>
@@ -244,7 +244,7 @@ onMounted(() => {
               </div>
 
               <div class="mb-3">
-                <FilePond ref="filePondAvatar" label="Foto Profile" name="avatar" :files="formState.avatars"
+                <FilePond ref="filePondAvatar" label="Foto Profil" name="avatar" :files="formState.avatars"
                   v-on:updatefiles="onUpdateFiles" />
                 <ErrorMessage :errors="v$.avatars.$errors" />
               </div>

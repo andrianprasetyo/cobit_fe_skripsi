@@ -69,7 +69,7 @@ watch(() => queryView.value, (value) => {
                 aria-controls="pills-account" aria-selected="true">
                 <div class="d-flex flex-row align-items-center">
                   <TablerIcon icon="UserCircleIcon" class="me-2" />
-                  <span class="d-none d-md-block">Profile</span>
+                  <span class="d-none d-md-block">Profil</span>
                 </div>
               </BaseButton>
             </li>

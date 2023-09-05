@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useQuisionerStore = defineStore('quisioner', {
+export const useKuesionerStore = defineStore('kuesioner', {
   state: () => ({
     responden: null,
     question: {

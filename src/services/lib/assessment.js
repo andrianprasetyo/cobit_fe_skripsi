@@ -27,7 +27,7 @@ export default {
 
   /**
    *
-   * @param {asessment, deskripsi, tahun, pic_nama, pic_email, pic_divisi, pic_jabatan, organisasi_id, organisasi_nama, organisasi_deskripsi} payload
+   * @param {asessment, deskripsi, tahun, pic_nama, pic_email, pic_divisi, pic_jabatan, organisasi_id, organisasi_nama, organisasi_deskripsi, pic_divisi_id, pic_jabatan_id} payload
    * @returns
    */
   createAssessment(payload) {
@@ -92,5 +92,5 @@ export default {
    */
   editPic(payload) {
     return axiosClient.put(`assesment/pic/edit/${payload?.id}`, payload)
-  },
+  }
 }

@@ -1,9 +1,11 @@
 <script setup>
 import { reactive, computed, watch } from 'vue'
+import debounce from 'lodash.debounce'
 
 import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
 import { useVuelidate } from "@vuelidate/core";
@@ -13,6 +15,7 @@ import { useToast } from '@/stores/toast'
 import { useLoading } from 'vue-loading-overlay'
 
 import AssessmentServices from '@/services/lib/assessment'
+import OrganisasiServices from '@/services/lib/organisasi'
 
 const assessment = useAssessmentStore()
 const toast = useToast()
@@ -34,6 +37,16 @@ const formState = reactive({
   pic_email: '',
   pic_divisi: '',
   pic_jabatan: '',
+})
+
+const listDivisi = reactive({
+  loading: false,
+  data: []
+})
+
+const listJabatan = reactive({
+  loading: false,
+  data: []
 })
 
 /* -------------------------------- COMPUTED -------------------------------- */
@@ -58,6 +71,36 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 /* --------------------------------- METHODS -------------------------------- */
+const handleSearchJabatan = debounce(async ({ search }) => {
+  try {
+    const response = await OrganisasiServices.getListJabatan({ limit: 10, page: 1, search, organisasi_divisi_id: formState.pic_divisi?.id })
+
+    if (response) {
+      const data = response?.data
+
+      listJabatan.data = data?.list || []
+    }
+
+  } catch (error) {
+    toast.error({ error })
+  }
+}, 500)
+
+const handleSearchDivisi = debounce(async ({ search }) => {
+  try {
+    const response = await OrganisasiServices.getListDivisi({ limit: 10, page: 1, search, organisasi_id: assessment.detail?.organisasi?.id })
+
+    if (response) {
+      const data = response?.data
+
+      listDivisi.data = data?.list || []
+    }
+
+  } catch (error) {
+    toast.error({ error })
+  }
+}, 500)
+
 const handleClose = () => {
   emits('close', true)
 }
@@ -66,7 +109,7 @@ const setValueToForm = () => {
   formState.pic_nama = assessment.detail?.pic?.nama || ''
   formState.pic_email = assessment.detail?.pic?.email || ''
   formState.pic_divisi = assessment.detail?.pic?.divisi || ''
-  formState.pic_jabatan = assessment.detail?.pic?.posisi || ''
+  formState.pic_jabatan = assessment.detail?.pic?.jabatan || ''
 }
 
 const onSubmit = async () => {
@@ -81,8 +124,8 @@ const onSubmit = async () => {
         id: assessment.detail?.pic?.id,
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
-        pic_divisi: formState.pic_divisi,
-        pic_jabatan: formState.pic_jabatan
+        pic_divisi_id: formState.pic_divisi?.id,
+        pic_jabatan_id: formState.pic_jabatan?.id
       })
 
       if (response) {
@@ -117,6 +160,16 @@ const onSubmit = async () => {
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     setValueToForm()
+
+    if (!listDivisi.data.length) {
+      handleSearchDivisi({ search: '' })
+    }
+  }
+}, { deep: true })
+
+watch(() => [formState.pic_divisi], () => {
+  if (formState.pic_divisi?.id) {
+    handleSearchJabatan({ search: '' })
   }
 }, { deep: true })
 </script>
@@ -144,14 +197,65 @@ watch(() => [props.isShow], () => {
       </div>
 
       <div class="mb-3">
-        <BaseInput id="pic_divisi" v-model="v$.pic_divisi.$model" label="Divisi PIC" placeholder="Masukkan Divisi PIC"
-          tabindex="3" :isInvalid="v$.pic_divisi.$errors?.length" :disabled="formState.loadingSubmit" />
+        <label class="form-label" for="divisi">Divisi</label>
+
+        <v-select id="divisi" @search="(search) => handleSearchDivisi({ search })" :filterable="false"
+          :options="listDivisi.data" v-model="formState.pic_divisi"
+          :disabled="listDivisi.loading || formState.loadingSubmit" label="nama" placeholder="Cari Jabatan"
+          :select-on-key-codes="[]" :class="{ 'invalid-v-select': v$.pic_divisi.$errors?.length }">
+          <template #no-options>
+            Tidak ada Divisi Ditemukan
+          </template>
+
+          <template #option="option">
+            <div class="d-flex flex-row align-items-center py-1 width-150px">
+              <span class="me-2 fw-bold text-truncate">
+                {{ option.nama }}
+              </span>
+            </div>
+          </template>
+
+          <template #selected-option="option">
+            <div class="d-flex flex-row align-items-center py-1 width-150px ">
+              <span class="me-2 fw-bold text-truncate">
+                {{ option.nama }}
+              </span>
+            </div>
+          </template>
+
+        </v-select>
         <ErrorMessage :errors="v$.pic_divisi.$errors" />
       </div>
 
       <div class="mb-3">
-        <BaseInput id="pic_jabatan" v-model="v$.pic_jabatan.$model" label="Divisi PIC" placeholder="Masukkan Jabatan PIC"
-          tabindex="4" :isInvalid="v$.pic_jabatan.$errors?.length" :disabled="formState.loadingSubmit" />
+        <label class="form-label" for="jabatan">Jabatan</label>
+
+        <v-select id="jabatan" @search="(search) => handleSearchJabatan({ search })" :filterable="false"
+          :options="listJabatan.data" v-model="formState.pic_jabatan"
+          :disabled="listJabatan.loading || formState.loadingSubmit || !formState.pic_divisi" label="nama"
+          placeholder="Cari Jabatan" :select-on-key-codes="[]"
+          :class="{ 'invalid-v-select': v$.pic_jabatan.$errors?.length }">
+          <template #no-options>
+            Tidak ada Jabatan Ditemukan
+          </template>
+
+          <template #option="option">
+            <div class="d-flex flex-row align-items-center py-1 width-150px">
+              <span class="me-2 fw-bold text-truncate">
+                {{ option.nama }}
+              </span>
+            </div>
+          </template>
+
+          <template #selected-option="option">
+            <div class="d-flex flex-row align-items-center py-1 width-150px ">
+              <span class="me-2 fw-bold text-truncate">
+                {{ option.nama }}
+              </span>
+            </div>
+          </template>
+
+        </v-select>
         <ErrorMessage :errors="v$.pic_jabatan.$errors" />
       </div>
     </template>

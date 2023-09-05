@@ -171,7 +171,6 @@ const handleSubmit = () => {
   }
 }
 
-
 </script>
 
 <template>

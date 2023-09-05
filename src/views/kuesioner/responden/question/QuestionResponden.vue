@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, onMounted, watch, computed, ref, onUnmounted } from 'vue'
 
-import DesignFactorHeader from '@/views/quisioner/responden/question/components/DesignFactorHeader.vue'
+import DesignFactorHeader from '@/views/kuesioner/responden/question/components/DesignFactorHeader.vue'
 import LoadingSpinner from '@/components/Loading/LoadingSpinner.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -17,14 +17,14 @@ import { ValidateEach } from '@vuelidate/components'
 import { formatDateMoments } from '@/utils/momentDateFormat'
 
 import { useToast } from '@/stores/toast'
-import { useQuisionerStore } from '@/views/quisioner/quisionerStore'
+import { useKuesionerStore } from '@/views/kuesioner/kuesionerStore'
 import { useRouter } from 'vue-router'
 import { useAlert } from '@/stores/alert'
 
 const alert = useAlert()
 const router = useRouter()
 const toast = useToast()
-const quesioner = useQuisionerStore()
+const quesioner = useKuesionerStore()
 
 
 /* ---------------------------------- STATE & COMPUTED --------------------------------- */
@@ -262,7 +262,7 @@ const handleBack = async () => {
 }
 
 const handleNavigateFinish = () => {
-  router.replace({ path: '/quisioner/responden/question/finish' })
+  router.replace({ path: '/kuesioner/responden/question/finish' })
 }
 
 const handleClickNavigation = ({ number }) => {
