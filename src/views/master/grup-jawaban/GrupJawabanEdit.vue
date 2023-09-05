@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -14,23 +14,29 @@ import GroupAnswerServices from '@/services/lib/group-answer'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, minValue, maxValue } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
-import { useRouter } from 'vue-router'
+import { useAlert } from '@/stores/alert'
+import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
 import groupAnswerType from '@/data/groupAnswerType.json'
 
 const toast = useToast()
+const route = useRoute()
 const router = useRouter()
 const loading = useLoading()
+const alert = useAlert()
 
 const formState = reactive({
   loadingSubmit: false,
+  loadingSubmitJawaban: false,
+  loading: false,
   nama: '',
   jenis: '',
   jawaban: [
     {
+      id: null,
       nama: '',
-      bobot: '',
+      bobot: ''
     }
   ]
 })
@@ -81,7 +87,7 @@ const rules = computed(() => {
           required: helpers.withMessage('Silahkan isi bobot', required),
           minValue: helpers.withMessage(`Bobot Min ${minBobotValue.value}`, minValue(minBobotValue.value)),
           maxValue: helpers.withMessage(`Bobot Max ${maxBobotValue.value}`, maxValue(maxBobotValue.value))
-        },
+        }
       })
     }
   }
@@ -89,19 +95,138 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, formState, { $lazy: true, $autoDirty: false })
 
+const getDetailGroupAnswer = async () => {
+  const loader = loading.show()
+
+  try {
+    formState.loading = true
+    const response = await GroupAnswerServices.getDetailGroupAnswer({ id: route.params?.id })
+
+    if (response) {
+      const data = response?.data;
+
+      formState.nama = data?.nama
+      formState.jenis = data?.jenis
+
+      const jawabans = data?.jawabans
+
+      if (Array.isArray(jawabans) && jawabans.length) {
+        const listJawaban = []
+        jawabans.map((item => listJawaban.push({
+          id: item?.id,
+          nama: item?.jawaban,
+          bobot: item?.bobot
+        })))
+        formState.jawaban = listJawaban
+      }
+
+      formState.loading = false
+      loader.hide()
+    }
+
+  } catch (error) {
+    formState.loading = false
+    loader.hide()
+    toast.error({ error })
+  }
+}
+
 const handleBack = () => {
   router.back()
 }
 
-const handleRemoveJawaban = (index) => {
+const filterJawaban = (index) => {
   const filtered = formState.jawaban.filter((_, itemIndex) => itemIndex !== index)
   formState.jawaban = filtered
 }
 
+const removeJawaban = async ({ id, index }) => {
+
+  try {
+    const response = await GroupAnswerServices.deleteJawabanGroupAnswer({ id })
+
+    if (response) {
+      toast.success({
+        title: 'Hapus Jawaban Grup Jawaban',
+        text: `Berhasil Menghapus Data Jawaban Grup Jawaban`
+      })
+
+      filterJawaban(index)
+
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+
+}
+
+const removeSemuaJawaban = async ({ id }) => {
+
+  try {
+    const response = await GroupAnswerServices.deleteSemuaJawabanGroupAnswer({ id })
+
+    if (response) {
+      toast.success({
+        title: 'Hapus Semua Grup Jawaban',
+        text: `Berhasil Menghapus Semua Data Grup Jawaban`
+      })
+
+      formState.jawaban = []
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
+const handleRemoveJawaban = ({ title, id, index }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menghapus Jawaban ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed && id) {
+      alert.loading()
+      try {
+        const response = await removeJawaban({ id, index })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    } else if (result.isConfirmed) {
+      filterJawaban(index)
+    }
+  })
+}
+
+const handleRemoveSemuaJawaban = () => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menghapus Semua Jawaban`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await removeSemuaJawaban({ id: route.params?.id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
 const handleTambahJawaban = () => {
   formState.jawaban.push({
+    id: null,
     nama: '',
-    bobot: '',
+    bobot: ''
   })
 }
 
@@ -113,14 +238,19 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await GroupAnswerServices.createGroupAnswer({ nama: formState.nama, jenis: formState.jenis, jawaban: formState.jawaban })
+      const response = await GroupAnswerServices.editGroupAnswer({
+        id: route.params?.id,
+        nama: formState.nama,
+        jenis: formState.jenis,
+        jawaban: formState.jawaban
+      })
 
       if (response) {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Tambah Group Answer',
-          text: 'Berhasil Menambahkan Data Group Answer'
+          title: 'Edit Grup Jawaban',
+          text: 'Berhasil Mengubah Data Grup Jawaban'
         })
         handleBack()
       }
@@ -132,6 +262,10 @@ const handleSubmit = async () => {
   }
 }
 
+onMounted(() => {
+  getDetailGroupAnswer()
+})
+
 </script>
 
 <template>
@@ -142,54 +276,60 @@ const handleSubmit = async () => {
       <div class="card">
         <div class="card-body">
           <div class="mb-3">
-            <BaseInput id="nama" v-model="v$.nama.$model" label="Nama" placeholder="Masukkan Nama Group Answer"
-              tabindex="1" :isInvalid="v$.nama.$errors?.length" :disabled="formState.loadingSubmit" />
+            <BaseInput id="nama" v-model="v$.nama.$model" label="Nama" placeholder="Masukkan Nama Grup Jawaban"
+              tabindex="1" :isInvalid="v$.nama.$errors?.length"
+              :disabled="formState.loadingSubmit || formState.loading" />
             <ErrorMessage :errors="v$.nama.$errors" />
           </div>
 
           <div class="mb-3">
-            <BaseSelect id="jenis" v-model="v$.jenis.$model" label="Jenis" default-option="Pilih Jenis Group Answer"
+            <BaseSelect id="jenis" v-model="v$.jenis.$model" label="Jenis" default-option="Pilih Jenis Grup Jawaban"
               :options="groupAnswerType" tabindex="2" :isInvalid="v$.jenis.$errors?.length"
-              :disabled="formState.loadingSubmit" />
+              :disabled="formState.loadingSubmit || formState.loading" />
             <ErrorMessage :errors="v$.jenis.$errors" />
           </div>
-
-
         </div>
       </div>
 
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title fw-semibold">Jawaban Group Answer</h5>
-          <!-- <p class="card-subtitle mb-0">Subitle</p> -->
+          <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center">
+            <h5 class="card-title fw-semibold">Jawaban Grup</h5>
+
+            <div>
+              <BaseButton @click="handleRemoveSemuaJawaban" class="btn btn-outline-danger" title="Hapus Semua Jawaban">
+                <template #icon-left>
+                  <TablerIcon icon="TrashIcon" />
+                </template>
+              </BaseButton>
+            </div>
+          </div>
 
           <div class="d-flex flex-column mt-4">
             <template v-if="formState.jawaban.length">
-              <div v-for="(_, index) in formState.jawaban" :key="`jawaban-${index}`" class="row mb-3">
-
+              <div v-for="(jawaban, index) in formState.jawaban" :key="`jawaban-${index}`" class="row mb-3">
                 <div class="col-12 col-md-9 mb-2 mb-md-0">
                   <BaseInput :id="`input-jawaban-${index}`" :label="`Jawaban ${isJenisPilgan ? index + 1 : ''}`"
                     v-model="v$.jawaban.$model[index].nama" placeholder="Masukkan Jawaban" :tabindex="3 + (index + 1)"
-                    :disabled="formState.loadingSubmit"
-                    :isInvalid="!!v$.jawaban.$each?.$response?.$errors[index]?.nama?.length" />
+                    :disabled="formState.loadingSubmit || formState.loading"
+                    :is-invalid="!!v$.jawaban.$each?.$response?.$errors[index]?.nama?.length" />
                   <ErrorMessage
                     v-if="Array.isArray(v$.jawaban.$each?.$response?.$errors) && v$.jawaban.$each?.$response?.$errors.length"
-                    :errors="v$.jawaban.$each?.$response?.$errors[index].nama" />
+                    :errors="v$.jawaban.$each?.$response?.$errors[index]?.nama" />
                 </div>
-
                 <div class="col-12 col-md-2">
                   <BaseInput :id="`input-Bobot-${index}`" :label="`Bobot`" type="number"
                     v-model="v$.jawaban.$model[index].bobot" placeholder="Masukkan Bobot" :tabindex="3 + (index + 1)"
-                    :disabled="formState.loadingSubmit"
-                    :isInvalid="!!v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length" />
+                    :disabled="formState.loadingSubmit || formState.loading"
+                    :is-invalid="!!v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length" />
                   <ErrorMessage
                     v-if="Array.isArray(v$.jawaban.$each?.$response?.$errors) && v$.jawaban.$each?.$response?.$errors.length"
-                    :errors="v$.jawaban.$each?.$response?.$errors[index].bobot" />
+                    :errors="v$.jawaban.$each?.$response?.$errors[index]?.bobot" />
                 </div>
-
                 <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
-                  <BaseButton @click="handleRemoveJawaban(index)" class="btn btn-outline-danger w-100"
-                    :class="[v$.jawaban.$each?.$response?.$errors[index]?.name?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']">
+                  <BaseButton @click="handleRemoveJawaban({ id: jawaban.id, title: jawaban.nama, index: index })"
+                    class="btn btn-outline-danger w-100"
+                    :class="[v$.jawaban.$each?.$response?.$errors[index]?.nama?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']">
                     <TablerIcon icon="TrashIcon" />
                   </BaseButton>
                 </div>
@@ -220,9 +360,8 @@ const handleSubmit = async () => {
               </BaseButton>
             </div>
 
-
             <div>
-              <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
+              <BaseButton @click="handleSubmit" title="Simpan Perubahan" :disabled="formState.loadingSubmit"
                 :is-loading="formState.loadingSubmit">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />

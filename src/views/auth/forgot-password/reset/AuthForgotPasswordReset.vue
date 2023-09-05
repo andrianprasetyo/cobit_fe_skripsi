@@ -111,7 +111,7 @@ const onSubmit = async () => {
       <h2 class="mb-3 fs-7 fw-bolder lh-base">Reset Password &nbsp;🔑</h2>
 
       <p class="mb-9">
-        Masukkan kata sandi baru yang ingin anda gunakan.
+        Masukkan password baru yang ingin anda gunakan.
       </p>
 
       <form @submit.prevent="onSubmit">

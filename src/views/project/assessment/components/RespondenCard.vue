@@ -133,6 +133,24 @@ const getListResponden = async ({ limit, page, sortBy, sortType, search, assesme
   }
 }
 
+const reinviteResponden = async ({ id, email }) => {
+  try {
+    alert.loading()
+    const response = await RespondenServices.reinviteResponden({ id })
+
+    if (response) {
+      toast.success({
+        title: 'Kirim Ulang Undangan Responden',
+        text: `Berhasil Mengirim Ulang Undangan ke Responden ${email}`
+      })
+      alert.instance().close()
+    }
+  } catch (error) {
+    alert.instance().close()
+    toast.error({ error })
+  }
+}
+
 const handleRefresh = () => {
   getListResponden({
     limit: serverOptions.value.rowsPerPage,
@@ -367,8 +385,8 @@ watch(() => [serverOptions.value, filter.value], () => {
         </template>
 
         <template #item-divisi="item">
-          <div v-if="item.item?.divisi" class="d-flex w-100">
-            {{ item.item?.divisi }}
+          <div v-if="item.item?.divisi?.nama" class="d-flex w-100">
+            {{ item.item?.divisi?.nama }}
           </div>
 
           <div v-else>
@@ -377,8 +395,8 @@ watch(() => [serverOptions.value, filter.value], () => {
         </template>
 
         <template #item-jabatan="item">
-          <div v-if="item.item?.jabatan" class="d-flex w-100">
-            {{ item.item?.jabatan }}
+          <div v-if="item.item?.jabatan?.nama" class="d-flex w-100">
+            {{ item.item?.jabatan?.nama }}
           </div>
 
           <div v-else>
@@ -401,6 +419,18 @@ watch(() => [serverOptions.value, filter.value], () => {
               <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                 id="dropdownMenuButton" aria-expanded="false" />
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li>
+                  <BaseButton @click="reinviteResponden({ id: item.item?.id, email: item?.item?.email })"
+                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    <template #icon-left>
+                      <TablerIcon icon="MailIcon" />
+                      <span class="ms-2">
+                        Kirim Ulang Undangan
+                      </span>
+                    </template>
+                  </BaseButton>
+                </li>
+
                 <li>
                   <BaseButton
                     @click="handleDeleteResponden({ title: item.item?.nama || item.item?.email, id: item.item?.id })"

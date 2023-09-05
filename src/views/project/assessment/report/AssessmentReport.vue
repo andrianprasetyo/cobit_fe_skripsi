@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, ref, computed, watch, onUnmounted } from 'vue'
+import { defineAsyncComponent, ref, computed, watch, onUnmounted, onMounted } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
@@ -8,6 +8,7 @@ import BaseTab from '@/components/Tab/BaseTab.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useTitle } from '@vueuse/core'
 
 const TabGamo = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report/components/TabGamo.vue')
@@ -25,6 +26,7 @@ const TabStep4 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report/components/TabStep4.vue')
 })
 
+const title = useTitle()
 const router = useRouter()
 const route = useRoute()
 const assessmentStore = useAssessmentStore()
@@ -76,6 +78,12 @@ watch(() => queryView.value, (value) => {
   }
 }, { deep: true, immediate: true })
 
+onMounted(() => {
+  if (assessmentStore.selectedAssessment?.nama) {
+    title.value = `Report ${assessmentStore.selectedAssessment?.nama || ''}`
+  }
+})
+
 onUnmounted(() => {
   assessmentStore.resetState()
 })
@@ -107,7 +115,8 @@ onUnmounted(() => {
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber2Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Step 2 : Determine the initial scope of the Governance System</span>
+                <span class="d-none d-md-block width-150px text-truncate">Step 2 : Determine the initial scope of the
+                  Governance System</span>
               </div>
             </BaseButton>
           </li>
@@ -118,7 +127,8 @@ onUnmounted(() => {
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber3Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Step 3 : Refine the scope of the Governance System</span>
+                <span class="d-none d-md-block width-150px text-truncate">Step 3 : Refine the scope of the Governance
+                  System</span>
               </div>
             </BaseButton>
           </li>
@@ -129,7 +139,8 @@ onUnmounted(() => {
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber4Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Step 4 : Conclude the Scope of the Governance System</span>
+                <span class="d-none d-md-block width-150px text-truncate">Step 4 : Conclude the Scope of the Governance
+                  System</span>
               </div>
             </BaseButton>
           </li>

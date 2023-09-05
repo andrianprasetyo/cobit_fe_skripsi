@@ -35,9 +35,9 @@
       {
         "id": "98061bf4-3e16-43f1-b645-6cfbedbd7238",
         "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
-        "title": "Group Answer",
-        "menu_key": "masterlayanan",
-        "url": "/master/group-answer",
+        "title": "Grup Jawaban",
+        "menu_key": "master-grup-jawaban",
+        "url": "/master/grup-jawaban",
         "icon": "ClipboardTextIcon",
         "type": "menu",
         "urutan": 0,

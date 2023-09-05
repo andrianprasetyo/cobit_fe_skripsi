@@ -17,8 +17,9 @@ import { useToast } from '@/stores/toast'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useTitle } from '@vueuse/core'
 
-
+const title = useTitle()
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
@@ -31,7 +32,9 @@ const formState = reactive({
   assessment: '',
   deskripsi: '',
   start_date: '',
-  end_date: ''
+  end_date: '',
+  start_date_quisioner: '',
+  end_date_quisioner: ''
 })
 
 const rules = computed(() => {
@@ -43,10 +46,16 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
     },
     start_date: {
-      required: helpers.withMessage("Silahkan tanggal mulai", required)
+      required: helpers.withMessage("Silahkan isi tanggal mulai", required)
     },
     end_date: {
-      required: helpers.withMessage("Silahkan tanggal selesai", required)
+      required: helpers.withMessage("Silahkan isi tanggal selesai", required)
+    },
+    start_date_quisioner: {
+      required: helpers.withMessage("Silahkan isi tanggal mulai kuesioner", required)
+    },
+    end_date_quisioner: {
+      required: helpers.withMessage("Silahkan isi tanggal selesai kuesioner", required)
     },
   }
 })
@@ -71,7 +80,9 @@ const handleSubmit = async () => {
         nama: formState.assessment,
         deskripsi: formState.deskripsi,
         start_date: formState.start_date,
-        end_date: formState.end_date
+        end_date: formState.end_date,
+        start_date_quisioner: formState.start_date_quisioner,
+        end_date_quisioner: formState.end_date_quisioner
       })
 
       if (response) {
@@ -101,6 +112,10 @@ onMounted(() => {
     formState.deskripsi = data?.deskripsi || ''
     formState.start_date = data?.start_date || ''
     formState.end_date = data?.end_date || ''
+    formState.start_date_quisioner = data?.start_date_quisioner || ''
+    formState.end_date_quisioner = data?.end_date_quisioner || ''
+
+    title.value = `Edit ${data?.nama || ''}`
   })
 })
 
@@ -138,7 +153,8 @@ onUnmounted(() => {
             <div class="col-12 col-md-6">
               <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai" locale="id"
                 model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai"
-                :disabled="formState.loadingSubmit" tabindex="3" :isInvalid="v$.start_date.$errors?.length" :enable-time-picker="false" />
+                :disabled="formState.loadingSubmit" tabindex="3" :isInvalid="v$.start_date.$errors?.length"
+                :enable-time-picker="false" />
               <ErrorMessage :errors="v$.start_date.$errors" />
             </div>
 
@@ -148,6 +164,26 @@ onUnmounted(() => {
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="4"
                 :isInvalid="v$.end_date.$errors?.length" :min-date="formState.start_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.end_date.$errors" />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-6">
+              <DateInput uid="start_date_quisioner" v-model="v$.start_date_quisioner.$model"
+                label="Tanggal Mulai Kuesioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy" :min-date="formState.start_date"
+                placeholder="Silahkan Pilih Tanggal Mulai Kuesioner" :disabled="formState.loadingSubmit" tabindex="5"
+                :isInvalid="v$.start_date_quisioner.$errors?.length" :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.start_date_quisioner.$errors" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model" label="Tanggal Selesai Kuesioner"
+                locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+                placeholder="Silahkan Pilih Tanggal Selesai Kuesioner"
+                :disabled="formState.loadingSubmit || !formState.start_date" tabindex="6"
+                :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"
+                :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.end_date_quisioner.$errors" />
             </div>
           </div>
         </div>

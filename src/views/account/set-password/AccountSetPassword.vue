@@ -116,7 +116,7 @@ const onSubmit = async () => {
       <h2 class="mb-3 fs-7 fw-bolder lh-base">Konfigurasi Password Akun &nbsp;🔑</h2>
 
       <p class="mb-9">
-        Masukkan kata sandi yang ingin anda gunakan.
+        Masukkan password yang ingin anda gunakan.
       </p>
 
       <form @submit.prevent="onSubmit">

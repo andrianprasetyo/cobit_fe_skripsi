@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, watch } from 'vue'
 import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
@@ -33,17 +33,32 @@ const formState = reactive({
   deskripsi: '',
   start_date: '',
   end_date: '',
+  start_date_quisioner: '',
+  end_date_quisioner: '',
   pic_nama: '',
   pic_email: '',
   pic_divisi: '',
   pic_jabatan: '',
+  pic_divisi_id: '',
+  pic_jabatan_id: '',
   organisasi: null,
   organisasi_id: '',
   organisasi_nama: '',
   organisasi_deskripsi: '',
+  pic_expire_at: ''
 })
 
 const listOrganisasi = reactive({
+  loading: false,
+  data: []
+})
+
+const listDivisi = reactive({
+  loading: false,
+  data: []
+})
+
+const listJabatan = reactive({
   loading: false,
   data: []
 })
@@ -62,6 +77,12 @@ const rules = computed(() => {
     end_date: {
       required: helpers.withMessage("Silahkan tanggal selesai", required)
     },
+    start_date_quisioner: {
+      required: helpers.withMessage("Silahkan tanggal mulai kuisioner", required)
+    },
+    end_date_quisioner: {
+      required: helpers.withMessage("Silahkan tanggal selesai kuisioner", required)
+    },
     pic_nama: {
       required: helpers.withMessage("Silahkan isi nama PIC", required)
     },
@@ -70,16 +91,25 @@ const rules = computed(() => {
       email: helpers.withMessage("Alamat email tidak valid", email)
     },
     pic_divisi: {
-      required: helpers.withMessage("Silahkan isi divisi PIC", required)
+      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(!formState.organisasi_id))
     },
     pic_jabatan: {
-      required: helpers.withMessage("Silahkan isi jabatan PIC", required)
+      requiredIf: helpers.withMessage("Silahkan isi jabatan PIC", requiredIf(!formState.organisasi_id))
+    },
+    pic_divisi_id: {
+      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(formState.organisasi_id))
+    },
+    pic_jabatan_id: {
+      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(formState.organisasi_id))
     },
     organisasi_nama: {
       requiredIf: helpers.withMessage("Silahkan isi nama organisasi", requiredIf(!formState.organisasi_id))
     },
     organisasi_deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi organisasi", requiredIf(!formState.organisasi_id))
+    },
+    pic_expire_at: {
+      required: helpers.withMessage("Silahkan isi tanggal kadaluarsa pic", required)
     }
   }
 })
@@ -135,11 +165,43 @@ const handleSearchOrganisasi = debounce(async ({ search }) => {
   }
 }, 500)
 
+const handleSearchDivisi = debounce(async ({ search }) => {
+  try {
+    const response = await OrganisasiServices.getListDivisi({ limit: 10, page: 1, search, organisasi_id: formState.organisasi_id })
+
+    if (response) {
+      const data = response?.data
+
+      listDivisi.data = data?.list || []
+    }
+
+  } catch (error) {
+    toast.error({ error })
+  }
+}, 500)
+
+const handleSearchJabatan = debounce(async ({ search }) => {
+  try {
+    const response = await OrganisasiServices.getListJabatan({ limit: 10, page: 1, search, organisasi_id: formState.pic_divisi_id })
+
+    if (response) {
+      const data = response?.data
+
+      listJabatan.data = data?.list || []
+    }
+
+  } catch (error) {
+    toast.error({ error })
+  }
+}, 500)
+
+
 const handleSelectedOrganisasi = ({ id, nama, deskripsi }) => {
   if (id) {
     formState.organisasi_id = id;
     formState.organisasi_nama = nama;
     formState.organisasi_deskripsi = deskripsi || ''
+    handleSearchDivisi({ search: '' })
   } else {
     formState.organisasi_nama = nama;
   }
@@ -162,10 +224,11 @@ const handleSubmit = async () => {
         deskripsi: formState.deskripsi,
         start_date: formState.start_date,
         end_date: formState.end_date,
+        start_date_quisioner: formState.start_date_quisioner,
+        end_date_quisioner: formState.end_date_quisioner,
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
-        pic_divisi: formState.pic_divisi,
-        pic_jabatan: formState.pic_jabatan,
+        pic_expire_at: formState.pic_expire_at
       }
 
       if (formState.organisasi_nama) {
@@ -178,6 +241,22 @@ const handleSubmit = async () => {
 
       if (formState.organisasi_id) {
         payload.organisasi_id = formState.organisasi_id
+      }
+
+      if (formState.pic_divisi) {
+        payload.pic_divisi = formState.pic_divisi
+      }
+
+      if (formState.pic_jabatan) {
+        payload.pic_jabatan = formState.pic_jabatan
+      }
+
+      if (formState.pic_divisi_id) {
+        payload.pic_divisi_id = formState.pic_divisi_id
+      }
+
+      if (formState.pic_jabatan_id) {
+        payload.pic_jabatan_id = formState.pic_jabatan_id
       }
 
       const response = await AssessmentServices.createAssessment(payload)
@@ -215,6 +294,9 @@ const handleResetPIC = () => {
   formState.pic_email = ''
   formState.pic_jabatan = ''
   formState.pic_divisi = ''
+  formState.pic_divisi_id = ''
+  formState.pic_jabatan_id = ''
+  formState.pic_expire_at = ''
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -223,6 +305,12 @@ onMounted(() => {
   getListOrganisasi({ limit: 10, page: 1 })
 })
 */
+
+watch(() => [formState.pic_divisi_id], () => {
+  if (formState.pic_divisi_id) {
+    handleSearchJabatan({ search: '' })
+  }
+}, { deep: true })
 
 onMounted(() => {
   if (auth.getIsEksternal) {
@@ -281,6 +369,28 @@ onMounted(() => {
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="4"
                 :isInvalid="v$.end_date.$errors?.length" :min-date="formState.start_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.end_date.$errors" />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12 col-md-6">
+              <DateInput uid="start_date_quisioner" v-model="v$.start_date_quisioner.$model"
+                label="Tanggal Mulai Kuisioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+                placeholder="Silahkan Pilih Tanggal Mulai Kuisioner"
+                :disabled="formState.loadingSubmit || !formState.start_date" tabindex="5"
+                :isInvalid="v$.start_date_quisioner.$errors?.length" :min-date="formState.start_date"
+                :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.start_date_quisioner.$errors" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model" label="Tanggal Selesai Kuisioner"
+                locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+                placeholder="Silahkan Pilih Tanggal Selesai Kuisioner"
+                :disabled="formState.loadingSubmit || !formState.start_date_quisioner" tabindex="6"
+                :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"
+                :enable-time-picker="false" />
+              <ErrorMessage :errors="v$.end_date_quisioner.$errors" />
             </div>
           </div>
         </div>
@@ -368,17 +478,94 @@ onMounted(() => {
             <ErrorMessage :errors="v$.pic_email.$errors" />
           </div>
 
-          <div class="mb-3">
-            <BaseInput id="pic_divisi" v-model="v$.pic_divisi.$model" label="Divisi PIC" placeholder="Masukkan Divisi PIC"
-              tabindex="9" :isInvalid="v$.pic_divisi.$errors?.length" :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.pic_divisi.$errors" />
-          </div>
+          <template v-if="formState.organisasi_id">
+            <div class="mb-3">
+              <label class="form-label" for="divisi">Divisi</label>
+
+              <v-select id="divisi" @search="(search) => handleSearchDivisi({ search })" :filterable="false"
+                :options="listDivisi.data" v-model="formState.pic_divisi_id" :reduce="(state) => state?.id"
+                :disabled="listDivisi.loading || formState.loadingSubmit" label="nama" placeholder="Cari Divisi"
+                :select-on-key-codes="[]" :class="{ 'invalid-v-select': v$.pic_divisi_id.$errors?.length }">
+                <template #no-options>
+                  Tidak ada Divisi Ditemukan
+                </template>
+
+                <template #option="option">
+                  <div class="d-flex flex-row align-items-center py-1 width-150px">
+                    <span class="me-2 fw-bold text-truncate">
+                      {{ option.nama }}
+                    </span>
+                  </div>
+                </template>
+
+                <template #selected-option="option">
+                  <div class="d-flex flex-row align-items-center py-1 width-150px ">
+                    <span class="me-2 fw-bold text-truncate">
+                      {{ option.nama }}
+                    </span>
+                  </div>
+                </template>
+
+              </v-select>
+              <ErrorMessage :errors="v$.pic_divisi_id.$errors" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="jabatan">Jabatan</label>
+
+              <v-select id="jabatan" @search="(search) => handleSearchJabatan({ search })" :filterable="false"
+                :options="listJabatan.data" v-model="formState.pic_jabatan_id" :reduce="(state) => state?.id"
+                :disabled="listJabatan.loading || formState.loadingSubmit || !formState.pic_divisi_id" label="nama"
+                placeholder="Cari Jabatan" :select-on-key-codes="[]"
+                :class="{ 'invalid-v-select': v$.pic_jabatan_id.$errors?.length }">
+                <template #no-options>
+                  Tidak ada Jabatan Ditemukan
+                </template>
+
+                <template #option="option">
+                  <div class="d-flex flex-row align-items-center py-1 width-150px">
+                    <span class="me-2 fw-bold text-truncate">
+                      {{ option.nama }}
+                    </span>
+                  </div>
+                </template>
+
+                <template #selected-option="option">
+                  <div class="d-flex flex-row align-items-center py-1 width-150px ">
+                    <span class="me-2 fw-bold text-truncate">
+                      {{ option.nama }}
+                    </span>
+                  </div>
+                </template>
+
+              </v-select>
+              <ErrorMessage :errors="v$.pic_jabatan_id.$errors" />
+            </div>
+          </template>
+
+          <template v-else>
+            <div class="mb-3">
+              <BaseInput id="pic_divisi" v-model="v$.pic_divisi.$model" label="Divisi PIC"
+                placeholder="Masukkan Divisi PIC" tabindex="9" :isInvalid="v$.pic_divisi.$errors?.length"
+                :disabled="formState.loadingSubmit" />
+              <ErrorMessage :errors="v$.pic_divisi.$errors" />
+            </div>
+
+            <div class="mb-3">
+              <BaseInput id="pic_jabatan" v-model="v$.pic_jabatan.$model" label="Jabatan PIC"
+                placeholder="Masukkan Jabatan PIC" tabindex="10" :isInvalid="v$.pic_jabatan.$errors?.length"
+                :disabled="formState.loadingSubmit" />
+              <ErrorMessage :errors="v$.pic_jabatan.$errors" />
+            </div>
+          </template>
 
           <div class="mb-3">
-            <BaseInput id="pic_jabatan" v-model="v$.pic_jabatan.$model" label="Jabatan PIC"
-              placeholder="Masukkan Jabatan PIC" tabindex="10" :isInvalid="v$.pic_jabatan.$errors?.length"
-              :disabled="formState.loadingSubmit" />
-            <ErrorMessage :errors="v$.pic_jabatan.$errors" />
+            <DateInput uid="pic_expire_at" v-model="v$.pic_expire_at.$model" label="Tanggal Kadaluarsa PIC" locale="id"
+              model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai Kadaluarsa PIC"
+              :disabled="formState.loadingSubmit || !formState.start_date" tabindex="5"
+              :isInvalid="v$.pic_expire_at.$errors?.length" :min-date="formState.start_date"
+              :enable-time-picker="false" />
+            <ErrorMessage :errors="v$.pic_expire_at.$errors" />
           </div>
         </div>
       </div>

@@ -39,6 +39,9 @@ const assessment = reactive({
     text: 'Periode Assessment',
     value: 'start_date',
   }, {
+    text: 'Periode Kuesioner',
+    value: 'start_date_quisioner',
+  }, {
     text: 'Status',
     value: 'status',
     sortable: true
@@ -246,7 +249,8 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/detail` })
 }
 
-const handleNavigateReport = ({ id }) => {
+const handleNavigateReport = ({ id, item }) => {
+  assessmentStore.selectedAssessment = item
   router.push({ path: `/project/assessment/${id}/report` })
 }
 
@@ -390,6 +394,16 @@ watch(() => [serverOptions.value, filter.value], () => {
               </div>
             </template>
 
+            <template #item-start_date_quisioner="item">
+              <div v-if="item.item?.start_date_quisioner" class="d-flex w-100">
+                {{ formatDate({ value: item.item?.start_date_quisioner }) }} s/d {{ formatDate({ value: item.item?.end_date_quisioner }) }}
+              </div>
+
+              <div v-else>
+                Belum Ditentukan
+              </div>
+            </template>
+
             <template #item-status="item">
               <div class="d-flex justify-content-center align-items-center w-100">
                 <span class="badge rounded-pill font-medium text-capitalize fw-bold"
@@ -430,7 +444,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
 
                   <li>
-                    <BaseButton @click="handleNavigateReport({ id: item?.item?.id })"
+                    <BaseButton @click="handleNavigateReport({ id: item?.item?.id, item: item.item })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="ChartHistogramIcon" />

@@ -9,9 +9,12 @@ import OverviewCard from '@/views/project/assessment/components/OverviewCard.vue
 import RespondenCard from '@/views/project/assessment/components/RespondenCard.vue'
 import ModalEditPIC from '@/views/project/assessment/components/ModalEditPIC.vue'
 
+import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useRoute, useRouter } from 'vue-router'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useTitle } from '@vueuse/core'
 
+const title = useTitle()
 const route = useRoute()
 const router = useRouter()
 const assessment = useAssessmentStore()
@@ -32,6 +35,12 @@ const classStatus = computed(() => {
   }
 })
 
+const formatDate = computed(() => {
+  return value => {
+    return formatDateMoments({ value: value?.value })
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleBack = () => {
   router.back()
@@ -47,7 +56,9 @@ const handleRefresh = () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  assessment.getDetailAssessment({ id: route.params?.id })
+  assessment.getDetailAssessment({ id: route.params?.id }).then(() => {
+    title.value = `Detail ${assessment.detail?.nama || ''}`
+  })
 })
 
 onUnmounted(() => {
@@ -82,6 +93,36 @@ onUnmounted(() => {
                 <span class="fw-bolder">Deskripsi:</span>
 
                 <div v-html="assessment.detail?.deskripsi || ' - '" />
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span class="fw-bolder">Periode Assessment:</span>
+
+                <div v-if="assessment.detail?.start_date">
+                  {{ formatDate({ value: assessment.detail?.start_date }) }} s/d {{ formatDate({
+                    value:
+                      assessment.detail?.end_date
+                  }) }}
+                </div>
+
+                <div v-else>
+                  -
+                </div>
+              </div>
+
+              <div class="fs-2 mb-1 d-flex flex-column">
+                <span class="fw-bolder">Periode Kuesioner:</span>
+
+                <div v-if="assessment.detail?.start_date_quisioner">
+                  {{ formatDate({ value: assessment.detail?.start_date_quisioner }) }} s/d {{ formatDate({
+                    value:
+                      assessment.detail?.end_date_quisioner
+                  }) }}
+                </div>
+
+                <div v-else>
+                  -
+                </div>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
@@ -139,37 +180,41 @@ onUnmounted(() => {
               </BaseButton>
             </div>
 
-            <div class="d-flex flex-column">
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">
-                  Nama:
-                </span>
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <div class="fs-2 mb-2 d-flex flex-column">
+                  <span class="fw-bolder">
+                    Nama:
+                  </span>
 
-                <div>{{ assessment.detail?.pic?.nama || "-" }}</div>
+                  <div>{{ assessment.detail?.pic?.nama || "-" }}</div>
+                </div>
+
+                <div class="fs-2 mb-2 d-flex flex-column">
+                  <span class="fw-bolder">
+                    Email:
+                  </span>
+
+                  <div>{{ assessment.detail?.pic?.email || '-' }}</div>
+                </div>
               </div>
 
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">
-                  Email:
-                </span>
+              <div class="col-12 col-md-6">
+                <div class="fs-2 mb-2 d-flex flex-column">
+                  <span class="fw-bolder">
+                    Divisi:
+                  </span>
 
-                <div>{{ assessment.detail?.pic?.email || '-' }}</div>
-              </div>
+                  <div>{{ assessment.detail?.pic?.divisi?.nama || '-' }}</div>
+                </div>
 
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">
-                  Divisi:
-                </span>
+                <div class="fs-2 mb-2 d-flex flex-column">
+                  <span class="fw-bolder">
+                    Jabatan:
+                  </span>
 
-                <div>{{ assessment.detail?.pic?.divisi || '-' }}</div>
-              </div>
-
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">
-                  Jabatan:
-                </span>
-
-                <div>{{ assessment.detail?.pic?.posisi || '-' }}</div>
+                  <div>{{ assessment.detail?.pic?.jabatan?.nama || '-' }}</div>
+                </div>
               </div>
             </div>
           </template>

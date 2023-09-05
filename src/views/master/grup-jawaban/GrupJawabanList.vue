@@ -24,7 +24,7 @@ const groupAnswer = reactive({
   loading: false,
   data: [],
   headers: [{
-    text: 'Nama Group Answer',
+    text: 'Nama Grup Jawaban',
     value: 'nama',
     sortable: true
   }, {
@@ -107,8 +107,8 @@ const deleteGroupAnswer = async ({ id }) => {
 
     if (response) {
       toast.success({
-        title: 'Hapus Group Answer',
-        text: `Berhasil Menghapus Data Group Answer`
+        title: 'Hapus Grup Jawaban',
+        text: `Berhasil Menghapus Data Grup Jawaban`
       })
       handleRefresh()
 
@@ -140,11 +140,11 @@ const handleDelete = ({ title, id }) => {
 }
 
 const handleNavigateToEdit = ({ id }) => {
-  router.push(`/master/group-answer/${id}/edit`)
+  router.push(`/master/grup-jawaban/${id}/edit`)
 }
 
 const handleNavigateAdd = () => {
-  router.push('/master/group-answer/add')
+  router.push('/master/grup-jawaban/add')
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -174,15 +174,15 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Group Answer</h5>
+              <h5 class="card-title fw-semibold">Grup Jawaban</h5>
             </div>
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput v-model="filter.search" placeholder="Cari Group Answer" />
+              <SearchInput v-model="filter.search" placeholder="Cari Grup Jawaban" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
-                title="Tambah Group Answer">
+                title="Tambah Grup Jawaban">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>

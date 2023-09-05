@@ -76,14 +76,14 @@ const router = createRouter({
 
         {
           path: '/master',
-          redirect: '/master/group-answer',
+          redirect: '/master/grup-jawaban',
           children: [
             {
-              name: 'GroupAnswer',
-              path: '/master/group-answer',
-              component: () => import('@/views/master/group-answer/GroupAnswerList.vue'),
+              name: 'GrupJawaban',
+              path: '/master/grup-jawaban',
+              component: () => import('@/views/master/grup-jawaban/GrupJawabanList.vue'),
               meta: {
-                pageTitle: 'Group Answer',
+                pageTitle: 'Grup Jawaban',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -94,20 +94,20 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Group Answer',
+                    text: 'Grup Jawaban',
                     disabled: true,
-                    href: '/master/group-answer',
+                    href: '/master/grup-jawaban',
                     active: true
                   }
                 ]
               }
             },
             {
-              name: 'TambahGroupAnswer',
-              path: '/master/group-answer/add',
-              component: () => import('@/views/master/group-answer/GroupAnswerAdd.vue'),
+              name: 'TambahGrupJawaban',
+              path: '/master/grup-jawaban/add',
+              component: () => import('@/views/master/grup-jawaban/GrupJawabanAdd.vue'),
               meta: {
-                pageTitle: 'Tambah Group Answer',
+                pageTitle: 'Tambah Grup Jawaban',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -118,26 +118,26 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Group Answer',
+                    text: 'Grup Jawaban',
                     disabled: false,
-                    href: '/master/group-answer',
+                    href: '/master/grup-jawaban',
                     active: false
                   },
                   {
-                    text: 'Tambah Group Answer',
+                    text: 'Tambah Grup Jawaban',
                     disabled: true,
-                    href: '/master/group-answer/add',
+                    href: '/master/grup-jawaban/add',
                     active: true
                   }
                 ]
               }
             },
             {
-              name: 'EditGroupAnswer',
-              path: '/master/group-answer/:id/edit',
-              component: () => import('@/views/master/group-answer/GroupAnswerEdit.vue'),
+              name: 'EditGrupJawaban',
+              path: '/master/grup-jawaban/:id/edit',
+              component: () => import('@/views/master/grup-jawaban/GrupJawabanEdit.vue'),
               meta: {
-                pageTitle: 'Edit Group Answer',
+                pageTitle: 'Edit Grup Jawaban',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -148,15 +148,15 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Group Answer',
+                    text: 'Grup Jawaban',
                     disabled: false,
-                    href: '/master/group-answer',
+                    href: '/master/grup-jawaban',
                     active: false
                   },
                   {
-                    text: 'Edit Group Answer',
+                    text: 'Edit Grup Jawaban',
                     disabled: true,
-                    href: '/master/group-answer/:id/edit',
+                    href: '/master/grup-jawaban/:id/edit',
                     active: true
                   }
                 ]
@@ -502,6 +502,36 @@ const router = createRouter({
                     text: 'Edit Organisasi',
                     disabled: true,
                     href: '/master/organisasi/:id/edit',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'DivisiOrganisasi',
+              path: '/master/organisasi/:id/divisi-dan-jabatan',
+              component: () => import('@/views/master/organisasi/OrganisasiDivisiDanJabatan.vue'),
+              meta: {
+                pageTitle: 'Divisi & Jabatan Organisasi',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Organisasi',
+                    disabled: false,
+                    href: '/master/organisasi',
+                    active: false
+                  },
+                  {
+                    text: 'Divisi & Jabatan Organisasi',
+                    disabled: true,
+                    href: '/master/organisasi/:id/divisi-dan-jabatan',
                     active: true
                   }
                 ]
@@ -868,29 +898,29 @@ const router = createRouter({
         },
 
         {
-          path: '/quisioner',
-          redirect: '/quisioner/responden',
+          path: '/kuesioner',
+          redirect: '/kuesioner/responden',
           children: [
             {
-              name: 'Quisioner',
-              path: '/quisioner/responden',
-              component: () => import('@/views/quisioner/responden/QuisionerResponden.vue'),
+              name: 'Kuesioner',
+              path: '/kuesioner/responden',
+              component: () => import('@/views/kuesioner/responden/KuesionerResponden.vue'),
               meta: {
-                pageTitle: 'Quisioner',
+                pageTitle: 'Kuesioner',
                 layout: 'AppLayoutSideView',
                 background_picture: '/assets/images/illustrations/man-choice-document.svg',
                 requiredAuth: false,
                 breadcrumb: [
                   {
-                    text: 'Quisioner',
+                    text: 'Kuesioner',
                     disabled: false,
-                    href: '/quisioner',
+                    href: '/kuesioner',
                     active: false
                   },
                   {
-                    text: 'Quisioner Responden',
+                    text: 'Kuesioner Responden',
                     disabled: true,
-                    href: '/quisioner/responden',
+                    href: '/kuesioner/responden',
                     active: true
                   }
                 ]
@@ -898,8 +928,8 @@ const router = createRouter({
             },
             {
               name: 'Question',
-              path: '/quisioner/responden/question',
-              component: () => import('@/views/quisioner/responden/question/QuestionResponden.vue'),
+              path: '/kuesioner/responden/question',
+              component: () => import('@/views/kuesioner/responden/question/QuestionResponden.vue'),
               meta: {
                 pageTitle: 'Question',
                 layout: 'AppLayoutSideView',
@@ -907,31 +937,31 @@ const router = createRouter({
                 requiredAuth: false,
                 breadcrumb: [
                   {
-                    text: 'Quisioner',
+                    text: 'Kuesioner',
                     disabled: false,
-                    href: '/quisioner',
+                    href: '/kuesioner',
                     active: false
                   },
                   {
-                    text: 'Quisioner Responden',
+                    text: 'Kuesioner Responden',
                     disabled: false,
-                    href: '/quisioner/responden',
+                    href: '/kuesioner/responden',
                     active: false
                   },
                   {
-                    text: 'Quisioner Question',
+                    text: 'Kuesioner Question',
                     disabled: true,
-                    href: '/quisioner/question',
+                    href: '/kuesioner/responden/question',
                     active: true
                   }
                 ]
               }
             },
             {
-              name: 'QuestionFinish',
-              path: '/quisioner/responden/question/finish',
+              name: 'KuesionerFinish',
+              path: '/kuesioner/responden/question/finish',
               component: () =>
-                import('@/views/quisioner/responden/question/QuestionRespondenFinish.vue'),
+                import('@/views/kuesioner/responden/question/QuestionRespondenFinish.vue'),
               meta: {
                 pageTitle: 'Question Selesai',
                 layout: 'AppLayoutBoxed',
@@ -939,27 +969,27 @@ const router = createRouter({
                 requiredAuth: false,
                 breadcrumb: [
                   {
-                    text: 'Quisioner',
+                    text: 'Kuesioner',
                     disabled: false,
-                    href: '/quisioner',
+                    href: '/kuesioner',
                     active: false
                   },
                   {
-                    text: 'Quisioner Responden',
+                    text: 'Kuesioner Responden',
                     disabled: false,
-                    href: '/quisioner/responden',
+                    href: '/kuesioner/responden',
                     active: false
                   },
                   {
-                    text: 'Quisioner Question',
+                    text: 'Kuesioner Question',
                     disabled: false,
-                    href: '/quisioner/responden/question',
+                    href: '/kuesioner/responden/question',
                     active: false
                   },
                   {
-                    text: 'Quisioner Question Selesai',
+                    text: 'Kuesioner Question Selesai',
                     disabled: true,
-                    href: '/quisioner/responden/question/finish',
+                    href: '/kuesioner/responden/question/finish',
                     active: true
                   }
                 ]

@@ -8,6 +8,7 @@ import BaseTab from '@/components/Tab/BaseTab.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useTitle } from '@vueuse/core'
 
 const TabStep2 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/summary/components/TabStep2.vue')
@@ -21,6 +22,7 @@ const TabStep4 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/summary/components/TabStep4.vue')
 })
 
+const title = useTitle()
 const router = useRouter()
 const route = useRoute()
 const assessment = useAssessmentStore()
@@ -54,7 +56,12 @@ const handleBack = () => {
 }
 
 const getReportCanvasAssessment = () => {
-  assessment.getReportCanvasAssessment({ assessment_id: route.params?.id })
+  assessment.getReportCanvasAssessment({ assessment_id: route.params?.id }).then(() => {
+    if (assessment.selectedAssessment?.nama) {
+      title.value = `Summary GAMO ${assessment.selectedAssessment?.nama || ''}`
+    }
+
+  })
 }
 
 const onSubmitAdjustment = () => {
