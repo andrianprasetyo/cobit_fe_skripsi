@@ -207,6 +207,7 @@ watch(() => [formState.divisi], () => {
     </div>
 
     <div v-else class="row col-12 offset-md-1 col-md-9">
+
       <div class="card">
         <div class="card-body">
           <h2 class="mb-4 fs-7 fw-bolder lh-base text-center">

@@ -40,7 +40,7 @@ const formState = reactive({
 const rules = computed(() => {
   return {
     assessment: {
-      required: helpers.withMessage('Silahkan isi nama assessment', required),
+      required: helpers.withMessage('Silahkan isi nama asesmen', required),
     },
     deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
@@ -89,8 +89,8 @@ const handleSubmit = async () => {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Edit Assessment',
-          text: 'Berhasil Mengubah Data Assessment'
+          title: 'Edit Asesmen',
+          text: 'Berhasil Mengubah Data Asesmen'
         })
         handleBack()
       }
@@ -132,17 +132,17 @@ onUnmounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Assessment</h5>
+          <h5 class="card-title mb-9 fw-semibold">Asesmen</h5>
 
           <div class="mb-3">
-            <BaseInput id="assessment" v-model="v$.assessment.$model" label="Nama Assessment"
-              placeholder="Masukkan Nama Assessment" tabindex="1" :isInvalid="v$.assessment.$errors?.length"
+            <BaseInput id="assessment" v-model="v$.assessment.$model" label="Nama Asesmen"
+              placeholder="Masukkan Nama Asesmen" tabindex="1" :isInvalid="v$.assessment.$errors?.length"
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.assessment.$errors" />
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="deskripsi">Deskripsi Asessment</label>
+            <label class="form-label" for="deskripsi">Deskripsi Asesmen</label>
 
             <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model"
               :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />

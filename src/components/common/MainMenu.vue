@@ -4,10 +4,15 @@ import { useRoute } from 'vue-router';
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import LinkMenuItem from '@/components/Link/LinkMenuItem.vue'
 
+
 import { useAuth } from '@/stores/auth'
+import { useAppConfig } from '@/stores/appConfig'
+import { useWindowSize } from '@vueuse/core';
 
 const route = useRoute()
+const appConfig = useAppConfig()
 const { menu } = useAuth()
+const { width } = useWindowSize()
 
 /* ---------------------------------- STATE --------------------------------- */
 const stateSidebar = reactive({
@@ -142,6 +147,15 @@ onMounted(() => {
             }
           }
         }
+      }
+    })
+  }
+
+  // Check Is Mobile
+  if (width.value < 550) {
+    appConfig.$patch({
+      layouts: {
+        ...appConfig.layouts, miniSidebar: true,
       }
     })
   }

@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, onMounted, watch } from 'vue'
+import { reactive, ref, onMounted, watch, computed } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
@@ -7,35 +7,43 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 
-import DesignFactorServices from '@/services/lib/design-factor'
+import CapabilityLevelServices from '@/services/lib/capability-level'
 
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
+const route = useRoute()
 
 /* ---------------------------------- STATE --------------------------------- */
-const designFactor = reactive({
+const capabilityLevel = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Kode',
-    value: 'kode',
-    sortable: true
-  }, {
-    text: 'Nama',
-    value: 'nama',
-    sortable: true,
-  }, {
-    text: 'Deskripsi',
-    value: 'deskripsi',
-  }, {
-    text: 'Action',
-    value: 'action'
-  }],
+  headers: [
+    {
+      text: 'GAMO',
+      value: 'domain'
+    }, {
+      text: 'Capability Level',
+      value: 'level',
+      sortable: true
+    }, {
+      text: 'Activities',
+      value: 'kegiatan',
+    }, {
+      text: 'Translate',
+      value: 'translate',
+    }, {
+      text: 'Weight',
+      value: 'bobot',
+      sortable: true
+    }, {
+      text: 'Action',
+      value: 'action',
+    }],
   meta: {
     current_page: 1,
     per_page: 10,
@@ -55,43 +63,48 @@ const filter = ref({
   search: ''
 })
 
+const idGamo = computed(() => {
+  return route.params?.id
+})
+
 /* --------------------------------- METHODS -------------------------------- */
-const getListDesignFactor = async ({ limit, page, sortBy, sortType, search }) => {
+const getListCapabilityLevel = async ({ limit, page, sortBy, sortType, search, domain_id }) => {
   try {
-    designFactor.loading = true
-    const response = await DesignFactorServices.getListDesignFactor({ limit, page, sortBy, sortType, search })
+    capabilityLevel.loading = true
+    const response = await CapabilityLevelServices.getListCapabilityLevel({ limit, page, sortBy, sortType, search, domain_id })
 
     if (response) {
       const data = response?.data
 
-      designFactor.data = data?.list || []
-      designFactor.meta = data?.meta
-      designFactor.loading = false
+      capabilityLevel.data = data?.list || []
+      capabilityLevel.meta = data?.meta
+      capabilityLevel.loading = false
     }
   } catch (error) {
-    designFactor.loading = false
+    capabilityLevel.loading = false
     toast.error({ error })
   }
 }
 
 const handleRefresh = () => {
-  getListDesignFactor({
+  getListCapabilityLevel({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    domain_id: idGamo.value
   })
 }
 
-const deleteDesignFactor = async ({ id }) => {
+const deleteCapabilityLevel = async ({ id }) => {
   try {
-    const response = await DesignFactorServices.deleteDesignFactor({ id })
+    const response = await CapabilityLevelServices.deleteCapabilityLevel({ id })
 
     if (response) {
       toast.success({
-        title: 'Hapus Design Factor',
-        text: `Berhasil Menghapus Data Design Factor`
+        title: 'Hapus Capability Level',
+        text: `Berhasil Menghapus Data Capability Level`
       })
       handleRefresh()
 
@@ -103,26 +116,6 @@ const deleteDesignFactor = async ({ id }) => {
   }
 }
 
-const handleNavigateAdd = () => {
-  router.push('/master/design-factor/add')
-}
-
-const handleNavigateToOverview = ({ id }) => {
-  router.push(`/master/design-factor/${id}/overview`)
-}
-
-const handleNavigateToEdit = ({ id }) => {
-  router.push(`/master/design-factor/${id}/edit`)
-}
-
-const handleNavigateToQuestion = ({ id }) => {
-  router.push(`/master/design-factor/${id}/question`)
-}
-
-const handleNavigateToComponent = ({ id }) => {
-  router.push(`/master/design-factor/${id}/component`)
-}
-
 const handleDelete = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menghapus ${title}`
@@ -130,7 +123,7 @@ const handleDelete = ({ title, id }) => {
     if (result.isConfirmed) {
       alert.loading()
       try {
-        const response = await deleteDesignFactor({ id })
+        const response = await deleteCapabilityLevel({ id })
 
         if (response) {
           alert.instance().close()
@@ -142,18 +135,32 @@ const handleDelete = ({ title, id }) => {
   })
 }
 
+const handleNavigateAdd = () => {
+  router.push(`/master/gamo/${idGamo.value}/capability-level/add`)
+}
+
+const handleNavigateToDetail = ({ id }) => {
+  router.push(`/master/gamo/${idGamo.value}/capability-level/${id}/detail`)
+}
+
+const handleNavigateToEdit = ({ id }) => {
+  router.push(`/master/gamo/${idGamo.value}/capability-level/${id}/edit`)
+}
+
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  getListDesignFactor({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
+  getListCapabilityLevel({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, domain_id: idGamo.value })
 })
 
 watch(() => [serverOptions.value, filter.value], () => {
-  getListDesignFactor({
+  getListCapabilityLevel({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    domain_id: idGamo.value
   })
 }, { deep: true })
 
@@ -169,15 +176,15 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Design Factor</h5>
+              <h5 class="card-title fw-semibold">Capability Level</h5>
             </div>
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput v-model="filter.search" placeholder="Cari Design Factor" />
+              <SearchInput v-model="filter.search" placeholder="Cari Capability Level" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Design Factor">
+                title="Tambah Capability Level">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -185,27 +192,66 @@ watch(() => [serverOptions.value, filter.value], () => {
             </div>
           </div>
 
-          <DataTable :headers="designFactor.headers" :items="designFactor.data" :loading="designFactor.loading"
-            :server-items-length="designFactor.meta.total" v-model:server-options="serverOptions" fixed-header>
+          <DataTable :headers="capabilityLevel.headers" :items="capabilityLevel.data" :loading="capabilityLevel.loading"
+            :server-items-length="capabilityLevel.meta.total" v-model:server-options="serverOptions" fixed-header>
 
-            <template #header-kode="header">
+            <template #header-level="header">
               <div class="d-flex justify-content-center align-items-center w-100">
                 {{ header.item?.text }}
               </div>
             </template>
 
-            <template #item-kode="item">
+            <template #header-domain="header">
               <div class="d-flex justify-content-center align-items-center w-100">
-                {{ item.item?.kode }}
+                {{ header.item?.text }}
               </div>
             </template>
 
-            <template #item-deskripsi="item">
-              <div v-if="item.item?.deskripsi" class="d-flex flex-wrap">
-                <div class="width-250px text-break text-wrap" v-html="item.item?.deskripsi" />
+            <template #header-bobot="header">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ header.item?.text }}
+              </div>
+            </template>
+
+            <template #header-actions="header">
+              <div class="d-flex justify-content-center align-items-center">
+                {{ header.item?.text }}
+              </div>
+            </template>
+
+            <template #item-level="item">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                Level {{ item.item?.level }}
+              </div>
+            </template>
+
+            <template #item-domain="item">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ item.item?.domain?.kode }}
+              </div>
+            </template>
+
+            <template #item-kegiatan="item">
+              <div v-if="item.item?.kegiatan" class="d-flex flex-wrap">
+                <div class="width-250px text-break text-wrap" v-html="item.item?.kegiatan" />
               </div>
               <div v-else>
-                Belum Ada Deskripsi
+                Belum Ada Activities
+              </div>
+            </template>
+
+            <template #item-translate="item">
+              <div v-if="item.item?.translate" class="d-flex flex-wrap">
+                <div class="width-250px text-break text-wrap" v-html="item.item?.translate" />
+              </div>
+              <div v-else>
+                Belum Ada Translate
+              </div>
+            </template>
+
+            <template #item-bobot="item">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ item.item?.bobot }}
               </div>
             </template>
 
@@ -216,12 +262,12 @@ watch(() => [serverOptions.value, filter.value], () => {
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <BaseButton @click="handleNavigateToOverview({ id: item?.item?.id })"
+                    <BaseButton @click="handleNavigateToDetail({ id: item.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
                       <template #icon-left>
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
-                          Overview
+                          Lihat Detail
                         </span>
                       </template>
                     </BaseButton>
@@ -232,7 +278,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
 
                   <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
+                    <BaseButton @click="handleNavigateToEdit({ id: item.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />
@@ -244,35 +290,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
 
                   <li>
-                    <BaseButton @click="handleNavigateToQuestion({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ClipboardListIcon" />
-                        <span class="ms-2">
-                          Question
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <li>
-                    <BaseButton @click="handleNavigateToComponent({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ListDetailsIcon" />
-                        <span class="ms-2">
-                          Komponen
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-
-                  <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                    <BaseButton @click="handleDelete({ title: item.item?.domain?.kode, id: item.item?.id })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
                       <template #icon-left>
                         <TablerIcon icon="TrashIcon" />
@@ -283,8 +301,10 @@ watch(() => [serverOptions.value, filter.value], () => {
                     </BaseButton>
                   </li>
                 </ul>
+
               </div>
             </template>
+
           </DataTable>
         </div>
       </div>

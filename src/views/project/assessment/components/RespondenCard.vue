@@ -210,8 +210,8 @@ const selesaikanAsessment = async ({ id }) => {
 
     if (response) {
       toast.success({
-        title: 'Ubah Status Assessment',
-        text: `Berhasil Mengubah Status Assessment`
+        title: 'Ubah Status Asesmen',
+        text: `Berhasil Mengubah Status Asesmen`
       })
 
       assessment.getDetailAssessment({ id })
@@ -227,7 +227,7 @@ const selesaikanAsessment = async ({ id }) => {
 
 const handleSelesaikanAssessment = () => {
   alert.info({
-    title: `Apakah Anda Yakin untuk Menyelesaikan Assessment`
+    title: `Apakah Anda Yakin untuk Menyelesaikan Asesmen`
   }).then(async (result) => {
     if (result.isConfirmed) {
       alert.loading()
@@ -335,7 +335,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <li>
               <BaseButton @click="handleNavigateReport"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report Assessment">
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report GAMO">
                 <template #icon-left>
                   <TablerIcon size="16" icon="ChartHistogramIcon" class="me-2" />
                 </template>
@@ -352,7 +352,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   <template #icon-left>
                     <TablerIcon icon="CheckboxIcon" />
                     <span class="ms-2">
-                      Selesaikan Assessment
+                      Selesaikan Asesmen
                     </span>
                   </template>
                 </BaseButton>
