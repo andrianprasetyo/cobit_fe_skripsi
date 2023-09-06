@@ -24,8 +24,8 @@ const capabilityLevel = reactive({
   data: [],
   headers: [
     {
-      text: 'GAMO',
-      value: 'domain'
+      text: 'Sub GAMO',
+      value: 'subkode'
     }, {
       text: 'Capability Level',
       value: 'level',
@@ -201,7 +201,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               </div>
             </template>
 
-            <template #header-domain="header">
+            <template #header-subkode="header">
               <div class="d-flex justify-content-center align-items-center w-100">
                 {{ header.item?.text }}
               </div>
@@ -225,9 +225,9 @@ watch(() => [serverOptions.value, filter.value], () => {
               </div>
             </template>
 
-            <template #item-domain="item">
+            <template #item-subkode="item">
               <div class="d-flex justify-content-center align-items-center w-100">
-                {{ item.item?.domain?.kode }}
+                {{ item.item?.subkode }}
               </div>
             </template>
 

@@ -7,6 +7,7 @@
     "paths": {
       // penggunaan komponen / helpers "@/components/namaComponents"
       "@/components/*": ["components/*"],
+      "@/hooks/*": ["hooks/*"],
       "@/layouts/*": ["layouts/*"],
       "@/plugins/*": ["plugins/*"],
       "@/router/*": ["router/*"],
@@ -17,5 +18,5 @@
     }
   },
   "include": ["./src", "**/*.js", "**/*.jsx", "**/*.vue", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

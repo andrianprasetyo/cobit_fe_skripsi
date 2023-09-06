@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
+
 /*
 import debounce from 'lodash.debounce'
 */
@@ -12,19 +13,20 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
 
 import CapabilityLevelServices from '@/services/lib/capability-level'
-
 /*
 import DomainServices from '@/services/lib/domain'
 */
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, maxLength } from "@vuelidate/validators";
+import { required, helpers, minValue } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
+import { useTitle } from '@vueuse/core'
 
 import capabilityLevelJSON from '@/data/capabilityLevel.json'
 
+const title = useTitle()
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
@@ -33,6 +35,9 @@ const loading = useLoading()
 /* ---------------------------------- STATE --------------------------------- */
 const formState = reactive({
   loadingSubmit: false,
+  loading: false,
+  detail: null,
+  urutan: '',
   kode: '',
   kegiatan: '',
   translate: '',
@@ -52,12 +57,22 @@ const idGamo = computed(() => {
   return route.params?.id
 })
 
+const idCapabilityLevel = computed(() => {
+  return route.params?.capability_level_id
+})
+
 const rules = computed(() => {
   return {
+    urutan: {
+      required: helpers.withMessage('Silahkan isi urutan', required),
+      minValue: helpers.withMessage('Minimal urutan yaitu angka 1', minValue(1)),
+    },
+    /*
     kode: {
       required: helpers.withMessage('Silahkan isi kode', required),
       maxLength: helpers.withMessage('Kode maksimal 5 karakter / nomor', maxLength(5)),
     },
+    */
     kegiatan: {
       required: helpers.withMessage('Silahkan isi activities', required),
     },
@@ -70,15 +85,47 @@ const rules = computed(() => {
     bobot: {
       required: helpers.withMessage('Silahkan isi bobot', required),
     },
+    /*
     domain_id: {
       required: helpers.withMessage("Silahkan pilih domain", required)
     }
+    */
   }
 })
 
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 /* --------------------------------- METHODS -------------------------------- */
+const getDetailCapabilityLevel = async () => {
+  const loader = loading.show()
+
+  try {
+    formState.loading = true
+    const response = await CapabilityLevelServices.getDetailCapabilityLevel({ id: idCapabilityLevel.value })
+
+    if (response) {
+      const data = response?.data;
+
+      formState.urutan = data?.urutan
+      formState.kode = data?.kode
+      formState.level = data?.level
+      formState.kegiatan = data?.kegiatan || ''
+      formState.translate = data?.translate || ''
+      formState.bobot = data?.bobot
+
+      title.value = `Edit Capability Level ${data?.kode}`
+
+      formState.loading = false
+      loader.hide()
+    }
+
+  } catch (error) {
+    formState.loading = false
+    loader.hide()
+    toast.error({ error })
+  }
+}
+
 /*
 const handleSearchDomain = debounce(async ({ search }) => {
   try {
@@ -109,13 +156,15 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await CapabilityLevelServices.createCapabilityLevel({
+      const response = await CapabilityLevelServices.editCapabilityLevel({
+        id: idCapabilityLevel.value,
+        urutan: formState.urutan,
         kode: formState.kode,
         kegiatan: formState.kegiatan,
         translate: formState.translate,
         level: formState.level,
         bobot: formState.bobot,
-        domain_id: formState.domain_id
+        domain_id: idGamo.value
       })
 
       if (response) {
@@ -140,8 +189,10 @@ const handleSubmit = async () => {
 onMounted(() => {
   /*
   handleSearchDomain({ search: '' })
-  */
   formState.domain_id = idGamo.value
+  */
+
+  getDetailCapabilityLevel()
 })
 
 </script>
@@ -156,7 +207,7 @@ onMounted(() => {
           <h5 class="card-title mb-9 fw-semibold">Capability Level</h5>
 
           <div class="row mb-3">
-            <div class="col-12 col-md-12">
+            <div class="col-12 col-md-9">
               <label class="form-label" for="level">Level</label>
 
               <v-select id="level" :filterable="false" :options="capabilityLevelJSON" v-model="formState.level"
@@ -168,6 +219,13 @@ onMounted(() => {
                 </template>
               </v-select>
               <ErrorMessage :errors="v$.level.$errors" />
+            </div>
+
+            <div class="col-12 col-md-3">
+              <BaseInput id="urutan" type="number" v-model="v$.urutan.$model" label="Urutan" placeholder="Masukkan Urutan"
+                tabindex="2" :min="1" :isInvalid="v$.urutan.$errors?.length"
+                :disabled="formState.loading || formState.loadingSubmit" />
+              <ErrorMessage :errors="v$.urutan.$errors" />
             </div>
 
             <!-- <div class="col-12 col-md-6">
@@ -191,14 +249,14 @@ onMounted(() => {
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-12 col-md-9">
-              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode"
-                tabindex="3" :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
-              <ErrorMessage :errors="v$.kode.$errors" />
+              <BaseInput id="kode" v-model="formState.kode" label="Sub Kode" placeholder="Masukkan Sub Kode" tabindex="3"
+                :disabled="true" />
             </div>
 
             <div class="col-12 col-md-3">
               <BaseInput id="weight" type="number" v-model="v$.bobot.$model" label="Weight" placeholder="Masukkan Weight"
-                tabindex="4" :isInvalid="v$.bobot.$errors?.length" :disabled="formState.loadingSubmit" />
+                tabindex="4" :isInvalid="v$.bobot.$errors?.length"
+                :disabled="formState.loading || formState.loadingSubmit" />
               <ErrorMessage :errors="v$.bobot.$errors" />
             </div>
           </div>
@@ -207,7 +265,7 @@ onMounted(() => {
             <label class="form-label" for="kegiatan">Activities</label>
 
             <CKEditor id="kegiatan" tabindex="5" v-model="v$.kegiatan.$model" :isInvalid="!!v$.kegiatan.$errors?.length"
-              :disabled="formState.loadingSubmit" />
+              :disabled="formState.loading || formState.loadingSubmit" />
             <ErrorMessage :errors="v$.kegiatan.$errors" />
           </div>
 
@@ -215,7 +273,7 @@ onMounted(() => {
             <label class="form-label" for="translate">Translate</label>
 
             <CKEditor id="translate" tabindex="6" v-model="v$.translate.$model"
-              :isInvalid="!!v$.translate.$errors?.length" :disabled="formState.loadingSubmit" />
+              :isInvalid="!!v$.translate.$errors?.length" :disabled="formState.loading || formState.loadingSubmit" />
             <ErrorMessage :errors="v$.translate.$errors" />
           </div>
         </div>
