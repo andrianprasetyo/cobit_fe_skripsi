@@ -127,6 +127,10 @@ const handleNavigateToCapabilityLevel = ({ id }) => {
   router.push(`/master/gamo/${id}/capability-level`)
 }
 
+const handleNavigateToCapabilityAnswer = () => {
+  router.push(`/master/gamo/capability-answer`)
+}
+
 const handleNavigateAdd = () => {
   router.push('/master/gamo/add')
 }
@@ -170,6 +174,13 @@ watch(() => [serverOptions.value, filter.value], () => {
                 title="Tambah GAMO">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
+                </template>
+              </BaseButton>
+
+              <BaseButton @click="handleNavigateToCapabilityAnswer"
+                class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0 " title="Atur Jawaban Capability">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="AdjustmentsIcon" />
                 </template>
               </BaseButton>
             </div>

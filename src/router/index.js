@@ -422,6 +422,37 @@ const router = createRouter({
                 ]
               }
             },
+
+            {
+              name: 'CapabilityAnswer',
+              path: '/master/gamo/capability-answer',
+              component: () => import('@/views/master/gamo/capability-answer/CapabilityAnswer.vue'),
+              meta: {
+                pageTitle: 'Jawaban Capability',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Governance and Management Objectives (GAMO)',
+                    disabled: false,
+                    href: '/master/gamo',
+                    active: false
+                  },
+                  {
+                    text: 'Jawaban Capability',
+                    disabled: true,
+                    href: '/master/gamo/capability-answer',
+                    active: true
+                  }
+                ]
+              }
+            },
             {
               name: 'CapabilityLevel',
               path: '/master/gamo/:id/capability-level',
@@ -485,6 +516,80 @@ const router = createRouter({
                     text: 'Tambah Capability Level',
                     disabled: true,
                     href: '/master/gamo/:id/capability-level/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditCapabilityLevel',
+              path: '/master/gamo/:id/capability-level/:capability_level_id/edit',
+              component: () =>
+                import('@/views/master/gamo/capability-level/CapabilityLevelEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Capability Level',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Governance and Management Objectives (GAMO)',
+                    disabled: false,
+                    href: '/master/gamo',
+                    active: false
+                  },
+                  {
+                    text: 'Capability Level',
+                    disabled: false,
+                    href: '/master/gamo/:id/capability-level',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Capability Level',
+                    disabled: true,
+                    href: '/master/gamo/:id/capability-level/:capability_level_id/edit',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'DetailCapabilityLevel',
+              path: '/master/gamo/:id/capability-level/:capability_level_id/detail',
+              component: () =>
+                import('@/views/master/gamo/capability-level/detail/CapabilityLevelDetail.vue'),
+              meta: {
+                pageTitle: 'Detail Capability Level',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Governance and Management Objectives (GAMO)',
+                    disabled: false,
+                    href: '/master/gamo',
+                    active: false
+                  },
+                  {
+                    text: 'Capability Level',
+                    disabled: false,
+                    href: '/master/gamo/:id/capability-level',
+                    active: false
+                  },
+                  {
+                    text: 'Detail Capability Level',
+                    disabled: true,
+                    href: '/master/gamo/:id/capability-level/:capability_level_id/detail',
                     active: true
                   }
                 ]
