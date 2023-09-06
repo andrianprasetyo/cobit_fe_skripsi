@@ -558,43 +558,6 @@ const router = createRouter({
                 ]
               }
             },
-            {
-              name: 'DetailCapabilityLevel',
-              path: '/master/gamo/:id/capability-level/:capability_level_id/detail',
-              component: () =>
-                import('@/views/master/gamo/capability-level/detail/CapabilityLevelDetail.vue'),
-              meta: {
-                pageTitle: 'Detail Capability Level',
-                layout: 'AppLayoutAdmin',
-                requiredAuth: true,
-                breadcrumb: [
-                  {
-                    text: 'Master',
-                    disabled: false,
-                    href: '/master',
-                    active: false
-                  },
-                  {
-                    text: 'Governance and Management Objectives (GAMO)',
-                    disabled: false,
-                    href: '/master/gamo',
-                    active: false
-                  },
-                  {
-                    text: 'Capability Level',
-                    disabled: false,
-                    href: '/master/gamo/:id/capability-level',
-                    active: false
-                  },
-                  {
-                    text: 'Detail Capability Level',
-                    disabled: true,
-                    href: '/master/gamo/:id/capability-level/:capability_level_id/detail',
-                    active: true
-                  }
-                ]
-              }
-            },
 
             {
               name: 'Organisasi',

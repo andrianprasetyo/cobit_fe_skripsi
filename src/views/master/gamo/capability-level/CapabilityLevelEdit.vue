@@ -18,7 +18,7 @@ import DomainServices from '@/services/lib/domain'
 */
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, minValue } from "@vuelidate/validators";
+import { required, helpers, minValue, maxLength } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -67,12 +67,10 @@ const rules = computed(() => {
       required: helpers.withMessage('Silahkan isi urutan', required),
       minValue: helpers.withMessage('Minimal urutan yaitu angka 1', minValue(1)),
     },
-    /*
     kode: {
       required: helpers.withMessage('Silahkan isi kode', required),
       maxLength: helpers.withMessage('Kode maksimal 5 karakter / nomor', maxLength(5)),
     },
-    */
     kegiatan: {
       required: helpers.withMessage('Silahkan isi activities', required),
     },
@@ -249,8 +247,9 @@ onMounted(() => {
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-12 col-md-9">
-              <BaseInput id="kode" v-model="formState.kode" label="Sub Kode" placeholder="Masukkan Sub Kode" tabindex="3"
-                :disabled="true" />
+              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode" tabindex="3"
+                :isInvalid="v$.kode.$errors?.length" :disabled="formState.loading || formState.loadingSubmit" />
+              <ErrorMessage :errors="v$.kode.$errors" />
             </div>
 
             <div class="col-12 col-md-3">

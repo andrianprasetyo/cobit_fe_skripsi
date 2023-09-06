@@ -24,7 +24,7 @@ const capabilityLevel = reactive({
   data: [],
   headers: [
     {
-      text: 'Sub GAMO',
+      text: 'Sub Kode GAMO',
       value: 'subkode'
     }, {
       text: 'Capability Level',

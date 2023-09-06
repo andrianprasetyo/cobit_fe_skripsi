@@ -78,17 +78,17 @@ watch(() => [selectedAssessment.value], () => {
       class="mb-4 d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
       <div class="w-100 mb-3 mb-md-0">
         <h5 class="card-title fw-semibold">Rekapitulasi Responden</h5>
-        <p class="card-subtitle mb-0">Berdasarkan Assessment</p>
+        <p class="card-subtitle mb-0">Berdasarkan Asesmen</p>
       </div>
 
       <div class="w-100">
         <div>
           <v-select id="list_assessment" @search="(search) => handleSearchAssessment({ search })" :filterable="false"
             :reduce="option => option?.id" :options="listAssessment.data" v-model="selectedAssessment"
-            :disabled="listAssessment.loading" label="id" placeholder="Filter Berdasarkan Assessment"
+            :disabled="listAssessment.loading" label="id" placeholder="Filter Berdasarkan Asesmen"
             :select-on-key-codes="[]">
             <template #no-options>
-              Tidak Ada Assessment Ditemukan
+              Tidak Ada Asesmen Ditemukan
             </template>
 
             <template #option="option">
