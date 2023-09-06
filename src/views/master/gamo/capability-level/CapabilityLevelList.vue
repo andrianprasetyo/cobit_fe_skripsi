@@ -139,10 +139,6 @@ const handleNavigateAdd = () => {
   router.push(`/master/gamo/${idGamo.value}/capability-level/add`)
 }
 
-const handleNavigateToDetail = ({ id }) => {
-  router.push(`/master/gamo/${idGamo.value}/capability-level/${id}/detail`)
-}
-
 const handleNavigateToEdit = ({ id }) => {
   router.push(`/master/gamo/${idGamo.value}/capability-level/${id}/edit`)
 }
@@ -261,21 +257,6 @@ watch(() => [serverOptions.value, filter.value], () => {
                   id="dropdownMenuButton" aria-expanded="false" />
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateToDetail({ id: item.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
-                      <template #icon-left>
-                        <TablerIcon icon="EyeIcon" />
-                        <span class="ms-2">
-                          Lihat Detail
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
 
                   <li>
                     <BaseButton @click="handleNavigateToEdit({ id: item.item?.id })"
