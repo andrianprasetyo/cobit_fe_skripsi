@@ -243,6 +243,10 @@ const handleNavigateCapability = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/capability` })
 }
 
+const handleNavigateSettingTarget = ({ id, assessment }) => {
+  router.push({ path: `/project/assessment/${id}/setting-target`, query: { assessment } })
+}
+
 const handleSelesaikanAssessment = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
@@ -438,6 +442,18 @@ watch(() => [serverOptions.value, filter.value], () => {
                   <template v-if="!isStatusCompleted(item?.item?.status)">
                     <li>
                       <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <BaseButton
+                        @click="handleNavigateSettingTarget({ id: item?.item?.id, assessment: item.item?.nama })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="TargetArrowIcon" />
+                          <span class="ms-2">
+                            Setting Target
+                          </span>
+                        </template>
+                      </BaseButton>
                     </li>
                     <li>
                       <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"

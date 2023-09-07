@@ -237,16 +237,12 @@ const handleSubmit = async () => {
         */
       }
 
-      if (formState.organisasi_nama) {
-        payload.organisasi_nama = formState.organisasi_nama
-      }
-
-      if (formState.organisasi_deskripsi) {
-        payload.organisasi_deskripsi = formState.organisasi_deskripsi
-      }
 
       if (formState.organisasi_id) {
         payload.organisasi_id = formState.organisasi_id
+      } else {
+        payload.organisasi_nama = formState.organisasi_nama
+        payload.organisasi_deskripsi = formState.organisasi_deskripsi
       }
 
       if (formState.pic_divisi) {
@@ -453,7 +449,7 @@ onMounted(() => {
             <label class="form-label" for="organisasi_deskripsi">Deskripsi Organisasi</label>
 
             <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model"
-              :isInvalid="!!v$.organisasi_deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
+              :isInvalid="!!v$.organisasi_deskripsi.$errors?.length" :disabled="formState.loadingSubmit || formState.organisasi_id" />
             <ErrorMessage v-if="v$.organisasi_deskripsi.$errors" :errors="v$.organisasi_deskripsi.$errors" />
           </div>
         </div>
