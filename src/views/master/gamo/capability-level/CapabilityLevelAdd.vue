@@ -7,6 +7,7 @@ import debounce from 'lodash.debounce'
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
+import BaseDropdownButton from '@/components/Button/BaseDropdownButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
@@ -38,7 +39,7 @@ const formState = reactive({
   translate: '',
   level: '',
   bobot: '',
-  domain_id: null
+  domain_id: null,
 })
 
 /*
@@ -100,7 +101,7 @@ const handleBack = () => {
   router.back()
 }
 
-const handleSubmit = async () => {
+const handleSubmit = async ({ isSaveAndClear = false }) => {
   const result = await v$.value.$validate()
 
   if (result) {
@@ -125,7 +126,12 @@ const handleSubmit = async () => {
           title: 'Tambah Capability Level',
           text: 'Berhasil Menambahkan Data Capability Level'
         })
-        handleBack()
+
+        if (isSaveAndClear) {
+          handleResetState()
+        } else {
+          handleBack()
+        }
       }
     } catch (error) {
       loader.hide()
@@ -133,6 +139,15 @@ const handleSubmit = async () => {
       toast.error({ error })
     }
   }
+}
+
+const handleResetState = () => {
+  v$.value.$reset()
+  formState.kode = ''
+  formState.kegiatan = ''
+  formState.translate = ''
+  formState.level = ''
+  formState.bobot = ''
 }
 
 
@@ -191,8 +206,8 @@ onMounted(() => {
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-12 col-md-9">
-              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode"
-                tabindex="3" :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
+              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode" tabindex="3"
+                :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
               <ErrorMessage :errors="v$.kode.$errors" />
             </div>
 
@@ -233,12 +248,21 @@ onMounted(() => {
             </div>
 
             <div>
-              <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit">
+              <BaseDropdownButton @click.stop="handleSubmit({ isSaveAndClear: false })" title="Simpan"
+                :disabled="formState.loadingSubmit" :is-loading="formState.loadingSubmit">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>
-              </BaseButton>
+
+                <template #dropdown>
+                  <BaseButton @click.stop="handleSubmit({ isSaveAndClear: true })" class="dropdown-item w-100"
+                    title="Simpan & Reset">
+                  </BaseButton>
+
+                  <BaseButton @click.stop="handleResetState" type="button" class="dropdown-item w-100" title="Reset">
+                  </BaseButton>
+                </template>
+              </BaseDropdownButton>
             </div>
           </div>
         </div>

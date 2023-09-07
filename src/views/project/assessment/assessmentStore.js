@@ -52,6 +52,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     getCapabilityListLevel(state) {
       return state.capability.listLevel
+    },
+
+    getCapabilitySelectedLevel(state) {
+      return state.capability.selectedLevel
     }
   },
   actions: {
@@ -65,6 +69,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setReportChartAdjustment(payload) {
       this.reportChart.adjustment = payload
+    },
+
+    setCapabilitySelectedLevel(payload) {
+      this.capability.selectedLevel = payload
     },
 
     async getDetailAssessment(payload) {
@@ -302,5 +310,8 @@ export const useAssessmentStore = defineStore('assessment', {
     resetState() {
       this.$reset()
     }
+  },
+  persist: {
+    enabled: true
   }
 })

@@ -4,10 +4,13 @@ import { reactive, ref, onMounted, watch, computed } from 'vue'
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
+import BaseSelect from '@/components/Select/BaseSelect.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 
 import CapabilityLevelServices from '@/services/lib/capability-level'
+
+import capabilityLevelJSON from '@/data/capabilityLevel.json'
 
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
@@ -24,12 +27,16 @@ const capabilityLevel = reactive({
   data: [],
   headers: [
     {
+      text: 'Urutan',
+      value: 'urutan',
+      sortable: true
+    },
+    {
       text: 'Sub Kode GAMO',
       value: 'subkode'
     }, {
       text: 'Capability Level',
-      value: 'level',
-      sortable: true
+      value: 'level'
     }, {
       text: 'Activities',
       value: 'kegiatan',
@@ -59,8 +66,11 @@ const serverOptions = ref({
   sortType: '',
 });
 
+const isShowFilterLevel = ref(false)
+
 const filter = ref({
-  search: ''
+  search: '',
+  level: ''
 })
 
 const idGamo = computed(() => {
@@ -68,10 +78,10 @@ const idGamo = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getListCapabilityLevel = async ({ limit, page, sortBy, sortType, search, domain_id }) => {
+const getListCapabilityLevel = async ({ limit, page, sortBy, sortType, search, domain_id, level }) => {
   try {
     capabilityLevel.loading = true
-    const response = await CapabilityLevelServices.getListCapabilityLevel({ limit, page, sortBy, sortType, search, domain_id })
+    const response = await CapabilityLevelServices.getListCapabilityLevel({ limit, page, sortBy, sortType, search, domain_id, level })
 
     if (response) {
       const data = response?.data
@@ -93,6 +103,7 @@ const handleRefresh = () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    level: filter.value.level,
     domain_id: idGamo.value
   })
 }
@@ -156,7 +167,8 @@ watch(() => [serverOptions.value, filter.value], () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
-    domain_id: idGamo.value
+    level: filter.value.level,
+    domain_id: idGamo.value,
   })
 }, { deep: true })
 
@@ -189,11 +201,21 @@ watch(() => [serverOptions.value, filter.value], () => {
           </div>
 
           <DataTable :headers="capabilityLevel.headers" :items="capabilityLevel.data" :loading="capabilityLevel.loading"
-            :server-items-length="capabilityLevel.meta.total" v-model:server-options="serverOptions" fixed-header>
+            :server-items-length="capabilityLevel.meta.total" v-model:server-options="serverOptions" fixed-header
+            :show-index="false">
 
             <template #header-level="header">
-              <div class="d-flex justify-content-center align-items-center w-100">
+              <div class="filter-column width-150px">
                 {{ header.item?.text }}
+
+                <TablerIcon icon="FilterCogIcon" class="ms-1 cursor-pointer"
+                  :class="[isShowFilterLevel ? 'text-secondary' : '']"
+                  @click.stop="isShowFilterLevel = !isShowFilterLevel" />
+
+                <div class="filter-menu filter-status-menu mt-2" v-if="isShowFilterLevel">
+                  <BaseSelect v-model="filter.level" default-option="Semua Level" :options="capabilityLevelJSON">
+                  </BaseSelect>
+                </div>
               </div>
             </template>
 
@@ -212,6 +234,12 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #header-actions="header">
               <div class="d-flex justify-content-center align-items-center">
                 {{ header.item?.text }}
+              </div>
+            </template>
+
+            <template #item-urutan="item">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ item.item?.urutan }}
               </div>
             </template>
 

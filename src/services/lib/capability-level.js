@@ -12,7 +12,9 @@ export default {
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
-      }${payload?.domain_id ? `&domain_id=${payload?.domain_id}` : ''}`
+      }${payload?.domain_id ? `&domain_id=${payload?.domain_id}` : ''}${
+        payload?.level ? `&level=${payload?.level}` : ''
+      }`
     )
   },
 
