@@ -77,6 +77,10 @@ const idGamo = computed(() => {
   return route.params?.id
 })
 
+const titleGamo = computed(() => {
+  return route.query?.gamo
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const getListCapabilityLevel = async ({ limit, page, sortBy, sortType, search, domain_id, level }) => {
   try {
@@ -184,7 +188,8 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Capability Level</h5>
+              <h5 class="card-title fw-semibold mb-2">Capability Level</h5>
+              <p v-if="titleGamo" class="card-subtitle mb-0">{{ titleGamo }}</p>
             </div>
 
             <div

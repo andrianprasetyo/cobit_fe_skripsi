@@ -123,8 +123,11 @@ const handleNavigateToEdit = ({ id }) => {
   router.push(`/master/gamo/${id}/edit`)
 }
 
-const handleNavigateToCapabilityLevel = ({ id }) => {
-  router.push(`/master/gamo/${id}/capability-level`)
+const handleNavigateToCapabilityLevel = ({ id, title }) => {
+  router.push({
+    path: `/master/gamo/${id}/capability-level`,
+    query: { gamo: title }
+  })
 }
 
 const handleNavigateToCapabilityAnswer = () => {
@@ -221,7 +224,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                     </BaseButton>
                   </li>
                   <li>
-                    <BaseButton @click="handleNavigateToCapabilityLevel({ id: item?.item?.id })"
+                    <BaseButton @click="handleNavigateToCapabilityLevel({ id: item?.item?.id, title: item.item?.kode })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="ChartBarIcon" />
