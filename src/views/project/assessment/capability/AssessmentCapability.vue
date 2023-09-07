@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, ref, computed, watch, onUnmounted, onMounted } from 'vue'
+import { defineAsyncComponent, watch, onUnmounted, onMounted } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
@@ -13,8 +13,8 @@ import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 import { useAppConfig } from '@/stores/appConfig'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
-const TabLevel2 = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/capability/components/TabLevel2.vue')
+const TabLevel = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/components/TabLevel.vue'),
 })
 
 const appConfig = useAppConfig()
@@ -23,21 +23,16 @@ const route = useRoute()
 const assessmentStore = useAssessmentStore()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
-const level = ref('2')
-
 const ViewComponent = {
-  '2': TabLevel2,
+  '2': TabLevel,
+  '3': TabLevel,
+  '4': TabLevel,
+  '5': TabLevel,
 }
-
-const queryLevel = computed(() => {
-  return route.query?.level
-})
 
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickLevel = (value) => {
-  router.replace({
-    query: { level: value }
-  })
+  assessmentStore.setCapabilitySelectedLevel(value)
 }
 
 const handleBack = () => {
@@ -73,26 +68,6 @@ onUnmounted(() => {
   appConfig.setMiniSidebar(false)
   assessmentStore.resetState()
 })
-
-watch(() => queryLevel.value, (value) => {
-  switch (value) {
-    case '2':
-      level.value = '2'
-      break;
-    case '3':
-      level.value = '3'
-      break;
-    case '4':
-      level.value = '4'
-      break;
-    case '5':
-      level.value = '5'
-      break;
-    default:
-      level.value = '2';
-      break;
-  }
-}, { deep: true, immediate: true })
 
 watch(() => assessmentStore.capability.selectedGamo, (value) => {
   assessmentStore.getCapabilityListLevelAssessment({
@@ -136,8 +111,9 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
               role="presentation">
               <BaseButton @click="handleClickLevel(item?.level)"
                 class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
-                :class="[level === (item?.level || index) ? 'active' : '']" :id="`pills-${item?.level || index}-tab`"
-                role="tab" :aria-controls="`pills-${item?.level || index}`" aria-selected="true">
+                :class="[assessmentStore.capability.selectedLevel === (item?.level || index) ? 'active' : '']"
+                :id="`pills-${item?.level || index}-tab`" role="tab" :aria-controls="`pills-${item?.level || index}`"
+                aria-selected="true">
                 <div class="d-flex flex-row align-items-center">
                   <TablerIcon :icon="`SquareNumber${item?.level || index}Icon`" class="me-2" />
                   <span class="d-none d-md-block width-50px text-truncate">Level {{ item?.level }}</span>
@@ -150,7 +126,7 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
             <RouterView>
               <Transition name="fade-top" mode="out-in">
                 <KeepAlive :max="2">
-                  <component :is="ViewComponent[level]" :level="level" />
+                  <component :is="ViewComponent[assessmentStore.capability.selectedLevel]" />
                 </KeepAlive>
               </Transition>
             </RouterView>

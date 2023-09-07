@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, computed } from 'vue'
+import { reactive, onActivated, computed } from 'vue'
 
 import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
@@ -40,7 +40,7 @@ const getDetailLevelCapability = async () => {
 
   try {
     capability.loading = true
-    const response = await CapabilityServices.getDetailLevelCapability({ level: '2', domain_id: assessmentStore.capability.selectedGamo?.id })
+    const response = await CapabilityServices.getDetailLevelCapability({ level: assessmentStore.capability.selectedLevel, domain_id: assessmentStore.capability.selectedGamo?.id })
 
     if (response) {
       const data = response?.data;
@@ -68,8 +68,8 @@ const onSubmit = async () => {
 
     if (response) {
       toast.success({
-        title: 'Simpan Data Capability Level 2',
-        text: 'Berhasil Menyimpan Data Capability Level 2'
+        title: `Simpan Data Capability Level ${assessmentStore.capability.selectedLevel}`,
+        text: `Berhasil Menyimpan Data Capability Level ${assessmentStore.capability.selectedLevel}`
       })
 
       capability.loadingSubmit = false
@@ -86,7 +86,7 @@ const onSubmit = async () => {
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
-onMounted(() => {
+onActivated(() => {
   getDetailLevelCapability()
 })
 
@@ -96,7 +96,7 @@ onMounted(() => {
   <div class="card">
     <div class="card-body">
       <div class="d-flex flex-row justify-content-between align-items-center">
-        <h5 class="card-title mb-3 mb-md-0 fw-semibold">Level 2</h5>
+        <h5 class="card-title mb-3 mb-md-0 fw-semibold">Level {{ assessmentStore.capability.selectedLevel }}</h5>
 
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
@@ -115,6 +115,9 @@ onMounted(() => {
           <table class="table border customize-table text-nowrap mb-0 align-middle">
             <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">
               <tr>
+                <th class="align-middle" rowspan="2">
+                  <h6 class="fs-3 fw-semibold mb-0">Urutan</h6>
+                </th>
                 <th class="width-150px align-middle" rowspan="2">
                   <div class="width-100px text-break text-wrap">
                     <h6 class="fs-3 fw-semibold mb-0">Management Practice Code</h6>
@@ -159,6 +162,11 @@ onMounted(() => {
             <tbody>
               <template v-if="Array.isArray(capability.data) && capability.data.length">
                 <tr v-for="(item, index) in capability.data" :key="`capability-level-2-item-${index}`">
+                  <td>
+                    <div class="text-break text-center text-wrap fw-bold">
+                      {{ item?.urutan }}
+                    </div>
+                  </td>
                   <td>
                     <div v-if="item?.subkode" class="width-100px text-break text-wrap fw-bold" v-html="item?.subkode" />
                   </td>
