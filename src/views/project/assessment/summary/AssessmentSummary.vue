@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, ref, computed, watch, onMounted, reactive } from 'vue'
+import { defineAsyncComponent, ref, computed, watch, onMounted, onUnmounted, reactive } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
@@ -9,6 +9,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
+import { useAppConfig } from '@/stores/appConfig'
 
 const TabStep2 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/summary/components/TabStep2.vue')
@@ -22,6 +23,7 @@ const TabStep4 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/summary/components/TabStep4.vue')
 })
 
+const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
 const route = useRoute()
@@ -90,7 +92,12 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
+  appConfig.setMiniSidebar(true)
   getReportCanvasAssessment()
+})
+
+onUnmounted(() => {
+  appConfig.setMiniSidebar(false)
 })
 
 </script>

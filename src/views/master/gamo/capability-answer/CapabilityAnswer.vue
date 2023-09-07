@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, onUnmounted } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -11,16 +11,18 @@ import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
 import CapabilityAnswerServices from '@/services/lib/capability-answer'
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, minValue, maxValue } from "@vuelidate/validators";
+import { required, helpers, minValue, maxValue, maxLength } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useAlert } from '@/stores/alert'
+import { useAppConfig } from '@/stores/appConfig'
 
 const toast = useToast()
 const router = useRouter()
 const loading = useLoading()
 const alert = useAlert()
+const appConfig = useAppConfig()
 
 /* ---------------------------------- STATE --------------------------------- */
 const formState = reactive({
@@ -30,6 +32,7 @@ const formState = reactive({
     {
       id: null,
       nama: '',
+      label: '',
       bobot: '',
     }
   ],
@@ -41,6 +44,10 @@ const rules = computed(() => {
       $each: helpers.forEach({
         nama: {
           required: helpers.withMessage('Silahkan isi nama', required),
+        },
+        label: {
+          required: helpers.withMessage('Silahkan isi label', required),
+          maxLength: helpers.withMessage("Maksimal 3 karakter", maxLength(3))
         },
         bobot: {
           required: helpers.withMessage('Silahkan isi weight', required),
@@ -71,6 +78,7 @@ const getCapabilityAnswer = async () => {
           list.push({
             id: item?.id,
             nama: item?.nama,
+            label: item?.label,
             bobot: item?.bobot,
           })
         )
@@ -118,6 +126,7 @@ const handleTambahJawaban = () => {
   formState.jawaban.push({
     id: null,
     nama: '',
+    label: '',
     bobot: '',
   })
 }
@@ -177,7 +186,12 @@ const handleSubmit = async () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  appConfig.setMiniSidebar(true)
   getCapabilityAnswer()
+})
+
+onUnmounted(() => {
+  appConfig.setMiniSidebar(false)
 })
 
 </script>
@@ -193,14 +207,21 @@ onMounted(() => {
 
           <template v-if="formState.jawaban.length">
             <div v-for="(jawaban, index) in formState.jawaban" :key="`jawaban-${index}`" class="row mb-4">
-
-              <div class="col-12 col-md-9 mb-2 mb-md-0">
+              <div class="col-12 col-md-7 mb-2 mb-md-0">
                 <BaseInput :id="`input-nama-${index}`" label="Nama Jawaban" v-model="v$.jawaban.$model[index].nama"
                   placeholder="Masukkan Nama Jawaban" :disabled="formState.loadingSubmit"
                   :is-invalid="!!v$.jawaban.$each?.$response?.$errors[index]?.nama?.length" />
                 <ErrorMessage
                   v-if="Array.isArray(v$.jawaban.$each?.$response?.$errors) && v$.jawaban.$each?.$response?.$errors.length"
                   :errors="v$.jawaban.$each?.$response?.$errors[index]?.nama" />
+              </div>
+              <div class="col-12 col-md-2 mb-2 mb-md-0">
+                <BaseInput :id="`input-label-${index}`" label="Label" v-model="v$.jawaban.$model[index].label"
+                  placeholder="Masukkan Label" :disabled="formState.loadingSubmit"
+                  :is-invalid="!!v$.jawaban.$each?.$response?.$errors[index]?.label?.length" />
+                <ErrorMessage
+                  v-if="Array.isArray(v$.jawaban.$each?.$response?.$errors) && v$.jawaban.$each?.$response?.$errors.length"
+                  :errors="v$.jawaban.$each?.$response?.$errors[index]?.label" />
               </div>
               <div class="col-12 col-md-2 mb-2 mb-md-0">
                 <BaseInput :id="`input-bobot-${index}`" :label="`Weight`" type="number"
@@ -214,7 +235,7 @@ onMounted(() => {
               <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
                 <BaseButton @click="handleHapusJawaban({ title: jawaban?.nama, id: jawaban?.id, index: index })"
                   class="btn btn-outline-danger w-100"
-                  :class="[v$.jawaban.$each?.$response?.$errors[index]?.nama?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']">
+                  :class="[v$.jawaban.$each?.$response?.$errors[index]?.nama?.length || v$.jawaban.$each?.$response?.$errors[index]?.label?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']">
                   <template #icon-left>
                     <TablerIcon icon="TrashIcon" />
                   </template>

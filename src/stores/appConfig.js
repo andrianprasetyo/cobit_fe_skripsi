@@ -11,7 +11,7 @@ export const useAppConfig = defineStore({
   id: 'appConfig',
   state: () => ({
     app: {
-      appName: 'Assessment Cobit 2019',
+      appName: 'Asesmen Cobit 2019',
       appLogoImage: appLogoImageRounded,
       appLogoImageOnly: appLogoImageOnly,
       appHostDownload: APP_HOST_DOWNLOAD,
@@ -29,6 +29,9 @@ export const useAppConfig = defineStore({
   actions: {
     toggleMiniSidebar() {
       this.layouts.miniSidebar = !this.layouts.miniSidebar
+    },
+    setMiniSidebar(payload) {
+      this.layouts.miniSidebar = payload
     }
   },
   persist: {

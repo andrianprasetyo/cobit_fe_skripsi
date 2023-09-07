@@ -290,12 +290,13 @@ onUnmounted(() => {
 })
 
 watch(() => [quesioner.question.currentQuestion], () => {
-  Promise.all([
-    getListQuestion({
-      id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
-    }),
-    getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id }),
-  ])
+  getListQuestion({
+    id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
+  })
+
+  if (!isLastQuestion.value) {
+    getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
+  }
 }, { deep: true })
 
 </script>
@@ -392,7 +393,9 @@ watch(() => [quesioner.question.currentQuestion], () => {
                           class="width-100px align-middle">
                           <div class="d-flex flex-wrap justify-content-center ">
                             <span class="width-100px text-break text-wrap text-center">
-                              {{ jawaban?.jawaban }}
+                              <h6 class="fs-3 fw-semibold mb-0">
+                                {{ jawaban?.jawaban }}
+                              </h6>
                             </span>
                           </div>
                         </th>

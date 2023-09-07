@@ -17,7 +17,11 @@ const assessment = useAssessmentStore()
         <table class="table border text-nowrap mb-0 align-middle">
           <thead class="position-sticky top-0 bg-white" style="z-index: 5 !important;">
             <tr>
-              <th class="width-200px align-middle">Design Factor</th>
+              <th class="width-200px align-middle">
+                <h6 class="fs-3 fw-semibold mb-0">
+                  Design Factor
+                </h6>
+              </th>
               <template
                 v-if="Array.isArray(assessment.reportCanvasSummary?.df) && assessment.reportCanvasSummary?.df.length">
                 <template v-for="(df, indexDf) in assessment.reportCanvasSummary?.df" :key="`${indexDf}-${df?.id}`">
@@ -26,16 +30,20 @@ const assessment = useAssessmentStore()
                     <!-- Design Factor Header-->
                     <div class="d-flex flex-wrap">
                       <div class="width-150px text-break text-wrap text-center">
-                        {{ df?.nama }}
+                        <h6 class="fs-3 fw-semibold mb-0">
+                          {{ df?.nama }}
+                        </h6>
                       </div>
                     </div>
                   </th>
                 </template>
 
-                <th class="bg-primary text-white border-0 width-250px align-middle">
+                <th class="bg-primary text-white border-0 width-250px align-middle" rowspan="2">
                   <div class="d-flex flex-wrap">
                     <div class="width-225px text-break text-wrap text-center">
-                      Refined Scope: Governance/Management Objectives Score
+                      <h6 class="fs-3 fw-semibold mb-0 text-white">
+                        Refined Scope: Governance/Management Objectives Score
+                      </h6>
                     </div>
                   </div>
                 </th>
@@ -46,7 +54,9 @@ const assessment = useAssessmentStore()
             <tr>
               <th>
                 <div class="width-250px d-flex align-items-center mb-2">
-                  Weight
+                  <h6 class="fs-3 fw-semibold mb-0">
+                    Weight
+                  </h6>
                 </div>
               </th>
               <template
@@ -61,7 +71,6 @@ const assessment = useAssessmentStore()
                     </div>
                   </th>
                 </template>
-                <th class="bg-primary text-white border-0 width-250px" />
               </template>
             </tr>
           </thead>

@@ -186,7 +186,9 @@ const onSubmit = async () => {
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getDetailQuisionerRespondenByCode().then(() => {
-    handleSearchDivisi({ search: '' })
+    if (formState.detail?.assesment?.organisasi?.id) {
+      handleSearchDivisi({ search: '' })
+    }
   })
 })
 
@@ -242,20 +244,26 @@ watch(() => [formState.divisi], () => {
               <div>
                 <strong>Perhatian.</strong> Periode Kuisioner Belum Dimulai atau Sudah Terlewat.
                 <br />
-                <strong>Periode Kuesioner :</strong> {{ formatDate({ value: formState.detail?.assesment?.start_date_quisioner }) }} s/d {{
-                  formatDate({
-                    value:
-                      formState.detail?.assesment?.end_date_quisioner
-                  }) }}.
+                <strong>Periode Kuesioner :</strong> {{ formatDate({
+                  value:
+                    formState.detail?.assesment?.start_date_quisioner
+                }) }} s/d {{
+  formatDate({
+    value:
+      formState.detail?.assesment?.end_date_quisioner
+  }) }}.
               </div>
             </BaseAlert>
 
             <BaseAlert v-else-if="isKuesionerAvailable" variant="primary">
-              <strong>Periode Kuesioner : </strong> {{ formatDate({ value: formState.detail?.assesment?.start_date_quisioner }) }} s/d {{
-                formatDate({
-                  value:
-                    formState.detail?.assesment?.end_date_quisioner
-                }) }}
+              <strong>Periode Kuesioner : </strong> {{ formatDate({
+                value:
+                  formState.detail?.assesment?.start_date_quisioner
+              }) }} s/d {{
+  formatDate({
+    value:
+      formState.detail?.assesment?.end_date_quisioner
+  }) }}
             </BaseAlert>
 
             <hr />

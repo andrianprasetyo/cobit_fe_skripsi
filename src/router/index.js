@@ -1029,6 +1029,37 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'CapabilityAssesmen',
+              path: '/project/assessment/:id/capability',
+              component: () =>
+                import('@/views/project/assessment/capability/AssessmentCapability.vue'),
+              meta: {
+                pageTitle: 'Capability Asesmen',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Capability Asesmen',
+                    disabled: true,
+                    href: '/project/assessment/:id/capability',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },

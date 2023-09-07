@@ -41,13 +41,11 @@ export default {
    */
   getListDivisi(payload) {
     return axiosClient.get(
-      `quisioner/responden/divisi/list?limit=${payload?.limit || 10}&page=${
-        payload?.page || 1
-      }&organisasi_id=${payload?.organisasi_id}${
-        payload?.search ? `&search=${payload?.search}` : ''
-      }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
-        payload?.sortType ? `&sortType=${payload?.sortType}` : ''
-      }`
+      `quisioner/responden/divisi/list?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
+        payload?.organisasi_id ? `&organisasi_id=${payload?.organisasi_id}` : ''
+      }${payload?.search ? `&search=${payload?.search}` : ''}${
+        payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''
+      }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}`
     )
   },
 
