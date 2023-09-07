@@ -9,6 +9,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
+import { useAppConfig } from '@/stores/appConfig'
 
 const TabGamo = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report/components/TabGamo.vue')
@@ -26,6 +27,7 @@ const TabStep4 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report/components/TabStep4.vue')
 })
 
+const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
 const route = useRoute()
@@ -79,12 +81,14 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
+  appConfig.setMiniSidebar(true)
   if (assessmentStore.selectedAssessment?.nama) {
     title.value = `Report ${assessmentStore.selectedAssessment?.nama || ''}`
   }
 })
 
 onUnmounted(() => {
+  appConfig.setMiniSidebar(false)
   assessmentStore.resetState()
 })
 

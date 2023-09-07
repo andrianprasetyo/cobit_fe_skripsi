@@ -17,25 +17,33 @@ const assessment = useAssessmentStore()
         <table class="table border text-nowrap mb-0 align-middle">
           <thead class="position-sticky top-0 bg-white" style="z-index: 5 !important;">
             <tr>
-              <th class="width-200px align-middle">Design Factor</th>
+              <th class="width-200px align-middle">
+                <h6 class="fs-3 fw-semibold mb-0">
+                  Design Factor
+                </h6>
+              </th>
               <template
                 v-if="Array.isArray(assessment.reportCanvasSummary?.df) && assessment.reportCanvasSummary?.df.length">
                 <template v-for="(df, indexDf) in assessment.reportCanvasSummary?.df" :key="`${indexDf}-${df?.id}`">
-                  <th v-if="indexDf <= 3" class="width-200px align-middle position-sticky top-0">
+                  <th v-if="indexDf <= 3" class="width-200px align-middle position-sticky top-0" rowspan="1">
                     <!-- Design Factor Header Section 2-->
                     <div class="d-flex flex-wrap">
                       <div class="width-150px text-break text-wrap text-center">
-                        {{ df?.nama }}
+                        <h6 class="fs-3 fw-semibold mb-0">
+                          {{ df?.nama }}
+                        </h6>
                       </div>
                     </div>
                   </th>
 
                   <!-- Step Scope 2 -->
-                  <th v-else-if="indexDf === 4"
+                  <th v-else-if="indexDf === 4" rowspan="2" colspan="1"
                     class="bg-primary text-white width-250px align-middle border-0 position-sticky top-0">
                     <div class="d-flex flex-wrap">
-                      <div class="width-225px text-break text-wrap text-center">
-                        Initial Scope: Governance/Management Objectives Score
+                      <div class="width-225px text-break text-wrap text-center ">
+                        <h6 class="fs-3 fw-semibold mb-0 text-white">
+                          Initial Scope: Governance/Management Objectives Score
+                        </h6>
                       </div>
                     </div>
                   </th>
@@ -47,7 +55,9 @@ const assessment = useAssessmentStore()
             <tr>
               <th>
                 <div class="width-250px d-flex align-items-center mb-2">
-                  Weight
+                  <h6 class="fs-3 fw-semibold mb-0">
+                    Weight
+                  </h6>
                 </div>
               </th>
               <template
@@ -60,9 +70,7 @@ const assessment = useAssessmentStore()
                         placeholder="Masukkan Weight"
                         v-model="assessment.reportCanvasSummary.df[indexWeight].assesmentweight.weight" />
                     </div>
-
                   </th>
-                  <th v-else-if="indexWeight === 4" class="bg-primary border-0 text-white width-250px" />
                 </template>
               </template>
             </tr>

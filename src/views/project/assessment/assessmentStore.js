@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 import AssessmentServices from '@/services/lib/assessment'
 import ReportServices from '@/services/lib/report'
+import CapabilityServices from '@/services/lib/capability'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from '@/stores/toast'
@@ -16,7 +17,13 @@ export const useAssessmentStore = defineStore('assessment', {
       nonAdjustment: null,
       adjustment: null
     },
-    reportCanvasSummary: null
+    reportCanvasSummary: null,
+    capability: {
+      listGamo: [],
+      selectedGamo: null,
+      listLevel: [],
+      selectedLevel: '2'
+    }
   }),
   getters: {
     getSelectedAssessment(state) {
@@ -37,6 +44,14 @@ export const useAssessmentStore = defineStore('assessment', {
 
     getReportCanvasSummary(state) {
       return state.reportCanvasSummary
+    },
+
+    getCapabilitySelectedGamo(state) {
+      return state.capability.selectedGamo
+    },
+
+    getCapabilityListLevel(state) {
+      return state.capability.listLevel
     }
   },
   actions: {
@@ -215,6 +230,64 @@ export const useAssessmentStore = defineStore('assessment', {
             title: 'Data Adjustment',
             text: 'Berhasil Menyimpan Data Adjustment'
           })
+
+          loader.hide()
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityListGamoAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await CapabilityServices.getListGamoCapability({
+          assesment_id: payload?.assesment_id
+        })
+
+        if (response) {
+          const data = response.data
+          this.capability.listGamo = data?.list || []
+
+          loader.hide()
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityListLevelAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await CapabilityServices.getListLevelCapability({
+          domain_id: payload?.domain_id
+        })
+
+        if (response) {
+          const data = response.data
+          const list = data || []
+
+          /*
+            Sorting Value
+
+          if (Array.isArray(list) && list.length) {
+            const sorted = list.sort((a, b) => a?.level - b?.level)
+
+            this.capability.listLevel = sorted
+          }
+          */
+
+          this.capability.listLevel = list
 
           loader.hide()
           return response

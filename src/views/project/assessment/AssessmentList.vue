@@ -239,6 +239,10 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/detail` })
 }
 
+const handleNavigateCapability = ({ id }) => {
+  router.push({ path: `/project/assessment/${id}/capability` })
+}
+
 const handleSelesaikanAssessment = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
@@ -414,6 +418,18 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
                           Lihat Detail Asesmen
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <BaseButton @click="handleNavigateCapability({ id: item?.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ClipboardTextIcon" />
+                        <span class="ms-2">
+                          Lihat Capability Asesmen
                         </span>
                       </template>
                     </BaseButton>

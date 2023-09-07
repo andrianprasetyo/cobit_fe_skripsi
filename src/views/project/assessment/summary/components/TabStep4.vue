@@ -41,53 +41,71 @@ const suggessCapabilityLevel = computed(() => {
         <table class="table border text-nowrap mb-0 align-middle">
           <thead class="position-sticky top-0 bg-white" style="z-index: 5 !important;">
             <tr>
-              <th class="width-200px align-middle">Design Factor</th>
-              <th class="bg-primary text-white border-0 width-250px align-middle">
+              <th class="width-200px align-middle">
+                <h6 class="fs-3 fw-semibold mb-0">
+                  Design Factor
+                </h6>
+              </th>
+              <th class="bg-primary text-white border-0 width-250px align-middle" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-225px text-break text-wrap text-center">
-                    Refined Scope: Governance/Management Objectives Score
+                    <h6 class="fs-3 fw-semibold mb-0 text-white">
+                      Refined Scope: Governance/Management Objectives Score
+                    </h6>
                   </div>
                 </div>
               </th>
-              <th class="width-150px align-middle border-0">
+              <th class="width-150px align-middle border-0" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-125px text-break text-wrap text-center">
-                    Adjustment (between -100 and +100)
+                    <h6 class="fs-3 fw-semibold mb-0">
+                      Adjustment (between -100 and +100)
+                    </h6>
                   </div>
                 </div>
               </th>
-              <th class="width-250px align-middle border-0">
+              <th class="width-250px align-middle border-0" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-225px text-break text-wrap text-center">
-                    Reason
+                    <h6 class="fs-3 fw-semibold mb-0">
+                      Reason
+                    </h6>
                   </div>
                 </div>
               </th>
-              <th class="bg-primary text-white border-0 align-middle">
+              <th class="bg-primary text-white border-0 align-middle" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-200px text-break text-wrap text-center">
-                    Concluded Scope: Governance/Management Objectives Priority
+                    <h6 class="fs-3 fw-semibold mb-0 text-white">
+                      Concluded Scope: Governance/Management Objectives Priority
+                    </h6>
                   </div>
                 </div>
               </th>
-              <th class="bg-primary text-white border-0 align-middle">
+              <th class="bg-primary text-white border-0 align-middle" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-150px text-break text-wrap text-center">
-                    Suggested Target Capability Level
+                    <h6 class="fs-3 fw-semibold mb-0 text-white">
+                      Suggested Target Capability Level
+                    </h6>
                   </div>
                 </div>
               </th>
-              <th class="align-middle  border-0">
+              <th class="align-middle border-0" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-150px text-break text-wrap text-center">
-                    Agreed Target Capability Level
+                    <h6 class="fs-3 fw-semibold mb-0">
+                      Agreed Target Capability Level
+                    </h6>
                   </div>
                 </div>
               </th>
-              <th class="width-250px align-middle  border-0">
+              <th class="width-250px align-middle border-0" rowspan="2">
                 <div class="d-flex flex-wrap">
                   <div class="width-225px text-break text-wrap text-center">
-                    Reason
+                    <h6 class="fs-3 fw-semibold mb-0">
+                      Reason
+                    </h6>
                   </div>
                 </div>
               </th>
@@ -98,10 +116,6 @@ const suggessCapabilityLevel = computed(() => {
               <th>
                 <div class="width-250px d-flex align-items-center mb-2">Weight</div>
               </th>
-              <th colspan="1" class="bg-primary border-0 width-250px" />
-              <th colspan="2" class="border-0 width-250px" />
-              <th colspan="2" class="bg-primary" />
-              <th colspan="2" class="border-0 width-250px" />
             </tr>
           </thead>
 
@@ -129,8 +143,8 @@ const suggessCapabilityLevel = computed(() => {
                       placeholder="Masukkan Nilai Adjustment (Jika Perlu)" />
                   </td>
                   <td>
-                    <BaseInput :id="`reason-adjustment-${indexHasil}`" v-model="hasil.assesmentcanvas.reason_adjustment"
-                      placeholder="Masukkan Alasan (Jika Ada)" />
+                    <BaseInput type="text-area" :id="`reason-adjustment-${indexHasil}`"
+                      v-model="hasil.assesmentcanvas.reason_adjustment" placeholder="Masukkan Alasan (Jika Ada)" />
                   </td>
                   <td class="text-center bg-light fw-bold">
                     {{ concludedScope({
@@ -145,7 +159,7 @@ const suggessCapabilityLevel = computed(() => {
                     {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
                   </td>
                   <td class="text-center">
-                    <BaseInput :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
+                    <BaseInput type="text-area" :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
                       placeholder="Masukkan Alasan (Jika Ada)" />
                   </td>
                 </template>

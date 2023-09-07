@@ -1,5 +1,14 @@
+<script setup>
+const props = defineProps({
+  class: {
+    type: [Array, String],
+    default: 'nav nav-tabs user-profile-tab'
+  },
+})
+</script>
+
 <template>
-  <ul class="nav nav-pills user-profile-tab" id="pills-tab" role="tablist">
+  <ul :class="props.class" id="pills-tab" role="tablist">
     <slot name="tab-navigation" />
   </ul>
 

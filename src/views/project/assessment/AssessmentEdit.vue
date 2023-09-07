@@ -170,7 +170,8 @@ onUnmounted(() => {
           <div class="row mb-3">
             <div class="col-12 col-md-6">
               <DateInput uid="start_date_quisioner" v-model="v$.start_date_quisioner.$model"
-                label="Tanggal Mulai Kuesioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy" :min-date="formState.start_date"
+                label="Tanggal Mulai Kuesioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+                :min-date="formState.start_date" :max-date="formState.end_date"
                 placeholder="Silahkan Pilih Tanggal Mulai Kuesioner" :disabled="formState.loadingSubmit" tabindex="5"
                 :isInvalid="v$.start_date_quisioner.$errors?.length" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.start_date_quisioner.$errors" />
@@ -182,7 +183,7 @@ onUnmounted(() => {
                 placeholder="Silahkan Pilih Tanggal Selesai Kuesioner"
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="6"
                 :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"
-                :enable-time-picker="false" />
+                :max-date="formState.end_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.end_date_quisioner.$errors" />
             </div>
           </div>

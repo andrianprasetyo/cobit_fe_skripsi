@@ -45,7 +45,9 @@ const formState = reactive({
   organisasi_id: '',
   organisasi_nama: '',
   organisasi_deskripsi: '',
+  /*
   pic_expire_at: ''
+  */
 })
 
 const listOrganisasi = reactive({
@@ -108,9 +110,11 @@ const rules = computed(() => {
     organisasi_deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi organisasi", requiredIf(!formState.organisasi_id))
     },
+    /*
     pic_expire_at: {
       required: helpers.withMessage("Silahkan isi tanggal kadaluarsa pic", required)
     }
+    */
   }
 })
 
@@ -228,7 +232,9 @@ const handleSubmit = async () => {
         end_date_quisioner: formState.end_date_quisioner,
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
+        /*
         pic_expire_at: formState.pic_expire_at
+        */
       }
 
       if (formState.organisasi_nama) {
@@ -379,7 +385,7 @@ onMounted(() => {
                 placeholder="Silahkan Pilih Tanggal Mulai Kuisioner"
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="5"
                 :isInvalid="v$.start_date_quisioner.$errors?.length" :min-date="formState.start_date"
-                :enable-time-picker="false" />
+                :max-date="formState.end_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.start_date_quisioner.$errors" />
             </div>
 
@@ -389,7 +395,7 @@ onMounted(() => {
                 placeholder="Silahkan Pilih Tanggal Selesai Kuisioner"
                 :disabled="formState.loadingSubmit || !formState.start_date_quisioner" tabindex="6"
                 :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"
-                :enable-time-picker="false" />
+                :max-date="formState.end_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.end_date_quisioner.$errors" />
             </div>
           </div>
@@ -559,14 +565,14 @@ onMounted(() => {
             </div>
           </template>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <DateInput uid="pic_expire_at" v-model="v$.pic_expire_at.$model" label="Tanggal Kadaluarsa PIC" locale="id"
               model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai Kadaluarsa PIC"
               :disabled="formState.loadingSubmit || !formState.start_date" tabindex="5"
               :isInvalid="v$.pic_expire_at.$errors?.length" :min-date="formState.start_date"
               :enable-time-picker="false" />
             <ErrorMessage :errors="v$.pic_expire_at.$errors" />
-          </div>
+          </div> -->
         </div>
       </div>
 
