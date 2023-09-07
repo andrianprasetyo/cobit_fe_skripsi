@@ -186,7 +186,7 @@ const handleSearchDivisi = debounce(async ({ search }) => {
 
 const handleSearchJabatan = debounce(async ({ search }) => {
   try {
-    const response = await OrganisasiServices.getListJabatan({ limit: 10, page: 1, search, organisasi_id: formState.pic_divisi_id })
+    const response = await OrganisasiServices.getListJabatan({ limit: 10, page: 1, search, organisasi_divisi_id: formState.pic_divisi_id })
 
     if (response) {
       const data = response?.data
