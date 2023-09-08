@@ -1060,6 +1060,111 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'SettingTargetAssesmen',
+              path: '/project/assessment/:id/setting-target',
+              component: () =>
+                import('@/views/project/assessment/setting-target/AssessmentSettingTargetList.vue'),
+              meta: {
+                pageTitle: 'Setting Target Asesmen',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Setting Target Asesmen',
+                    disabled: true,
+                    href: '/project/assessment/:id/setting-target',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'TambahTargetAssesmen',
+              path: '/project/assessment/:id/setting-target/add',
+              component: () =>
+                import('@/views/project/assessment/setting-target/AssessmentSettingTargetAdd.vue'),
+              meta: {
+                pageTitle: 'Tambah Target Asesmen',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Setting Target Asesmen',
+                    disabled: false,
+                    href: '/project/assessment/:id/setting-target',
+                    active: false
+                  },
+                  {
+                    text: 'Tambah Target Asesmen',
+                    disabled: true,
+                    href: '/project/assessment/:id/setting-target/add',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'EditTargetAssesmen',
+              path: '/project/assessment/:id/setting-target/:assessment_target_id/edit',
+              component: () =>
+                import('@/views/project/assessment/setting-target/AssessmentSettingTargetEdit.vue'),
+              meta: {
+                pageTitle: 'Edit Target Asesmen',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Setting Target Asesmen',
+                    disabled: false,
+                    href: '/project/assessment/:id/setting-target',
+                    active: false
+                  },
+                  {
+                    text: 'Edit Target Asesmen',
+                    disabled: true,
+                    href: '/project/assessment/:id/setting-target/:assessment_target_id/edit',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },
