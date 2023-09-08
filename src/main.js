@@ -2,6 +2,7 @@ import '@/assets/css/main-styles.css'
 import '@/assets/css/styles.css'
 import '@/assets/css/pace.css'
 import '@/assets/css/vue-select.css'
+import '@/assets/css/file-manager.css'
 
 import '@/assets/libs/jquery/jquery.min.js'
 import '@/assets/libs/simplebar/simplebar.min.js'

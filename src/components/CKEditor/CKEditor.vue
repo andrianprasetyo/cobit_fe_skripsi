@@ -33,7 +33,7 @@ const editorConfigDefault = computed(() => ({
 
 const editorData = computed({
   get() {
-    return props.modelValue
+    return props.modelValue || ''
   },
   set(value) {
     if (value) {

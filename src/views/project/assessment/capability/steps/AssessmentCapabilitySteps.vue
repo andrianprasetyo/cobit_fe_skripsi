@@ -34,11 +34,13 @@ const handleClickLevel = (level) => {
           <StepsWizardHeaderItem v-for="level in assessmentStore.capability.listLevel" :key="`step-${level.level}`"
             :step="level.level" :label="`Level ${level.level}`"
             :is-active="assessmentStore.capability.selectedLevel == level.level"
-            :disabled="assessmentStore.capability.selectedLevel != level.level" @click="handleClickLevel(level.level)" />
+            :is-completed="assessmentStore.capability.selectedLevel >= level.level"
+            :disabled="(assessmentStore.capability.selectedLevel != level.level)"
+            @click="handleClickLevel(level.level)" />
         </template>
 
         <template #content>
-          <Transition name="fade-top" mode="out-in">
+          <Transition name="fade" mode="out-in">
             <KeepAlive :max="2">
               <component :is="ViewComponent[assessmentStore.capability.selectedLevel]" />
             </KeepAlive>

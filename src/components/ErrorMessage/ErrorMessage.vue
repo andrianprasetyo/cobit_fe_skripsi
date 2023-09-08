@@ -8,6 +8,10 @@ const props = defineProps({
   onlyShowOne: {
     type: Boolean,
     default: false
+  },
+  class: {
+    type: [String, Object, String],
+    default: 'text-danger pt-1'
   }
 })
 </script>
@@ -17,25 +21,25 @@ const props = defineProps({
   <div v-if="Array.isArray(props.errors) && props.errors.length">
     <template v-if="!props.onlyShowOne">
       <div v-for="(error, index) of props.errors" :key="`errors-${index}`">
-        <div class="text-danger pt-1">
+        <div :class="props.class">
           {{ error.$message }}
         </div>
       </div>
     </template>
 
     <template v-else>
-      <div class="text-danger pt-1">
+      <div :class="props.class">
         {{ props.errors[0].$message }}
       </div>
     </template>
 
     <!-- This is for Normal String Errors Message -->
     <div v-if="typeof props.errors === 'string'">
-      <div class="text-danger pt-1">{{ props.errors }}</div>
+      <div :class="props.class">{{ props.errors }}</div>
     </div>
   </div>
 
   <div v-else>
-    <div v-if="typeof props.errors === 'string'" class="text-danger pt-1">{{ props.errors }}</div>
+    <div v-if="typeof props.errors === 'string'" :class="props.class">{{ props.errors }}</div>
   </div>
 </template>

@@ -10,6 +10,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  isCompleted: {
+    type: Boolean,
+    defalt: false
+  },
   disabled: {
     type: Boolean,
     default: false
@@ -20,11 +24,12 @@ const props = defineProps({
 <template>
   <li role="tab" :class="{
     'current': props.isActive,
+    'done': props.isCompleted,
     'disabled': props.disabled
   }" aria-disabled="false" aria-selected="true">
-    <a :id="`steps-uid-${props.step}-t-0`" :aria-controls="`steps-uid-${props.step}-p-0`" v-bind="$attrs">
+    <a :id="`steps-uid-${props.step}-t-0`" :aria-controls="`steps-uid-${props.step}-p-0`">
       <span class="current-info audible">current step:</span>
-      <span class="step cursor-pointer">{{ props.step }}</span> {{ label }}
+      <span v-bind="$attrs" class="step cursor-pointer">{{ props.step }}</span> {{ label }}
     </a>
   </li>
 </template>

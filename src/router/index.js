@@ -1036,7 +1036,7 @@ const router = createRouter({
               component: () =>
                 import('@/views/project/assessment/capability/AssessmentCapability.vue'),
               meta: {
-                pageTitle: 'Capability Asesmen',
+                pageTitle: 'Kapabilitas Asesmen',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -1053,7 +1053,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Capability Asesmen',
+                    text: 'Kapabilitas Asesmen',
                     disabled: true,
                     href: '/project/assessment/:id/capability',
                     active: true
