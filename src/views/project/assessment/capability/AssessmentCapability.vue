@@ -38,10 +38,14 @@ const queryView = computed(() => {
   return route.query?.view
 })
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickView = (value) => {
-  router.replace({
-    query: { view: value }
+  router.push({
+    query: { ...route.query, view: value }
   })
 }
 
@@ -109,6 +113,12 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
 
       <div v-if="assessmentStore.capability.listGamo?.length" class="card">
         <div class="card-body">
+          <div class="mb-3">
+            <h5 class="card-title fw-semibold mb-2">Kapabilitas Asesmen</h5>
+            <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+          </div>
+
+
           <BaseAlert v-if="!assessmentStore.capability.selectedGamo && assessmentStore.capability.listGamo?.length"
             variant="primary">
             <strong>Perhatian.</strong> Silahkan pilih terlebih dahulu GAMO
@@ -138,7 +148,7 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
                 aria-selected="true">
                 <div class="d-flex flex-row align-items-center">
                   <TablerIcon :icon="`ChartBarIcon`" class="me-2" />
-                  <span class="d-none d-md-block text-truncate">Steps Level</span>
+                  <span class="d-none d-md-block text-truncate">Level</span>
                 </div>
               </BaseButton>
             </li>
@@ -175,6 +185,10 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
 
       <div v-if="!assessmentStore.capability.listGamo?.length" class="card">
         <div class="card-body">
+          <div class="mb-3">
+            <h5 class="card-title fw-semibold mb-2">Kapabilitas Asesmen</h5>
+            <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+          </div>
           <NoOptions title="Tidak Ada Data Tersedia" />
         </div>
       </div>

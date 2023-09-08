@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import AssessmentServices from '@/services/lib/assessment'
 import ReportServices from '@/services/lib/report'
 import CapabilityServices from '@/services/lib/capability'
+import RepositoryServices from '@/services/lib/repository'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from '@/stores/toast'
@@ -22,7 +23,11 @@ export const useAssessmentStore = defineStore('assessment', {
       listGamo: [],
       selectedGamo: null,
       listLevel: [],
-      selectedLevel: '2'
+      selectedSubGamo: null,
+      selectedLevel: '2',
+      detailListLevel: [],
+      detailListAnswer: [],
+      listMediaFile: []
     }
   }),
   getters: {
@@ -73,6 +78,26 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setCapabilitySelectedLevel(payload) {
       this.capability.selectedLevel = payload
+    },
+
+    setCapabilitySelectedSubGamo(payload) {
+      this.capability.selectedSubGamo = payload
+    },
+
+    saveCapabilityPenilaianSubGamo(payload) {
+      const indexSaved = this.capability.detailListLevel.findIndex(
+        (item) => item?.id === payload?.id
+      )
+
+      if (indexSaved != -1) {
+        const patched = this.capability.detailListLevel
+        patched[indexSaved] = payload
+        this.capability.detailListLevel = patched
+      }
+    },
+
+    setCapabilityListMediaFile(payload) {
+      this.capability.listMediaFile = payload
     },
 
     async getDetailAssessment(payload) {
@@ -302,6 +327,50 @@ export const useAssessmentStore = defineStore('assessment', {
         }
       } catch (error) {
         loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityDetailLevelAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getDetailLevelCapability({
+          level: payload.level,
+          domain_id: payload.domain_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.detailListLevel = data?.list || []
+          this.capability.detailListAnswer = data?.answer || []
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityListMediaRepositoryAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await RepositoryServices.getListMediaRepository({
+          assesment_id: payload.assesment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.listMediaFile = data?.list || []
+
+          return response
+        }
+      } catch (error) {
         toast.error({ error })
         throw error
       }

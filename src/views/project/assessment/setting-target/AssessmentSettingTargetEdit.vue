@@ -38,7 +38,7 @@ const rules = computed(() => {
       $each: helpers.forEach({
         target: {
           required: helpers.withMessage('Silahkan isi target', required),
-          maxValue: helpers.withMessage("Maksimal angka target 10", maxValue(10))
+          maxValue: helpers.withMessage("Maksimal angka target 5", maxValue(5))
         },
       })
     }

@@ -448,7 +448,7 @@ onMounted(() => {
           <div class="mb-3">
             <label class="form-label" for="organisasi_deskripsi">Deskripsi Organisasi</label>
 
-            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model"
+            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model" placeholder="Masukkan Deskripsi"
               :isInvalid="!!v$.organisasi_deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage v-if="v$.organisasi_deskripsi.$errors" :errors="v$.organisasi_deskripsi.$errors" />
           </div>

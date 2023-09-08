@@ -239,8 +239,8 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/detail` })
 }
 
-const handleNavigateCapability = ({ id }) => {
-  router.push({ path: `/project/assessment/${id}/capability` })
+const handleNavigateCapability = ({ id, assessment }) => {
+  router.push({ path: `/project/assessment/${id}/capability`, query: { assessment } })
 }
 
 const handleNavigateSettingTarget = ({ id, assessment }) => {
@@ -428,12 +428,12 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
 
                   <li>
-                    <BaseButton @click="handleNavigateCapability({ id: item?.item?.id })"
+                    <BaseButton @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="ClipboardTextIcon" />
                         <span class="ms-2">
-                          Lihat Capability Asesmen
+                          Lihat Kapabilitas Asesmen
                         </span>
                       </template>
                     </BaseButton>

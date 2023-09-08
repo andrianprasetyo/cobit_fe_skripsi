@@ -144,7 +144,7 @@ onUnmounted(() => {
           <div class="mb-3">
             <label class="form-label" for="deskripsi">Deskripsi Asesmen</label>
 
-            <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model"
+            <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model" placeholder="Masukkan Deskripsi"
               :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.deskripsi.$errors" />
           </div>
