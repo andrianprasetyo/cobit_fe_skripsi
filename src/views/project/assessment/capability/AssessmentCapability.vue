@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, watch, onUnmounted, onMounted } from 'vue'
+import { defineAsyncComponent, watch, onUnmounted, onMounted, ref, computed } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
@@ -13,26 +13,36 @@ import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 import { useAppConfig } from '@/stores/appConfig'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
-const TabLevel = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/capability/components/TabLevel.vue'),
-})
-
 const appConfig = useAppConfig()
 const router = useRouter()
 const route = useRoute()
 const assessmentStore = useAssessmentStore()
 
+const TabStep = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/steps/AssessmentCapabilitySteps.vue'),
+})
+
+const TabRepository = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/repository/AssessmentCapabilityRepository.vue'),
+})
+
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
+const tab = ref("step")
+
 const ViewComponent = {
-  '2': TabLevel,
-  '3': TabLevel,
-  '4': TabLevel,
-  '5': TabLevel,
+  'step': TabStep,
+  'repository': TabRepository
 }
 
+const queryView = computed(() => {
+  return route.query?.view
+})
+
 /* --------------------------------- METHODS -------------------------------- */
-const handleClickLevel = (value) => {
-  assessmentStore.setCapabilitySelectedLevel(value)
+const handleClickView = (value) => {
+  router.replace({
+    query: { view: value }
+  })
 }
 
 const handleBack = () => {
@@ -57,6 +67,20 @@ const handleSearchGamoCapability = debounce(async ({ search }) => {
 */
 
 /* ---------------------------------- HOOKS --------------------------------- */
+watch(() => queryView.value, (value) => {
+  switch (value) {
+    case 'step':
+      tab.value = 'step'
+      break;
+    case 'repository':
+      tab.value = 'repository'
+      break;
+    default:
+      tab.value = 'step';
+      break;
+  }
+}, { deep: true, immediate: true })
+
 onMounted(() => {
   appConfig.setMiniSidebar(true)
   assessmentStore.getCapabilityListGamoAssessment({
@@ -105,18 +129,27 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
       </div>
 
       <template v-if="Array.isArray(assessmentStore.capability.listLevel) && assessmentStore.capability.selectedGamo">
-        <BaseTab v-if="assessmentStore.capability.listLevel?.length">
+        <BaseTab v-if="assessmentStore.capability.listLevel?.length" class="nav nav-pills nav-fill">
           <template #tab-navigation>
-            <li v-for="(item, index) in assessmentStore.capability.listLevel" :key="`tab-item-${index}`" class="nav-item"
-              role="presentation">
-              <BaseButton @click="handleClickLevel(item?.level)"
-                class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
-                :class="[assessmentStore.capability.selectedLevel === (item?.level || index) ? 'active' : '']"
-                :id="`pills-${item?.level || index}-tab`" role="tab" :aria-controls="`pills-${item?.level || index}`"
+            <li class="nav-item" role="presentation">
+              <BaseButton @click="handleClickView('step')"
+                class="nav-link d-flex align-items-center justify-content-center fs-3"
+                :class="[tab === 'step' ? 'active' : '']" :id="`pills-step-tab`" role="tab" :aria-controls="`pills-step`"
                 aria-selected="true">
                 <div class="d-flex flex-row align-items-center">
-                  <TablerIcon :icon="`SquareNumber${item?.level || index}Icon`" class="me-2" />
-                  <span class="d-none d-md-block width-50px text-truncate">Level {{ item?.level }}</span>
+                  <TablerIcon :icon="`ChartBarIcon`" class="me-2" />
+                  <span class="d-none d-md-block text-truncate">Steps Level</span>
+                </div>
+              </BaseButton>
+            </li>
+            <li class="nav-item" role="presentation">
+              <BaseButton @click="handleClickView('repository')"
+                class="nav-link d-flex align-items-center justify-content-center fs-3"
+                :class="[tab === 'repository' ? 'active' : '']" :id="`pills-repository-tab`" role="tab"
+                :aria-controls="`pills-repository`" aria-selected="true">
+                <div class="d-flex flex-row align-items-center">
+                  <TablerIcon :icon="`DatabaseIcon`" class="me-2" />
+                  <span class="d-none d-md-block text-truncate">Repository</span>
                 </div>
               </BaseButton>
             </li>
@@ -126,7 +159,7 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
             <RouterView>
               <Transition name="fade-top" mode="out-in">
                 <KeepAlive :max="2">
-                  <component :is="ViewComponent[assessmentStore.capability.selectedLevel]" />
+                  <component :is="ViewComponent[tab]" />
                 </KeepAlive>
               </Transition>
             </RouterView>
