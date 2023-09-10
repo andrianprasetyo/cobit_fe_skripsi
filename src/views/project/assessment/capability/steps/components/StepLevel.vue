@@ -4,7 +4,9 @@ import { reactive, computed, watch } from 'vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
+import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import ModalPenilaian from '@/views/project/assessment/capability/steps/components/ModalPenilaian.vue'
+import ModalEvident from '@/views/project/assessment/capability/steps/components/ModalEvident.vue'
 
 import CapabilityServices from '@/services/lib/capability'
 
@@ -21,6 +23,7 @@ const capability = reactive({
   loading: false,
   loadingSubmit: false,
   isShowModalPenilaian: false,
+  isShowModalEvident: false,
 })
 
 const valueAnwer = computed(() => {
@@ -85,6 +88,14 @@ const handleToggleModalPenilaian = ({ gamo }) => {
   }
 }
 
+const handleToggleModalEvident = ({ gamo }) => {
+  capability.isShowModalEvident = !capability.isShowModalEvident
+
+  if (capability.isShowModalEvident) {
+    assessmentStore.setCapabilitySelectedSubGamo(gamo)
+  }
+}
+
 const onSubmit = async () => {
   const loader = loading.show()
 
@@ -138,6 +149,12 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
       </div>
     </div>
 
+    <div class="my-4">
+      <BaseAlert v-if="assessmentStore.getCapabilityIsEditedPenilaianSubGamo" variant="warning">
+        <strong>Info.</strong> Terdapat perubahan data yang belum anda simpan.
+      </BaseAlert>
+    </div>
+
     <div class="table-responsive rounded-2 mb-4 mt-4">
       <div class="mh-100vh">
         <table class="table border customize-table text-nowrap mb-0 align-middle">
@@ -179,26 +196,35 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
             <template
               v-if="Array.isArray(assessmentStore.capability.detailListLevel) && assessmentStore.capability.detailListLevel.length">
               <tr v-for="(item, index) in assessmentStore.capability.detailListLevel"
-                :key="`capability-level-2-item-${index}`">
-                <td>
-                  <div class="text-break text-center text-wrap fw-bold">
+                :key="`capability-level-item-${index}-${item?.id}`">
+                <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
+                  <div class="text-break text-center text-wrap fw-bold ">
                     {{ item?.urutan }}
                   </div>
                 </td>
-                <td>
+                <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <div v-if="item?.subkode" class="width-100px text-break text-wrap fw-bold" v-html="item?.subkode" />
+
+                  <div v-if="item?.capabilityass?.isEdited" class="d-flex flex-row align-items-center text-warning">
+                    <TablerIcon icon="InfoTriangleIcon" size="12" class="me-1" />
+
+                    <small class="text-capitalize fw-bold text-break text-wrap lh-base">
+                      Terdapat Perubahan Data
+                    </small>
+                  </div>
                 </td>
-                <td class="width-175px">
+                <td class="width-175px" :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <div class="d-flex flex-wrap justify-content-center ">
                     <div v-if="item?.kegiatan" class="width-150px text-break text-wrap" v-html="item?.kegiatan" />
                   </div>
                 </td>
-                <td class="width-175px">
+                <td class="width-175px" :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <div class="d-flex flex-wrap justify-content-center ">
                     <div v-if="item?.translate" class="width-150px text-break text-wrap" v-html="item?.translate" />
                   </div>
                 </td>
-                <td class="text-center width-100px">
+                <td class="text-center width-100px"
+                  :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <div class="d-flex flex-wrap justify-content-center">
                     <div class="d-flex flex-column width-75px">
                       <template v-if="item?.evident">
@@ -237,7 +263,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                 <td class="text-center bg-light">
                   {{ item?.bobot }}
                 </td>
-                <td>
+                <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <TablerIcon icon="DotsIcon" size="20" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                     id="dropdownMenuButton" aria-expanded="false" />
 
@@ -252,7 +278,8 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                       </template>
                     </BaseButton>
 
-                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    <BaseButton @click="handleToggleModalEvident({ gamo: item })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="FileTextIcon" />
                         <span class="ms-2">
@@ -309,6 +336,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
     </div>
 
     <ModalPenilaian :is-show="capability.isShowModalPenilaian" @close="handleToggleModalPenilaian" />
+    <ModalEvident :is-show="capability.isShowModalEvident" @close="handleToggleModalEvident" />
   </section>
 </template>
 

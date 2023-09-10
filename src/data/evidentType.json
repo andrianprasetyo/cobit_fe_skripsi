@@ -1,0 +1,12 @@
+[
+  {
+    "key": "evident-type-url",
+    "label": "URL",
+    "value": "url"
+  },
+  {
+    "key": "evident-type-file",
+    "label": "File",
+    "value": "file"
+  }
+]

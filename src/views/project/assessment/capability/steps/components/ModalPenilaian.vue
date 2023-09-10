@@ -57,7 +57,8 @@ const handleSubmit = async () => {
     ...assessmentStore.capability.selectedSubGamo,
     capabilityass: {
       ...assessmentStore.capability.selectedSubGamo.capabilityass,
-      ...formState
+      ...formState,
+      isEdited: true,
     }
   }
   assessmentStore.saveCapabilityPenilaianSubGamo(payload)
@@ -83,7 +84,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #body>
-      <div class="mb-4 text-end">
+      <div class="mb-4 text-center">
         <h6>
           Management Practice Code
         </h6>
