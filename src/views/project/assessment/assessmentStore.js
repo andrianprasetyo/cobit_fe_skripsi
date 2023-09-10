@@ -27,7 +27,8 @@ export const useAssessmentStore = defineStore('assessment', {
       selectedLevel: '2',
       detailListLevel: [],
       detailListAnswer: [],
-      listMediaFile: []
+      listMediaFile: [],
+      selectedMediaFile: null
     }
   }),
   getters: {
@@ -61,6 +62,18 @@ export const useAssessmentStore = defineStore('assessment', {
 
     getCapabilitySelectedLevel(state) {
       return state.capability.selectedLevel
+    },
+
+    getCapabilityIsEditedPenilaianSubGamo(state) {
+      const indexEdited = state.capability.detailListLevel.findIndex((level) => {
+        return level?.capabilityass?.isEdited
+      })
+
+      if (indexEdited !== -1) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   actions: {
@@ -98,6 +111,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setCapabilityListMediaFile(payload) {
       this.capability.listMediaFile = payload
+    },
+
+    setCapabilitySelectedMediaFile(payload) {
+      this.capability.selectedMediaFile = payload
     },
 
     async getDetailAssessment(payload) {
@@ -367,6 +384,28 @@ export const useAssessmentStore = defineStore('assessment', {
           const data = response?.data
 
           this.capability.listMediaFile = data?.list || []
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async deleteCapabilityMediaRepositoryAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await RepositoryServices.deleteMediaRepository({
+          id: payload.id
+        })
+
+        if (response) {
+          toast.success({
+            title: 'Delete File Repository',
+            text: 'Berhasil Menghapus Data File Repository'
+          })
 
           return response
         }

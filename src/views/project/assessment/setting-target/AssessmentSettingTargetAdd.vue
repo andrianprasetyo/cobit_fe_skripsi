@@ -7,6 +7,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
+import BaseAlert from '@/components/Alert/BaseAlert.vue'
 
 import AssessmentTargetServices from '@/services/lib/assessment-target'
 
@@ -146,7 +147,12 @@ onMounted(() => {
 
       <div v-if="formState.listTarget?.length" class="card">
         <div class="card-body">
-          <div class="table-responsive rounded-2 mb-4 mt-4">
+          <BaseAlert
+            v-if="Array.isArray(v$.listTarget.$each?.$response?.$errors) && v$.listTarget.$each?.$response?.$errors.length"
+            variant="danger">
+            <strong>Perhatian.</strong> Terdapat beberapa target yang belum terisi ataupun belum sesuai
+          </BaseAlert>
+          <div class="table-responsive rounded-2 mb-4 mt-4 ">
             <div class="mh-100vh">
               <table class="table border customize-table text-nowrap mb-0 align-middle">
                 <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">

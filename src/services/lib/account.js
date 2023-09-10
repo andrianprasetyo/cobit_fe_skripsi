@@ -15,7 +15,13 @@ export default {
    * @returns
    */
   editAccount(payload) {
-    return axiosClient.post(`account/edit`, payload)
+    return axiosClient(`account/edit`, {
+      method: 'POST',
+      data: payload,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   },
 
   /**

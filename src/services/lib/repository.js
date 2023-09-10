@@ -17,7 +17,13 @@ export default {
    * @returns
    */
   createMediaRepository(payload) {
-    return axiosClient.post(`repository/add`, payload)
+    return axiosClient(`repository/add`, {
+      method: "POST",
+      data: payload,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
   },
 
   /**

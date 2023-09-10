@@ -2,6 +2,7 @@
 import vueFilePond from "vue-filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js'
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
 
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
@@ -26,13 +27,18 @@ const props = defineProps({
     type: [String, Object, Array],
     default: 'form-label'
   },
+  allowFileSizeValidation: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const slots = defineSlots()
 
 const FilePond = vueFilePond(
   FilePondPluginImagePreview,
-  FilePondPluginFileValidateType
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize
 )
 
 </script>
@@ -45,7 +51,11 @@ const FilePond = vueFilePond(
     </div>
 
     <FilePond :label-idle="props.placeholder" :accepted-file-types="props.accepted" :files="props.files" v-bind="$attrs"
-      label-invalid-field="Terdapat Beberapa file Yang Tidak Diijinkan" :instant-upload="false" />
+      labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan" labelMaxFileSizeExceeded="File terlalu besar"
+      labelMaxFileSize="Maksimal file size yaitu {filesize}"
+      labelMaxTotalFileSizeExceeded="Melebihi maksimal size file yang diijinkan"
+      labelMaxTotalFileSize="Total Maksimal file size yaitu {filesize}" :instant-upload="false"
+      :allowFileSizeValidation="props.allowFileSizeValidation" />
   </div>
 </template>
 
