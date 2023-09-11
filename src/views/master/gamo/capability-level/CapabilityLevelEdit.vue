@@ -271,14 +271,14 @@ onMounted(() => {
             <label class="form-label" for="kegiatan">Activities</label>
 
             <CKEditor id="kegiatan" tabindex="5" v-model="v$.kegiatan.$model" :isInvalid="!!v$.kegiatan.$errors?.length"
-              :disabled="formState.loading || formState.loadingSubmit" />
+              :disabled="formState.loading || formState.loadingSubmit" placeholder="Masukkan Activities" />
             <ErrorMessage :errors="v$.kegiatan.$errors" />
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="translate">Translate</label>
 
-            <CKEditor id="translate" tabindex="6" v-model="v$.translate.$model"
+            <CKEditor id="translate" tabindex="6" v-model="v$.translate.$model" placeholder="Masukkan Translate"
               :isInvalid="!!v$.translate.$errors?.length" :disabled="formState.loading || formState.loadingSubmit" />
             <ErrorMessage :errors="v$.translate.$errors" />
           </div>

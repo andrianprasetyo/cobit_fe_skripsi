@@ -124,18 +124,26 @@ const onSubmit = async () => {
       formData.append('level', assessmentStore.capability.selectedLevel)
 
       assessmentStore.capability.detailListLevel.map((item, index) => {
-        formData.append(`capability_assesment_id[${index}]`, item?.id || null)
-        formData.append(`capability_level_id[${index}]`, item?.capabilityass?.capability_level_id || null)
-        formData.append(`capability_answer_id[${index}]`, item?.capabilityass?.capability_answer_id || null)
-        formData.append(`note[${index}]`, item?.capabilityass?.note || null)
-        formData.append(`ofi[${index}]`, item?.capabilityass?.ofi || null)
+        formData.append(`capability_assesment_id[${index}]`, item?.capabilityass?.id || '')
+        formData.append(`capability_level_id[${index}]`, item?.capabilityass?.capability_level_id || '')
+        formData.append(`capability_answer_id[${index}]`, item?.capabilityass?.capability_answer_id || '')
+        formData.append(`note[${index}]`, item?.capabilityass?.note || '')
+        formData.append(`ofi[${index}]`, item?.capabilityass?.ofi || '')
 
-        if (Array.isArray(item?.evident) && item?.evident.length) {
-          item?.evident.map((ev, indexEv) => {
+        if (Array.isArray(item?.capabilityass?.evident) && item?.capabilityass?.evident?.length) {
+          item?.capabilityass?.evident.map((ev, indexEv) => {
+            if (ev?.tipe) {
+              formData.append(`evident[${index}][${indexEv}][tipe]`, ev?.tipe)
+            }
+
             if (ev?.url) {
               formData.append(`evident[${index}][${indexEv}][url]`, ev?.url)
             } else if (ev?.media_repositories_id) {
               formData.append(`evident[${index}][${indexEv}][media_repositories_id]`, ev?.media_repositories_id)
+            }
+
+            if (ev?.deskripsi) {
+              formData.append(`evident[${index}][${indexEv}][deskripsi]`, ev?.deskripsi)
             }
           })
         }
@@ -275,7 +283,8 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                   :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <div class="d-flex flex-wrap justify-content-center">
                     <div class="d-flex flex-column width-75px">
-                      <template v-if="item?.evident">
+                      <template
+                        v-if="Array.isArray(item?.capabilityass?.evident) && item?.capabilityass?.evident?.length">
                         <TablerIcon icon="CircleCheckIcon" class="text-success" size="20" />
                       </template>
 
@@ -350,7 +359,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                 </td>
                 <td class="text-center bg-light-primary">
                   <h6 class="fs-3 fw-semibold mb-0">
-                    {{ assessmentStore.capability.detailTotalBobot.answer }}
+                    {{ parseFloat(assessmentStore.capability.detailTotalBobot.answer).toFixed(2) }}
                   </h6>
                 </td>
                 <td class="text-center bg-light">
@@ -369,7 +378,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                 </td>
                 <td colspan="2" class="bg-primary">
                   <h6 class="fs-3 fw-semibold mb-0 text-center text-white">
-                    {{ assessmentStore.capability.detailTotalBobot.result }}
+                    {{ parseFloat(assessmentStore.capability.detailTotalBobot.result).toFixed(2) }}
                   </h6>
                 </td>
                 <td colspan="1"></td>

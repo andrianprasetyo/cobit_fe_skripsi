@@ -48,7 +48,7 @@ const rules = computed(() => {
   return {
     evident: {
       $each: helpers.forEach({
-        type: {
+        tipe: {
           required: helpers.withMessage('Silahkan isi jenis evident', requiredIf(props.isShow)),
         },
         url: {
@@ -82,7 +82,7 @@ const filterEvident = (index) => {
 
 const handleTambahEvident = () => {
   formState.evident.push({
-    type: '',
+    tipe: '',
     url: null,
     media_repositories_id: null,
     deskripsi: '',
@@ -132,21 +132,18 @@ const handleUploadFile = async ({ file, index }) => {
 const handleSubmit = async () => {
   const result = await v$.value.$validate()
   if (result) {
-    console.log('result', result)
     const payload = {
       ...assessmentStore.capability.selectedSubGamo,
       capabilityass: {
         ...assessmentStore.capability.selectedSubGamo.capabilityass,
+        evident: formState.evident,
         isEdited: true,
       },
-      evident: formState.evident
     }
     assessmentStore.saveCapabilityPenilaianSubGamo(payload)
     handleClose()
   }
 }
-
-/* ---------------------------------- HOOKS --------------------------------- */
 
 </script>
 
@@ -187,17 +184,17 @@ const handleSubmit = async () => {
             </div>
           </div>
           <div class="mb-3">
-            <BaseSelect :id="`evident_type_${index}`" v-model="evident.type" label="Jenis" default-option="Pilih Jenis"
+            <BaseSelect :id="`evident_type_${index}`" v-model="evident.tipe" label="Jenis" default-option="Pilih Jenis"
               :options="evidentTypeJSON" options-label="label" options-value="value"
-              :is-invalid="!!v$.evident.$each?.$response?.$errors[index].type?.length" />
+              :is-invalid="!!v$.evident.$each?.$response?.$errors[index].tipe?.length" />
 
             <ErrorMessage
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
-              :errors="v$.evident.$each?.$response?.$errors[index].type" />
+              :errors="v$.evident.$each?.$response?.$errors[index].tipe" />
           </div>
 
           <!-- URL -->
-          <div v-if="evident.type === 'url'" class="mb-3">
+          <div v-if="evident.tipe === 'url'" class="mb-3">
             <BaseInput :id="`evident_url_${index}`" v-model="evident.url" label="URL" placeholder="Masukkan URL"
               :is-invalid="!!v$.evident.$each?.$response?.$errors[index].url?.length" />
 
@@ -207,7 +204,7 @@ const handleSubmit = async () => {
           </div>
 
           <!-- File -->
-          <div v-if="evident.type === 'file'" class="mb-3">
+          <div v-if="evident.tipe === 'file'" class="mb-3">
             <FilePond id="direct-upload-file-pond" label="File" name="direct-upload-file-pond"
               accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
               :files="formState.files" :allowFileSizeValidation="true" maxFileSize="2Mb"
@@ -222,11 +219,11 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          <div v-if="evident.type === 'file'" class="mb-3">
+          <div v-if="evident.tipe === 'file'" class="mb-3">
 
           </div>
 
-          <div v-if="evident.type" class="mb-3">
+          <div v-if="evident.tipe" class="mb-3">
             <label class="form-label" :for="`evident_deskripsi_${index}`">Deskripsi</label>
             <CKEditor :id="`evident_deskripsi_${index}`" v-model="evident.deskripsi" placeholder="Masukkan Deskripsi" />
             <!-- <ErrorMessage
