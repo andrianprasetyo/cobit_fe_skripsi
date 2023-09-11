@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
@@ -20,6 +20,7 @@ import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAlert } from '@/stores/alert'
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from '@/stores/toast'
+import { useAppConfig } from '@/stores/appConfig'
 
 import RepositoryServices from '@/services/lib/repository'
 
@@ -37,6 +38,7 @@ const alert = useAlert()
 const loading = useLoading()
 const route = useRoute()
 const toast = useToast()
+const appConfig = useAppConfig()
 
 /* ---------------------------------- STATE --------------------------------- */
 const formState = reactive({
@@ -72,6 +74,8 @@ const v$ = useVuelidate(rules, formState, { $rewardEarly: true, $stopPropagation
 
 /* --------------------------------- METHODS -------------------------------- */
 const handleClose = () => {
+  formState.evident = [];
+  v$.value.$reset()
   emits('close', true)
 }
 
@@ -86,6 +90,7 @@ const handleTambahEvident = () => {
     url: null,
     media_repositories_id: null,
     deskripsi: '',
+    files: [],
   })
 }
 
@@ -117,6 +122,7 @@ const handleUploadFile = async ({ file, index }) => {
         const patched = formState.evident;
 
         patched[index].media_repositories_id = data?.id;
+        patched[index].files = [file?.file]
 
         formState.evident = patched
 
@@ -144,6 +150,49 @@ const handleSubmit = async () => {
     handleClose()
   }
 }
+
+const setValueToForm = () => {
+  if (Array.isArray(assessmentStore.capability.selectedSubGamo?.capabilityass?.evident) && assessmentStore.capability.selectedSubGamo?.capabilityass?.evident.length) {
+    assessmentStore.capability.selectedSubGamo?.capabilityass?.evident.map((ev) => {
+      if (ev?.url) {
+        formState.evident.push({
+          tipe: 'url',
+          url: ev?.url,
+          deskripsi: ev?.deskripsi || '',
+          media_repositories_id: null,
+        })
+      } else if (ev?.docs) {
+        let files = []
+        if (ev?.docs?.docs) {
+          const path = `${appConfig.app.appHostMedia}${ev?.docs?.docs?.path}`
+          const file = new File([{ ...ev?.docs?.docs, path }], ev?.docs?.docs?.originalname, { type: ev?.docs?.docs?.type })
+          files[0] = file
+        }
+
+        formState.evident.push({
+          tipe: 'file',
+          url: null,
+          media_repositories_id: ev?.media_repositories_id,
+          files: files
+        })
+      } else if (ev?.files) {
+        formState.evident.push({
+          tipe: 'file',
+          url: null,
+          media_repositories_id: ev?.media_repositories_id,
+          files: ev?.files,
+          deskripsi: ev?.deskripsi
+        })
+      }
+    })
+  }
+}
+
+watch(() => [props.isShow], () => {
+  if (props.isShow) {
+    setValueToForm()
+  }
+}, { deep: true })
 
 </script>
 
@@ -207,7 +256,7 @@ const handleSubmit = async () => {
           <div v-if="evident.tipe === 'file'" class="mb-3">
             <FilePond id="direct-upload-file-pond" label="File" name="direct-upload-file-pond"
               accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
-              :files="formState.files" :allowFileSizeValidation="true" maxFileSize="2Mb"
+              :files="formState.evident[index].files" :allowFileSizeValidation="true" maxFileSize="2Mb"
               :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'" :instant-upload="true"
               v-on:initfile="$event => handleUploadFile({ file: $event, index })" />
 
