@@ -19,7 +19,7 @@ import { useAlert } from '@/stores/alert'
 import { useAppConfig } from '@/stores/appConfig'
 
 const toast = useToast()
-const assessment = useAssessmentStore()
+const assessmentStore = useAssessmentStore()
 const route = useRoute()
 const alert = useAlert()
 const router = useRouter()
@@ -71,13 +71,13 @@ const filter = ref({
 })
 
 const isAssessmentDone = computed(() => {
-  return assessment?.detail?.status === 'completed'
+  return assessmentStore?.detail?.status === 'completed'
 })
 
 
 const classStatus = computed(() => {
   return value => {
-    const isOngoing = value === 'ongoing'
+    const isOngoing = value === 'ongoing' || value === 'active'
     const isCompleted = value === 'completed' || value === 'done'
     const isUnstart = value === 'unstart'
     const isPending = value === 'pending' || value === 'diundang'
@@ -103,7 +103,7 @@ const toggleModalInviteResponden = () => {
   responden.isShowModalInviteResponden = !responden.isShowModalInviteResponden
 
   if (responden.isShowModalInviteResponden) {
-    assessment.setSeletedAssessment(assessment.detail)
+    assessmentStore.setSeletedAssessment(assessmentStore.detail)
   }
 }
 
@@ -111,7 +111,7 @@ const toggleModalSummaryGamo = () => {
   responden.isShowModalSummaryGamo = !responden.isShowModalSummaryGamo
 
   if (responden.isShowModalSummaryGamo) {
-    assessment.setSeletedAssessment(assessment.detail)
+    assessmentStore.setSeletedAssessment(assessmentStore.detail)
   }
 }
 
@@ -214,7 +214,7 @@ const selesaikanAsessment = async ({ id }) => {
         text: `Berhasil Mengubah Status Asesmen`
       })
 
-      assessment.getDetailAssessment({ id })
+      assessmentStore.getDetailAssessment({ id })
 
       return response
     }

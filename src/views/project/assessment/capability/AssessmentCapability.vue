@@ -26,12 +26,17 @@ const TabRepository = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/capability/repository/AssessmentCapabilityRepository.vue'),
 })
 
+const TabSummary = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/summary/AssessmentCapabilitySummary.vue'),
+})
+
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const tab = ref("step")
 
 const ViewComponent = {
   'step': TabStep,
-  'repository': TabRepository
+  'repository': TabRepository,
+  'summary': TabSummary,
 }
 
 const queryView = computed(() => {
@@ -44,7 +49,7 @@ const assessmentTitle = computed(() => {
 
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickView = (value) => {
-  router.push({
+  router.replace({
     query: { ...route.query, view: value }
   })
 }
@@ -78,6 +83,9 @@ watch(() => queryView.value, (value) => {
       break;
     case 'repository':
       tab.value = 'repository'
+      break;
+    case 'summary':
+      tab.value = 'summary'
       break;
     default:
       tab.value = 'step';
@@ -163,12 +171,23 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
                 </div>
               </BaseButton>
             </li>
+            <li class="nav-item" role="presentation">
+              <BaseButton @click="handleClickView('summary')"
+                class="nav-link d-flex align-items-center justify-content-center fs-3"
+                :class="[tab === 'summary' ? 'active' : '']" :id="`pills-summary-tab`" role="tab"
+                :aria-controls="`pills-summary`" aria-selected="true">
+                <div class="d-flex flex-row align-items-center">
+                  <TablerIcon :icon="`ClipboardDataIcon`" class="me-2" />
+                  <span class="d-none d-md-block text-truncate">Summary</span>
+                </div>
+              </BaseButton>
+            </li>
           </template>
 
           <template #tab-content>
             <RouterView>
               <Transition name="fade-top" mode="out-in">
-                <KeepAlive :max="2">
+                <KeepAlive :max="3">
                   <component :is="ViewComponent[tab]" />
                 </KeepAlive>
               </Transition>

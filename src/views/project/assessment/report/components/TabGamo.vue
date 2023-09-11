@@ -50,19 +50,10 @@ const serverOptions = ref({
 
 
 /* -------------------------------- COMPUTED -------------------------------- */
-const isNeedAssessment = computed(() => {
-  return value => {
-    if (value >= 3) {
-      return 'Ya'
-    } else {
-      return "Tidak"
-    }
-  }
-})
 
 const classIsNeedAssessment = computed(() => {
   return value => {
-    if (value >= 3) {
+    if (value === "Ya") {
       return 'bg-light-success text-success'
     } else {
       return 'bg-light-danger text-danger'
@@ -178,8 +169,8 @@ onMounted(() => {
         <template #item-assessment="item">
           <div class="d-flex justify-content-center align-items-center w-100">
             <span class="badge rounded-pill font-medium text-capitalize fw-bold"
-              :class="classIsNeedAssessment(item.item.aggreed_capability_level)">
-              {{ isNeedAssessment(item.item.aggreed_capability_level) }}
+              :class="classIsNeedAssessment(item.item?.is_assessment)">
+              {{ item.item?.is_assessment }}
             </span>
           </div>
         </template>

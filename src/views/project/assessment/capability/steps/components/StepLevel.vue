@@ -7,6 +7,7 @@ import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import ModalPenilaian from '@/views/project/assessment/capability/steps/components/ModalPenilaian.vue'
 import ModalEvidence from '@/views/project/assessment/capability/steps/components/ModalEvidence.vue'
+import ModalAverageCompliance from '@/views/project/assessment/capability/steps/components/ModalAverageCompliance.vue'
 
 import CapabilityServices from '@/services/lib/capability'
 
@@ -26,6 +27,7 @@ const capability = reactive({
   loadingSubmit: false,
   isShowModalPenilaian: false,
   isShowModalEvidence: false,
+  isShowModalAverageCompliance: false
 })
 
 const valueAnwer = computed(() => {
@@ -104,6 +106,10 @@ const handleToggleModalEvidence = ({ gamo }) => {
   }
 }
 
+const handleToggleModalAverageCompliance = () => {
+  capability.isShowModalAverageCompliance = !capability.isShowModalAverageCompliance
+}
+
 const onSubmit = async () => {
   const loader = loading.show()
 
@@ -175,6 +181,13 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
       <h5 class="card-title mb-3 mb-md-0 fw-semibold">Level {{ assessmentStore.capability.selectedLevel }}</h5>
 
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+        <BaseButton @click="handleToggleModalAverageCompliance" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
+          title="Lihat Nilai Rata-rata" :disabled="capability.loadingSubmit || capability.loading">
+          <template #icon-left>
+            <TablerIcon icon="GraphIcon" />
+          </template>
+        </BaseButton>
+
         <BaseButton @click="onSubmit" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Simpan Data"
           :disabled="capability.loadingSubmit || capability.loading" :is-loading="capability.loadingSubmit">
           <template #icon-left>
@@ -271,8 +284,6 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                       </span>
                     </div>
                   </div>
-
-
                 </td>
                 <td class="text-center bg-light-primary width-100px">
                   <div class="d-flex flex-wrap justify-content-center">
@@ -371,6 +382,8 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
 
     <ModalPenilaian :is-show="capability.isShowModalPenilaian" @close="handleToggleModalPenilaian" />
     <ModalEvidence :is-show="capability.isShowModalEvidence" @close="handleToggleModalEvidence" />
+    <ModalAverageCompliance :is-show="capability.isShowModalAverageCompliance"
+      @close="handleToggleModalAverageCompliance" />
   </section>
 </template>
 
