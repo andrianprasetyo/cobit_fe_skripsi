@@ -29,7 +29,8 @@ export const useAssessmentStore = defineStore('assessment', {
       detailListAnswer: [],
       detailTotalBobot: null,
       listMediaFile: [],
-      selectedMediaFile: null
+      selectedMediaFile: null,
+      averageComplianceLevel: null
     }
   }),
   getters: {
@@ -79,11 +80,7 @@ export const useAssessmentStore = defineStore('assessment', {
 
     getCapabilityIsComplianceEnough(state) {
       return state.capability.detailTotalBobot?.result >= 0.85
-    },
-
-    // getCapabilityIsLevelUnlocked(state){
-    //   const isComplianceEnough = state.capability.detailTotalBobot?.result >= 0.85
-    // }
+    }
   },
   actions: {
     setSeletedAssessment(payload) {
@@ -124,6 +121,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setCapabilitySelectedMediaFile(payload) {
       this.capability.selectedMediaFile = payload
+    },
+
+    setCapabilityAverageComplianceLevel(payload) {
+      this.capability.averageComplianceLevel = payload
     },
 
     async getDetailAssessment(payload) {
@@ -417,6 +418,28 @@ export const useAssessmentStore = defineStore('assessment', {
             title: 'Delete File Repository',
             text: 'Berhasil Menghapus Data File Repository'
           })
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityAverageAverageComplianceLevel(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getAverageComplianceLevelCapability({
+          domain_id: payload.domain_id,
+          asesment_id: payload.assesment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.averageComplianceLevel = data
 
           return response
         }

@@ -76,19 +76,9 @@ const handleClose = () => {
               <h6 class="mb-0 fw-semibold">{{ assessmentStore.capability.selectedMediaFile?.docs?.originalname || "-" }}
               </h6>
             </div>
-            <div class="text-start mb-3">
+            <div class="text-start mb-5">
               <span class="fs-3">Ukuran File</span>
               <h6 class="mb-0 fw-semibold">{{ formatBytes(assessmentStore.capability.selectedMediaFile?.docs.size) }}</h6>
-            </div>
-            <div class="text-start mb-5 ">
-              <span class="fs-3">Deskripsi File</span>
-              <div class="bg-light-primary p-3 rounded">
-                <div v-if="assessmentStore.capability.selectedMediaFile?.deskripsi"
-                  v-html="assessmentStore.capability.selectedMediaFile?.deskripsi" />
-
-                <h6 v-else class="mb-0 fw-semibold">-</h6>
-              </div>
-
             </div>
 
             <h6 class="fw-semibold mb-0 text-dark mb-3">Informasi Pemilik</h6>

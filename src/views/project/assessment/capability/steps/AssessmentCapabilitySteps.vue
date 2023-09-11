@@ -35,7 +35,7 @@ const handleClickLevel = (level) => {
             :step="level.level" :label="`Level ${level.level}`"
             :is-active="assessmentStore.capability.selectedLevel == level.level"
             :is-completed="assessmentStore.capability.selectedLevel >= level.level"
-            :disabled="(assessmentStore.capability.selectedLevel != level.level)"
+            :disabled="(assessmentStore.capability.selectedLevel != level.level) || assessmentStore.capability.getCapabilityIsComplianceEnough"
             @click="handleClickLevel(level.level)" />
         </template>
 

@@ -15,7 +15,7 @@ import evidentTypeJSON from '@/data/evidentType.json'
 
 import { useRoute } from 'vue-router'
 import { useVuelidate } from "@vuelidate/core";
-import { helpers, requiredIf } from "@vuelidate/validators";
+import { helpers, requiredIf, url } from "@vuelidate/validators";
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAlert } from '@/stores/alert'
 import { useLoading } from 'vue-loading-overlay'
@@ -51,6 +51,14 @@ const rules = computed(() => {
         type: {
           required: helpers.withMessage('Silahkan isi jenis evident', requiredIf(props.isShow)),
         },
+        url: {
+          url: helpers.withMessage("Tautan atau URL tidak valid", url)
+        },
+        /*
+        deskripsi: {
+          required: helpers.withMessage('Silahkan isi deskripsi', requiredIf(props.isShow)),
+        }
+        */
       })
     },
   }
@@ -92,10 +100,8 @@ const handleHapusEvident = ({ title, index }) => {
 }
 
 const handleUploadFile = async ({ file, index }) => {
-
-  const loader = loading.show()
-
-  if (file && file?.file) {
+  if (file && file?.file && file?.status === 2) {
+    const loader = loading.show()
     try {
       const formData = new FormData()
 
@@ -124,16 +130,20 @@ const handleUploadFile = async ({ file, index }) => {
 }
 
 const handleSubmit = async () => {
-  const payload = {
-    ...assessmentStore.capability.selectedSubGamo,
-    capabilityass: {
-      ...assessmentStore.capability.selectedSubGamo.capabilityass,
-      isEdited: true,
-    },
-    evident: formState.evident
+  const result = await v$.value.$validate()
+  if (result) {
+    console.log('result', result)
+    const payload = {
+      ...assessmentStore.capability.selectedSubGamo,
+      capabilityass: {
+        ...assessmentStore.capability.selectedSubGamo.capabilityass,
+        isEdited: true,
+      },
+      evident: formState.evident
+    }
+    assessmentStore.saveCapabilityPenilaianSubGamo(payload)
+    handleClose()
   }
-  assessmentStore.saveCapabilityPenilaianSubGamo(payload)
-  handleClose()
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -145,7 +155,7 @@ const handleSubmit = async () => {
     @close="handleClose">
     <template #header>
       <h4 class="modal-title">
-        Evident
+        Evidence
       </h4>
     </template>
 
@@ -161,8 +171,11 @@ const handleSubmit = async () => {
 
       <template v-if="formState.evident.length">
         <template v-for="(evident, index) in formState.evident" :key="`evident-form-${index}`">
+
+          <hr v-if="index > 0" />
+
           <div class="mb-9 d-flex flex-column flex-md-row justify-content-md-between align-items-md-center my-4">
-            <h5 class="fw-semibold">Evident {{ index + 1 }}</h5>
+            <h5 class="fw-semibold">Evidence {{ index + 1 }}</h5>
 
             <div>
               <BaseButton @click="handleHapusEvident({ title: index + 1, index: index })" class="btn btn-outline-danger"
@@ -175,7 +188,8 @@ const handleSubmit = async () => {
           </div>
           <div class="mb-3">
             <BaseSelect :id="`evident_type_${index}`" v-model="evident.type" label="Jenis" default-option="Pilih Jenis"
-              :options="evidentTypeJSON" options-label="label" options-value="value" />
+              :options="evidentTypeJSON" options-label="label" options-value="value"
+              :is-invalid="!!v$.evident.$each?.$response?.$errors[index].type?.length" />
 
             <ErrorMessage
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
@@ -184,7 +198,12 @@ const handleSubmit = async () => {
 
           <!-- URL -->
           <div v-if="evident.type === 'url'" class="mb-3">
-            <BaseInput :id="`evident_url_${index}`" v-model="evident.url" label="URL" placeholder="Masukkan URL" />
+            <BaseInput :id="`evident_url_${index}`" v-model="evident.url" label="URL" placeholder="Masukkan URL"
+              :is-invalid="!!v$.evident.$each?.$response?.$errors[index].url?.length" />
+
+            <ErrorMessage
+              v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
+              :errors="v$.evident.$each?.$response?.$errors[index].url" />
           </div>
 
           <!-- File -->
@@ -203,27 +222,29 @@ const handleSubmit = async () => {
             </div>
           </div>
 
-          <div v-if="evident.type" class="mb-3">
-            <label class="form-label" :for="`evident_deskripsi_${index}`">Deskripsi</label>
-            <CKEditor :id="`evident_deskripsi_${index}`" v-model="evident.deskripsi" placeholder="Masukkan Deskripsi"
-              :isInvalid="!!v$.evident.$each?.$response?.$errors[index].deskripsi?.length" />
-            <ErrorMessage
-              v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.listTarget.$each?.$response?.$errors.length"
-              :errors="v$.listTarget.$each?.$response?.$errors[index].deskripsi" />
+          <div v-if="evident.type === 'file'" class="mb-3">
+
           </div>
 
-          <hr />
+          <div v-if="evident.type" class="mb-3">
+            <label class="form-label" :for="`evident_deskripsi_${index}`">Deskripsi</label>
+            <CKEditor :id="`evident_deskripsi_${index}`" v-model="evident.deskripsi" placeholder="Masukkan Deskripsi" />
+            <!-- <ErrorMessage
+              v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
+              :errors="v$.evident.$each?.$response?.$errors[index].deskripsi" /> -->
+          </div>
+
         </template>
 
 
       </template>
 
       <template v-else>
-        <NoOptions title="Belum Ada Evident" />
+        <NoOptions title="Belum Ada Evidence" />
       </template>
 
       <div class="mt-5 d-flex justify-content-center align-items-center">
-        <BaseButton @click="handleTambahEvident" title="Tambah Evident">
+        <BaseButton @click="handleTambahEvident" title="Tambah Evidence">
           <template #icon-left>
             <TablerIcon icon="PlusIcon" />
           </template>
@@ -232,7 +253,7 @@ const handleSubmit = async () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Evident" :disabled="!formState.evident.length">
+      <BaseButton @click="handleSubmit" title="Simpan Evidence" :disabled="!formState.evident.length">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

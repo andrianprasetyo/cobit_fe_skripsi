@@ -51,5 +51,16 @@ export default {
         'Content-Type': 'multipart/form-data'
       }
     })
+  },
+
+  /**
+   *
+   * @param {domain_id, asesment_id} payload
+   * @returns
+   */
+  getAverageComplianceLevelCapability(payload) {
+    return axiosClient.get(
+      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&asesment_id=${payload?.asesment_id}`
+    )
   }
 }
