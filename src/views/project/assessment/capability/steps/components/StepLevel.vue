@@ -142,9 +142,7 @@ const onSubmit = async () => {
               formData.append(`evident[${index}][${indexEv}][media_repositories_id]`, ev?.media_repositories_id)
             }
 
-            if (ev?.deskripsi) {
-              formData.append(`evident[${index}][${indexEv}][deskripsi]`, ev?.deskripsi)
-            }
+            formData.append(`evident[${index}][${indexEv}][deskripsi]`, ev?.deskripsi || '')
           })
         }
       })
@@ -172,9 +170,11 @@ const onSubmit = async () => {
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
-watch(() => [assessmentStore.capability.selectedLevel], () => {
-  getCapabilityDetailLevelAssessment()
-}, { immediate: true, deep: true })
+watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capability.listLevel], () => {
+  if (assessmentStore.capability.listLevel.length && assessmentStore.capability.selectedLevel && assessmentStore.capability.selectedGamo) {
+    getCapabilityDetailLevelAssessment()
+  }
+}, { deep: true, immediate: true })
 
 </script>
 
@@ -285,11 +285,12 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                     <div class="d-flex flex-column width-75px">
                       <template
                         v-if="Array.isArray(item?.capabilityass?.evident) && item?.capabilityass?.evident?.length">
-                        <TablerIcon icon="CircleCheckIcon" class="text-success" size="20" />
+                        <TablerIcon v-tooltip="`Terdapat ${item?.capabilityass?.evident?.length} Evidence`"
+                          icon="CircleCheckIcon" class="text-success" size="20" />
                       </template>
 
                       <span v-else class="fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base">
-                        <TablerIcon icon="CircleXIcon" class="text-danger" size="22" />
+                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="CircleXIcon" class="text-danger" size="22" />
                       </span>
                     </div>
                   </div>

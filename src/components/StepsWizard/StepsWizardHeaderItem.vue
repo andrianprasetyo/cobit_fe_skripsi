@@ -19,6 +19,9 @@ const props = defineProps({
     default: false
   }
 })
+
+const slots = defineSlots()
+
 </script>
 
 <template>
@@ -29,7 +32,17 @@ const props = defineProps({
   }" aria-disabled="false" aria-selected="true">
     <a :id="`steps-uid-${props.step}-t-0`" :aria-controls="`steps-uid-${props.step}-p-0`">
       <span class="current-info audible">current step:</span>
-      <span v-bind="$attrs" class="step cursor-pointer">{{ props.step }}</span> {{ label }}
+      <slot v-if="slots['step']" v-bind="$attrs" name="step" />
+      <span v-else v-bind="$attrs" class="step cursor-pointer">
+        {{ props.step }}
+      </span>
+
+      <slot v-if="slots['label']" name="label" />
+
+      <div v-else>
+        {{ label }}
+      </div>
+      <slot></slot>
     </a>
   </li>
 </template>

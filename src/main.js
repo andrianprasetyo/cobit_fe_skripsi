@@ -26,6 +26,7 @@ import setupCKEditor from '@/plugins/ckeditor'
 import setupApexCharts from '@/plugins/apexcharts'
 import setupLoadingOverlay from '@/plugins/loading-overlay'
 import setupVSelect from '@/plugins/v-select'
+import setupFloatingVue from '@/plugins/floating-vue'
 
 import App from './App.vue'
 import router from './router'
@@ -42,5 +43,6 @@ setupCKEditor(app)
 setupApexCharts(app)
 setupLoadingOverlay(app)
 setupVSelect(app)
+setupFloatingVue(app)
 
 app.mount('#app')

@@ -1,8 +1,9 @@
 <script setup>
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, computed } from 'vue'
 
 import StepsWizard from '@/components/StepsWizard/StepsWizard.vue'
 import StepsWizardHeaderItem from '@/components/StepsWizard/StepsWizardHeaderItem.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
 const StepLevel = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/capability/steps/components/StepLevel.vue'),
@@ -19,9 +20,25 @@ const ViewComponent = {
   '5': StepLevel,
 }
 
+const isStepsUnlocked = computed(() => {
+  return level => {
+    const isOverlapped = level < assessmentStore.capability.selectedLevel
+    const isCurrentLevel = level == assessmentStore.capability.selectedLevel
+    const isNextLevelUnlocked = assessmentStore.getCapabilityIsComplianceEnough >= 0.85 && (level == +assessmentStore.capability.selectedLevel + 1)
+
+    if (isOverlapped || isCurrentLevel || isNextLevelUnlocked) {
+      return true
+    } else {
+      return false
+    }
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickLevel = (level) => {
-  assessmentStore.setCapabilitySelectedLevel(level)
+  if (isStepsUnlocked.value(level)) {
+    assessmentStore.setCapabilitySelectedLevel(level)
+  }
 }
 
 </script>
@@ -35,8 +52,19 @@ const handleClickLevel = (level) => {
             :step="level.level" :label="`Level ${level.level}`"
             :is-active="assessmentStore.capability.selectedLevel == level.level"
             :is-completed="assessmentStore.capability.selectedLevel >= level.level"
-            :disabled="(assessmentStore.capability.selectedLevel != level.level) || assessmentStore.capability.getCapabilityIsComplianceEnough"
-            @click="handleClickLevel(level.level)" />
+            :disabled="!isStepsUnlocked(level.level)" @click="handleClickLevel(level.level)">
+            <template #step>
+              <span v-if="isStepsUnlocked(level.level)" class="step cursor-pointer">
+                {{ level.level }}
+              </span>
+
+              <span v-else>
+                <span class="step">
+                  <TablerIcon icon="LockIcon" />
+                </span>
+              </span>
+            </template>
+          </StepsWizardHeaderItem>
         </template>
 
         <template #content>
