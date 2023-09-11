@@ -4,7 +4,6 @@ import { reactive, computed } from 'vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
-import CKEditor from '@/components/CKEditor/CKEditor.vue'
 import FilePond from '@/components/FilePond/FilePond.vue'
 
 import RepositoryServices from '@/services/lib/repository'
@@ -30,7 +29,6 @@ const loading = useLoading()
 const formState = reactive({
   loadingSubmit: false,
   files: [],
-  deskripsi: '',
   isNewFiles: false,
 })
 
@@ -65,7 +63,6 @@ const handleSubmit = async () => {
     }
 
     formData.append('assesment_id', assessmentId.value)
-    formData.append('deskripsi', formState.deskripsi)
 
     const response = await RepositoryServices.createMediaRepository(formData)
 
@@ -111,12 +108,6 @@ const handleSubmit = async () => {
             pdf
           </small>
         </div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label" for="upload-media-file-deskripsi">Deskripsi</label>
-
-        <CKEditor id="upload-media-file-deskripsi" placeholder="Masukkan Deskripsi File" v-model="formState.deskripsi" />
       </div>
     </template>
 

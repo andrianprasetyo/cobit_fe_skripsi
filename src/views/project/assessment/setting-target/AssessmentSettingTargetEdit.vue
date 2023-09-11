@@ -49,6 +49,10 @@ const assessmentTargetId = computed(() => {
   return route.params?.assessment_target_id
 })
 
+const assessmentId = computed(() => {
+  return route.params?.id
+})
+
 const assessmentTargetNama = computed(() => {
   return route.query?.target
 })
@@ -90,6 +94,7 @@ const handleSubmit = async () => {
 
       const response = await AssessmentTargetServices.saveTarget({
         id: assessmentTargetId.value,
+        assesment_id: assessmentId.value,
         nama: formState.nama,
         target: formState.listTarget
       })

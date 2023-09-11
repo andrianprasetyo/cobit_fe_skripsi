@@ -30,6 +30,10 @@ const props = defineProps({
   allowFileSizeValidation: {
     type: Boolean,
     default: false
+  },
+  instantUpload: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -54,7 +58,7 @@ const FilePond = vueFilePond(
       labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan" labelMaxFileSizeExceeded="File terlalu besar"
       labelMaxFileSize="Maksimal file size yaitu {filesize}"
       labelMaxTotalFileSizeExceeded="Melebihi maksimal size file yang diijinkan"
-      labelMaxTotalFileSize="Total Maksimal file size yaitu {filesize}" :instant-upload="false"
+      labelMaxTotalFileSize="Total Maksimal file size yaitu {filesize}" :instant-upload="props.instantUpload"
       :allowFileSizeValidation="props.allowFileSizeValidation" />
   </div>
 </template>

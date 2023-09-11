@@ -100,6 +100,7 @@ const handleSubmit = async () => {
 
       const response = await AssessmentTargetServices.saveTarget({
         id: null,
+        assesment_id: assessmentId.value,
         nama: formState.nama,
         target: formState.listTarget,
       })

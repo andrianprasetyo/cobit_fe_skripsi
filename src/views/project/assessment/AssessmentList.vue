@@ -46,7 +46,7 @@ const assessment = reactive({
     sortable: true
   }, {
     text: 'Action',
-    value: 'action'
+    value: 'action',
   },
   ],
   meta: {

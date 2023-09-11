@@ -7,7 +7,9 @@ export default {
    */
   getListMediaRepository(payload) {
     return axiosClient.get(
-      `repository/list?limit=${payload?.limit || 10}&page=${payload?.page || 1}`
+      `repository/list?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
+        payload?.assesment_id ? `&assesment_id=${payload?.assesment_id}` : ''
+      }`
     )
   },
 
@@ -18,11 +20,11 @@ export default {
    */
   createMediaRepository(payload) {
     return axiosClient(`repository/add`, {
-      method: "POST",
+      method: 'POST',
       data: payload,
       headers: {
-        "Content-Type": "multipart/form-data",
-      },
+        'Content-Type': 'multipart/form-data'
+      }
     })
   },
 
