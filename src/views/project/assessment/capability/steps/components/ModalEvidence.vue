@@ -9,13 +9,19 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
+import FilePond from '@/components/FilePond/FilePond.vue'
 
 import evidentTypeJSON from '@/data/evidentType.json'
 
+import { useRoute } from 'vue-router'
 import { useVuelidate } from "@vuelidate/core";
 import { helpers, requiredIf } from "@vuelidate/validators";
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAlert } from '@/stores/alert'
+import { useLoading } from 'vue-loading-overlay'
+import { useToast } from '@/stores/toast'
+
+import RepositoryServices from '@/services/lib/repository'
 
 const props = defineProps({
   isShow: {
@@ -28,6 +34,9 @@ const emits = defineEmits(['close', 'refresh'])
 
 const assessmentStore = useAssessmentStore()
 const alert = useAlert()
+const loading = useLoading()
+const route = useRoute()
+const toast = useToast()
 
 /* ---------------------------------- STATE --------------------------------- */
 const formState = reactive({
@@ -45,6 +54,10 @@ const rules = computed(() => {
       })
     },
   }
+})
+
+const assessmentId = computed(() => {
+  return route.params?.id
 })
 
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true, $stopPropagation: true })
@@ -70,12 +83,44 @@ const handleTambahEvident = () => {
 
 const handleHapusEvident = ({ title, index }) => {
   alert.info({
-    title: `Apakah Anda Yakin untuk Menghapus Evident ${title}`
+    title: `Apakah Anda Yakin untuk Menghapus Evidence ${title}`
   }).then(async (result) => {
     if (result.isConfirmed) {
       filterEvident(index)
     }
   })
+}
+
+const handleUploadFile = async ({ file, index }) => {
+
+  const loader = loading.show()
+
+  if (file && file?.file) {
+    try {
+      const formData = new FormData()
+
+      formData.append('docs', file?.file)
+
+      formData.append('assesment_id', assessmentId.value)
+
+      const response = await RepositoryServices.createMediaRepository(formData)
+
+      if (response) {
+        const data = response.data;
+
+        const patched = formState.evident;
+
+        patched[index].media_repositories_id = data?.id;
+
+        formState.evident = patched
+
+        loader.hide()
+      }
+    } catch (error) {
+      loader.hide()
+      toast.error({ error })
+    }
+  }
 }
 
 const handleSubmit = async () => {
@@ -136,9 +181,28 @@ const handleSubmit = async () => {
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
               :errors="v$.evident.$each?.$response?.$errors[index].type" />
           </div>
+
+          <!-- URL -->
           <div v-if="evident.type === 'url'" class="mb-3">
             <BaseInput :id="`evident_url_${index}`" v-model="evident.url" label="URL" placeholder="Masukkan URL" />
           </div>
+
+          <!-- File -->
+          <div v-if="evident.type === 'file'" class="mb-3">
+            <FilePond id="direct-upload-file-pond" label="File" name="direct-upload-file-pond"
+              accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
+              :files="formState.files" :allowFileSizeValidation="true" maxFileSize="2Mb"
+              :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'" :instant-upload="true"
+              v-on:initfile="$event => handleUploadFile({ file: $event, index })" />
+
+            <div class="mt-1">
+              <small>
+                <span class="text-danger fw-bold">Perhatian!</span> File yang diupload hanya diperbolehkan file excel atau
+                pdf
+              </small>
+            </div>
+          </div>
+
           <div v-if="evident.type" class="mb-3">
             <label class="form-label" :for="`evident_deskripsi_${index}`">Deskripsi</label>
             <CKEditor :id="`evident_deskripsi_${index}`" v-model="evident.deskripsi" placeholder="Masukkan Deskripsi"

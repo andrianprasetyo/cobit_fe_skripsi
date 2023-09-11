@@ -6,14 +6,16 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import ModalPenilaian from '@/views/project/assessment/capability/steps/components/ModalPenilaian.vue'
-import ModalEvident from '@/views/project/assessment/capability/steps/components/ModalEvident.vue'
+import ModalEvidence from '@/views/project/assessment/capability/steps/components/ModalEvidence.vue'
 
 import CapabilityServices from '@/services/lib/capability'
 
+import { useRoute } from 'vue-router'
 import { useToast } from '@/stores/toast'
 import { useLoading } from 'vue-loading-overlay'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
+const route = useRoute()
 const toast = useToast()
 const loading = useLoading()
 const assessmentStore = useAssessmentStore()
@@ -23,7 +25,7 @@ const capability = reactive({
   loading: false,
   loadingSubmit: false,
   isShowModalPenilaian: false,
-  isShowModalEvident: false,
+  isShowModalEvidence: false,
 })
 
 const valueAnwer = computed(() => {
@@ -36,12 +38,12 @@ const valueAnwer = computed(() => {
   }
 })
 
+/*
 const totalValue = computed(() => {
   return assessmentStore.capability.detailListLevel.reduce((acc, value) => {
     if (value?.capabilityass?.capability_level_id) {
-      const values = valueAnwer.value(value?.capabilityass?.capability_level_id)?.bobot
-      // console.log('values', valueAnwer.value(value?.capabilityass?.capability_level_id))?.bobot
-      acc += values || 0
+      const values = valueAnwer.value(value?.capabilityass?.capability_answer_id)?.bobot
+      acc += parseInt(values) || 0
     }
 
     return acc
@@ -59,7 +61,12 @@ const totalWeight = computed(() => {
 })
 
 const totalCompliances = computed(() => {
-  return totalValue.value / totalWeight.value
+  return (totalValue.value / totalWeight.value).toFixed(2)
+})
+*/
+
+const assessmentId = computed(() => {
+  return route.params?.id
 })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -69,7 +76,8 @@ const getCapabilityDetailLevelAssessment = async () => {
 
     const response = await assessmentStore.getCapabilityDetailLevelAssessment({
       level: assessmentStore.capability.selectedLevel,
-      domain_id: assessmentStore.capability.selectedGamo?.id
+      domain_id: assessmentStore.capability.selectedGamo?.id,
+      assesment_id: assessmentId.value
     })
 
     if (response) {
@@ -88,10 +96,10 @@ const handleToggleModalPenilaian = ({ gamo }) => {
   }
 }
 
-const handleToggleModalEvident = ({ gamo }) => {
-  capability.isShowModalEvident = !capability.isShowModalEvident
+const handleToggleModalEvidence = ({ gamo }) => {
+  capability.isShowModalEvidence = !capability.isShowModalEvidence
 
-  if (capability.isShowModalEvident) {
+  if (capability.isShowModalEvidence) {
     assessmentStore.setCapabilitySelectedSubGamo(gamo)
   }
 }
@@ -101,7 +109,34 @@ const onSubmit = async () => {
 
   try {
     capability.loadingSubmit = true
-    const response = await CapabilityServices.answerLevelCapability({ jawaban: assessmentStore.capability.detailListLevel })
+
+    const formData = new FormData()
+
+    if (assessmentStore.capability.detailListLevel.length) {
+      formData.append('assesment_id', assessmentId.value)
+      formData.append('domain_id', assessmentStore.capability.selectedGamo?.id)
+      formData.append('level', assessmentStore.capability.selectedLevel)
+
+      assessmentStore.capability.detailListLevel.map((item, index) => {
+        formData.append(`capability_assesment_id[${index}]`, item?.id || null)
+        formData.append(`capability_level_id[${index}]`, item?.capabilityass?.capability_level_id || null)
+        formData.append(`capability_answer_id[${index}]`, item?.capabilityass?.capability_answer_id || null)
+        formData.append(`note[${index}]`, item?.capabilityass?.note || null)
+        formData.append(`ofi[${index}]`, item?.capabilityass?.ofi || null)
+
+        if (Array.isArray(item?.evident) && item?.evident.length) {
+          item?.evident.map((ev, indexEv) => {
+            if (ev?.url) {
+              formData.append(`evident[${index}][${indexEv}][url]`, ev?.url)
+            } else if (ev?.media_repositories_id) {
+              formData.append(`evident[${index}][${indexEv}][media_repositories_id]`, ev?.media_repositories_id)
+            }
+          })
+        }
+      })
+    }
+
+    const response = await CapabilityServices.answerLevelCapability(formData)
 
     if (response) {
       toast.success({
@@ -175,7 +210,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                 <h6 class="fs-3 fw-semibold mb-0">Translate</h6>
               </th>
               <th class="align-middle text-center" rowspan="2">
-                <h6 class="fs-3 fw-semibold mb-0">Evident</h6>
+                <h6 class="fs-3 fw-semibold mb-0">Evidence</h6>
               </th>
               <template
                 v-if="Array.isArray(assessmentStore.capability.detailListAnswer) && assessmentStore.capability.detailListAnswer.length">
@@ -278,12 +313,12 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                       </template>
                     </BaseButton>
 
-                    <BaseButton @click="handleToggleModalEvident({ gamo: item })"
+                    <BaseButton @click="handleToggleModalEvidence({ gamo: item })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="FileTextIcon" />
                         <span class="ms-2">
-                          Evident
+                          Evidence
                         </span>
                       </template>
                     </BaseButton>
@@ -293,8 +328,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
             </template>
           </tbody>
 
-          <template
-            v-if="Array.isArray(assessmentStore.capability.detailListAnswer) && assessmentStore.capability.detailListAnswer.length">
+          <template v-if="assessmentStore.capability.detailTotalBobot">
             <tfoot class="position-sticky bottom-0">
               <tr>
                 <td colspan="4"></td>
@@ -305,12 +339,12 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                 </td>
                 <td class="text-center bg-light-primary">
                   <h6 class="fs-3 fw-semibold mb-0">
-                    {{ totalValue }}
+                    {{ assessmentStore.capability.detailTotalBobot.answer }}
                   </h6>
                 </td>
                 <td class="text-center bg-light">
                   <h6 class="fs-3 fw-semibold mb-0">
-                    {{ totalWeight }}
+                    {{ assessmentStore.capability.detailTotalBobot.level }}
                   </h6>
                 </td>
                 <td colspan="1"></td>
@@ -324,7 +358,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
                 </td>
                 <td colspan="2" class="bg-primary">
                   <h6 class="fs-3 fw-semibold mb-0 text-center text-white">
-                    {{ totalCompliances }}
+                    {{ assessmentStore.capability.detailTotalBobot.result }}
                   </h6>
                 </td>
                 <td colspan="1"></td>
@@ -336,7 +370,7 @@ watch(() => [assessmentStore.capability.selectedLevel], () => {
     </div>
 
     <ModalPenilaian :is-show="capability.isShowModalPenilaian" @close="handleToggleModalPenilaian" />
-    <ModalEvident :is-show="capability.isShowModalEvident" @close="handleToggleModalEvident" />
+    <ModalEvidence :is-show="capability.isShowModalEvidence" @close="handleToggleModalEvidence" />
   </section>
 </template>
 

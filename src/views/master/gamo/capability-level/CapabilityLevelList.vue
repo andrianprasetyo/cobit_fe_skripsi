@@ -151,11 +151,17 @@ const handleDelete = ({ title, id }) => {
 }
 
 const handleNavigateAdd = () => {
-  router.push(`/master/gamo/${idGamo.value}/capability-level/add`)
+  router.push({
+    path: `/master/gamo/${idGamo.value}/capability-level/add`,
+    query: { gamo: titleGamo.value }
+  })
 }
 
-const handleNavigateToEdit = ({ id }) => {
-  router.push(`/master/gamo/${idGamo.value}/capability-level/${id}/edit`)
+const handleNavigateToEdit = ({ id, title }) => {
+  router.push({
+    path: `/master/gamo/${idGamo.value}/capability-level/${id}/edit`,
+    query: { gamo: title }
+  })
 }
 
 
@@ -292,7 +298,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                   <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item.item?.id })"
+                    <BaseButton @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />

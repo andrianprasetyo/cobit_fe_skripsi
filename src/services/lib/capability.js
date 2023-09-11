@@ -34,7 +34,7 @@ export default {
    */
   getDetailLevelCapability(payload) {
     return axiosClient.get(
-      `capabilityassesment/list?level=${payload?.level}&domain_id=${payload?.domain_id}`
+      `capabilityassesment/list?level=${payload?.level}&domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
     )
   },
 
@@ -44,6 +44,12 @@ export default {
    * @returns
    */
   answerLevelCapability(payload) {
-    return axiosClient.post(`capabilityassesment/answer`, payload)
+    return axiosClient(`capabilityassesment/answer`, {
+      method: 'POST',
+      data: payload,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }

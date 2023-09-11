@@ -61,6 +61,10 @@ const idCapabilityLevel = computed(() => {
   return route.params?.capability_level_id
 })
 
+const titleGamo = computed(() => {
+  return route.query?.gamo
+})
+
 const rules = computed(() => {
   return {
     urutan: {
@@ -202,9 +206,12 @@ onMounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Capability Level</h5>
+          <div class="mb-5 mb-sm-0">
+            <h5 class="card-title mb-2 fw-semibold">Capability Level</h5>
+            <p v-if="titleGamo" class="card-subtitle mb-0">{{ titleGamo }}</p>
+          </div>
 
-          <div class="row mb-3">
+          <div class="row mb-3 mt-3">
             <div class="col-12 col-md-9">
               <label class="form-label" for="level">Level</label>
 

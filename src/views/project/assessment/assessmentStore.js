@@ -27,6 +27,7 @@ export const useAssessmentStore = defineStore('assessment', {
       selectedLevel: '2',
       detailListLevel: [],
       detailListAnswer: [],
+      detailTotalBobot: null,
       listMediaFile: [],
       selectedMediaFile: null
     }
@@ -74,7 +75,15 @@ export const useAssessmentStore = defineStore('assessment', {
       } else {
         return false
       }
-    }
+    },
+
+    getCapabilityIsComplianceEnough(state) {
+      return state.capability.detailTotalBobot?.result >= 0.85
+    },
+
+    // getCapabilityIsLevelUnlocked(state){
+    //   const isComplianceEnough = state.capability.detailTotalBobot?.result >= 0.85
+    // }
   },
   actions: {
     setSeletedAssessment(payload) {
@@ -355,7 +364,8 @@ export const useAssessmentStore = defineStore('assessment', {
       try {
         const response = await CapabilityServices.getDetailLevelCapability({
           level: payload.level,
-          domain_id: payload.domain_id
+          domain_id: payload.domain_id,
+          assesment_id: payload.assesment_id
         })
 
         if (response) {
@@ -363,6 +373,7 @@ export const useAssessmentStore = defineStore('assessment', {
 
           this.capability.detailListLevel = data?.list || []
           this.capability.detailListAnswer = data?.answer || []
+          this.capability.detailTotalBobot = data?.total_bobot || null
 
           return response
         }

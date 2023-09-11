@@ -15,6 +15,10 @@ const props = defineProps({
   name: {
     type: [String, Number]
   },
+  classBody: {
+    type: [String],
+    default: 'col-12 col-lg-3 col-md-4'
+  },
   size: {
     type: [String, Number]
   },
@@ -66,7 +70,7 @@ const handleToggleDropdown = () => {
 </script>
 
 <template>
-  <div class="col-12 col-lg-3 col-md-4">
+  <div :class="props.classBody">
     <div class="card shadow-none border cursor-pointer" @dblclick.stop="handleDoubleClick" @click.stop="handleClick"
       @contextmenu.stop.prevent="handleToggleDropdown" v-bind="$attrs">
       <div class="card-img-top bg-dark bg-opacity-10 py-3">
