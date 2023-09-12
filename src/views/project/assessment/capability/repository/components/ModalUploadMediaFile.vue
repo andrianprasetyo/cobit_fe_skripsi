@@ -3,6 +3,7 @@ import { reactive, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
+import BaseInput from '@/components/Input/BaseInput.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import FilePond from '@/components/FilePond/FilePond.vue'
 
@@ -29,6 +30,7 @@ const loading = useLoading()
 const formState = reactive({
   loadingSubmit: false,
   files: [],
+  deskripsi: '',
   isNewFiles: false,
 })
 
@@ -58,11 +60,15 @@ const handleSubmit = async () => {
   try {
     const formData = new FormData()
 
+    formData.append('assesment_id', assessmentId.value)
+
     if (Array.isArray(formState.files) && formState.files.length) {
       formData.append('docs', formState.files[0])
     }
 
-    formData.append('assesment_id', assessmentId.value)
+    if (formState.deskripsi) {
+      formData.append('deskripsi', formState.deskripsi)
+    }
 
     const response = await RepositoryServices.createMediaRepository(formData)
 
@@ -109,10 +115,15 @@ const handleSubmit = async () => {
           </small>
         </div>
       </div>
+
+      <div class="mb-3">
+        <BaseInput type="text-area" label="Deskripsi File" v-model="formState.deskripsi"
+          placeholder="Masukkan Deskripsi File" />
+      </div>
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Upload" :disabled="formState.loadingSubmit"
+      <BaseButton @click="handleSubmit" title="Upload" :disabled="!formState.files.length || formState.loadingSubmit"
         :isLoading="formState.loadingSubmit">
         <template #icon-left>
           <TablerIcon icon="UploadIcon" />

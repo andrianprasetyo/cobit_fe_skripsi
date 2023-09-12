@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue'
 
 import BaseModal from '@/components/Modal/BaseModal.vue'
+import BaseButton from '@/components/Button/BaseButton.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAppConfig } from '@/stores/appConfig'
@@ -36,9 +38,25 @@ const pathSource = computed(() => {
   }
 })
 
+const isExcel = computed(() => {
+  return value => {
+    return value === 'xlsx'
+  }
+})
+
+const isPdf = computed(() => {
+  return value => {
+    return value === 'pdf'
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClose = () => {
   emits('close', true)
+}
+
+const handleDownloadExcel = ({ url }) => {
+  window.open(url, '_blank');
 }
 
 
@@ -57,9 +75,21 @@ const handleClose = () => {
       <div class="row">
         <div class="col-12 col-md-8 ">
           <div class="border rounded p-4 overflow-auto vh-100">
-            <div v-if="isErrorViewFile" class="ratio ratio-1x1">
-              <iframe class="rounded" allowfullscreen @error="isErrorViewFile = true"
+            <div v-if="!isErrorViewFile" class="ratio ratio-1x1">
+              <iframe v-if="isPdf(assessmentStore.capability.selectedMediaFile?.docs?.ext)" class="rounded"
+                allowfullscreen @error="isErrorViewFile = true"
                 :src="pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path)" />
+
+              <div v-else-if="isExcel(assessmentStore.capability.selectedMediaFile?.docs?.ext)"
+                class="d-flex justify-content-center align-items-center">
+                <BaseButton
+                  @click="handleDownloadExcel({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
+                  title="Download File">
+                  <template #icon-left>
+                    <TablerIcon icon="DownloadIcon" />
+                  </template>
+                </BaseButton>
+              </div>
             </div>
 
             <div v-else class="h-100 d-flex align-items-center justify-content-center">
@@ -76,10 +106,18 @@ const handleClose = () => {
               <h6 class="mb-0 fw-semibold">{{ assessmentStore.capability.selectedMediaFile?.docs?.originalname || "-" }}
               </h6>
             </div>
-            <div class="text-start mb-5">
+            <div class="text-start" :class="[assessmentStore.capability.selectedMediaFile?.deskripsi ? 'mb-3' : 'mb-5']">
               <span class="fs-3">Ukuran File</span>
               <h6 class="mb-0 fw-semibold">{{ formatBytes(assessmentStore.capability.selectedMediaFile?.docs.size) }}</h6>
             </div>
+
+            <div v-if="assessmentStore.capability.selectedMediaFile?.deskripsi" class="text-start mb-5 ">
+              <span class="fs-3">Deskripsi File</span>
+              <div class="bg-light-primary p-3 rounded">
+                <div v-html="assessmentStore.capability.selectedMediaFile?.deskripsi" />
+              </div>
+            </div>
+
 
             <h6 class="fw-semibold mb-0 text-dark mb-3">Informasi Pemilik</h6>
             <div class="text-start mb-3">
