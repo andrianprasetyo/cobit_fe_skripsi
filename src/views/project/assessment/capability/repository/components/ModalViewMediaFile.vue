@@ -63,7 +63,7 @@ const handleClose = () => {
             </div>
 
             <div v-else class="h-100 d-flex align-items-center justify-content-center">
-              <NoData title="File Tidak Ditemukan" />
+              <NoData title="Terjadi Kesalahan. File Tidak Ditemukan" />
             </div>
           </div>
         </div>

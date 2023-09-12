@@ -22,6 +22,9 @@ const props = defineProps({
   size: {
     type: [String, Number]
   },
+  ext: {
+    type: String
+  },
   lastUpdate: {
     type: [String,]
   },
@@ -36,6 +39,18 @@ const emits = defineEmits(['delete', 'edit', 'click', 'double-click'])
 const formatDate = computed(() => {
   return value => {
     return formatDateMoments({ value: value?.value, format: "LLL" })
+  }
+})
+
+const isExcel = computed(() => {
+  return value => {
+    return value === 'xlsx'
+  }
+})
+
+const isPdf = computed(() => {
+  return value => {
+    return value === 'pdf'
   }
 })
 
@@ -76,7 +91,18 @@ const handleToggleDropdown = () => {
       <div class="card-img-top bg-dark bg-opacity-10 py-3">
         <div class="d-flex justify-content-center position-relative">
           <div class="thumbnail-files d-flex justify-content-center align-items-center">
-            <TablerIcon :icon="'FileIcon'" size="40" />
+            <!-- Excel -->
+            <template v-if="isExcel(props.ext)">
+              <img src="/assets/images/icons/xls.png" alt="file-icon" height="40">
+            </template>
+
+            <!-- PDF -->
+            <template v-else-if="isPdf(props.ext)">
+              <img src="/assets/images/icons/doc.png" alt="file-icon" height="40">
+            </template>
+
+            <!-- Other -->
+            <TablerIcon v-else :icon="'FileIcon'" size="40" />
           </div>
 
           <div v-if="!props.isDisabled" class="dropdown-button-wrapper">

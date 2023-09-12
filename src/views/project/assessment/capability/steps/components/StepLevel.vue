@@ -8,6 +8,7 @@ import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import ModalPenilaian from '@/views/project/assessment/capability/steps/components/ModalPenilaian.vue'
 import ModalEvidence from '@/views/project/assessment/capability/steps/components/ModalEvidence.vue'
 import ModalAverageCompliance from '@/views/project/assessment/capability/steps/components/ModalAverageCompliance.vue'
+import ModalViewDetailEvidence from '@/views/project/assessment/capability/steps/components/ModalViewDetailEvidence.vue'
 
 import CapabilityServices from '@/services/lib/capability'
 
@@ -27,6 +28,7 @@ const capability = reactive({
   loadingSubmit: false,
   isShowModalPenilaian: false,
   isShowModalEvidence: false,
+  isShowModalViewDetailEvidence: false,
   isShowModalAverageCompliance: false
 })
 
@@ -102,6 +104,14 @@ const handleToggleModalEvidence = ({ gamo }) => {
   capability.isShowModalEvidence = !capability.isShowModalEvidence
 
   if (capability.isShowModalEvidence) {
+    assessmentStore.setCapabilitySelectedSubGamo(gamo)
+  }
+}
+
+const handleToggleModalViewDetailEvidence = ({ gamo }) => {
+  capability.isShowModalViewDetailEvidence = !capability.isShowModalViewDetailEvidence
+
+  if (capability.isShowModalViewDetailEvidence) {
     assessmentStore.setCapabilitySelectedSubGamo(gamo)
   }
 }
@@ -285,12 +295,14 @@ watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capabilit
                     <div class="d-flex flex-column width-75px">
                       <template
                         v-if="Array.isArray(item?.capabilityass?.evident) && item?.capabilityass?.evident?.length">
-                        <TablerIcon v-tooltip="`Terdapat ${item?.capabilityass?.evident?.length} Evidence`"
-                          icon="CircleCheckIcon" class="text-success" size="20" />
+                        <TablerIcon @click="handleToggleModalViewDetailEvidence({ gamo: item })"
+                          v-tooltip="`Terdapat ${item?.capabilityass?.evident?.length} Evidence. Tekan Untuk Lihat Detail`"
+                          icon="CircleCheckIcon" class="text-success cursor-pointer" size="24" />
+
                       </template>
 
                       <span v-else class="fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base">
-                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="CircleXIcon" class="text-danger" size="22" />
+                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="CircleXIcon" class="text-danger" size="24" />
                       </span>
                     </div>
                   </div>
@@ -392,6 +404,8 @@ watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capabilit
 
     <ModalPenilaian :is-show="capability.isShowModalPenilaian" @close="handleToggleModalPenilaian" />
     <ModalEvidence :is-show="capability.isShowModalEvidence" @close="handleToggleModalEvidence" />
+    <ModalViewDetailEvidence :is-show="capability.isShowModalViewDetailEvidence"
+      @close="handleToggleModalViewDetailEvidence" />
     <ModalAverageCompliance :is-show="capability.isShowModalAverageCompliance"
       @close="handleToggleModalAverageCompliance" />
   </section>
