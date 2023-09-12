@@ -135,6 +135,22 @@ const handleUploadFile = async ({ file, index }) => {
   }
 }
 
+const handleDeleteFile = async ({ media_repositories_id }) => {
+  if (media_repositories_id) {
+    const loader = loading.show()
+    try {
+      const response = await RepositoryServices.deleteMediaRepository({ id: media_repositories_id })
+
+      if (response) {
+        loader.hide()
+      }
+    } catch (error) {
+      loader.hide()
+      toast.error({ error })
+    }
+  }
+}
+
 const handleSubmit = async () => {
   const result = await v$.value.$validate()
   if (result) {
@@ -259,7 +275,8 @@ watch(() => [props.isShow], () => {
               accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
               :files="formState.evident[index].files" :allowFileSizeValidation="true" maxFileSize="2Mb"
               :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'" :instant-upload="true"
-              v-on:initfile="$event => handleUploadFile({ file: $event, index })" />
+              v-on:initfile="$event => handleUploadFile({ file: $event, index })"
+              v-on:removefile="handleDeleteFile({ media_repositories_id: evident?.media_repositories_id, index })" />
 
             <div class="mt-1">
               <small>
@@ -300,7 +317,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Evidence" :disabled="!formState.evident.length">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Evidence" :disabled="!formState.evident.length">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

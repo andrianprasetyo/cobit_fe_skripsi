@@ -23,6 +23,28 @@ const assessmentId = computed(() => {
   return route.params?.id
 })
 
+const isLastValueLevelNotNA = computed(() => {
+  return ({ index, lastIndex, label }) => {
+    return ((index + 1 === lastIndex) && label !== 'N')
+  }
+})
+
+const indexIsLastValueLevelNA = computed(() => {
+  return value => {
+    if (Array.isArray(value) && value.length) {
+      const indexNA = value.findIndex(v => v?.label === 'N' || v?.label === 'NA')
+
+      if (indexNA !== -1) {
+        return indexNA - 1
+      } else {
+        return -1
+      }
+    } else {
+      return -1
+    }
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const getSummary = async () => {
   try {
@@ -100,7 +122,7 @@ onMounted(() => {
               <tr v-for="(item, indexSummary) in assessmentStore.capability.listSummary"
                 :key="`summary-item-${indexSummary}`">
                 <td>
-                  <div class="fw-bold">{{ item?.kode }}</div>
+                  <div class="fw-bolder">{{ item?.kode }}</div>
                   <div v-html="item.ket" />
                 </td>
                 <td class="text-center">
@@ -108,10 +130,22 @@ onMounted(() => {
                 </td>
 
                 <template v-if="Array.isArray(item?.level) && item?.level?.length">
-                  <td v-for="(level, index) in item?.level" :key="`value-level-${index}-${indexSummary}`"
-                    v-tooltip="`${level?.total_compilance}`" class="text-center">
-                    {{ level?.label }}
-                  </td>
+                  <template v-if="item?.level?.length">
+                    <td v-for="(level, index) in item?.level" :key="`value-level-${index}-${indexSummary}`"
+                      v-tooltip="`${level?.total_compilance}`" class="text-center">
+                      <span
+                        v-if="(indexIsLastValueLevelNA(item?.level) === index) || isLastValueLevelNotNA({ index: index, lastIndex: item?.level?.length, label: level?.label })"
+                        class="badge rounded-pill font-medium text-capitalize fw-bold bg-primary">
+                        {{ level?.label }}
+                      </span>
+                      <span v-else>
+                        {{ level?.label }}
+                      </span>
+                    </td>
+                  </template>
+                  <template v-else>
+                    <td colspan="5" />
+                  </template>
                 </template>
                 <template
                   v-else-if="Array.isArray(assessmentStore.capability.listSummaryLevel) && assessmentStore.capability.listSummaryLevel.length">

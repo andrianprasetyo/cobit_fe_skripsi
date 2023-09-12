@@ -81,12 +81,14 @@ const handleDownloadExcel = ({ url }) => {
             <h5 class="fw-semibold">Evidence {{ index + 1 }}</h5>
           </div>
 
-          <div class="row">
+          <div class="row overflow-hidden">
             <div class="col-12 col-md-8 d-flex align-items-stretch">
               <div class="border rounded p-4 w-100">
-                <div v-if="evidence?.url" class="ratio ratio-1x1">
-                  <iframe class="rounded" allowfullscreen :src="evidence?.url" />
-                </div>
+                <template v-if="evidence?.url">
+                  <div class="ratio ratio-1x1">
+                    <iframe class="rounded" allowfullscreen :src="evidence?.url" />
+                  </div>
+                </template>
 
                 <template v-else>
                   <div v-if="!isErrorViewFile" class="ratio ratio-1x1">
@@ -118,6 +120,13 @@ const handleDownloadExcel = ({ url }) => {
                   <div v-if="evidence.deskripsi" class="fs-3" v-html="evidence.deskripsi" />
                   <span v-else class="fs-3">Tidak Ada Deskripsi</span>
                 </div>
+
+                <template v-if="evidence.url">
+                  <h6 class="fw-semibold mb-0 text-dark mb-3">URL</h6>
+                  <span class="fs-3 d-flex flex-wrap ">
+                    <a :href="evidence.url" target="_blank" class="link-primary d-inline-block text-truncate" style="max-width: 175px;">{{ evidence.url }}</a>
+                  </span>
+                </template>
               </div>
             </div>
           </div>

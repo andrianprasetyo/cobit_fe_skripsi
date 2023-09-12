@@ -125,7 +125,7 @@ onMounted(() => {
           <div class="row border-top py-4 mb-4">
             <MediaFileItem v-for="mediaFile in assessmentStore.capability.listMediaFile"
               :key="`media-file-${mediaFile?.id}`" :id="`media-file-${mediaFile?.id}`" :ext="mediaFile?.docs?.ext"
-              :name="mediaFile?.docs?.originalname" :lastUpdate="mediaFile?.created_at" :size="mediaFile?.docs?.size"
+              :name="mediaFile?.deskripsi || mediaFile?.docs?.originalname" :lastUpdate="mediaFile?.created_at" :size="mediaFile?.docs?.size"
               :class="{ 'border-primary': isHighlightedMediaFile(mediaFile?.id) }" @edit="handleEdit({ file: mediaFile })"
               @click="handleClick({ file: mediaFile })" @double-click="handleDoubleClick({ file: mediaFile })"
               @delete="handleDelete({ title: mediaFile?.docs?.originalname, id: mediaFile?.id })" />
