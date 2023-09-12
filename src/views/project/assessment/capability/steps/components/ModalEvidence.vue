@@ -197,7 +197,7 @@ watch(() => [props.isShow], () => {
 </script>
 
 <template>
-  <BaseModal id="evident" :order="4" :open="props.isShow" :showBtnCloseFooter="false" classNameModal="modal-lg"
+  <BaseModal id="evidence" :order="4" :open="props.isShow" :showBtnCloseFooter="false" classNameModal="modal-lg"
     @close="handleClose">
     <template #header>
       <h4 class="modal-title">
