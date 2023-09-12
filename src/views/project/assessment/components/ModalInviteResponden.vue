@@ -11,7 +11,7 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import FilePond from '@/components/FilePond/FilePond.vue'
 
 import { useVuelidate } from "@vuelidate/core";
-import { helpers, required, requiredIf, email } from "@vuelidate/validators";
+import { helpers, requiredIf, email } from "@vuelidate/validators";
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAppConfig } from '@/stores/appConfig'
 
@@ -50,10 +50,10 @@ const formState = reactive({
 const rules = computed(() => {
   return {
     inviteBy: {
-      required: helpers.withMessage('Silahkan pilih cara untuk mengundang responden', required),
+      requiredIf: helpers.withMessage('Silahkan pilih cara untuk mengundang responden', requiredIf(props.isShow)),
     },
     emails: {
-      requiredIf: helpers.withMessage('Silahkan alamat email yang ingin diundang', requiredIf(formState.inviteBy === 'email')),
+      requiredIf: helpers.withMessage('Silahkan alamat email yang ingin diundang', requiredIf(props.isShow && formState.inviteBy === 'email')),
     },
     /*
     file: {
@@ -69,7 +69,7 @@ const rules = computed(() => {
     }
     */
     files: {
-      requiredIf: helpers.withMessage('Silahkan upload file excel yang sudah diisi', requiredIf(formState.inviteBy === 'email')),
+      requiredIf: helpers.withMessage('Silahkan upload file excel yang sudah diisi', requiredIf(props.isShow && formState.inviteBy === 'email')),
     }
   }
 })

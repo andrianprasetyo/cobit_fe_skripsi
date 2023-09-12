@@ -8,6 +8,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
+import ModalUploadLaporan from '@/views/project/assessment/components/ModalUploadLaporan.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 import OrganisasiServices from '@/services/lib/organisasi'
@@ -56,6 +57,7 @@ const assessment = reactive({
     total_page: 0
   },
   isShowModalInviteResponden: false,
+  isShowModalUploadLaporan: false
 })
 
 const organisasi = reactive({
@@ -154,6 +156,14 @@ const toggleModalInviteResponden = ({ item }) => {
   assessment.isShowModalInviteResponden = !assessment.isShowModalInviteResponden
 
   if (assessment.isShowModalInviteResponden) {
+    assessmentStore.setSeletedAssessment(item)
+  }
+}
+
+const toggleModalUploadLaporan = ({ item }) => {
+  assessment.isShowModalUploadLaporan = !assessment.isShowModalUploadLaporan
+
+  if (assessment.isShowModalUploadLaporan) {
     assessmentStore.setSeletedAssessment(item)
   }
 }
@@ -494,6 +504,17 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </BaseButton>
                     </li>
                     <li>
+                      <BaseButton @click="toggleModalUploadLaporan({ item: item?.item })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="UploadIcon" />
+                          <span class="ms-2">
+                            Upload Laporan Asesmen
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <li>
                       <BaseButton @click="handleSelesaikanAssessment({ title: item?.item?.nama, id: item?.item?.id })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
                         <template #icon-left>
@@ -539,5 +560,8 @@ watch(() => [serverOptions.value, filter.value], () => {
 
     <ModalInviteResponden :is-show="assessment.isShowModalInviteResponden"
       @close="toggleModalInviteResponden({ item: null })" />
+
+    <ModalUploadLaporan :is-show="assessment.isShowModalUploadLaporan" @close="toggleModalUploadLaporan({ item: null })"
+      @refresh="handleRefresh" />
   </div>
 </template>

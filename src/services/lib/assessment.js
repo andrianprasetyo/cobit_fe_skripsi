@@ -92,5 +92,20 @@ export default {
    */
   editPic(payload) {
     return axiosClient.put(`assesment/pic/edit/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {id, docs} payload
+   * @returns
+   */
+  uploadLaporan(payload) {
+    return axiosClient(`assesment/upload/report`, {
+      method: 'POST',
+      data: payload,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 }
