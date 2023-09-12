@@ -173,7 +173,8 @@ const setValueToForm = () => {
           tipe: 'file',
           url: null,
           media_repositories_id: ev?.media_repositories_id,
-          files: files
+          files: files,
+          deskripsi: ev?.deskripsi || '',
         })
       } else if (ev?.files) {
         formState.evident.push({
@@ -235,11 +236,11 @@ watch(() => [props.isShow], () => {
           <div class="mb-3">
             <BaseSelect :id="`evident_type_${index}`" v-model="evident.tipe" label="Jenis" default-option="Pilih Jenis"
               :options="evidentTypeJSON" options-label="label" options-value="value"
-              :is-invalid="!!v$.evident.$each?.$response?.$errors[index].tipe?.length" />
+              :is-invalid="!!v$.evident.$each?.$response?.$errors[index]?.tipe?.length" />
 
             <ErrorMessage
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
-              :errors="v$.evident.$each?.$response?.$errors[index].tipe" />
+              :errors="v$.evident.$each?.$response?.$errors[index]?.tipe" />
           </div>
 
           <!-- URL -->

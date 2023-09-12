@@ -2,7 +2,9 @@
 import { computed, ref } from 'vue'
 
 import BaseModal from '@/components/Modal/BaseModal.vue'
-import NoData from '@/components/EmptyPlaceholder/NoData.vue';
+import NoData from '@/components/EmptyPlaceholder/NoData.vue'
+import BaseButton from '@/components/Button/BaseButton.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAppConfig } from '@/stores/appConfig'
@@ -28,10 +30,27 @@ const pathSource = computed(() => {
   }
 })
 
+const isExcel = computed(() => {
+  return value => {
+    return value === 'xlsx'
+  }
+})
+
+const isPdf = computed(() => {
+  return value => {
+    return value === 'pdf'
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClose = () => {
   emits('close', true)
 }
+
+const handleDownloadExcel = ({ url }) => {
+  window.open(url, '_blank');
+}
+
 
 </script>
 
@@ -65,13 +84,31 @@ const handleClose = () => {
           <div class="row">
             <div class="col-12 col-md-8 d-flex align-items-stretch">
               <div class="border rounded p-4 w-100">
-                <div v-if="isErrorViewFile" class="ratio ratio-1x1">
-                  <iframe class="rounded" allowfullscreen @error="isErrorViewFile = true"
-                    :src="pathSource(evidence?.docs?.docs?.path)" />
+                <div v-if="evidence?.url" class="ratio ratio-1x1">
+                  <iframe class="rounded" allowfullscreen :src="evidence?.url" />
                 </div>
-                <div v-else class="h-100 d-flex align-items-center justify-content-center">
-                  <NoData title="Terjadi Kesalahan. File Tidak Ditemukan" />
-                </div>
+
+                <template v-else>
+                  <div v-if="!isErrorViewFile" class="ratio ratio-1x1">
+                    <iframe v-if="isPdf(assessmentStore.capability.selectedMediaFile?.docs?.ext)" class="rounded"
+                      allowfullscreen @error="isErrorViewFile = true"
+                      :src="pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path)" />
+
+                    <div v-else-if="isExcel(assessmentStore.capability.selectedMediaFile?.docs?.ext)"
+                      class="d-flex justify-content-center align-items-center">
+                      <BaseButton
+                        @click="handleDownloadExcel({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
+                        title="Download File">
+                        <template #icon-left>
+                          <TablerIcon icon="DownloadIcon" />
+                        </template>
+                      </BaseButton>
+                    </div>
+                  </div>
+                  <div v-else class="h-100 d-flex align-items-center justify-content-center">
+                    <NoData title="Terjadi Kesalahan. File Tidak Ditemukan" />
+                  </div>
+                </template>
               </div>
             </div>
             <div class="col-12 col-md-4 d-flex align-items-stretch">
