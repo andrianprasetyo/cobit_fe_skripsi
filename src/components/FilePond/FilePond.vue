@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import vueFilePond from "vue-filepond";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js'
@@ -45,6 +46,12 @@ const FilePond = vueFilePond(
   FilePondPluginFileValidateSize
 )
 
+const filePondRef = ref()
+
+defineExpose({
+  filePondRef
+})
+
 </script>
 
 <template>
@@ -54,9 +61,9 @@ const FilePond = vueFilePond(
       <slot name="extra-label" />
     </div>
 
-    <FilePond :label-idle="props.placeholder" :accepted-file-types="props.accepted" :files="props.files" v-bind="$attrs"
-      labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan" labelMaxFileSizeExceeded="File terlalu besar"
-      labelMaxFileSize="Maksimal file size yaitu {filesize}"
+    <FilePond ref="filePondRef" :label-idle="props.placeholder" :accepted-file-types="props.accepted" :files="props.files"
+      v-bind="$attrs" labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan"
+      labelMaxFileSizeExceeded="File terlalu besar" labelMaxFileSize="Maksimal file size yaitu {filesize}"
       labelMaxTotalFileSizeExceeded="Melebihi maksimal size file yang diijinkan"
       labelMaxTotalFileSize="Total Maksimal file size yaitu {filesize}" :instant-upload="props.instantUpload"
       :allowFileSizeValidation="props.allowFileSizeValidation" />

@@ -200,8 +200,8 @@ const handleDeleteResponden = ({ title, id }) => {
   })
 }
 
-const handleNavigateReport = () => {
-  router.push(`/project/assessment/${route.params?.id}/report`)
+const handleNavigateReportGamo = () => {
+  router.push(`/project/assessment/${route.params?.id}/report-gamo`)
 }
 
 const selesaikanAsessment = async ({ id }) => {
@@ -334,7 +334,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </li>
 
             <li>
-              <BaseButton @click="handleNavigateReport"
+              <BaseButton @click="handleNavigateReportGamo"
                 class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report GAMO">
                 <template #icon-left>
                   <TablerIcon size="16" icon="ChartHistogramIcon" class="me-2" />

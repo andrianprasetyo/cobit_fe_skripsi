@@ -12,19 +12,19 @@ import { useTitle } from '@vueuse/core'
 import { useAppConfig } from '@/stores/appConfig'
 
 const TabGamo = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/report/components/TabGamo.vue')
+  loader: () => import('@/views/project/assessment/report-gamo/components/TabGamo.vue')
 })
 
 const TabStep2 = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/report/components/TabStep2.vue')
+  loader: () => import('@/views/project/assessment/report-gamo/components/TabStep2.vue')
 })
 
 const TabStep3 = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/report/components/TabStep3.vue')
+  loader: () => import('@/views/project/assessment/report-gamo/components/TabStep3.vue')
 })
 
 const TabStep4 = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/report/components/TabStep4.vue')
+  loader: () => import('@/views/project/assessment/report-gamo/components/TabStep4.vue')
 })
 
 const appConfig = useAppConfig()
@@ -83,7 +83,7 @@ watch(() => queryView.value, (value) => {
 onMounted(() => {
   appConfig.setMiniSidebar(true)
   if (assessmentStore.selectedAssessment?.nama) {
-    title.value = `Report ${assessmentStore.selectedAssessment?.nama || ''}`
+    title.value = `Report GAMO ${assessmentStore.selectedAssessment?.nama || ''}`
   }
 })
 
