@@ -30,7 +30,9 @@ export const useAssessmentStore = defineStore('assessment', {
       detailTotalBobot: null,
       listMediaFile: [],
       selectedMediaFile: null,
-      averageComplianceLevel: null
+      averageComplianceLevel: null,
+      listSummary: [],
+      listSummaryLevel: []
     }
   }),
   getters: {
@@ -440,6 +442,28 @@ export const useAssessmentStore = defineStore('assessment', {
           const data = response?.data
 
           this.capability.averageComplianceLevel = data
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilitySummaryAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getSummaryCapability({
+          assesment_id: payload.assesment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.listSummary = data?.list || []
+          this.capability.listSummaryLevel = data?.level || []
 
           return response
         }

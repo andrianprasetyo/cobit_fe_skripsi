@@ -62,5 +62,16 @@ export default {
     return axiosClient.get(
       `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&asesment_id=${payload?.asesment_id}`
     )
+  },
+
+  /**
+   *
+   * @param {assesment_id} payload
+   * @returns
+   */
+  getSummaryCapability(payload) {
+    return axiosClient.get(
+      `capabilityassesment/summary-by-domain?assesment_id=${payload?.assesment_id}`
+    )
   }
 }

@@ -247,6 +247,10 @@ const handleNavigateSettingTarget = ({ id, assessment }) => {
   router.push({ path: `/project/assessment/${id}/setting-target`, query: { assessment } })
 }
 
+const handleNavigateReport = ({ id, assessment }) => {
+  router.push({ path: `/project/assessment/${id}/report-assessment`, query: { assessment } })
+}
+
 const handleSelesaikanAssessment = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
@@ -434,6 +438,18 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <TablerIcon icon="ClipboardTextIcon" />
                         <span class="ms-2">
                           Lihat Kapabilitas Asesmen
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <BaseButton @click="handleNavigateReport({ id: item?.item?.id, assessment: item.item?.nama })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ChartDotsIcon" />
+                        <span class="ms-2">
+                          Lihat Report Asesmen
                         </span>
                       </template>
                     </BaseButton>

@@ -1002,8 +1002,9 @@ const router = createRouter({
             },
             {
               name: 'ReportGAMO',
-              path: '/project/assessment/:id/report',
-              component: () => import('@/views/project/assessment/report/AssessmentReport.vue'),
+              path: '/project/assessment/:id/report-gamo',
+              component: () =>
+                import('@/views/project/assessment/report-gamo/AssessmentReportGamo.vue'),
               meta: {
                 pageTitle: 'Report GAMO',
                 layout: 'AppLayoutAdmin',
@@ -1024,7 +1025,7 @@ const router = createRouter({
                   {
                     text: 'Report GAMO',
                     disabled: true,
-                    href: '/project/assessment/:id/report',
+                    href: '/project/assessment/:id/report-gamo',
                     active: true
                   }
                 ]
@@ -1161,6 +1162,36 @@ const router = createRouter({
                     text: 'Edit Target Asesmen',
                     disabled: true,
                     href: '/project/assessment/:id/setting-target/:assessment_target_id/edit',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'ReportAsesmen',
+              path: '/project/assessment/:id/report-assessment',
+              component: () => import('@/views/project/assessment/report-assessment/AssessmentReport.vue'),
+              meta: {
+                pageTitle: 'Report Asesmen',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Report',
+                    disabled: true,
+                    href: '/project/assessment/:id/report-assessment',
                     active: true
                   }
                 ]
