@@ -435,7 +435,7 @@ export const useAssessmentStore = defineStore('assessment', {
       try {
         const response = await CapabilityServices.getAverageComplianceLevelCapability({
           domain_id: payload.domain_id,
-          asesment_id: payload.assesment_id
+          assesment_id: payload.assesment_id
         })
 
         if (response) {

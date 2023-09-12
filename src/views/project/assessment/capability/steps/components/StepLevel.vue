@@ -217,7 +217,7 @@ watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capabilit
 
     <div class="my-4">
       <BaseAlert v-if="assessmentStore.getCapabilityIsEditedPenilaianSubGamo" variant="warning">
-        <strong>Info.</strong> Terdapat perubahan data yang belum anda simpan.
+        <strong>Info.</strong> Terdapat <i class="mx-1">Draft</i> perubahan data yang belum anda simpan.
       </BaseAlert>
     </div>
 

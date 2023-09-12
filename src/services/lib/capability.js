@@ -60,7 +60,7 @@ export default {
    */
   getAverageComplianceLevelCapability(payload) {
     return axiosClient.get(
-      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&asesment_id=${payload?.asesment_id}`
+      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
     )
   },
 

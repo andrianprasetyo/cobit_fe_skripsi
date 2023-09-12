@@ -160,7 +160,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Penilaian" :disabled="!formState.capability_answer_id">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Penilaian" :disabled="!formState.capability_answer_id">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

@@ -92,7 +92,7 @@ watch(() => [props.isShow], () => {
                       {{ average?.level }}
                     </td>
                     <td class="text-center">
-                      {{ average?.kompilasi }}
+                      {{ average?.compliance }}
                     </td>
                   </tr>
                 </template>

@@ -104,7 +104,7 @@ const handleSubmit = async () => {
       <div class="mb-3">
         <FilePond id="upload-media-file-pond" label="File" name="media-file-pond"
           accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
-          :files="formState.files" v-on:updatefiles="onUpdateFiles" :allowFileSizeValidation="true" maxFileSize="2Mb"
+          :files="formState.files" v-on:updatefiles="onUpdateFiles" :allowFileSizeValidation="true" maxFileSize="5Mb"
           :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'">
         </FilePond>
 
