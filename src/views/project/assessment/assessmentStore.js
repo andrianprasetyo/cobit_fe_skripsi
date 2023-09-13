@@ -132,7 +132,7 @@ export const useAssessmentStore = defineStore('assessment', {
       this.capability.averageComplianceLevel = payload
     },
 
-    setReportSelectedGamo(payload){
+    setReportSelectedGamo(payload) {
       this.report.selectedGamo = payload
     },
 
@@ -398,7 +398,9 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await RepositoryServices.getListMediaRepository({
-          assesment_id: payload.assesment_id
+          assesment_id: payload.assesment_id,
+          search: payload?.search,
+          limit: payload?.limit
         })
 
         if (response) {

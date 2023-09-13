@@ -10,7 +10,7 @@ const props = defineProps({
   isFullPage: {
     type: Boolean,
     default: false
-  }
+  },
 })
 
 const emit = defineEmits(['update:active'])
@@ -27,5 +27,5 @@ const value = computed({
 </script>
 
 <template>
-  <loading v-model:active="value" :is-full-page="props.isFullPage" />
+  <loading v-model:active="value" :is-full-page="props.isFullPage" v-bind="$attrs" />
 </template>

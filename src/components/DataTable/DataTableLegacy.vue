@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Vue3EasyDataTable from 'vue3-easy-data-table';
-import { usePagination, useRowsPerPage } from "use-vue3-easy-data-table";
-
 import 'vue3-easy-data-table/dist/style.css';
 
 import LoadingSpinner from '@/components/Loading/LoadingSpinner.vue'
@@ -17,69 +15,57 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  maxPageLinks: {
-    type: Number,
-    default: 5
-  },
-  rowsItems: {
-    type: Array,
-    default: () => [10, 25, 50, 100]
-  }
 })
 
 const dataTable = ref()
 
-const {
-  currentPageFirstIndex,
-  currentPageLastIndex,
-  clientItemsLength,
-  maxPaginationNumber,
-  currentPaginationNumber,
-  isFirstPage,
-  isLastPage,
-  nextPage,
-  prevPage,
-  updatePage,
-} = usePagination(dataTable);
+// index related
+const currentPageFirstIndex = computed(() => dataTable.value?.currentPageFirstIndex);
+const currentPageLastIndex = computed(() => dataTable.value?.currentPageLastIndex);
+const clientItemsLength = computed(() => dataTable.value?.clientItemsLength || dataTable?.value?.serverItemsLength);
 
-const {
-  rowsPerPageActiveOption,
-  updateRowsPerPageActiveOption,
-} = useRowsPerPage(dataTable);
+// pagination related
+const maxPaginationNumber = computed(() => dataTable.value?.maxPaginationNumber);
+const currentPaginationNumber = computed(() => dataTable.value?.currentPaginationNumber);
 
-const updateRowsPerPageSelect = (e) => {
-  updateRowsPerPageActiveOption(e.target.value);
+const isFirstPage = computed(() => dataTable.value?.isFirstPage);
+const isLastPage = computed(() => dataTable.value?.isLastPage);
+
+const nextPage = () => {
+  /* Replace To Query
+   router.replace({
+    query: { ...router.currentRoute.value.query, page: dataTable.value.currentPaginationNumber }
+  })
+  */
+
+  dataTable.value.nextPage();
+};
+const prevPage = () => {
+  /* Replace To Query
+   router.replace({
+    query: { ...router.currentRoute.value.query, page: dataTable.value.currentPaginationNumber }
+  })
+  */
+  dataTable.value.prevPage();
+};
+const updatePage = (paginationNumber) => {
+  /* Replace To Query
+    router.replace({
+    query: { ...router.currentRoute.value.query, page: paginationNumber }
+  })
+  */
+  dataTable.value.updatePage(paginationNumber);
 };
 
-const limitVisiblePages = computed(() => {
-  const displayPages = []
+/*
+// rows per page related
+const rowsPerPageOptions = computed(() => dataTable.value?.rowsPerPageOptions);
+const rowsPerPageActiveOption = computed(() => dataTable.value?.rowsPerPageActiveOption);
 
-  const totalTiers = Math.ceil(maxPaginationNumber.value / props.maxPageLinks)
-
-  const activeTier = Math.ceil(currentPaginationNumber.value / props.maxPageLinks)
-
-  const start = ((activeTier - 1) * 5) + 1
-  const end = start + 5
-
-  if (activeTier > 1) {
-    displayPages.push(start - 1)
-  }
-
-  for (let i = start; i < end; i++) {
-    if (i > maxPaginationNumber.value) {
-      break
-    }
-
-    displayPages.push(i)
-  }
-
-  if (activeTier < totalTiers) {
-    displayPages.push(end)
-  }
-
-  return displayPages
-})
-
+const updateRowsPerPageSelect = (e) => {
+  dataTable.value.updateRowsPerPageActiveOption(Number((e.target).value));
+};
+*/
 
 </script>
 
@@ -87,8 +73,8 @@ const limitVisiblePages = computed(() => {
   <div>
     <Vue3EasyDataTable ref="dataTable" table-class-name="customize-table pb-0"
       header-item-class-name="text-center align-middle" :headers="props.headers" :items="props.items" buttons-pagination
-      show-index border-cell rows-per-page-message="Per Halaman" :rows-items="props.rowsItems" show-index-symbol='No'
-      rows-of-page-separator-message="dari" theme-color="#203058" hide-footer :max-pagination-number="5" v-bind="$attrs">
+      show-index border-cell rows-per-page-message="Per Halaman" :rows-items="[10, 25, 50, 100]" show-index-symbol='No'
+      rows-of-page-separator-message="dari" theme-color="#203058" hide-footer v-bind="$attrs">
 
       <template #loading>
         <slot v-if="slots['loading']" name="loading" />
@@ -105,16 +91,18 @@ const limitVisiblePages = computed(() => {
       </template>
     </Vue3EasyDataTable>
 
-    <div v-if="Array.isArray(items) && items.length"
+    <div v-if="items.length"
       class="pt-3 d-flex flex-column justify-content-center flex-md-row justify-content-md-between align-items-center border-top">
       <div class="d-flex flex-row justify-content-center align-items-center">
         <div>
-          <select class="form-select" @change="updateRowsPerPageSelect">
-            <option v-for="item in props.rowsItems" :key="item" :selected="item === rowsPerPageActiveOption"
-              :value="item">
-              {{ item }}
-            </option>
-          </select>
+          <!-- <select class="form-select" @change="updateRowsPerPageSelect">
+            <template v-if="Array.isArray(rowsPerPageOptions) && rowsPerPageOptions.length">
+              <option v-for="item in rowsPerPageOptions" :key="item" :selected="item === rowsPerPageActiveOption"
+                :value="item">
+                {{ item }}
+              </option>
+            </template>
+          </select> -->
         </div>
 
         <div class="ms-3">
@@ -128,7 +116,7 @@ const limitVisiblePages = computed(() => {
             <a class="page-link cursor-pointer" tabindex="-1" aria-disabled="true">Sebelumnya</a>
           </li>
           <template v-if="maxPaginationNumber">
-            <li v-for="paginationNumber in limitVisiblePages" :key="`index-button-pagination-${paginationNumber}`"
+            <li v-for="paginationNumber in maxPaginationNumber" :key="`index-button-pagination-${paginationNumber}`"
               class="page-item" @click="updatePage(paginationNumber)">
               <button class="page-link cursor-pointer" :disabled="paginationNumber === currentPaginationNumber"
                 :class="{ 'active': paginationNumber === currentPaginationNumber }">

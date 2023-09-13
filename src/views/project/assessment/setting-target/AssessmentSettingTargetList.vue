@@ -184,6 +184,13 @@ watch(() => [serverOptions.value, filter.value], () => {
           <DataTable :headers="assessmentTarget.headers" :items="assessmentTarget.data"
             :loading="assessmentTarget.loading" :server-items-length="assessmentTarget.meta.total"
             v-model:server-options="serverOptions" fixed-header>
+
+            <template #item-nama="item">
+              <div class="d-flex w-100">
+                {{ item.item.nama }} <span v-if="item.item?.default" class="ms-2 fw-bold">(Default)</span>
+              </div>
+            </template>
+
             <template #item-action="item">
               <div class="dropdown dropstart">
                 <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"

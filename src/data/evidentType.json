@@ -5,8 +5,14 @@
     "value": "url"
   },
   {
-    "key": "evident-type-file",
-    "label": "File",
-    "value": "file"
+    "key": "evident-type-file-upload",
+    "label": "Upload File",
+    "value": "file-upload"
+  },
+  
+  {
+    "key": "evident-type-file-repository",
+    "label": "Pilih Dari Repository",
+    "value": "file-repository"
   }
 ]

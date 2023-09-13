@@ -1,12 +1,15 @@
 <script setup>
-import { reactive, ref, watch, computed, onMounted } from 'vue'
+import { reactive, ref, watch, computed, onMounted, onUnmounted } from 'vue'
+import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+import ModalOFI from '@/views/project/assessment/report-assessment/components/ModalOFI.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
+import AssessmentTargetServices from '@/services/lib/assessment-target'
 
 import { useToast } from '@/stores/toast'
 import { useRoute, useRouter } from 'vue-router'
@@ -28,14 +31,14 @@ const report = reactive({
     value: 'domain',
     sortable: true
   }, {
-    text: 'Target Organisasi',
-    value: 'aggreed_capability_level',
+    text: 'Target',
+    value: 'target_level',
   }, {
     text: 'Hasil Assesment',
-    value: 'result',
+    value: 'hasil_assesment',
   }, {
-    text: 'Gap Organisasi',
-    value: 'gap_organisasi',
+    text: 'Gap Target',
+    value: 'gap_minus',
   }, {
     text: 'Gap Deskripsi',
     value: 'gap_deskripsi',
@@ -56,6 +59,17 @@ const report = reactive({
   isShowModalOfi: false
 })
 
+const listTarget = reactive({
+  loading: false,
+  data: [],
+  meta: {
+    current_page: 1,
+    per_page: 10,
+    total: 0,
+    total_page: 0
+  },
+})
+
 const serverOptions = ref({
   page: 1,
   rowsPerPage: 10,
@@ -66,6 +80,10 @@ const serverOptions = ref({
 const filter = ref({
   target_id: ''
 })
+
+const isShowFilterTarget = ref(false)
+
+// const isShowFilterGamo = ref(false)
 
 const assessmentTitle = computed(() => {
   return route.query?.assessment
@@ -111,8 +129,26 @@ const handleToggleModalOfi = ({ item }) => {
   }
 }
 
+const handleSearchListTarget = debounce(async ({ search }) => {
+  try {
+    listTarget.loading = true
+    const response = await AssessmentTargetServices.getListTarget({ limit: 10, page: 1, search, assesment_id: assessmentId.value })
+
+    if (response) {
+      const data = response?.data
+      listTarget.loading = false
+      listTarget.data = data?.list || []
+    }
+
+  } catch (error) {
+    listTarget.loading = false
+    toast.error({ error })
+  }
+}, 500)
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  appConfig.setMiniSidebar(true)
   getReportAssessment({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
@@ -121,6 +157,12 @@ onMounted(() => {
     target_id: filter.value.target_id,
     assesment_id: assessmentId.value
   })
+
+  handleSearchListTarget({ search: '' })
+})
+
+onUnmounted(() => {
+  appConfig.setMiniSidebar(false)
 })
 
 watch(() => [serverOptions.value, filter.value], () => {
@@ -163,19 +205,52 @@ watch(() => [serverOptions.value, filter.value], () => {
 
           <DataTable :headers="report.headers" :items="report.data" :loading="report.loading"
             :server-items-length="report.meta.total" v-model:server-options="serverOptions" fixed-header>
-            <template #header-aggreed_capability_level="header">
+            <template #header-target_level="header">
+              <div class="filter-column width-200px align-middle">
+                <div>
+                  {{ header.item.text }}
+
+                  <!-- <TablerIcon icon="FilterCogIcon" class="ms-1 cursor-pointer"
+                    :class="[isShowFilterTarget ? 'text-secondary' : '']"
+                    @click.stop="isShowFilterTarget = !isShowFilterTarget" /> -->
+                </div>
+
+                <div class="filter-menu filter-status-menu mt-2" v-if="isShowFilterTarget">
+                  <v-select id="filter-target" @search="(search) => handleSearchListTarget({ search })"
+                    :filterable="false" :options="listTarget.data" v-model="filter.target_id"
+                    :disabled="listTarget.loading" label="nama" :reduce="state => state?.id" :loading="listTarget.loading"
+                    placeholder="Cari Target" :select-on-key-codes="[]">
+                    <template #no-options>
+                      Tidak ada Target Ditemukan
+                    </template>
+
+                    <template #option="option">
+                      <div class="d-flex flex-row align-items-center py-1 width-150px">
+                        <span class="me-2 fw-bold text-truncate">
+                          {{ option.nama }}
+                        </span>
+                      </div>
+                    </template>
+
+                    <template #selected-option="option">
+                      <div class="d-flex flex-row align-items-center py-1 width-150px ">
+                        <span class="me-2 fw-bold text-truncate">
+                          {{ option.nama }}
+                        </span>
+                      </div>
+                    </template>
+                  </v-select>
+                </div>
+              </div>
+            </template>
+
+            <template #header-hasil_assesment="header">
               <div class="d-flex justify-content-center align-items-center w-100">
                 {{ header.item.text }}
               </div>
             </template>
 
-            <template #header-result="header">
-              <div class="d-flex justify-content-center align-items-center w-100">
-                {{ header.item.text }}
-              </div>
-            </template>
-
-            <template #header-gap_organisasi="header">
+            <template #header-gap_minus="header">
               <div class="d-flex justify-content-center align-items-center w-100">
                 {{ header.item.text }}
               </div>
@@ -183,28 +258,26 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <template #item-domain="item">
               <div class="d-flex flex-wrap flex-column">
-                <div v-if="item.item?.domain?.kode" class="width-250px text-break text-wrap fw-bold"
-                  v-html="item.item?.domain?.kode" />
-                <div v-if="item.item?.domain?.ket" class="width-250px text-break text-wrap"
-                  v-html="item.item?.domain?.ket" />
+                <div v-if="item.item?.kode" class="width-250px text-break text-wrap fw-bold" v-html="item.item?.kode" />
+                <div v-if="item.item?.ket" class="width-250px text-break text-wrap" v-html="item.item?.ket" />
               </div>
             </template>
 
-            <template #item-aggreed_capability_level="item">
+            <template #item-target_level="item">
               <div class="d-flex justify-content-center align-items-center w-100">
-                {{ item.item?.aggreed_capability_level }}
+                {{ item.item?.target_level }}
               </div>
             </template>
 
-            <template #item-result="item">
+            <template #item-hasil_assesment="item">
               <div class="d-flex justify-content-center align-items-center w-100">
-                {{ item.item?.result }}
+                {{ item.item?.hasil_assesment }}
               </div>
             </template>
 
-            <template #item-gap_organisasi="item">
-              <div class="d-flex justify-content-center align-items-center w-100">
-                {{ item.item?.gap_organisasi }}
+            <template #item-gap_minus="item">
+              <div class="d-flex justify-content-center align-items-center w-100 text-danger">
+                {{ item.item?.gap_minus }}
               </div>
             </template>
 
@@ -236,12 +309,12 @@ watch(() => [serverOptions.value, filter.value], () => {
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <BaseButton @class="handleToggleModalOfi({ item: item.item })"
+                    <BaseButton @click="handleToggleModalOfi({ item: item.item })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
                       <template #icon-left>
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
-                          Lihat OFI
+                          Lihat Opportunity for Improvement
                         </span>
                       </template>
                     </BaseButton>
@@ -267,5 +340,7 @@ watch(() => [serverOptions.value, filter.value], () => {
         </div>
       </div>
     </section>
+
+    <ModalOFI :is-show="report.isShowModalOfi" @close="handleToggleModalOfi" />
   </div>
 </template>

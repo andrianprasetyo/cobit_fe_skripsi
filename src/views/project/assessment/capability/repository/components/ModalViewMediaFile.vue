@@ -81,7 +81,7 @@ const handleDownloadExcel = ({ url }) => {
                 :src="pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path)" />
 
               <div v-else-if="isExcel(assessmentStore.capability.selectedMediaFile?.docs?.ext)"
-                class="d-flex justify-content-center align-items-center">
+                class="d-flex justify-content-center align-items-center bg-light">
                 <BaseButton
                   @click="handleDownloadExcel({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
                   title="Download File">

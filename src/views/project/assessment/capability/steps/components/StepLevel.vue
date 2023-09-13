@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, onMounted } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
@@ -185,6 +185,10 @@ watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capabilit
     getCapabilityDetailLevelAssessment()
   }
 }, { deep: true, immediate: true })
+
+onMounted(() => {
+  assessmentStore.getCapabilityListMediaRepositoryAssessment({ assesment_id: route.params?.id, limit: 9 })
+})
 
 </script>
 
