@@ -82,27 +82,40 @@ watch(() => [props.isShow], () => {
         </h4>
         <h6 v-html="reportOFI.data?.ket" />
 
-        <span>( Current Maturity: {{ assessmentStore.report?.selectedGamo?.hasil_assesment }}; {{
-          assessmentStore?.report?.selectedGamo?.target_organisasi?.target?.nama }}: {{
-    assessmentStore.report?.selectedGamo?.target_level }} )</span>
+        <h6 class="text-primary">
+          ( Hasil Maturity:
+          <span class="fw-bolder">{{ assessmentStore.report?.selectedGamo?.hasil_assesment }}</span>;
+          {{ assessmentStore?.report?.selectedGamo?.target_organisasi?.target?.nama }}:
+          <span class="fw-bolder">{{ assessmentStore.report?.selectedGamo?.target_level }}</span> )
+        </h6>
       </div>
 
       <hr v-if="reportOFI.data?.capabilityassesments" />
 
-      <div>
-        <ol v-if="Array.isArray(reportOFI.data?.capabilityassesments) && reportOFI.data?.capabilityassesments.length">
+      <div v-if="Array.isArray(reportOFI.data?.capabilityassesments) && reportOFI.data?.capabilityassesments.length"
+        class="rounded border p-3 mt-3">
+        <h6 class="lh-base">Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan {{
+          assessmentStore.report?.selectedGamo?.target_level }} <br />
+          <span class="text-primary">(aktivitas COBIT untuk mencapai {{
+            assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama
+          }} = {{
+  assessmentStore.report?.selectedGamo?.target_level }})
+          </span>
+          adalah:
+        </h6>
+        <ol>
           <template v-for="(item, index) in reportOFI.data?.capabilityassesments" :key="`ofi-${index}-${item?.id}`">
-            <li v-if="item?.ofi">
+            <li v-if="item?.ofi" class="lh-base">
               <div v-html="item?.ofi" />
             </li>
           </template>
-
         </ol>
-
-        <template
-          v-else-if="Array.isArray(reportOFI.data?.capabilityassesments) && !reportOFI.data?.capabilityassesments.length && !reportOFI.loading">
-          <NoData title="Belum Ada Opportunity for Improvement Dibuat" />
-        </template>
       </div>
+
+      <template
+        v-else-if="Array.isArray(reportOFI.data?.capabilityassesments) && !reportOFI.data?.capabilityassesments.length && !reportOFI.loading">
+        <NoData title="Belum Ada Opportunity for Improvement Dibuat" />
+      </template>
     </template>
-  </BaseModal></template>
+  </BaseModal>
+</template>

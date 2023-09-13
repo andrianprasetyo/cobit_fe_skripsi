@@ -7,7 +7,6 @@ import DataTable from '@/components/DataTable/DataTable.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
-import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
 import ModalUploadLaporan from '@/views/project/assessment/components/ModalUploadLaporan.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
@@ -56,7 +55,6 @@ const assessment = reactive({
     total: 0,
     total_page: 0
   },
-  isShowModalInviteResponden: false,
   isShowModalUploadLaporan: false
 })
 
@@ -149,14 +147,6 @@ const getListOrganisasi = async ({ limit, page, search }) => {
   } catch (error) {
     organisasi.loading = false
     toast.error({ error })
-  }
-}
-
-const toggleModalInviteResponden = ({ item }) => {
-  assessment.isShowModalInviteResponden = !assessment.isShowModalInviteResponden
-
-  if (assessment.isShowModalInviteResponden) {
-    assessmentStore.setSeletedAssessment(item)
   }
 }
 
@@ -493,17 +483,6 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </BaseButton>
                     </li>
                     <li>
-                      <BaseButton @click="toggleModalInviteResponden({ item: item?.item })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                        <template #icon-left>
-                          <TablerIcon icon="SendIcon" />
-                          <span class="ms-2">
-                            Undang Responden
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
-                    <li>
                       <BaseButton @click="toggleModalUploadLaporan({ item: item?.item })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
@@ -557,9 +536,6 @@ watch(() => [serverOptions.value, filter.value], () => {
         </div>
       </div>
     </section>
-
-    <ModalInviteResponden :is-show="assessment.isShowModalInviteResponden"
-      @close="toggleModalInviteResponden({ item: null })" />
 
     <ModalUploadLaporan :is-show="assessment.isShowModalUploadLaporan" @close="toggleModalUploadLaporan({ item: null })"
       @refresh="handleRefresh" />
