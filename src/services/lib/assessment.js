@@ -121,7 +121,9 @@ export default {
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
       }${payload?.assesment_id ? `&assesment_id=${payload?.assesment_id}` : ''}
-      ${payload?.target_id ? `&target_id=${payload?.target_id}` : ''}`
+      ${payload?.target_id ? `&target_id=${payload?.target_id}` : ''}${
+        payload?.domain_id ? `&domain_id=${payload?.domain_id}` : ''
+      }`
     )
   },
 

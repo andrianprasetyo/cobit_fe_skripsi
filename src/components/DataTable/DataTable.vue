@@ -19,7 +19,7 @@ const props = defineProps({
   },
   maxPageLinks: {
     type: Number,
-    default: 5
+    default: 3
   },
   rowsItems: {
     type: Array,
@@ -58,8 +58,8 @@ const limitVisiblePages = computed(() => {
 
   const activeTier = Math.ceil(currentPaginationNumber.value / props.maxPageLinks)
 
-  const start = ((activeTier - 1) * 5) + 1
-  const end = start + 5
+  const start = ((activeTier - 1) * props.maxPageLinks) + 1
+  const end = start + props.maxPageLinks
 
   if (activeTier > 1) {
     displayPages.push(start - 1)
