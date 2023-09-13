@@ -31,6 +31,14 @@ const props = defineProps({
   isDisabled: {
     type: Boolean,
     default: false
+  },
+  isShowDropdown: {
+    type: Boolean,
+    default: true
+  },
+  isShowChecklist: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -78,7 +86,10 @@ const handleDoubleClick = () => {
 const handleToggleDropdown = () => {
   if (!props.isDisabled) {
     const element = document.querySelector(`#dropdownMenuLink-${props.id}`);
-    element.click()
+    if (element) {
+      element.click()
+    }
+
   }
 }
 
@@ -90,6 +101,9 @@ const handleToggleDropdown = () => {
       @contextmenu.stop.prevent="handleToggleDropdown" v-bind="$attrs">
       <div class="card-img-top bg-dark bg-opacity-10 py-3">
         <div class="d-flex justify-content-center position-relative">
+          <div v-if="props.isShowChecklist">
+            <TablerIcon :icon="'CircleCheckIcon'" size="25" class="text-primary position-absolute" style="top: 0; right: 15px;" />
+          </div>
           <div class="thumbnail-files d-flex justify-content-center align-items-center">
             <!-- Excel -->
             <template v-if="isExcel(props.ext)">
@@ -105,7 +119,7 @@ const handleToggleDropdown = () => {
             <TablerIcon v-else :icon="'FileIcon'" size="40" />
           </div>
 
-          <div v-if="!props.isDisabled" class="dropdown-button-wrapper">
+          <div v-if="!props.isDisabled && props.isShowDropdown" class="dropdown-button-wrapper">
             <BaseButton @click.stop="" class="btn btn-icon p-0" data-bs-toggle="dropdown" aria-expanded="false"
               :id="`dropdownMenuLink-${props.id}`" role="button">
               <TablerIcon icon="DotsVerticalIcon" size="22" />
@@ -146,12 +160,12 @@ const handleToggleDropdown = () => {
 
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-50">
-          <h6 class="mb-25 fw-bolder text-truncate">{{ props.name }}</h6>
+          <h6 v-tooltip="`${props.name}`" class="mb-25 fw-bolder text-truncate">{{ props.name }}</h6>
         </div>
         <div class="d-flex justify-content-between mb-1">
           <small class="text-muted fw-light text-truncate">
             Ukuran File :
-            <span class="fw-bold">
+            <span v-tooltip="`${formatBytes(props.size)}`" class="fw-bold">
               {{ formatBytes(props.size) }}
             </span>
           </small>
@@ -159,7 +173,7 @@ const handleToggleDropdown = () => {
         <div class="d-flex justify-content-between">
           <small class="text-muted fw-light text-truncate">
             Terakhir Update :
-            <span class="fw-bold">
+            <span v-tooltip="`${formatDate({ value: props.lastUpdate })}`" class="fw-bold">
               {{ formatDate({ value: props.lastUpdate }) }}
             </span>
           </small>
