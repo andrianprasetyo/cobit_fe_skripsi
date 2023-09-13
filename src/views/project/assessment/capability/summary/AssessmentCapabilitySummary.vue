@@ -25,14 +25,14 @@ const assessmentId = computed(() => {
 
 const isLastValueLevelNotNA = computed(() => {
   return ({ index, lastIndex, label }) => {
-    return ((index + 1 === lastIndex) && label !== 'N')
+    return ((index + 1 === lastIndex) && label !== 'N/A')
   }
 })
 
 const indexIsLastValueLevelNA = computed(() => {
   return value => {
     if (Array.isArray(value) && value.length) {
-      const indexNA = value.findIndex(v => v?.label === 'N' || v?.label === 'NA')
+      const indexNA = value.findIndex(v => v?.label === 'N' || v?.label === 'N/A')
 
       if (indexNA !== -1) {
         return indexNA - 1
