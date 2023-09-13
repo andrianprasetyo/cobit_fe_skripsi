@@ -33,6 +33,9 @@ export const useAssessmentStore = defineStore('assessment', {
       averageComplianceLevel: null,
       listSummary: [],
       listSummaryLevel: []
+    },
+    report: {
+      selectedGamo: null
     }
   }),
   getters: {
@@ -127,6 +130,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setCapabilityAverageComplianceLevel(payload) {
       this.capability.averageComplianceLevel = payload
+    },
+
+    setReportSelectedGamo(payload){
+      this.report.selectedGamo = payload
     },
 
     async getDetailAssessment(payload) {
