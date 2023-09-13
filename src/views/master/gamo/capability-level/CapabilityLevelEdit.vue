@@ -173,7 +173,7 @@ const handleSubmit = async () => {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Tambah Capability Level',
+          title: 'Edit Capability Level',
           text: 'Berhasil Menambahkan Data Capability Level'
         })
         handleBack()
