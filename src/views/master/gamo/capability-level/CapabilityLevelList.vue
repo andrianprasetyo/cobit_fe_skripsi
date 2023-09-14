@@ -164,11 +164,24 @@ const handleNavigateToEdit = ({ id, title }) => {
   })
 }
 
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListCapabilityLevel({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, domain_id: idGamo.value })
 })
+
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
 
 watch(() => [serverOptions.value, filter.value], () => {
   getListCapabilityLevel({

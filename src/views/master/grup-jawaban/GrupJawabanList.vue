@@ -91,6 +91,13 @@ const getListGroupAnswer = async ({ limit, page, sortBy, sortType, search }) => 
   }
 }
 
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 const handleRefresh = () => {
   getListGroupAnswer({
     limit: serverOptions.value.rowsPerPage,
@@ -151,6 +158,12 @@ const handleNavigateAdd = () => {
 onMounted(() => {
   getListGroupAnswer({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
 })
+
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
 
 watch(() => [serverOptions.value, filter.value], () => {
   getListGroupAnswer({

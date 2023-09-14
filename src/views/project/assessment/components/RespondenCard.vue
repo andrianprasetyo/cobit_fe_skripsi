@@ -99,6 +99,13 @@ const classStatus = computed(() => {
 
 
 /* --------------------------------- METHODS -------------------------------- */
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 const toggleModalInviteResponden = () => {
   responden.isShowModalInviteResponden = !responden.isShowModalInviteResponden
 
@@ -258,6 +265,12 @@ const exportHasilQuisioner = async () => {
 onMounted(() => {
   getListResponden({ limit: 10, page: 1, assesment_id: route.params?.id })
 })
+
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
 
 watch(() => [serverOptions.value, filter.value], () => {
   getListResponden({

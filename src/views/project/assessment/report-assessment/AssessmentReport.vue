@@ -127,7 +127,7 @@ const handleBack = () => {
 }
 
 const handleExport = () => {
-  const url = `${appConfig.app.appHost}assesment/report/download?id=${route.params?.id}${filter.value.target_id ? `&target_id=${filter.value.target_id}` : ''}`
+  const url = `${appConfig.app.appHost}assesment/report/capability/download?assesment_id=${route.params?.id}${filter.value.target_id ? `&target_id=${filter.value.target_id}` : ''}`
   window.open(url, '_blank');
 }
 
@@ -233,7 +233,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
               <BaseButton @click="handleExport" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Export Report" :disabled="report.loading">
+                title="Export Report" :disabled="report.loading || !filter.target_id">
                 <template #icon-left>
                   <TablerIcon size="16" icon="FileExportIcon" />
                 </template>

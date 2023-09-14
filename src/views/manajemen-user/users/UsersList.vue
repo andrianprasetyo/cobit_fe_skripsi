@@ -171,6 +171,13 @@ const handleRefresh = () => {
   })
 }
 
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 const handleNavigateToEdit = ({ id }) => {
   router.push({ path: `/manajemen-user/users/${id}/edit` })
 }
@@ -203,6 +210,12 @@ onMounted(() => {
   getListUsers({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
   getListRoles()
 })
+
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
 
 watch(() => [serverOptions.value, filter.value], () => {
   getListUsers({
