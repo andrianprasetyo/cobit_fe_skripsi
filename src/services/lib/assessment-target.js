@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {limit, page, search, sortBy, sortType, assessment_id} payload
+   * @param {{limit: Number, page: Number, search: String, sortBy: String, sortType: String, assessment_id: String}} payload
    * @returns
    */
   getListTarget(payload) {
@@ -18,7 +18,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   getDetailTarget(payload) {
@@ -27,7 +27,7 @@ export default {
 
   /**
    *
-   * @param {nama, assessment_id} payload
+   * @param {{nama: String, assessment_id: String}} payload
    * @returns
    */
   createTarget(payload) {
@@ -36,7 +36,7 @@ export default {
 
   /**
    *
-   * @param {id, nama} payload
+   * @param {{id: String, nama: String}} payload
    * @returns
    */
   editTarget(payload) {
@@ -45,7 +45,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   deleteTarget(payload) {
@@ -54,7 +54,7 @@ export default {
 
   /**
    *
-   * @param {target_id} payload
+   * @param {{target_id: String}} payload
    * @returns
    */
   getListTargetGamoByTargetId(payload) {
@@ -63,7 +63,7 @@ export default {
 
   /**
    *
-   * @param {assesment_id} payload
+   * @param {{assesment_id: String}} payload
    * @returns
    */
   getListTargetGamoByAssessmentId(payload) {
@@ -74,7 +74,7 @@ export default {
 
   /**
    *
-   * @param {id, nama, target} payload
+   * @param {{id: String, nama: String, target: String}} payload
    * @returns
    */
   saveTarget(payload) {

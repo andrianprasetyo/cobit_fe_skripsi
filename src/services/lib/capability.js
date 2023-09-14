@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {limit, page, search, assesment_id} payload
+   * @param {{limit: Number; page: Number; search: String | Number, assesment_id: String}} payload
    * @returns
    */
   getListGamoCapability(payload) {
@@ -18,29 +18,33 @@ export default {
 
   /**
    *
-   * @param {domain_id} payload
+   * @param {{domain_id: String}} payload
    * @returns
    */
   getListLevelCapability(payload) {
     return axiosClient.get(
-      `domain/assesment/capability-level/list-by-domain?domain_id=${payload?.domain_id}`
+      `domain/assesment/capability-level/list-by-domain?domain_id=${payload?.domain_id}${
+        payload?.capability_target_id
+          ? `&capability_target_id=${payload?.capability_target_id}`
+          : ''
+      }`
     )
   },
 
   /**
    *
-   * @param {level, domain_id} payload
+   * @param {{level: String; domain_id: String; assessment_id: String; capability_target_id: String}} payload
    * @returns
    */
   getDetailLevelCapability(payload) {
     return axiosClient.get(
-      `capabilityassesment/list?level=${payload?.level}&domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
+      `capabilityassesment/list?level=${payload?.level}&domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}&capability_target_id=${payload?.capability_target_id}`
     )
   },
 
   /**
    *
-   * @param {jawaban} payload
+   * @param {{jawaban: Array}} payload
    * @returns
    */
   answerLevelCapability(payload) {
@@ -55,18 +59,24 @@ export default {
 
   /**
    *
-   * @param {domain_id, asesment_id} payload
+   * @param {{domain_id: String; assesment_id: String, capability_target_id: String}} payload
    * @returns
    */
   getAverageComplianceLevelCapability(payload) {
     return axiosClient.get(
-      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
+      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&assesment_id=${
+        payload?.assesment_id
+      }${
+        payload?.capability_target_id
+          ? `&capability_target_id=${payload?.capability_target_id}`
+          : ''
+      }`
     )
   },
 
   /**
    *
-   * @param {assesment_id} payload
+   * @param {{assesment_id: String}} payload
    * @returns
    */
   getSummaryCapability(payload) {

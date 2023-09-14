@@ -1,6 +1,7 @@
 <script setup>
 import { defineAsyncComponent, watch, onUnmounted, onMounted, ref, computed } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
+import debounce from 'lodash.debounce'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
@@ -58,6 +59,20 @@ const handleBack = () => {
   router.back()
 }
 
+const handleSearchListTarget = debounce(async ({ search }) => {
+  assessmentStore.getCapabilityListTargetAssessment({
+    search: search,
+    assesment_id: route.params?.id,
+  })
+}, 500)
+
+const handleSearchListGamo = debounce(async ({ search }) => {
+  assessmentStore.getCapabilityListGamoAssessment({
+    search: search,
+    assesment_id: route.params?.id,
+  })
+}, 500)
+
 /*
 const handleSearchGamoCapability = debounce(async ({ search }) => {
   try {
@@ -95,9 +110,13 @@ watch(() => queryView.value, (value) => {
 
 onMounted(() => {
   appConfig.setMiniSidebar(true)
+  assessmentStore.getCapabilityListTargetAssessment({
+    assesment_id: route.params?.id,
+  })
+
   assessmentStore.getCapabilityListGamoAssessment({
     assesment_id: route.params?.id,
-    limit: 99
+    limit: 100
   })
 })
 
@@ -106,11 +125,13 @@ onUnmounted(() => {
   assessmentStore.resetState()
 })
 
-watch(() => assessmentStore.capability.selectedGamo, (value) => {
-  assessmentStore.getCapabilityListLevelAssessment({
-    domain_id: value?.id,
-    limit: 99
-  })
+watch(() => [assessmentStore.capability.selectedGamo, assessmentStore.capability.selectedTarget], (value) => {
+  if (value[0] && value[1]) {
+    assessmentStore.getCapabilityListLevelAssessment({
+      domain_id: assessmentStore.capability.selectedGamo?.id,
+      capability_target_id: assessmentStore.capability.selectedTarget?.id
+    })
+  }
   assessmentStore.setCapabilitySelectedLevel('2')
 }, { deep: true })
 
@@ -129,27 +150,43 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
             <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
           </div>
 
-
-          <BaseAlert v-if="!assessmentStore.capability.selectedGamo && assessmentStore.capability.listGamo?.length"
+          <BaseAlert v-if="!assessmentStore.capability.selectedGamo || !assessmentStore.capability.selectedTarget"
             variant="primary">
-            <strong>Perhatian.</strong> Silahkan pilih terlebih dahulu GAMO
+            <strong>Perhatian.</strong> Silahkan pilih <i class="mx-1">Target & GAMO</i> Terlebih Dahulu.
           </BaseAlert>
 
-          <div class="mb-0">
-            <label class="form-label" for="list-gamo-capability">Pilih GAMO</label>
+          <div class="row">
+            <div class="col-12 col-md-6 mb-0">
+              <label class="form-label" for="list-target-capability">Pilih Target</label>
 
-            <v-select id="list-gamo-capability" :filterable="false" :searchable="true" 
-              :options="assessmentStore.capability.listGamo" v-model="assessmentStore.capability.selectedGamo"
-              label="kode" placeholder="Silahkan Pilih GAMO" :select-on-key-codes="[]" :tabindex="1">
-              <template #no-options>
-                Tidak ada GAMO Ditemukan
-              </template>
-            </v-select>
+              <v-select id="list-target-capability" :filterable="false" :searchable="false"
+                @search="(search) => handleSearchListTarget({ search })" :options="assessmentStore.capability.listTarget"
+                v-model="assessmentStore.capability.selectedTarget" label="nama" placeholder="Silahkan Pilih Target"
+                :select-on-key-codes="[]" :tabindex="1">
+                <template #no-options>
+                  Tidak ada Target Ditemukan
+                </template>
+              </v-select>
+            </div>
+
+            <div class="col-12 col-md-6 mb-0">
+              <label class="form-label" for="list-gamo-capability">Pilih GAMO</label>
+
+              <v-select id="list-gamo-capability" :filterable="false" :searchable="false"
+                @search="(search) => handleSearchListGamo({ search })" :options="assessmentStore.capability.listGamo"
+                v-model="assessmentStore.capability.selectedGamo" label="kode" placeholder="Silahkan Pilih GAMO"
+                :select-on-key-codes="[]" :tabindex="2">
+                <template #no-options>
+                  Tidak ada GAMO Ditemukan
+                </template>
+              </v-select>
+            </div>
           </div>
         </div>
       </div>
 
-      <template v-if="Array.isArray(assessmentStore.capability.listLevel) && assessmentStore.capability.selectedGamo">
+      <template
+        v-if="Array.isArray(assessmentStore.capability.listLevel) && assessmentStore.capability.selectedGamo && assessmentStore.capability.selectedTarget">
         <BaseTab v-if="assessmentStore.capability.listLevel?.length" class="nav nav-pills nav-fill">
           <template #tab-navigation>
             <li class="nav-item" role="presentation">

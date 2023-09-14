@@ -79,8 +79,8 @@ const rulesPersentase = computed(() => {
     return {
       hasil: {
         required: helpers.withMessage('Silahkan isi persentase', required),
-        minValue: helpers.withMessage("Nilai Bobot minimal 1", minValue(1)),
-        mustBe100: helpers.withMessage("Nilai Bobot Keseluruhan jika dijumlahkan harus 100", () => {
+        minValue: helpers.withMessage("Nilai Bobot / Persentase minimal 1", minValue(1)),
+        mustBe100: helpers.withMessage("Nilai Bobot / Persentase Keseluruhan jika dijumlahkan harus 100", () => {
           let sum = 0
           questions.data[indexQuestion]?.komponen?.map((komponen) => {
             komponen.jawabans.reduce((acc, value) => {
@@ -377,10 +377,17 @@ watch(() => [quesioner.question.currentQuestion], () => {
               </BaseAlert>
             </div>
 
+            <div v-if="question?.grup?.jenis === 'persentase'" class="mt-4">
+              <BaseAlert variant="primary">
+                <strong>Info.</strong> Nilai Bobot / Persentase Keseluruhan jika dijumlahkan harus 100.
+              </BaseAlert>
+            </div>
+
             <div class="mt-4 d-flex">
               <h5 class="fw-semibold me-2 align-items-start">{{ quesioner.question.currentQuestion }}.</h5>
               <div v-if="question?.pertanyaan" v-html="question?.pertanyaan" />
             </div>
+            
 
             <div class="table-responsive rounded-2 mb-4 mt-4">
               <div class="mh-100vh">
@@ -439,9 +446,9 @@ watch(() => [quesioner.question.currentQuestion], () => {
                               :state="jawaban" :rules="rulesPersentase({ indexJawaban, indexKomponen, indexQuestion })"
                               :index="indexKomponen">
                               <template #default="{ v }">
-                                <td>
-                                  <div class="d-flex flex-column justify-content-center ">
-                                    <BaseInput :id="`input-${indexJawaban}-${indexKomponen}`" class="form-control w-25"
+                                <td class="width-250px">
+                                  <div class="d-flex flex-column justify-content-center">
+                                    <BaseInput :id="`input-${indexJawaban}-${indexKomponen}`" class="form-control"
                                       type="number" :min="1" :max="100" :name="`input-${indexKomponen}`"
                                       placeholder="Silakan isi persentase" v-model="v.hasil.$model"
                                       :is-invalid="!!v.hasil?.$errors?.length">
@@ -452,7 +459,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
                                       </template>
                                     </BaseInput>
 
-                                    <ErrorMessage :errors="v.hasil.$errors" />
+                                    <ErrorMessage :onlyShowOne="true" :errors="v.hasil.$errors" />
                                   </div>
                                 </td>
                               </template>
