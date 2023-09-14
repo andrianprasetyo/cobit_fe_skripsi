@@ -134,7 +134,7 @@ export default {
    */
   getReportDetailOFIAssessment(payload) {
     return axiosClient.get(
-      `assesment/report/detail-ofi?domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
+      `assesment/report/detail-ofi?domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}${payload?.capability_target_id ? `&capability_target_id=${payload?.capability_target_id}` : ''}`
     )
   }
 }
