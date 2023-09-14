@@ -320,7 +320,7 @@ onMounted(() => {
       nama: auth.account?.nama,
       email: auth.account?.email,
       divisi: auth.account?.divisi,
-      jabatan: auth.account?.posisi
+      jabatan: auth.account?.jabatan
     })
 
     setDefaultOrganisasi({

@@ -222,7 +222,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           </div>
 
           <CustomPagination :items="repository.data" :server-items-length="repository.meta.total"
-            :serverOptions="serverOptions" v-model="serverOptions" :current-page="repository.meta.current_page" />
+            :serverOptions="serverOptions" v-model:server-options="serverOptions" />
         </div>
 
 
