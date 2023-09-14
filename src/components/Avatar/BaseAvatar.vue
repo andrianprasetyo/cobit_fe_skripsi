@@ -21,6 +21,6 @@ const replaceImgDefault = (e) => {
 </script>
 
 <template>
-  <img :src="props.source" class="rounded-circle" :width="props.width" :height="props.height" alt="avatar"
-    @error="replaceImgDefault">
+  <img :src="props.source" class="rounded-circle" :width="props.width" :height="props.height" style="object-fit: contain;"
+    alt="avatar" @error="replaceImgDefault">
 </template>

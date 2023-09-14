@@ -96,7 +96,8 @@ watch(() => queryView.value, (value) => {
 onMounted(() => {
   appConfig.setMiniSidebar(true)
   assessmentStore.getCapabilityListGamoAssessment({
-    assesment_id: route.params?.id
+    assesment_id: route.params?.id,
+    limit: 99
   })
 })
 
@@ -107,7 +108,8 @@ onUnmounted(() => {
 
 watch(() => assessmentStore.capability.selectedGamo, (value) => {
   assessmentStore.getCapabilityListLevelAssessment({
-    domain_id: value?.id
+    domain_id: value?.id,
+    limit: 99
   })
   assessmentStore.setCapabilitySelectedLevel('2')
 }, { deep: true })
@@ -136,7 +138,7 @@ watch(() => assessmentStore.capability.selectedGamo, (value) => {
           <div class="mb-0">
             <label class="form-label" for="list-gamo-capability">Pilih GAMO</label>
 
-            <v-select id="list-gamo-capability" :filterable="false" :searchable="false"
+            <v-select id="list-gamo-capability" :filterable="false" :searchable="true" 
               :options="assessmentStore.capability.listGamo" v-model="assessmentStore.capability.selectedGamo"
               label="kode" placeholder="Silahkan Pilih GAMO" :select-on-key-codes="[]" :tabindex="1">
               <template #no-options>
