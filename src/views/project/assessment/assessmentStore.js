@@ -22,7 +22,6 @@ export const useAssessmentStore = defineStore('assessment', {
     reportCanvasSummary: null,
     capability: {
       listTarget: [],
-      selectedTarget: null,
       listGamo: [],
       selectedGamo: null,
       listLevel: [],
@@ -372,7 +371,6 @@ export const useAssessmentStore = defineStore('assessment', {
       try {
         const response = await CapabilityServices.getListLevelCapability({
           domain_id: payload?.domain_id,
-          capability_target_id: payload?.capability_target_id
         })
 
         if (response) {
@@ -409,7 +407,6 @@ export const useAssessmentStore = defineStore('assessment', {
           level: payload.level,
           domain_id: payload.domain_id,
           assesment_id: payload.assesment_id,
-          capability_target_id: payload?.capability_target_id
         })
 
         if (response) {
@@ -479,7 +476,6 @@ export const useAssessmentStore = defineStore('assessment', {
         const response = await CapabilityServices.getAverageComplianceLevelCapability({
           domain_id: payload.domain_id,
           assesment_id: payload.assesment_id,
-          capability_target_id: payload.capability_target_id
         })
 
         if (response) {
@@ -501,7 +497,6 @@ export const useAssessmentStore = defineStore('assessment', {
       try {
         const response = await CapabilityServices.getSummaryCapability({
           assesment_id: payload.assesment_id,
-          capability_target_id: payload.capability_target_id
         })
 
         if (response) {

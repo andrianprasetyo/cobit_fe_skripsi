@@ -36,7 +36,6 @@ const getCapabilityAverageAverageComplianceLevel = async () => {
 
     const response = await assessmentStore.getCapabilityAverageAverageComplianceLevel({
       domain_id: assessmentStore.capability.selectedGamo?.id,
-      capability_target_id: assessmentStore.capability.selectedTarget?.id,
       assesment_id: route.params?.id,
     })
 

@@ -27,7 +27,6 @@ const assessmentStore = useAssessmentStore()
 const formState = reactive({
   capability_answer_id: null,
   note: null,
-  ofi: null
 })
 
 /* -------------------------------- COMPUTED -------------------------------- */
@@ -49,7 +48,6 @@ const handleClose = () => {
 const setValueToForm = () => {
   formState.capability_answer_id = assessmentStore.capability.selectedSubGamo?.capabilityass?.capability_answer_id
   formState.note = assessmentStore.capability.selectedSubGamo?.capabilityass?.note
-  formState.ofi = assessmentStore.capability.selectedSubGamo?.capabilityass?.ofi
 }
 
 const handleSubmit = async () => {
@@ -151,16 +149,11 @@ watch(() => [props.isShow], () => {
 
         <CKEditor id="note-input" placeholder="Masukkan Note (Jika Ada)" v-model="formState.note" />
       </div>
-
-      <div class="mb-3">
-        <label class="form-label" for="ofi-input">Opportunity for Improvement</label>
-
-        <CKEditor id="ofi-input" placeholder="Masukkan Opportunity for Improvement (Jika Ada)" v-model="formState.ofi" />
-      </div>
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Penilaian" :disabled="!formState.capability_answer_id">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Penilaian"
+        :disabled="!formState.capability_answer_id">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

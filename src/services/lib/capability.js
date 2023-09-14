@@ -33,12 +33,12 @@ export default {
 
   /**
    *
-   * @param {{level: String; domain_id: String; assessment_id: String; capability_target_id: String}} payload
+   * @param {{level: String; domain_id: String; assesment_id: String}} payload
    * @returns
    */
   getDetailLevelCapability(payload) {
     return axiosClient.get(
-      `capabilityassesment/list?level=${payload?.level}&domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}&capability_target_id=${payload?.capability_target_id}`
+      `capabilityassesment/list?level=${payload?.level}&domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
     )
   },
 
@@ -59,17 +59,13 @@ export default {
 
   /**
    *
-   * @param {{domain_id: String; assesment_id: String, capability_target_id: String}} payload
+   * @param {{domain_id: String; assesment_id: String}} payload
    * @returns
    */
   getAverageComplianceLevelCapability(payload) {
     return axiosClient.get(
       `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&assesment_id=${
         payload?.assesment_id
-      }${
-        payload?.capability_target_id
-          ? `&capability_target_id=${payload?.capability_target_id}`
-          : ''
       }`
     )
   },
