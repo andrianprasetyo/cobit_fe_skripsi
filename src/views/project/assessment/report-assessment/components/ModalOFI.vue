@@ -28,10 +28,10 @@ const reportOFI = reactive({
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getReportDetailOFIAssessment = async ({ domain_id, assesment_id }) => {
+const getReportDetailOFIAssessment = async ({ domain_id, assesment_id, capability_target_id }) => {
   try {
     reportOFI.loading = true
-    const response = await AssessmentServices.getReportDetailOFIAssessment({ domain_id, assesment_id })
+    const response = await AssessmentServices.getReportDetailOFIAssessment({ domain_id, assesment_id, capability_target_id })
 
     if (response) {
       const data = response?.data
@@ -53,7 +53,8 @@ watch(() => [props.isShow], () => {
   if (props.isShow) {
     getReportDetailOFIAssessment({
       domain_id: assessmentStore.report.selectedGamo?.domain_id,
-      assesment_id: assessmentStore.report.selectedGamo?.assesment_id
+      assesment_id: assessmentStore.report.selectedGamo?.assesment_id,
+      capability_target_id: assessmentStore.report.selectedGamo?.capability_target_id
     })
   } else {
     reportOFI.data = null
@@ -78,9 +79,9 @@ watch(() => [props.isShow], () => {
 
       <div v-else>
         <h4 class="fw-bolder">
-          {{ reportOFI.data?.kode }}
+          {{ reportOFI.data?.domain?.kode }}
         </h4>
-        <h6 v-html="reportOFI.data?.ket" />
+        <h6 v-html="reportOFI.data?.domain?.ket" />
 
         <h6 class="text-primary">
           ( Hasil Maturity:
@@ -90,21 +91,20 @@ watch(() => [props.isShow], () => {
         </h6>
       </div>
 
-      <hr v-if="reportOFI.data?.capabilityassesments" />
+      <hr v-if="reportOFI.data?.ofi.length" />
 
-      <div v-if="Array.isArray(reportOFI.data?.capabilityassesments) && reportOFI.data?.capabilityassesments.length"
+      <div v-if="Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length"
         class="rounded border p-3 mt-3">
         <h6 class="lh-base">Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan {{
           assessmentStore.report?.selectedGamo?.target_level }} <br />
           <span class="text-primary">(aktivitas COBIT untuk mencapai {{
             assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama
-          }} = {{
-  assessmentStore.report?.selectedGamo?.target_level }})
+          }} = {{ assessmentStore.report?.selectedGamo?.target_level }})
           </span>
           adalah:
         </h6>
         <ol>
-          <template v-for="(item, index) in reportOFI.data?.capabilityassesments" :key="`ofi-${index}-${item?.id}`">
+          <template v-for="(item, index) in reportOFI.data?.ofi" :key="`ofi-${index}-${item?.id}`">
             <li v-if="item?.ofi" class="lh-base">
               <div v-html="item?.ofi" />
             </li>
@@ -113,7 +113,7 @@ watch(() => [props.isShow], () => {
       </div>
 
       <template
-        v-else-if="Array.isArray(reportOFI.data?.capabilityassesments) && !reportOFI.data?.capabilityassesments.length && !reportOFI.loading">
+        v-else-if="Array.isArray(reportOFI.data?.ofi) && !reportOFI.data?.ofi.length && !reportOFI.loading">
         <NoData title="Belum Ada Opportunity for Improvement Dibuat" />
       </template>
     </template>

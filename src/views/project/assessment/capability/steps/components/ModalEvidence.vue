@@ -116,7 +116,10 @@ const handleSelectTipe = ({ tipe, index }) => {
 
 const filterEvident = (index) => {
   const filtered = formState.evident.filter((_, itemIndex) => itemIndex !== index)
+  const filteredlistFileMediaRepository = formState.listFileMediaRepository.data.filter((_, itemIndex) => itemIndex !== index)
+
   formState.evident = filtered
+  formState.listFileMediaRepository.data = filteredlistFileMediaRepository
 }
 
 const handleTambahEvident = () => {
@@ -320,7 +323,6 @@ watch(() => [props.isShow], () => {
           {{ assessmentStore.capability?.selectedSubGamo?.subkode }}
         </h4>
       </div>
-
       <template v-if="formState.evident.length">
         <template v-for="(evident, index) in formState.evident" :key="`evident-form-${index}`">
 

@@ -51,7 +51,6 @@ const getSummary = async () => {
     summary.loading = true
     const response = await assessmentStore.getCapabilitySummaryAssessment({
       assesment_id: assessmentId.value,
-      capability_target_id: assessmentStore.capability.selectedTarget?.id
     })
 
     if (response) {
@@ -63,7 +62,7 @@ const getSummary = async () => {
 }
 
 const handleExport = () => {
-  const url = `${appConfig.app.appHost}capabilityassesment/summary-by-domain/download?assesment_id=${assessmentId.value}&capability_target_id=${assessmentStore.capability.selectedTarget?.id}`
+  const url = `${appConfig.app.appHost}capabilityassesment/summary-by-domain/download?assesment_id=${assessmentId.value}`
   window.open(url, '_blank');
 }
 

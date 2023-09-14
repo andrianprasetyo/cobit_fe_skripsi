@@ -304,7 +304,7 @@ watch(() => [filter.value], value => {
   }
 }, { deep: true })
 
-watch(() => [serverOptions.value, filter.value.search], () => {
+watch(() => [serverOptions.value, filter.value], () => {
   getListAssessment({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,

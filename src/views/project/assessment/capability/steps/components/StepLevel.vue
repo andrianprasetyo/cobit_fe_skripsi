@@ -9,6 +9,7 @@ import ModalPenilaian from '@/views/project/assessment/capability/steps/componen
 import ModalEvidence from '@/views/project/assessment/capability/steps/components/ModalEvidence.vue'
 import ModalAverageCompliance from '@/views/project/assessment/capability/steps/components/ModalAverageCompliance.vue'
 import ModalViewDetailEvidence from '@/views/project/assessment/capability/steps/components/ModalViewDetailEvidence.vue'
+import ModalOFI from "@/views/project/assessment/capability/steps/components/ModalOFI.vue"
 
 import CapabilityServices from '@/services/lib/capability'
 
@@ -29,7 +30,8 @@ const capability = reactive({
   isShowModalPenilaian: false,
   isShowModalEvidence: false,
   isShowModalViewDetailEvidence: false,
-  isShowModalAverageCompliance: false
+  isShowModalAverageCompliance: false,
+  isShowModalOFI: false,
 })
 
 const valueAnwer = computed(() => {
@@ -81,7 +83,6 @@ const getCapabilityDetailLevelAssessment = async () => {
     const response = await assessmentStore.getCapabilityDetailLevelAssessment({
       level: assessmentStore.capability.selectedLevel,
       domain_id: assessmentStore.capability.selectedGamo?.id,
-      capability_target_id: assessmentStore.capability.selectedTarget?.id,
       assesment_id: assessmentId.value
     })
 
@@ -105,6 +106,14 @@ const handleToggleModalEvidence = ({ gamo }) => {
   capability.isShowModalEvidence = !capability.isShowModalEvidence
 
   if (capability.isShowModalEvidence) {
+    assessmentStore.setCapabilitySelectedSubGamo(gamo)
+  }
+}
+
+const handleToggleModalOFI = ({ gamo }) => {
+  capability.isShowModalOFI = !capability.isShowModalOFI
+
+  if (capability.isShowModalOFI) {
     assessmentStore.setCapabilitySelectedSubGamo(gamo)
   }
 }
@@ -133,14 +142,12 @@ const onSubmit = async () => {
       formData.append('assesment_id', assessmentId.value)
       formData.append('domain_id', assessmentStore.capability.selectedGamo?.id)
       formData.append('level', assessmentStore.capability.selectedLevel)
-      formData.append('capability_target_id', assessmentStore.capability.selectedTarget?.id)
 
       assessmentStore.capability.detailListLevel.map((item, index) => {
         formData.append(`capability_assesment_id[${index}]`, item?.capabilityass?.id || '')
         formData.append(`capability_level_id[${index}]`, item?.capabilityass?.capability_level_id || '')
         formData.append(`capability_answer_id[${index}]`, item?.capabilityass?.capability_answer_id || '')
         formData.append(`note[${index}]`, item?.capabilityass?.note || '')
-        formData.append(`ofi[${index}]`, item?.capabilityass?.ofi || '')
 
         if (Array.isArray(item?.capabilityass?.evident) && item?.capabilityass?.evident?.length) {
           item?.capabilityass?.evident.map((ev, indexEv) => {
@@ -155,6 +162,14 @@ const onSubmit = async () => {
             }
 
             formData.append(`evident[${index}][${indexEv}][deskripsi]`, ev?.deskripsi || '')
+          })
+        }
+
+        if (Array.isArray(item?.capabilityass?.ofi) && item?.capabilityass?.ofi?.length) {
+          item?.capabilityass?.ofi.map((ofi, indexOfi) => {
+            formData.append(`ofi[${index}][${indexOfi}][ofi]`, ofi?.ofi || '')
+            formData.append(`ofi[${index}][${indexOfi}][capability_target_id]`, ofi?.capability_target_id || '')
+            formData.append(`ofi[${index}][${indexOfi}][domain_id]`, ofi?.domain_id || '')
           })
         }
       })
@@ -182,8 +197,8 @@ const onSubmit = async () => {
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
-watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capability.listLevel, assessmentStore.capability.selectedTarget, assessmentStore.capability.listTarget], () => {
-  if (assessmentStore.capability.listLevel.length && assessmentStore.capability.selectedLevel && assessmentStore.capability.selectedGamo && assessmentStore.capability.selectedTarget) {
+watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capability.listLevel], () => {
+  if (assessmentStore.capability.listLevel.length && assessmentStore.capability.selectedLevel && assessmentStore.capability.selectedGamo) {
     getCapabilityDetailLevelAssessment()
   }
 }, { deep: true, immediate: true })
@@ -361,6 +376,16 @@ onMounted(() => {
                         </span>
                       </template>
                     </BaseButton>
+
+                    <BaseButton @click="handleToggleModalOFI({ gamo: item })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="FileStarIcon" />
+                        <span class="ms-2">
+                          Opportunity for Improvement
+                        </span>
+                      </template>
+                    </BaseButton>
                   </ul>
                 </td>
               </tr>
@@ -408,6 +433,7 @@ onMounted(() => {
       </div>
     </div>
 
+    <ModalOFI :is-show="capability.isShowModalOFI" @close="handleToggleModalOFI" />
     <ModalPenilaian :is-show="capability.isShowModalPenilaian" @close="handleToggleModalPenilaian" />
     <ModalEvidence :is-show="capability.isShowModalEvidence" @close="handleToggleModalEvidence" />
     <ModalViewDetailEvidence :is-show="capability.isShowModalViewDetailEvidence"

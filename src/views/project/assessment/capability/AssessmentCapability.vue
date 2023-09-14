@@ -59,13 +59,6 @@ const handleBack = () => {
   router.back()
 }
 
-const handleSearchListTarget = debounce(async ({ search }) => {
-  assessmentStore.getCapabilityListTargetAssessment({
-    search: search,
-    assesment_id: route.params?.id,
-  })
-}, 500)
-
 const handleSearchListGamo = debounce(async ({ search }) => {
   assessmentStore.getCapabilityListGamoAssessment({
     search: search,
@@ -125,11 +118,10 @@ onUnmounted(() => {
   assessmentStore.resetState()
 })
 
-watch(() => [assessmentStore.capability.selectedGamo, assessmentStore.capability.selectedTarget], (value) => {
-  if (value[0] && value[1]) {
+watch(() => [assessmentStore.capability.selectedGamo], (value) => {
+  if (value) {
     assessmentStore.getCapabilityListLevelAssessment({
       domain_id: assessmentStore.capability.selectedGamo?.id,
-      capability_target_id: assessmentStore.capability.selectedTarget?.id
     })
   }
   assessmentStore.setCapabilitySelectedLevel('2')
@@ -150,43 +142,27 @@ watch(() => [assessmentStore.capability.selectedGamo, assessmentStore.capability
             <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
           </div>
 
-          <BaseAlert v-if="!assessmentStore.capability.selectedGamo || !assessmentStore.capability.selectedTarget"
+          <BaseAlert v-if="!assessmentStore.capability.selectedGamo && assessmentStore.capability.listGamo?.length"
             variant="primary">
-            <strong>Perhatian.</strong> Silahkan pilih <i class="mx-1">Target & GAMO</i> Terlebih Dahulu.
+            <strong>Perhatian.</strong> Silahkan pilih <i class="mx-1">GAMO</i> Terlebih Dahulu.
           </BaseAlert>
 
-          <div class="row">
-            <div class="col-12 col-md-6 mb-0">
-              <label class="form-label" for="list-target-capability">Pilih Target</label>
+          <div class="mb-0">
+            <label class="form-label" for="list-gamo-capability">Pilih GAMO</label>
 
-              <v-select id="list-target-capability" :filterable="false" :searchable="false"
-                @search="(search) => handleSearchListTarget({ search })" :options="assessmentStore.capability.listTarget"
-                v-model="assessmentStore.capability.selectedTarget" label="nama" placeholder="Silahkan Pilih Target"
-                :select-on-key-codes="[]" :tabindex="1">
-                <template #no-options>
-                  Tidak ada Target Ditemukan
-                </template>
-              </v-select>
-            </div>
-
-            <div class="col-12 col-md-6 mb-0">
-              <label class="form-label" for="list-gamo-capability">Pilih GAMO</label>
-
-              <v-select id="list-gamo-capability" :filterable="false" :searchable="false"
-                @search="(search) => handleSearchListGamo({ search })" :options="assessmentStore.capability.listGamo"
-                v-model="assessmentStore.capability.selectedGamo" label="kode" placeholder="Silahkan Pilih GAMO"
-                :select-on-key-codes="[]" :tabindex="2">
-                <template #no-options>
-                  Tidak ada GAMO Ditemukan
-                </template>
-              </v-select>
-            </div>
+            <v-select id="list-gamo-capability" :filterable="false" :searchable="false"
+              @search="(search) => handleSearchListGamo({ search })" :options="assessmentStore.capability.listGamo"
+              v-model="assessmentStore.capability.selectedGamo" label="kode" placeholder="Silahkan Pilih GAMO"
+              :select-on-key-codes="[]" :tabindex="2">
+              <template #no-options>
+                Tidak ada GAMO Ditemukan
+              </template>
+            </v-select>
           </div>
         </div>
       </div>
 
-      <template
-        v-if="Array.isArray(assessmentStore.capability.listLevel) && assessmentStore.capability.selectedGamo && assessmentStore.capability.selectedTarget">
+      <template v-if="Array.isArray(assessmentStore.capability.listLevel) && assessmentStore.capability.selectedGamo">
         <BaseTab v-if="assessmentStore.capability.listLevel?.length" class="nav nav-pills nav-fill">
           <template #tab-navigation>
             <li class="nav-item" role="presentation">
