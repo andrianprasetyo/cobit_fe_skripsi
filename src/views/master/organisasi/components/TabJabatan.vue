@@ -82,6 +82,12 @@ const handleRefresh = () => {
   })
 }
 
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
 
 const deleteJabatan = async ({ id }) => {
   try {
@@ -136,9 +142,16 @@ const toggleModalJabatan = () => {
   }
 }
 
+/* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListJabatan({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, organisasi_id: route.params?.id })
 })
+
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
 
 watch(() => [serverOptions.value, filter.value], () => {
   getListJabatan({

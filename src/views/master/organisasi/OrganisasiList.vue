@@ -127,6 +127,13 @@ const handleDelete = ({ title, id }) => {
 }
 */
 
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 const handleNavigateAdd = () => {
   router.push('/master/organisasi/add')
 }
@@ -143,6 +150,12 @@ const handleNavigateDivisiDanJabatan = ({ id }) => {
 onMounted(() => {
   getListOrganisasi({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
 })
+
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
 
 watch(() => [serverOptions.value, filter.value], () => {
   getListOrganisasi({

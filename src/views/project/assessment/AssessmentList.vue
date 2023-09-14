@@ -114,6 +114,13 @@ const isStatusCompleted = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 const getListAssessment = async ({ limit, page, sortBy, sortType, search, organisasi_id }) => {
   try {
     assessment.loading = true
@@ -291,6 +298,12 @@ onMounted(() => {
   getListOrganisasi({ limit: 10, page: 1 })
 })
 
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
+
 watch(() => [serverOptions.value, filter.value], () => {
   getListAssessment({
     limit: serverOptions.value.rowsPerPage,
@@ -301,6 +314,8 @@ watch(() => [serverOptions.value, filter.value], () => {
     organisasi_id: filter.value.organisasi_id
   })
 }, { deep: true })
+
+
 
 </script>
 
