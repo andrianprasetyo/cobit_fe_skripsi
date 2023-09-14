@@ -27,6 +27,7 @@ const formState = reactive({
   loadingSubmit: false,
   kode: '',
   ket: '',
+  translate: ''
 })
 
 const rules = computed(() => {
@@ -36,6 +37,9 @@ const rules = computed(() => {
     },
     ket: {
       required: helpers.withMessage("Silahkan isi ket", required)
+    },
+    translate: {
+      required: helpers.withMessage("Silahkan isi translate", required)
     },
   }
 })
@@ -56,7 +60,8 @@ const handleSubmit = async () => {
 
       const response = await DomainServices.createDomain({
         kode: formState.kode,
-        ket: formState.ket
+        ket: formState.ket,
+        translate: formState.translate
       })
 
       if (response) {
@@ -98,6 +103,13 @@ const handleSubmit = async () => {
               placeholder="Masukkan Deskripsi" tabindex="2" rows="4" :isInvalid="v$.ket.$errors?.length"
               :disabled="formState.loadingSubmit" />
             <ErrorMessage :errors="v$.ket.$errors" />
+          </div>
+
+          <div class="mb-3">
+            <BaseInput id="translate" type="text-area" v-model="v$.translate.$model" label="Translate"
+              placeholder="Masukkan Translate" tabindex="3" rows="4" :isInvalid="v$.translate.$errors?.length"
+              :disabled="formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.translate.$errors" />
           </div>
 
           <!-- <div class="mb-3">
