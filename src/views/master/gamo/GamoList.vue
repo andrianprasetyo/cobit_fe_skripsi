@@ -28,7 +28,9 @@ const domain = reactive({
   }, {
     text: 'Deskripsi',
     value: 'ket',
-    sortable: true
+  }, {
+    text: 'Translate atau Terjemahan',
+    value: 'translate',
   }, {
     text: 'Action',
     value: 'action'
@@ -216,6 +218,15 @@ watch(() => [serverOptions.value, filter.value], () => {
 
               <div v-else class="width-300px text-truncate text-break d-inline-block truncate-html">
                 Belum Ada Deskripsi
+              </div>
+            </template>
+
+            <template #item-translate="item">
+              <div v-if="item.item?.translate" class="width-300px text-truncate text-break d-inline-block truncate-html"
+                v-html="item.item?.translate" />
+
+              <div v-else class="width-300px text-truncate text-break d-inline-block truncate-html">
+                -
               </div>
             </template>
 

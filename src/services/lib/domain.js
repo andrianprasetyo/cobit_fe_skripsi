@@ -27,7 +27,7 @@ export default {
 
   /**
    *
-   * @param { kode, deskripsi } payload
+   * @param { kode, deskripsi, translate } payload
    * @returns
    */
   createDomain(payload) {
@@ -36,7 +36,7 @@ export default {
 
   /**
    *
-   * @param {id, kode, deskripsi} payload
+   * @param {id, kode, deskripsi, translate } payload
    * @returns
    */
   editDomain(payload) {
