@@ -81,6 +81,7 @@ const getCapabilityDetailLevelAssessment = async () => {
     const response = await assessmentStore.getCapabilityDetailLevelAssessment({
       level: assessmentStore.capability.selectedLevel,
       domain_id: assessmentStore.capability.selectedGamo?.id,
+      capability_target_id: assessmentStore.capability.selectedTarget?.id,
       assesment_id: assessmentId.value
     })
 
@@ -132,6 +133,7 @@ const onSubmit = async () => {
       formData.append('assesment_id', assessmentId.value)
       formData.append('domain_id', assessmentStore.capability.selectedGamo?.id)
       formData.append('level', assessmentStore.capability.selectedLevel)
+      formData.append('capability_target_id', assessmentStore.capability.selectedTarget?.id)
 
       assessmentStore.capability.detailListLevel.map((item, index) => {
         formData.append(`capability_assesment_id[${index}]`, item?.capabilityass?.id || '')
@@ -180,8 +182,8 @@ const onSubmit = async () => {
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
-watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capability.listLevel], () => {
-  if (assessmentStore.capability.listLevel.length && assessmentStore.capability.selectedLevel && assessmentStore.capability.selectedGamo) {
+watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capability.listLevel, assessmentStore.capability.selectedTarget, assessmentStore.capability.listTarget], () => {
+  if (assessmentStore.capability.listLevel.length && assessmentStore.capability.selectedLevel && assessmentStore.capability.selectedGamo && assessmentStore.capability.selectedTarget) {
     getCapabilityDetailLevelAssessment()
   }
 }, { deep: true, immediate: true })

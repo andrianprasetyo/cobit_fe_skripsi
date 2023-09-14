@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+import AssessmentTargetServices from '@/services/lib/assessment-target'
 import AssessmentServices from '@/services/lib/assessment'
 import ReportServices from '@/services/lib/report'
 import CapabilityServices from '@/services/lib/capability'
@@ -20,6 +21,8 @@ export const useAssessmentStore = defineStore('assessment', {
     },
     reportCanvasSummary: null,
     capability: {
+      listTarget: [],
+      selectedTarget: null,
       listGamo: [],
       selectedGamo: null,
       listLevel: [],
@@ -310,6 +313,32 @@ export const useAssessmentStore = defineStore('assessment', {
       }
     },
 
+    async getCapabilityListTargetAssessment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await AssessmentTargetServices.getListTarget({
+          assesment_id: payload?.assesment_id,
+          search: payload?.search,
+          limit: payload?.limit,
+          page: payload?.page
+        })
+
+        if (response) {
+          const data = response.data
+          this.capability.listTarget = data?.list || []
+
+          loader.hide()
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
     async getCapabilityListGamoAssessment(payload) {
       const toast = useToast()
       const loader = loading.show()
@@ -342,7 +371,8 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await CapabilityServices.getListLevelCapability({
-          domain_id: payload?.domain_id
+          domain_id: payload?.domain_id,
+          capability_target_id: payload?.capability_target_id
         })
 
         if (response) {
@@ -378,7 +408,8 @@ export const useAssessmentStore = defineStore('assessment', {
         const response = await CapabilityServices.getDetailLevelCapability({
           level: payload.level,
           domain_id: payload.domain_id,
-          assesment_id: payload.assesment_id
+          assesment_id: payload.assesment_id,
+          capability_target_id: payload?.capability_target_id
         })
 
         if (response) {
@@ -447,7 +478,8 @@ export const useAssessmentStore = defineStore('assessment', {
       try {
         const response = await CapabilityServices.getAverageComplianceLevelCapability({
           domain_id: payload.domain_id,
-          assesment_id: payload.assesment_id
+          assesment_id: payload.assesment_id,
+          capability_target_id: payload.capability_target_id
         })
 
         if (response) {
@@ -468,7 +500,8 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await CapabilityServices.getSummaryCapability({
-          assesment_id: payload.assesment_id
+          assesment_id: payload.assesment_id,
+          capability_target_id: payload.capability_target_id
         })
 
         if (response) {

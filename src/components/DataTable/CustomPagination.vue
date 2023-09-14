@@ -127,9 +127,6 @@ const valueServerOptions = computed({
 
 <template>
   <div>
-    <pre>
-      {{ dataTable }}
-    </pre>
     <Vue3EasyDataTable ref="dataTable" table-class-name="customize-table pb-0" style="display: none;"
       header-item-class-name="text-center align-middle" :headers="[]" :items="props.items" buttons-pagination show-index
       border-cell rows-per-page-message="Per Halaman" :rows-items="props.rowsItems" show-index-symbol='No'
