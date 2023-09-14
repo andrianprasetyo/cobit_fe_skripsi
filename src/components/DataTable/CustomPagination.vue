@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Vue3EasyDataTable from 'vue3-easy-data-table';
-import { usePagination, useRowsPerPage } from "use-vue3-easy-data-table";
 
 import 'vue3-easy-data-table/dist/style.css';
 
@@ -28,26 +27,61 @@ const emit = defineEmits(['update:modelValue'])
 
 const dataTable = ref()
 
-const {
-  currentPageFirstIndex,
-  currentPageLastIndex,
-  clientItemsLength,
-  maxPaginationNumber,
-  currentPaginationNumber,
-  isFirstPage,
-  isLastPage,
-  nextPage,
-  prevPage,
-  updatePage,
-} = usePagination(dataTable);
+// index related
+const currentPageFirstIndex = computed(() => dataTable.value?.currentPageFirstIndex);
+const currentPageLastIndex = computed(() => dataTable.value?.currentPageLastIndex);
+const clientItemsLength = computed(() => dataTable.value?.clientItemsLength || dataTable?.value?.serverItemsLength);
 
-const {
-  rowsPerPageActiveOption,
-  updateRowsPerPageActiveOption,
-} = useRowsPerPage(dataTable);
+// pagination related
+const maxPaginationNumber = computed(() => dataTable.value?.maxPaginationNumber);
+const currentPaginationNumber = computed(() => dataTable.value?.currentPaginationNumber);
+
+const isFirstPage = computed(() => dataTable.value?.isFirstPage);
+const isLastPage = computed(() => dataTable.value?.isLastPage);
+
+const nextPage = () => {
+  /* Replace To Query
+   router.replace({
+    query: { ...router.currentRoute.value.query, page: dataTable.value.currentPaginationNumber }
+  })
+  */
+  if (!isLastPage.value) {
+    dataTable.value.nextPage();
+    dataTable.value.currentPaginationNumber = +dataTable.value.currentPaginationNumber + 1
+  }
+};
+const prevPage = () => {
+  /* Replace To Query
+   router.replace({
+    query: { ...router.currentRoute.value.query, page: dataTable.value.currentPaginationNumber }
+  })
+  */
+
+  if (!isFirstPage.value) {
+    dataTable.value.prevPage();
+    dataTable.value.currentPaginationNumber = +dataTable.value.currentPaginationNumber - 1
+  }
+};
+const updatePage = (paginationNumber) => {
+  /* Replace To Query
+    router.replace({
+    query: { ...router.currentRoute.value.query, page: paginationNumber }
+  })
+  */
+  dataTable.value.updatePage(paginationNumber);
+  dataTable.value.currentPaginationNumber = paginationNumber
+};
+
+// rows per page related
+/*
+const rowsPerPageOptions = computed(() => dataTable.value?.rowsPerPageOptions);
+*/
+
+const rowsPerPageActiveOption = computed(() => dataTable.value?.rowsPerPageActiveOption);
 
 const updateRowsPerPageSelect = (e) => {
-  updateRowsPerPageActiveOption(e.target.value);
+  dataTable.value.currentPaginationNumber = 1
+  dataTable.value.updateRowsPerPageActiveOption(Number((e.target).value));
 };
 
 const limitVisiblePages = computed(() => {
@@ -93,6 +127,9 @@ const valueServerOptions = computed({
 
 <template>
   <div>
+    <pre>
+      {{ dataTable }}
+    </pre>
     <Vue3EasyDataTable ref="dataTable" table-class-name="customize-table pb-0" style="display: none;"
       header-item-class-name="text-center align-middle" :headers="[]" :items="props.items" buttons-pagination show-index
       border-cell rows-per-page-message="Per Halaman" :rows-items="props.rowsItems" show-index-symbol='No'
