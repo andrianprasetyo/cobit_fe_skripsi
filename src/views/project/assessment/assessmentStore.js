@@ -316,7 +316,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await CapabilityServices.getListGamoCapability({
-          assesment_id: payload?.assesment_id
+          assesment_id: payload?.assesment_id,
+          search: payload?.search,
+          limit: payload?.limit,
+          page: payload?.page
         })
 
         if (response) {

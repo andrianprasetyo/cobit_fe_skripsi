@@ -300,11 +300,13 @@ onMounted(() => {
 
 watch(() => [filter.value], value => {
   if (value) {
+    console.log('resetServerOptions', resetServerOptions)
     resetServerOptions()
   }
 }, { deep: true })
 
-watch(() => [serverOptions.value, filter.value], () => {
+watch(() => [serverOptions.value, filter.value.search], () => {
+  console.log('getListAssessment', getListAssessment)
   getListAssessment({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
@@ -313,7 +315,7 @@ watch(() => [serverOptions.value, filter.value], () => {
     search: filter.value.search,
     organisasi_id: filter.value.organisasi_id
   })
-}, { deep: true })
+})
 
 
 
