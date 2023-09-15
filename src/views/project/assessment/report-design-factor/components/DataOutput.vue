@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch, computed, ref, onMounted } from 'vue'
+import { reactive, watch, computed, ref } from 'vue'
 
 import DataTable from '@/components/DataTable/DataTable.vue'
 
@@ -74,17 +74,11 @@ const getReportDesignFactorOutput = async ({ assesment_id, design_faktor_id, lim
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
-onMounted(() => {
-  if (designFactorId.value && assessmentId.value) {
-    getReportDesignFactorOutput({ design_faktor_id: designFactorId.value, assesment_id: assessmentId.value, page: serverOptions.value.page, limit: serverOptions.value.rowsPerPage })
-  }
-})
-
 watch(() => [serverOptions.value, designFactorId.value, assessmentId.value], () => {
   if (designFactorId.value && assessmentId.value) {
     getReportDesignFactorOutput({ design_faktor_id: designFactorId.value, assesment_id: assessmentId.value, page: serverOptions.value.page, limit: serverOptions.value.rowsPerPage })
   }
-}, { deep: true })
+}, { deep: true, immediate: true })
 
 </script>
 

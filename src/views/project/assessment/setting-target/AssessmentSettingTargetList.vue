@@ -139,7 +139,11 @@ const handleNavigateEdit = ({ id, target }) => {
 }
 
 const handleNavigateAdd = () => {
-  router.push({ path: `/project/assessment/${assessmentId.value}/setting-target/add` })
+  router.push({
+    path: `/project/assessment/${assessmentId.value}/setting-target/add`, query: {
+      assessment: assessmentTitle.value
+    }
+  })
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -205,7 +209,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
+              <div v-if="!item.item.default" class="dropdown dropstart">
                 <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                   id="dropdownMenuButton" aria-expanded="false" />
 

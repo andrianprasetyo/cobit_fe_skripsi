@@ -46,10 +46,10 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
     },
     start_date: {
-      required: helpers.withMessage("Silahkan isi tanggal mulai", required)
+      required: helpers.withMessage("Silahkan isi tanggal mulai asesmen", required)
     },
     end_date: {
-      required: helpers.withMessage("Silahkan isi tanggal selesai", required)
+      required: helpers.withMessage("Silahkan isi tanggal selesai asesmen", required)
     },
     start_date_quisioner: {
       required: helpers.withMessage("Silahkan isi tanggal mulai kuesioner", required)
@@ -151,16 +151,16 @@ onUnmounted(() => {
 
           <div class="row mb-3">
             <div class="col-12 col-md-6">
-              <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai" locale="id"
-                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai"
+              <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai Asesmen" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai Asesmen"
                 :disabled="formState.loadingSubmit" tabindex="3" :isInvalid="v$.start_date.$errors?.length"
                 :enable-time-picker="false" />
               <ErrorMessage :errors="v$.start_date.$errors" />
             </div>
 
             <div class="col-12 col-md-6">
-              <DateInput uid="end_date" v-model="v$.end_date.$model" label="Tanggal Selesai" locale="id"
-                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Selesai"
+              <DateInput uid="end_date" v-model="v$.end_date.$model" label="Tanggal Selesai Asesmen" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Selesai Asesmen"
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="4"
                 :isInvalid="v$.end_date.$errors?.length" :min-date="formState.start_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.end_date.$errors" />

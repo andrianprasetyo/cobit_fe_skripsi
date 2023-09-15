@@ -80,7 +80,6 @@ watch(() => [designFactorId.value, assessmentId.value], () => {
           <h5 class="card-title fw-semibold">Input Section</h5>
         </div>
       </div>
-
       <DataTable :headers="reportDesignFactor.headers" :items="reportDesignFactor.data"
         :loading="reportDesignFactor.loading" fixed-header>
         <template #header-avg_bobot="header">

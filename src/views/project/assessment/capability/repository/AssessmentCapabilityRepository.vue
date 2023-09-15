@@ -156,6 +156,17 @@ const resetServerOptions = () => {
   serverOptions.value.sortType = ''
 }
 
+const handleRefresh = () => {
+  getCapabilityListMediaRepositoryAssessment({
+    limit: serverOptions.value.rowsPerPage,
+    page: serverOptions.value.page,
+    sortBy: serverOptions.value.sortBy,
+    sortType: serverOptions.value.sortType,
+    search: filter.value.search,
+    assesment_id: route.params?.id,
+  })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getCapabilityListMediaRepositoryAssessment({
@@ -239,7 +250,7 @@ watch(() => [serverOptions.value, filter.value], () => {
     </div>
 
     <ModalUploadMediaFile :is-show="repository.isShowModalUploadMediaFile" @close="handleToggleModalUploadMediaFile"
-      @refresh="getCapabilityListMediaRepositoryAssessment" />
+      @refresh="handleRefresh" />
 
     <ModalViewMediaFile :is-show="repository.isShowModalViewMediaFile" @close="handleToggleModalViewMediaFile" />
   </div>

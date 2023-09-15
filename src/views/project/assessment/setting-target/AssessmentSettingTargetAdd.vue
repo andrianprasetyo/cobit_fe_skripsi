@@ -50,6 +50,10 @@ const assessmentId = computed(() => {
   return route.params?.id
 })
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -136,7 +140,10 @@ onMounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Target Asesmen</h5>
+          <div class="pb-3 mb-sm-0">
+            <h5 class="card-title fw-semibold">Tambah Target Asesmen</h5>
+            <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+          </div>
 
           <div class="mb-3">
             <BaseInput id="nama" v-model="v$.nama.$model" label="Nama Target" placeholder="Masukkan Nama Target"
@@ -158,6 +165,9 @@ onMounted(() => {
               <table class="table border customize-table text-nowrap mb-0 align-middle">
                 <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">
                   <tr>
+                    <th class="align-middle text-center" rowspan="2">
+                      <h6 class="fs-3 fw-semibold mb-0">No</h6>
+                    </th>
                     <th class="align-middle" rowspan="2">
                       <h6 class="fs-3 fw-semibold mb-0">GAMO</h6>
                     </th>
@@ -169,6 +179,9 @@ onMounted(() => {
 
                 <tbody>
                   <tr v-for="(item, index) in formState.listTarget" :key="`target-${index}`">
+                    <td class="text-center">
+                      {{ index + 1 }}
+                    </td>
                     <td>
                       <div class="d-flex flex-wrap flex-column">
                         <div v-if="item?.domain?.kode" class="width-250px text-break text-wrap fw-bold"

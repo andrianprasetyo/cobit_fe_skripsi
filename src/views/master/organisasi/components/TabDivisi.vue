@@ -23,7 +23,7 @@ const divisi = reactive({
   loading: false,
   data: [],
   headers: [{
-    text: 'Nama',
+    text: 'Nama Divisi',
     value: 'nama',
     sortable: true
   }, {

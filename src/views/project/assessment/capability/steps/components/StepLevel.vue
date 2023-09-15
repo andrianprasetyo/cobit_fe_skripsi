@@ -71,6 +71,31 @@ const totalCompliances = computed(() => {
 })
 */
 
+const totalValue = computed(() => {
+  return assessmentStore.capability.detailListLevel.reduce((acc, value) => {
+    if (value?.capabilityass?.capability_level_id) {
+      const values = valueAnwer.value(value?.capabilityass?.capability_answer_id)?.bobot
+      acc += parseInt(values) || 0
+    }
+
+    return acc
+  }, 0)
+})
+
+const totalWeight = computed(() => {
+  return assessmentStore.capability.detailListLevel.reduce((acc, value) => {
+    if (value?.bobot) {
+      acc += value?.bobot || 0
+    }
+
+    return acc
+  }, 0)
+})
+
+const totalCompliances = computed(() => {
+  return (totalValue.value / totalWeight.value).toFixed(2)
+})
+
 const assessmentId = computed(() => {
   return route.params?.id
 })
@@ -323,7 +348,7 @@ onMounted(() => {
                       </template>
 
                       <span v-else class="fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base">
-                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="CircleXIcon" class="text-danger" size="24" />
+                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="HelpCircleIcon" class="text-body" size="24" />
                       </span>
                     </div>
                   </div>
@@ -403,12 +428,21 @@ onMounted(() => {
                 </td>
                 <td class="text-center bg-light-primary">
                   <h6 class="fs-3 fw-semibold mb-0">
-                    {{ parseFloat(assessmentStore.capability.detailTotalBobot.answer).toFixed(2) }}
+                    <!-- Computing Front End -->
+                    {{ isFinite(totalValue) ? parseFloat(assessmentStore.capability.detailTotalBobot.answer).toFixed(2) :
+                      0 }}
+
+                    <!-- From Backend -->
+                    <!-- {{ assessmentStore.capability.detailTotalBobot.answer ? parseFloat(assessmentStore.capability.detailTotalBobot.answer).toFixed(2) : 0 }} -->
                   </h6>
                 </td>
                 <td class="text-center bg-light">
                   <h6 class="fs-3 fw-semibold mb-0">
-                    {{ assessmentStore.capability.detailTotalBobot.level }}
+                    <!-- Computing Front End -->
+                    {{ isFinite(totalWeight) ? totalWeight : 0 }}
+
+                    <!-- From Backend -->
+                    <!-- {{ assessmentStore.capability.detailTotalBobot.level || 0 }} -->
                   </h6>
                 </td>
                 <td colspan="1"></td>
@@ -422,7 +456,11 @@ onMounted(() => {
                 </td>
                 <td colspan="2" class="bg-primary">
                   <h6 class="fs-3 fw-semibold mb-0 text-center text-white">
-                    {{ parseFloat(assessmentStore.capability.detailTotalBobot.result).toFixed(2) }}
+                    <!-- Computing Front End -->
+                    {{ isFinite(totalCompliances) ? totalCompliances : 0 }}
+
+                    <!-- From Backend -->
+                    <!-- {{ assessmentStore.capability.detailTotalBobot.result ? parseFloat(assessmentStore.capability.detailTotalBobot.result).toFixed(2) : 0 }} -->
                   </h6>
                 </td>
                 <td colspan="1"></td>

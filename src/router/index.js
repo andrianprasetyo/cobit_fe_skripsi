@@ -1264,11 +1264,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'Question',
+              name: 'Kuesioner',
               path: '/kuesioner/responden/question',
               component: () => import('@/views/kuesioner/responden/question/QuestionResponden.vue'),
               meta: {
-                pageTitle: 'Question',
+                pageTitle: 'Kuesioner',
                 layout: 'AppLayoutSideView',
                 background_picture: '/assets/images/illustrations/teamwork-activity.svg',
                 requiredAuth: false,
@@ -1300,7 +1300,7 @@ const router = createRouter({
               component: () =>
                 import('@/views/kuesioner/responden/question/QuestionRespondenFinish.vue'),
               meta: {
-                pageTitle: 'Question Selesai',
+                pageTitle: 'Kuesioner Selesai',
                 layout: 'AppLayoutBoxed',
                 background_picture: '/assets/images/illustrations/paperwork.svg',
                 requiredAuth: false,
