@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {limit, page, search, sortBy, sortType} payload
+   * @param {{limit: Number, page: Number, search: String, sortBy: String, sortType: String}} payload
    * @returns
    */
   getListDesignFactor(payload) {
@@ -18,7 +18,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   getDetailDesignFactor(payload) {
@@ -27,7 +27,7 @@ export default {
 
   /**
    *
-   * @param {kode, nama, deskripsi} payload
+   * @param {{kode: String, nama: String, deskripsi: String}} payload
    * @returns object
    */
   createDesignFactor(payload) {
@@ -36,7 +36,7 @@ export default {
 
   /**
    *
-   * @param {id, nama, kode, deskripsi} payload
+   * @param {{id: String, nama: String, kode: String, deskripsi: String}} payload
    * @returns
    */
   editDesignFactor(payload) {
@@ -45,7 +45,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   deleteDesignFactor(payload) {
@@ -54,7 +54,7 @@ export default {
 
   /**
    *
-   * @param {df_kode, df_nama, df_deskripsi, question, df_komponen} payload
+   * @param {{df_kode: String, df_nama: String, df_deskripsi: String, question: String | Number, df_komponen: String | Number}} payload
    */
   createDesignFactorWithQuestionAndComponent(payload) {
     return axiosClient.post(`design-faktor/quisioner/add`, payload)
@@ -62,7 +62,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   getQuestionAndComponentDesignFactor(payload) {
@@ -71,7 +71,7 @@ export default {
 
   /**
    *
-   * @param {id, question} payload
+   * @param {{id: String, question: String}} payload
    * @returns
    */
   editQuestionDesignFactor({ id, question }) {
@@ -80,7 +80,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   deleteQuestionDesignFactor(payload) {
@@ -89,7 +89,7 @@ export default {
 
   /**
    *
-   * @param {id, df_komponen} payload
+   * @param {{id: String, df_komponen: String}} payload
    * @returns
    */
   editKomponenDesignFactor({ id, df_komponen }) {
@@ -98,7 +98,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   deleteKomponenDesignFactor(payload) {

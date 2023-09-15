@@ -78,6 +78,8 @@ const chartOptions = reactive({
     },
   },
   yaxis: {
+    min: -100,
+    max: 100,
     labels: {
       show: true,
       align: 'right',

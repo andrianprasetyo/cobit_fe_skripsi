@@ -211,6 +211,10 @@ const handleNavigateReportGamo = () => {
   router.push(`/project/assessment/${route.params?.id}/report-gamo`)
 }
 
+const handleNavigateReportDesignFactor = () => {
+  router.push(`/project/assessment/${route.params?.id}/report-design-factor`)
+}
+
 const selesaikanAsessment = async ({ id }) => {
   try {
     const response = await AssessmentServices.setStatusAssessment({ id, status: 'completed' })
@@ -351,6 +355,15 @@ watch(() => [serverOptions.value, filter.value], () => {
                 class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report GAMO">
                 <template #icon-left>
                   <TablerIcon size="16" icon="ChartHistogramIcon" class="me-2" />
+                </template>
+              </BaseButton>
+            </li>
+
+            <li>
+              <BaseButton @click="handleNavigateReportDesignFactor"
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report Design Factor">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="ChartDonutIcon" class="me-2" />
                 </template>
               </BaseButton>
             </li>
