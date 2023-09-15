@@ -376,8 +376,7 @@ watch(() => [props.isShow], () => {
 
           <!-- URL -->
           <div v-if="evident.tipe === 'url'" class="mb-3">
-            <BaseInput :id="`evident_url_${index}`" v-model.trim="evident.url" label="URL" placeholder="Masukkan URL"
-              :is-invalid="!!v$.evident.$each?.$response?.$errors[index].url?.length" />
+            <BaseInput :id="`evident_url_${index}`" v-model.trim="evident.url" label="URL" placeholder="Masukkan URL" />
 
             <ErrorMessage
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
