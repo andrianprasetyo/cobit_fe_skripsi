@@ -78,6 +78,8 @@ const chartOptions = reactive({
     },
   },
   yaxis: {
+    min: -100,
+    max: 100,
     labels: {
       show: true,
       align: 'right',
@@ -113,8 +115,8 @@ onMounted(() => {
     <div class="card-body">
       <h5 class="card-title fw-semibold">Step 3: Refine the scope of the Governance System</h5>
 
-      <ApexChartsBar :height="1000" :categories="assessmentStore.reportChart.nonAdjustment?.categories || []" :options="chartOptions"
-        :series="assessmentStore.reportChart.nonAdjustment?.series?.step_3 || []" />
+      <ApexChartsBar :height="1000" :categories="assessmentStore.reportChart.nonAdjustment?.categories || []"
+        :options="chartOptions" :series="assessmentStore.reportChart.nonAdjustment?.series?.step_3 || []" />
     </div>
   </div>
 </template>

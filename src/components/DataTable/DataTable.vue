@@ -24,6 +24,10 @@ const props = defineProps({
   rowsItems: {
     type: Array,
     default: () => [10, 25, 50, 100]
+  },
+  isShowPagination: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -105,7 +109,7 @@ const limitVisiblePages = computed(() => {
       </template>
     </Vue3EasyDataTable>
 
-    <div v-if="Array.isArray(items) && items.length"
+    <div v-if="Array.isArray(items) && items.length && props.isShowPagination"
       class="pt-3 d-flex flex-column justify-content-center flex-md-row justify-content-md-between align-items-center border-top">
       <div class="d-flex flex-row justify-content-center align-items-center">
         <div>

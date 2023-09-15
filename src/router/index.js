@@ -1170,7 +1170,8 @@ const router = createRouter({
             {
               name: 'ReportAsesmen',
               path: '/project/assessment/:id/report-assessment',
-              component: () => import('@/views/project/assessment/report-assessment/AssessmentReport.vue'),
+              component: () =>
+                import('@/views/project/assessment/report-assessment/AssessmentReport.vue'),
               meta: {
                 pageTitle: 'Report Asesmen',
                 layout: 'AppLayoutAdmin',
@@ -1192,6 +1193,39 @@ const router = createRouter({
                     text: 'Report',
                     disabled: true,
                     href: '/project/assessment/:id/report-assessment',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'ReportDesignFactor',
+              path: '/project/assessment/:id/report-design-factor',
+              component: () =>
+                import(
+                  '@/views/project/assessment/report-design-factor/AssessmentReportDesignFactor.vue'
+                ),
+              meta: {
+                pageTitle: 'Report Design Factor',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Report Design Factor',
+                    disabled: true,
+                    href: '/project/assessment/:id/report-design-factor',
                     active: true
                   }
                 ]

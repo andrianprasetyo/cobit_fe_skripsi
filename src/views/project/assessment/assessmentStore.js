@@ -5,6 +5,7 @@ import AssessmentServices from '@/services/lib/assessment'
 import ReportServices from '@/services/lib/report'
 import CapabilityServices from '@/services/lib/capability'
 import RepositoryServices from '@/services/lib/repository'
+import DesignFactorServices from '@/services/lib/design-factor'
 
 import { useLoading } from 'vue-loading-overlay'
 import { useToast } from '@/stores/toast'
@@ -35,6 +36,9 @@ export const useAssessmentStore = defineStore('assessment', {
       averageComplianceLevel: null,
       listSummary: [],
       listSummaryLevel: []
+    },
+    reportDesignFactor: {
+      listDesignFactor: []
     },
     report: {
       selectedGamo: null
@@ -370,7 +374,7 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await CapabilityServices.getListLevelCapability({
-          domain_id: payload?.domain_id,
+          domain_id: payload?.domain_id
         })
 
         if (response) {
@@ -406,7 +410,7 @@ export const useAssessmentStore = defineStore('assessment', {
         const response = await CapabilityServices.getDetailLevelCapability({
           level: payload.level,
           domain_id: payload.domain_id,
-          assesment_id: payload.assesment_id,
+          assesment_id: payload.assesment_id
         })
 
         if (response) {
@@ -475,7 +479,7 @@ export const useAssessmentStore = defineStore('assessment', {
       try {
         const response = await CapabilityServices.getAverageComplianceLevelCapability({
           domain_id: payload.domain_id,
-          assesment_id: payload.assesment_id,
+          assesment_id: payload.assesment_id
         })
 
         if (response) {
@@ -496,7 +500,7 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await CapabilityServices.getSummaryCapability({
-          assesment_id: payload.assesment_id,
+          assesment_id: payload.assesment_id
         })
 
         if (response) {
@@ -508,6 +512,32 @@ export const useAssessmentStore = defineStore('assessment', {
           return response
         }
       } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getReportDesignFactorList(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await DesignFactorServices.getListDesignFactor({
+          limit: payload?.limit,
+          page: payload?.page,
+          search: payload?.search
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.reportDesignFactor.listDesignFactor = data?.list || []
+
+          loader.hide()
+          return response
+        }
+      } catch (error) {
+        loader.hide()
         toast.error({ error })
         throw error
       }
