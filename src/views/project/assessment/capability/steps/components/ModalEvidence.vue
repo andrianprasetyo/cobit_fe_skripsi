@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, ref } from 'vue'
 import debounce from 'lodash.debounce'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
@@ -44,6 +44,8 @@ const toast = useToast()
 const appConfig = useAppConfig()
 
 /* ---------------------------------- STATE --------------------------------- */
+const file_pond_upload = ref([])
+
 const formState = reactive({
   evident: [],
   listFileMediaRepository: {
@@ -173,9 +175,13 @@ const handleUploadFile = async ({ file, index }) => {
           patched[index].docs = { docs: data?.docs }
           formState.evident = patched
         } else {
-          toast.error({
-            text: 'Gagal Upload File'
-          })
+          if (file_pond_upload.value[index]) {
+            file_pond_upload.value[index].filePondRef.removeFile(file?.id || index)
+            toast.error({
+              text: 'Gagal Upload File'
+            })
+          }
+
         }
 
         loader.hide()
@@ -184,6 +190,15 @@ const handleUploadFile = async ({ file, index }) => {
       loader.hide()
       toast.error({ error })
     }
+  } else if (file && file?.file && file?.status !== 2) {
+    if (file_pond_upload.value[index].filePondRef) {
+      file_pond_upload.value[index].filePondRef.removeFile(file?.id || index)
+      toast.error({
+        text: 'File Diperkenankan / Gagal Upload File',
+
+      })
+    }
+
   }
 }
 
@@ -371,7 +386,7 @@ watch(() => [props.isShow], () => {
 
           <!-- File -->
           <div v-else-if="evident.tipe === 'file-upload'" class="mb-3">
-            <FilePond id="direct-upload-file-pond" label="File" name="direct-upload-file-pond"
+            <FilePond ref="file_pond_upload" id="direct-upload-file-pond" label="File" name="direct-upload-file-pond"
               accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
               :files="formState.evident[index].files" :allowFileSizeValidation="true" maxFileSize="2Mb"
               :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'" :instant-upload="true"
