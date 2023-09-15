@@ -21,8 +21,12 @@ const route = useRoute()
 const jabatan = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Nama',
+  headers: [
+  {
+    text: 'Divisi',
+    value: 'divisi'
+  },{
+    text: 'Jabatan',
     value: 'nama',
     sortable: true
   }, {
@@ -190,6 +194,12 @@ watch(() => [serverOptions.value, filter.value], () => {
 
       <DataTable :headers="jabatan.headers" :items="jabatan.data" :loading="jabatan.loading"
         :server-items-length="jabatan.meta.total" v-model:server-options="serverOptions" fixed-header>
+        <template #item-divisi="item">
+          <div>
+            {{ item.item?.divisi?.nama }}
+          </div>
+        </template>
+        
         <template #item-action="item">
           <div class="dropdown dropstart">
             <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"

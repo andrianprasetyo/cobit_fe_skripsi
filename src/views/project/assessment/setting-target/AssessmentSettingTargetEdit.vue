@@ -152,6 +152,9 @@ onMounted(() => {
               <table class="table border customize-table text-nowrap mb-0 align-middle">
                 <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">
                   <tr>
+                    <th class="align-middle text-center" rowspan="2">
+                      <h6 class="fs-3 fw-semibold mb-0">No</h6>
+                    </th>
                     <th class="align-middle" rowspan="2">
                       <h6 class="fs-3 fw-semibold mb-0">GAMO</h6>
                     </th>
@@ -163,6 +166,9 @@ onMounted(() => {
 
                 <tbody>
                   <tr v-for="(item, index) in formState.listTarget" :key="`target-${index}`">
+                    <td class="text-center">
+                      {{ index + 1 }}
+                    </td>
                     <td>
                       <div class="d-flex flex-wrap flex-column">
                         <div v-if="item?.domain?.kode" class="width-250px text-break text-wrap fw-bold"

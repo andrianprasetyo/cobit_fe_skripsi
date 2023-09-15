@@ -74,16 +74,16 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
     },
     start_date: {
-      required: helpers.withMessage("Silahkan tanggal mulai", required)
+      required: helpers.withMessage("Silahkan tanggal mulai asesmen", required)
     },
     end_date: {
-      required: helpers.withMessage("Silahkan tanggal selesai", required)
+      required: helpers.withMessage("Silahkan tanggal selesai asesmen", required)
     },
     start_date_quisioner: {
-      required: helpers.withMessage("Silahkan tanggal mulai kuisioner", required)
+      required: helpers.withMessage("Silahkan tanggal mulai kuesioner", required)
     },
     end_date_quisioner: {
-      required: helpers.withMessage("Silahkan tanggal selesai kuisioner", required)
+      required: helpers.withMessage("Silahkan tanggal selesai kuesioner", required)
     },
     pic_nama: {
       required: helpers.withMessage("Silahkan isi nama PIC", required)
@@ -352,22 +352,22 @@ onMounted(() => {
             <label class="form-label" for="deskripsi">Deskripsi Asesmen</label>
 
             <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model"
-              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
+              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" placeholder="Masukkan Deskripsi Asesmen" />
             <ErrorMessage v-if="v$.deskripsi.$errors" :errors="v$.deskripsi.$errors" />
           </div>
 
           <div class="row mb-3">
             <div class="col-12 col-md-6">
-              <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai" locale="id"
-                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai"
+              <DateInput uid="start_date" v-model="v$.start_date.$model" label="Tanggal Mulai Asesmen" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai Asesmen"
                 :disabled="formState.loadingSubmit" tabindex="3" :isInvalid="v$.start_date.$errors?.length"
                 :enable-time-picker="false" />
               <ErrorMessage :errors="v$.start_date.$errors" />
             </div>
 
             <div class="col-12 col-md-6">
-              <DateInput uid="end_date" v-model="v$.end_date.$model" label="Tanggal Selesai" locale="id"
-                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Selesai"
+              <DateInput uid="end_date" v-model="v$.end_date.$model" label="Tanggal Selesai Asesmen" locale="id"
+                model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Selesai Asesmen"
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="4"
                 :isInvalid="v$.end_date.$errors?.length" :min-date="formState.start_date" :enable-time-picker="false" />
               <ErrorMessage :errors="v$.end_date.$errors" />
@@ -377,8 +377,8 @@ onMounted(() => {
           <div class="row mb-3">
             <div class="col-12 col-md-6">
               <DateInput uid="start_date_quisioner" v-model="v$.start_date_quisioner.$model"
-                label="Tanggal Mulai Kuisioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
-                placeholder="Silahkan Pilih Tanggal Mulai Kuisioner"
+                label="Tanggal Mulai Kuesioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+                placeholder="Silahkan Pilih Tanggal Mulai Kuesioner"
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="5"
                 :isInvalid="v$.start_date_quisioner.$errors?.length" :min-date="formState.start_date"
                 :max-date="formState.end_date" :enable-time-picker="false" />
@@ -386,9 +386,9 @@ onMounted(() => {
             </div>
 
             <div class="col-12 col-md-6">
-              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model" label="Tanggal Selesai Kuisioner"
+              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model" label="Tanggal Selesai Kuesioner"
                 locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
-                placeholder="Silahkan Pilih Tanggal Selesai Kuisioner"
+                placeholder="Silahkan Pilih Tanggal Selesai Kuesioner"
                 :disabled="formState.loadingSubmit || !formState.start_date_quisioner" tabindex="6"
                 :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"
                 :max-date="formState.end_date" :enable-time-picker="false" />
@@ -448,7 +448,7 @@ onMounted(() => {
           <div class="mb-3">
             <label class="form-label" for="organisasi_deskripsi">Deskripsi Organisasi</label>
 
-            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model" placeholder="Masukkan Deskripsi"
+            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model" placeholder="Masukkan Deskripsi Organisasi"
               :isInvalid="!!v$.organisasi_deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
             <ErrorMessage v-if="v$.organisasi_deskripsi.$errors" :errors="v$.organisasi_deskripsi.$errors" />
           </div>

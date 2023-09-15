@@ -8,6 +8,7 @@ import BaseInput from '@/components/Input/BaseInput.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import BaseAlert from '@/components/Alert/BaseAlert.vue'
+import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 
 import QuisionerServices from '@/services/lib/quisioner'
 
@@ -342,8 +343,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
                     'btn-success': item?.terisi && item.urutan !== quesioner.question.currentQuestion,
                     'btn-primary': item?.urutan === quesioner.question.currentQuestion,
                     'btn-outline-dark': !item?.terisi && item?.urutan !== quesioner.question.currentQuestion
-                  }" :title="item?.urutan"
-                  :disabled="!item?.terisi && (item.urutan !== quesioner.question.currentQuestion)" />
+                  }" :title="item?.urutan" />
               </template>
             </div>
           </div>
@@ -387,7 +387,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
               <h5 class="fw-semibold me-2 align-items-start">{{ quesioner.question.currentQuestion }}.</h5>
               <div v-if="question?.pertanyaan" v-html="question?.pertanyaan" />
             </div>
-            
+
 
             <div class="table-responsive rounded-2 mb-4 mt-4">
               <div class="mh-100vh">
@@ -502,6 +502,12 @@ watch(() => [quesioner.question.currentQuestion], () => {
             </template>
           </BaseButton>
         </div>
+      </div>
+    </template>
+
+    <template v-else>
+      <div class="d-flex flex-column align-items-center justify-content-center vh-100">
+        <NoData title="Kuesioner Tidak Ditemukan" />
       </div>
     </template>
   </div>

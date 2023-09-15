@@ -117,7 +117,7 @@ const handleSubmit = async () => {
       </div>
 
       <div class="mb-3">
-        <BaseInput type="text-area" label="Deskripsi File" v-model="formState.deskripsi"
+        <BaseInput id="deskripsi_file" type="text-area" label="Deskripsi File" v-model="formState.deskripsi"
           placeholder="Masukkan Deskripsi File" />
       </div>
     </template>

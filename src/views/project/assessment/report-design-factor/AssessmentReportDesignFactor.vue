@@ -56,7 +56,7 @@ const handleBack = () => {
 watch(() => queryView.value, (value) => {
   if (value) {
     tab.value = value;
-  }
+  } 
 }, { deep: true, immediate: true })
 
 onMounted(() => {
