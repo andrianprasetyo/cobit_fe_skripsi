@@ -65,6 +65,14 @@ export const useAssessmentStore = defineStore('assessment', {
       return state.reportCanvasSummary
     },
 
+    getIsAnyDelayReportCanvasSummary(state){
+      if(Array.isArray(state.reportCanvasSummary?.hasil) && state.reportCanvasSummary?.hasil?.length){
+        return state.reportCanvasSummary?.hasil.every(item => item?.assesmentcanvas?.step2_init_value == 0)
+      }
+
+      return false 
+    },
+
     getCapabilitySelectedGamo(state) {
       return state.capability.selectedGamo
     },

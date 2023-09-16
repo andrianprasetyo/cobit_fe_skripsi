@@ -47,10 +47,14 @@ const queryView = computed(() => {
   return route.query?.view
 })
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickView = (value) => {
   router.replace({
-    query: { view: value }
+    query: { ...route.query, view: value }
   })
 }
 
@@ -82,8 +86,8 @@ watch(() => queryView.value, (value) => {
 
 onMounted(() => {
   appConfig.setMiniSidebar(true)
-  if (assessmentStore.selectedAssessment?.nama) {
-    title.value = `Report GAMO ${assessmentStore.selectedAssessment?.nama || ''}`
+  if (assessmentTitle.value) {
+    title.value = `Report GAMO ${assessmentTitle.value || ''}`
   }
 })
 

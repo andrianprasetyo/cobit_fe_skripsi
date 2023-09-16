@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, computed } from 'vue'
 
 import ApexChartsRadar from '@/components/ApexCharts/ApexChartsRadar.vue'
 
@@ -24,6 +24,11 @@ const chartOptions = reactive({
 const route = useRoute()
 const assessmentStore = useAssessmentStore()
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   assessmentStore.getReportChartAdjustmentAssessment({ assessment_id: route.params?.id })
@@ -34,7 +39,10 @@ onMounted(() => {
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title fw-semibold">Step 4: Conclude the Scope of the Governance System</h5>
+      <div>
+        <h5 class="card-title fw-semibold">Step 4: Conclude the Scope of the Governance System</h5>
+        <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+      </div>
 
       <ApexChartsRadar :height="1000" :categories="assessmentStore.reportChart.adjustment?.categories || []"
         :options="chartOptions" :series="assessmentStore.reportChart.adjustment?.series || []" />

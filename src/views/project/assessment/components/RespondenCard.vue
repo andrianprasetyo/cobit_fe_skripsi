@@ -208,11 +208,17 @@ const handleDeleteResponden = ({ title, id }) => {
 }
 
 const handleNavigateReportGamo = () => {
-  router.push(`/project/assessment/${route.params?.id}/report-gamo`)
+  router.push({
+    path: `/project/assessment/${route.params?.id}/report-gamo`,
+    query: { assessment: assessmentStore.detail?.nama }
+  })
 }
 
 const handleNavigateReportDesignFactor = () => {
-  router.push(`/project/assessment/${route.params?.id}/report-design-factor`)
+  router.push({
+    path: `/project/assessment/${route.params?.id}/report-design-factor`,
+    query: { assessment: assessmentStore.detail?.nama }
+  })
 }
 
 const selesaikanAsessment = async ({ id }) => {

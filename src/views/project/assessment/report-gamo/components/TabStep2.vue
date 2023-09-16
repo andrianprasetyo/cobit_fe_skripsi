@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, computed } from 'vue'
 
 import ApexChartsBar from '@/components/ApexCharts/ApexChartsBar.vue'
 
@@ -101,6 +101,10 @@ const chartOptions = reactive({
 const route = useRoute()
 const assessmentStore = useAssessmentStore()
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   if (!assessmentStore.reportChart.nonAdjustment?.series?.step_2) {
@@ -113,7 +117,10 @@ onMounted(() => {
 <template>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title fw-semibold">Step 2: Determine the initial scope of the Governance System</h5>
+      <div>
+        <h5 class="card-title fw-semibold">Step 2: Determine the initial scope of the Governance System</h5>
+        <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+      </div>
 
       <ApexChartsBar :height="1000" :categories="assessmentStore.reportChart.nonAdjustment?.categories || []"
         :options="chartOptions" :series="assessmentStore.reportChart.nonAdjustment?.series?.step_2 || []" />

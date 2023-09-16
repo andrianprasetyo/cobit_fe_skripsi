@@ -91,7 +91,10 @@ const getSummaryGamo = async ({ limit, page, assessment_id }) => {
 }
 
 const handleNavigateToAdjust = () => {
-  router.push({ path: `/project/assessment/${assessment.selectedAssessment?.id}/summary` })
+  router.push({
+    path: `/project/assessment/${assessment.selectedAssessment?.id}/summary`,
+    query: { assessment: assessment.detail?.nama }
+  })
 }
 
 const exportSummaryGamo = async () => {

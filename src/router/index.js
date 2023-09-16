@@ -1264,7 +1264,7 @@ const router = createRouter({
               }
             },
             {
-              name: 'Kuesioner',
+              name: 'KuesionerQuestion',
               path: '/kuesioner/responden/question',
               component: () => import('@/views/kuesioner/responden/question/QuestionResponden.vue'),
               meta: {
