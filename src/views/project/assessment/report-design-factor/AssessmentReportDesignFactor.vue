@@ -45,18 +45,14 @@ const assessmentTitle = computed(() => {
   return route.query?.assessment
 })
 
-const assessmentId = computed(() => {
-  return route.params?.id
-})
-
-const designFactorId = computed(() => {
-  return route.query?.design_factor_id
+const mounted = computed(() => {
+  return route.query?.mounted
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const handleClickView = ({ design_factor_id, design_factor, kode }) => {
+const handleClickView = ({ design_factor_id, design_factor, kode, mounted = true }) => {
   router.replace({
-    query: { ...route.query, view: kode, design_factor, design_factor_id }
+    query: { ...route.query, view: kode, design_factor, design_factor_id, mounted }
   })
 }
 
@@ -79,8 +75,8 @@ onMounted(() => {
   }).then((response) => {
     const data = response?.data
 
-    if (Array.isArray(data?.list) && data?.list.length && !assessmentId.value && !designFactorId.value) {
-      handleClickView({ design_factor: data?.list[0]?.nama, design_factor_id: data?.list[0]?.id, kode: data?.list[0]?.kode })
+    if (Array.isArray(data?.list) && data?.list.length && !mounted.value) {
+      handleClickView({ design_factor: data?.list[0]?.nama, design_factor_id: data?.list[0]?.id, kode: data?.list[0]?.kode, mounted: false })
     }
   })
 
