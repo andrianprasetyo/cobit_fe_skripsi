@@ -45,6 +45,14 @@ const assessmentTitle = computed(() => {
   return route.query?.assessment
 })
 
+const assessmentId = computed(() => {
+  return route.params?.id
+})
+
+const designFactorId = computed(() => {
+  return route.query?.design_factor_id
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickView = ({ design_factor_id, design_factor, kode }) => {
   router.replace({
@@ -71,7 +79,7 @@ onMounted(() => {
   }).then((response) => {
     const data = response?.data
 
-    if (Array.isArray(data?.list) && data?.list.length) {
+    if (Array.isArray(data?.list) && data?.list.length && !assessmentId.value && !designFactorId.value) {
       handleClickView({ design_factor: data?.list[0]?.nama, design_factor_id: data?.list[0]?.id, kode: data?.list[0]?.kode })
     }
   })
