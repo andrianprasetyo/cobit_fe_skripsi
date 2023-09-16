@@ -61,6 +61,10 @@ const classIsNeedAssessment = computed(() => {
   }
 })
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const getSummaryGamo = async ({ limit, page, assessment_id }) => {
   try {
@@ -113,6 +117,7 @@ onMounted(() => {
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
         <div>
           <h5 class="card-title fw-semibold">Governance and Management Objectives</h5>
+          <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
         </div>
 
         <div

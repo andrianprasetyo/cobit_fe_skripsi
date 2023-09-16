@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch, computed } from 'vue'
 
-import DataTable from '@/components/DataTable/DataTable.vue'
+import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 
 import ReportDesignFactorServices from '@/services/lib/report-design-factor'
 
@@ -16,22 +16,6 @@ const route = useRoute()
 const reportDesignFactor = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Value',
-    value: 'dfk_nama',
-  }, {
-    text: 'Importance',
-    value: 'avg_bobot',
-  }, {
-    text: 'Baseline Score',
-    value: 'dfk_baseline',
-  }],
-  meta: {
-    current_page: 1,
-    per_page: 10,
-    total: 0,
-    total_page: 0
-  },
 })
 
 const assessmentId = computed(() => {
@@ -53,10 +37,10 @@ const getReportDesignFactorInput = async ({ assesment_id, design_faktor_id }) =>
       const data = response?.data
 
       reportDesignFactor.data = data?.list || []
-      reportDesignFactor.meta = data?.meta
       reportDesignFactor.loading = false
     }
   } catch (error) {
+    reportDesignFactor.data = []
     reportDesignFactor.loading = false
     toast.error({ error })
   }
@@ -81,32 +65,65 @@ watch(() => [designFactorId.value, assessmentId.value], () => {
         </div>
       </div>
 
-      <DataTable :headers="reportDesignFactor.headers" :items="reportDesignFactor.data"
-        :loading="reportDesignFactor.loading" fixed-header>
-        <template #header-avg_bobot="header">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ header.item.text }}
-          </div>
-        </template>
+      <LoadingOverlay :active="reportDesignFactor.loading" />
 
-        <template #header-dfk_baseline="header">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ header.item.text }}
-          </div>
-        </template>
+      <div class="table-responsive rounded-2 mb-4 mt-4">
+        <div class="mh-100vh">
+          <table class="table border text-nowrap mb-0 align-middle">
+            <thead class="position-sticky top-0 bg-white" style="z-index: 5 !important;">
+              <tr>
+                <th class="width-75px align-middle text-center">
+                  <h6 class="fs-3 fw-semibold mb-0">
+                    No
+                  </h6>
+                </th>
+                <th class="align-middle">
+                  <h6 class="fs-3 fw-semibold mb-0">
+                    Value
+                  </h6>
+                </th>
+                <th class="width-100px align-middle text-center">
+                  <h6 class="fs-3 fw-semibold mb-0">
+                    Importance
+                  </h6>
+                </th>
+                <th class="width-100px align-middle text-center">
+                  <h6 class="fs-3 fw-semibold mb-0">
+                    Baseline Score
+                  </h6>
+                </th>
+              </tr>
+            </thead>
 
-        <template #item-avg_bobot="item">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ item?.item?.avg_bobot || "-" }}
-          </div>
-        </template>
+            <tbody>
+              <template v-if="Array.isArray(reportDesignFactor.data) && reportDesignFactor.data.length">
+                <tr v-for="(report, index) in reportDesignFactor.data" :key="`data-in-${report.id}-${index}`">
+                  <td class="width-75px text-center">
+                    {{ index + 1 }}
+                  </td>
+                  <td>
+                    {{ report?.dfk_nama }}
+                  </td>
+                  <td class="text-center">
+                    {{ report?.avg_bobot }}
+                  </td>
+                  <td class="text-center">
+                    {{ report?.dfk_baseline }}
+                  </td>
+                </tr>
+              </template>
 
-        <template #item-dfk_baseline="item">
-          <div class="d-flex justify-content-center align-items-center w-100">
-            {{ item?.item?.dfk_baseline || "-" }}
-          </div>
-        </template>
-      </DataTable>
+              <template v-else>
+                <tr>
+                  <td colspan="5" class="text-center">
+                    Data Tidak Ditemukan
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>

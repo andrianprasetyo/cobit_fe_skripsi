@@ -34,6 +34,7 @@ const rootTemplate = ref(null)
 const questions = reactive({
   loading: false,
   loadingSubmit: false,
+  loadingSubmitBack: false,
   data: [],
   loadingNavigation: false,
   navigation: [],
@@ -50,6 +51,7 @@ const isLastQuestion = computed(() => {
   }
 })
 
+/*
 const progressPercentage = computed(() => {
   return value => {
     if (value) {
@@ -60,6 +62,23 @@ const progressPercentage = computed(() => {
 
     return 0
   }
+})
+*/
+
+const progressPercentageAnswered = computed(() => {
+  const answered = questions.navigation.reduce((acc, value) => {
+    const isAnswered = value.terisi
+
+    if (isAnswered) {
+      acc += 1
+    }
+
+    return acc
+  }, 0)
+
+  const percentage = (answered / questions.meta.total) * 100
+
+  return percentage ? percentage.toFixed(0) : 0
 })
 
 const rulesPilihanGanda = computed(() => {
@@ -172,6 +191,31 @@ const saveJawaban = async ({ isLastQuestion = false }) => {
   }
 }
 
+const saveJawabanBack = async () => {
+  try {
+    questions.loadingSubmitBack = true
+    const response = await QuisionerServices.saveJawaban({ assesment_user_id: quesioner?.responden?.id, hasil: questions.data })
+
+    if (response) {
+      questions.loadingSubmitBack = false
+
+      quesioner.$patch({
+        question: {
+          currentQuestion: quesioner.question.currentQuestion - 1
+        }
+      })
+
+      scrollToTop()
+
+      return response
+    }
+  } catch (error) {
+    questions.loadingSubmitBack = false
+    toast.error({ error })
+    throw error
+  }
+}
+
 const finishQuisioner = async () => {
   try {
     questions.loadingSubmit = true
@@ -250,16 +294,25 @@ const handleFinish = async () => {
   }
 }
 
+const handleForceFinish = async () => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menyelesaikan Kuesioner?`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        finishQuisioner()
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
 const handleBack = async () => {
   if (quesioner.question.currentQuestion > 0) {
-    quesioner.$patch({
-      question: {
-        currentQuestion: quesioner.question.currentQuestion - 1
-      }
-    })
+    saveJawabanBack({ isLastQuestion: false })
   }
-
-  scrollToTop()
 }
 
 const handleNavigateFinish = () => {
@@ -272,6 +325,7 @@ const handleClickNavigation = ({ number }) => {
       currentQuestion: number
     }
   })
+  scrollToTop()
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -355,18 +409,28 @@ watch(() => [quesioner.question.currentQuestion], () => {
                 dari {{ questions.meta.total }}
               </h6>
 
-              <div>
-                <span class="badge bg-light-primary text-primary fw-semibold fs-3 mt-2 mt-md-0">
-                  {{ progressPercentage(quesioner.question.currentQuestion - 1) }}%
+              <div class="d-flex flex-row align-items-center">
+                <span class="badge bg-light-primary text-primary fw-semibold py-2 fs-3 mt-2 mt-md-0">
+                  <!-- Percetange By Answered -->
+                  {{ progressPercentageAnswered }}%
+
+                  <!-- Percentage By Number -->
+                  <!-- {{ progressPercentage(quesioner.question.currentQuestion - 1) }}% -->
                 </span>
+
+                <BaseButton v-if="!isLastQuestion && progressPercentageAnswered" @click="handleForceFinish" class="btn btn-sm btn-light-success ms-2 text-primary"
+                  title="Selesaikan">
+                  <template #icon-right>
+                    <TablerIcon icon="CheckboxIcon" />
+                  </template>
+                </BaseButton>
               </div>
             </div>
 
             <div class="progress mt-2 mt-md-0">
               <div class="progress-bar progress-bar-striped bg-primary progress-bar-animated" role="progressbar"
                 :aria-valuenow="quesioner.question.currentQuestion - 1" aria-valuemin="1"
-                :aria-valuemax="questions.meta.total"
-                :style="`width: ${progressPercentage(quesioner.question.currentQuestion - 1)}%`">
+                :aria-valuemax="questions.meta.total" :style="`width: ${progressPercentageAnswered}%`">
               </div>
             </div>
 
@@ -480,7 +544,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
       <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
         <div>
           <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Sebelumnya"
-            class="btn btn-outline-primary">
+            class="btn btn-outline-primary" :disabled="questions.loadingSubmitBack"
+            :is-loading="questions.loadingSubmitBack">
             <template #icon-left>
               <TablerIcon icon="ChevronLeftIcon" />
             </template>

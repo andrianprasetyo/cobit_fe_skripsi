@@ -41,10 +41,14 @@ const queryView = computed(() => {
   return route.query?.view
 })
 
+const assessmentTitle = computed(() => {
+  return route.query?.assessment
+})
+
 /* --------------------------------- METHODS -------------------------------- */
-const handleClickView = ({ design_factor_id, kode }) => {
+const handleClickView = ({ design_factor_id, design_factor, kode }) => {
   router.replace({
-    query: { ...route.query, view: kode, design_factor_id }
+    query: { ...route.query, view: kode, design_factor, design_factor_id }
   })
 }
 
@@ -56,7 +60,7 @@ const handleBack = () => {
 watch(() => queryView.value, (value) => {
   if (value) {
     tab.value = value;
-  } 
+  }
 }, { deep: true, immediate: true })
 
 onMounted(() => {
@@ -64,10 +68,16 @@ onMounted(() => {
 
   assessmentStore.getReportDesignFactorList({
     limit: 99,
+  }).then((response) => {
+    const data = response?.data
+
+    if (Array.isArray(data?.list) && data?.list.length) {
+      handleClickView({ design_factor: data?.list[0]?.nama, design_factor_id: data?.list[0]?.id, kode: data?.list[0]?.kode })
+    }
   })
 
-  if (assessmentStore.selectedAssessment?.nama) {
-    title.value = `Report Design Factor ${assessmentStore.selectedAssessment?.nama || ''}`
+  if (assessmentTitle.value) {
+    title.value = `Report Design Factor ${assessmentTitle.value || ''}`
   }
 })
 
@@ -89,12 +99,13 @@ onUnmounted(() => {
             v-if="Array.isArray(assessmentStore.reportDesignFactor.listDesignFactor) && assessmentStore.reportDesignFactor.listDesignFactor.length">
             <li v-for="(designFactor, index) in assessmentStore.reportDesignFactor.listDesignFactor" class="nav-item"
               role="presentation" :key="`design-factor-${designFactor?.kode}`">
-              <BaseButton @click="handleClickView({ design_factor_id: designFactor?.id, kode: designFactor?.kode })"
+              <BaseButton
+                @click="handleClickView({ design_factor_id: designFactor?.id, kode: designFactor?.kode, design_factor: designFactor?.nama })"
                 class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
                 :class="[tab === designFactor?.kode ? 'active' : '']" :id="`pills-${designFactor?.kode}-tab`" role="tab"
                 :aria-controls="`pills-${designFactor?.kode}`" aria-selected="true">
                 <div class="d-flex flex-row align-items-center">
-                  <TablerIcon :icon="`SquareNumber${index + 1}Icon`" class="me-2" />
+                  <TablerIcon :icon="`SquareLetter${String.fromCharCode(64 + (index + 1))}Icon`" class="me-2" />
                   <span class="d-none d-md-block text-truncate">{{ designFactor?.kode }}</span>
                 </div>
               </BaseButton>

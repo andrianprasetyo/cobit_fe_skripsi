@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch, computed, ref } from 'vue'
 
-import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
+import DataTable from '@/components/DataTable/DataTable.vue'
 
 import ReportDesignFactorServices from '@/services/lib/report-design-factor'
 
@@ -91,77 +91,7 @@ watch(() => [serverOptions.value, designFactorId.value, assessmentId.value], () 
           <h5 class="card-title fw-semibold">Output Section</h5>
         </div>
       </div>
-
-      <LoadingOverlay :active="reportDesignFactor.loading" />
-
-      <div class="table-responsive rounded-2 mb-4 mt-4">
-        <div class="mh-100vh">
-          <table class="table border text-nowrap mb-0 align-middle">
-            <thead class="position-sticky top-0 bg-white" style="z-index: 6 !important;">
-              <tr>
-                <th class="width-75px align-middle text-center">
-                  <h6 class="fs-3 fw-semibold mb-0">
-                    No
-                  </h6>
-                </th>
-                <th class="align-middle">
-                  <h6 class="fs-3 fw-semibold mb-0">
-                    Governance / Management Objective
-                  </h6>
-                </th>
-                <th class="width-100px align-middle text-center">
-                  <h6 class="fs-3 fw-semibold mb-0">
-                    Score
-                  </h6>
-                </th>
-                <th class="width-100px align-middle text-center">
-                  <h6 class="fs-3 fw-semibold mb-0">
-                    Baseline Score
-                  </h6>
-                </th>
-                <th class="width-100px align-middle text-center">
-                  <h6 class="fs-3 fw-semibold mb-0">
-                    Relative Importance
-                  </h6>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <template v-if="Array.isArray(reportDesignFactor.data) && reportDesignFactor.data.length">
-                <tr v-for="(report, index) in reportDesignFactor.data" :key="`data-out-${report.id}-${index}`">
-                  <td class="width-75px text-center">
-                    {{ index + 1 }}
-                  </td>
-                  <td>
-                    <div v-if="report.domain_kode" class="width-100px text-break text-wrap fw-bold"
-                      v-html="report?.domain_kode" />
-                    <div v-if="report.domain_ket" class="width-250px text-break text-wrap" v-html="report?.domain_ket" />
-                  </td>
-                  <td class="text-center">
-                    {{ report?.score || 0 }}
-                  </td>
-                  <td class="text-center">
-                    {{ report?.baseline_score || 0 }}
-                  </td>
-                  <td class="text-center">
-                    {{ report?.relative_importance || 0 }}
-                  </td>
-                </tr>
-              </template>
-
-              <template v-else>
-                <tr>
-                  <td colspan="5" class="text-center">
-                    Data Tidak Ditemukan
-                  </td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- <DataTable :headers="reportDesignFactor.headers" :items="reportDesignFactor.data"
+      <DataTable :headers="reportDesignFactor.headers" :items="reportDesignFactor.data"
         :loading="reportDesignFactor.loading" :server-items-length="reportDesignFactor.meta.total"
         v-model:server-options="serverOptions" fixed-header :is-show-pagination="false">
         <template #header-score="header">
@@ -207,7 +137,7 @@ watch(() => [serverOptions.value, designFactorId.value, assessmentId.value], () 
             {{ item?.item?.relative_importance || "-" }}
           </div>
         </template>
-      </DataTable> -->
+      </DataTable>
     </div>
   </div>
 </template>
