@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {{limit: Number, page: Number, search: String, sortBy: String, sortType: String, assessment_id: String}} payload
+   * @param {{limit: Number, page: Number, search: String, sortBy: String, sortType: String, assesment_id: String}} payload
    * @returns
    */
   getListTarget(payload) {

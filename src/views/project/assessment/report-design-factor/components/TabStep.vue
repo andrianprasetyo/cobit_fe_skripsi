@@ -18,17 +18,19 @@ const designfactorTitle = computed(() => {
 </script>
 
 <template>
-  <div class="card">
-    <div v-if="designfactorTitle" class="card-body">
-      <div class="mb-3 mb-md-0">
-        <h5 class="card-title fw-semibold mb-3">Report Design Factor</h5>
-        <hr />
-        <p v-if="designfactorTitle" class="card-subtitle mb-2 fw-bold">{{ designfactorTitle }}</p>
-        <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+  <div>
+    <div class="card">
+      <div v-if="designfactorTitle" class="card-body">
+        <div class="mb-3 mb-md-0">
+          <h5 class="card-title fw-semibold mb-3">Report Design Factor</h5>
+          <hr />
+          <p v-if="designfactorTitle" class="card-subtitle mb-2 fw-bold">{{ designfactorTitle }}</p>
+          <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <DataInput />
-  <DataOutput />
+    <DataInput />
+    <DataOutput />
+  </div>
 </template>

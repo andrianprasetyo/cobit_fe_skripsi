@@ -41,6 +41,10 @@ const assessment = reactive({
     text: 'Periode Kuesioner',
     value: 'start_date_quisioner',
   }, {
+    text: 'Nilai Minimal Target',
+    value: 'minimum_target',
+  },
+  {
     text: 'Status',
     value: 'status',
     sortable: true
@@ -258,6 +262,10 @@ const handleNavigateReport = ({ id, assessment }) => {
   router.push({ path: `/project/assessment/${id}/report-assessment`, query: { assessment } })
 }
 
+const handleNavigateReportRekapitulasi = ({ id, assessment }) => {
+  router.push({ path: `/project/assessment/${id}/report-rekapitulasi`, query: { assessment } })
+}
+
 const handleSelesaikanAssessment = ({ title, id }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
@@ -390,6 +398,12 @@ watch(() => [serverOptions.value, filter.value], () => {
               </div>
             </template>
 
+            <template #header-minimum_target="header">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ header.item.text }}
+              </div>
+            </template>
+
             <template #item-organisasi="item">
               <div class="d-flex w-100">
                 {{ item.item?.organisasi?.nama }}
@@ -416,6 +430,12 @@ watch(() => [serverOptions.value, filter.value], () => {
 
               <div v-else>
                 Belum Ditentukan
+              </div>
+            </template>
+
+            <template #item-minimum_target="item">
+              <div class="d-flex justify-content-center align-items-center w-100">
+                {{ item.item?.minimum_target || 0 }}
               </div>
             </template>
 
@@ -464,7 +484,20 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="ChartDotsIcon" />
                         <span class="ms-2">
-                          Lihat Report Asesmen
+                          Lihat Report Asesmen Berdasarkan Target
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <BaseButton
+                      @click="handleNavigateReportRekapitulasi({ id: item?.item?.id, assessment: item.item?.nama })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ChartGridDotsIcon" />
+                        <span class="ms-2">
+                          Lihat Report Rekapitulasi Asesmen
                         </span>
                       </template>
                     </BaseButton>

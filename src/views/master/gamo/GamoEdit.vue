@@ -60,6 +60,7 @@ const getDetailDomain = async () => {
 
       formState.kode = data?.kode
       formState.ket = data?.ket || ''
+      formState.translate = data?.translate || ''
 
       formState.loading = false
       loader.hide()

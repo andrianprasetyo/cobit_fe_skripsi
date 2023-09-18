@@ -21,6 +21,17 @@ const router = useRouter()
 const route = useRoute()
 const assessmentStore = useAssessmentStore()
 
+const props = defineProps({
+  isShowBreadCrumb: {
+    type: Boolean,
+    default: true
+  },
+  isToggleSidebar: {
+    type: Boolean,
+    default: true
+  }
+})
+
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const tab = ref("DF1")
 
@@ -68,33 +79,37 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
-  appConfig.setMiniSidebar(true)
+  if (props.isToggleSidebar) {
+    appConfig.setMiniSidebar(true)
+    if (assessmentTitle.value) {
+      title.value = `Report Design Factor ${assessmentTitle.value || ''}`
+    }
+  }
 
   assessmentStore.getReportDesignFactorList({
     limit: 99,
   }).then((response) => {
     const data = response?.data
 
-    if (Array.isArray(data?.list) && data?.list.length && !mounted.value) {
+    if (Array.isArray(data?.list) && data?.list.length && (mounted.value == 'false' || !mounted.value)) {
       handleClickView({ design_factor: data?.list[0]?.nama, design_factor_id: data?.list[0]?.id, kode: data?.list[0]?.kode, mounted: false })
     }
   })
 
-  if (assessmentTitle.value) {
-    title.value = `Report Design Factor ${assessmentTitle.value || ''}`
-  }
 })
 
 onUnmounted(() => {
-  appConfig.setMiniSidebar(false)
-  assessmentStore.resetState()
+  if (props.isToggleSidebar) {
+    appConfig.setMiniSidebar(false)
+    assessmentStore.resetState()
+  }
 })
 
 </script>
 
 <template>
   <div>
-    <BreadCrumb />
+    <BreadCrumb v-if="props.isShowBreadCrumb" />
 
     <section>
       <BaseTab>

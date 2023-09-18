@@ -142,8 +142,13 @@ const handleNavigateEdit = ({ id }) => {
   router.push({ path: `/master/organisasi/${id}/edit` })
 }
 
-const handleNavigateDivisiDanJabatan = ({ id }) => {
-  router.push({ path: `/master/organisasi/${id}/divisi-dan-jabatan` })
+const handleNavigateDivisiDanJabatan = ({ id, organisasi }) => {
+  router.push({
+    path: `/master/organisasi/${id}/divisi-dan-jabatan`,
+    query: {
+      organisasi
+    }
+  })
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -230,7 +235,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
 
                   <li>
-                    <BaseButton @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id })"
+                    <BaseButton
+                      @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id, organisasi: item.item?.nama })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="SubtaskIcon" />

@@ -1230,6 +1230,39 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'ReportRekapitulasi',
+              path: '/project/assessment/:id/report-rekapitulasi',
+              component: () =>
+                import(
+                  '@/views/project/assessment/report-rekapitulasi/AssessmentReportRekapitulasi.vue'
+                ),
+              meta: {
+                pageTitle: 'Report Rekapitulasi Asesmen',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Report Rekapitulasi Asesmen',
+                    disabled: true,
+                    href: '/project/assessment/:id/report-rekaputilasi',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },

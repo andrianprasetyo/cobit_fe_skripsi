@@ -33,6 +33,17 @@ const router = useRouter()
 const route = useRoute()
 const assessmentStore = useAssessmentStore()
 
+const props = defineProps({
+  isShowBreadCrumb: {
+    type: Boolean,
+    default: true
+  },
+  isToggleSidebar: {
+    type: Boolean,
+    default: true
+  }
+})
+
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const tab = ref("gamo")
 
@@ -62,7 +73,6 @@ const handleBack = () => {
   router.back()
 }
 
-
 /* ---------------------------------- HOOKS --------------------------------- */
 watch(() => queryView.value, (value) => {
   switch (value) {
@@ -85,22 +95,26 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
-  appConfig.setMiniSidebar(true)
-  if (assessmentTitle.value) {
-    title.value = `Report GAMO ${assessmentTitle.value || ''}`
+  if (props.isToggleSidebar) {
+    appConfig.setMiniSidebar(true)
+    if (assessmentTitle.value) {
+      title.value = `Report GAMO ${assessmentTitle.value || ''}`
+    }
   }
 })
 
 onUnmounted(() => {
-  appConfig.setMiniSidebar(false)
-  assessmentStore.resetState()
+  if (props.isToggleSidebar) {
+    appConfig.setMiniSidebar(false)
+    assessmentStore.resetState()
+  }
 })
 
 </script>
 
 <template>
   <div>
-    <BreadCrumb />
+    <BreadCrumb v-if="props.isShowBreadCrumb" />
 
     <section>
       <BaseTab>

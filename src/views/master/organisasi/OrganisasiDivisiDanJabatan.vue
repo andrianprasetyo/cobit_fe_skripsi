@@ -33,7 +33,7 @@ const queryView = computed(() => {
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickView = (value) => {
   router.replace({
-    query: { view: value }
+    query: { ...route.query, view: value }
   })
 }
 
