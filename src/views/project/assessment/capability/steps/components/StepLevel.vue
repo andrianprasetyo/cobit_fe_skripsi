@@ -75,7 +75,7 @@ const totalValue = computed(() => {
   return assessmentStore.capability.detailListLevel.reduce((acc, value) => {
     if (value?.capabilityass?.capability_level_id) {
       const values = valueAnwer.value(value?.capabilityass?.capability_answer_id)?.bobot
-      acc += parseInt(values) || 0
+      acc += parseFloat(values) || 0
     }
 
     return acc
@@ -93,7 +93,7 @@ const totalWeight = computed(() => {
 })
 
 const totalCompliances = computed(() => {
-  return (totalValue.value / totalWeight.value).toFixed(2)
+  return (totalValue.value / totalWeight.value)
 })
 
 const assessmentId = computed(() => {
@@ -429,8 +429,7 @@ onMounted(() => {
                 <td class="text-center bg-light-primary">
                   <h6 class="fs-3 fw-semibold mb-0">
                     <!-- Computing Front End -->
-                    {{ isFinite(totalValue) ? parseFloat(assessmentStore.capability.detailTotalBobot.answer).toFixed(2) :
-                      0 }}
+                    {{ isFinite(totalValue) ? Math.fround(parseFloat(totalValue).toFixed(2)).toFixed(2) : 0 }}
 
                     <!-- From Backend -->
                     <!-- {{ assessmentStore.capability.detailTotalBobot.answer ? parseFloat(assessmentStore.capability.detailTotalBobot.answer).toFixed(2) : 0 }} -->
@@ -457,10 +456,11 @@ onMounted(() => {
                 <td colspan="2" class="bg-primary">
                   <h6 class="fs-3 fw-semibold mb-0 text-center text-white">
                     <!-- Computing Front End -->
-                    {{ isFinite(totalCompliances) ? totalCompliances : 0 }}
+                    {{ isFinite(totalCompliances) ? Math.fround(parseFloat(totalCompliances).toFixed(2)).toFixed(2) : 0 }}
 
                     <!-- From Backend -->
-                    <!-- {{ assessmentStore.capability.detailTotalBobot.result ? parseFloat(assessmentStore.capability.detailTotalBobot.result).toFixed(2) : 0 }} -->
+                    <!-- {{ assessmentStore.capability.detailTotalBobot.result ?
+                      parseFloat(assessmentStore.capability.detailTotalBobot.result).toFixed(2) : 0 }} -->
                   </h6>
                 </td>
                 <td colspan="1"></td>

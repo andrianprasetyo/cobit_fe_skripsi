@@ -69,7 +69,7 @@ const handleClickLevel = (level) => {
 
         <template #content>
           <Transition name="fade" mode="out-in">
-            <KeepAlive :max="2">
+            <KeepAlive :max="1">
               <component :is="ViewComponent[assessmentStore.capability.selectedLevel]" />
             </KeepAlive>
           </Transition>
