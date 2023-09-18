@@ -311,7 +311,10 @@ const handleForceFinish = async () => {
 
 const handleBack = async () => {
   if (quesioner.question.currentQuestion > 0) {
-    saveJawabanBack({ isLastQuestion: false })
+    const result = await v$.value.$validate()
+    if (result) {
+      saveJawabanBack({ isLastQuestion: false })
+    }
   }
 }
 
@@ -418,8 +421,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
                   <!-- {{ progressPercentage(quesioner.question.currentQuestion - 1) }}% -->
                 </span>
 
-                <BaseButton v-if="!isLastQuestion && progressPercentageAnswered" @click="handleForceFinish" class="btn btn-sm btn-light-success ms-2 text-primary"
-                  title="Selesaikan">
+                <BaseButton v-if="!isLastQuestion && progressPercentageAnswered" @click="handleForceFinish"
+                  class="btn btn-sm btn-light-success ms-2 text-primary" title="Selesaikan">
                   <template #icon-right>
                     <TablerIcon icon="CheckboxIcon" />
                   </template>
@@ -543,7 +546,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
 
       <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
         <div>
-          <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Sebelumnya"
+          <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Pertanyaan Sebelumnya"
             class="btn btn-outline-primary" :disabled="questions.loadingSubmitBack"
             :is-loading="questions.loadingSubmitBack">
             <template #icon-left>
@@ -560,7 +563,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
             </template>
           </BaseButton>
 
-          <BaseButton v-else @click="handleNext" class="btn btn-primary mt-2 mt-md-0" title="Selanjutnya"
+          <BaseButton v-else @click="handleNext" class="btn btn-primary mt-2 mt-md-0" title="Pertanyaan Selanjutnya"
             :disabled="questions.loadingSubmit" :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="ChevronRightIcon" />

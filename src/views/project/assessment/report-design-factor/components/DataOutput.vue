@@ -104,7 +104,7 @@ watch(() => [serverOptions.value, designFactorId.value, assessmentId.value], () 
                     No
                   </h6>
                 </th>
-                <th class="align-middle">
+                <th class="width-250px align-middle">
                   <h6 class="fs-3 fw-semibold mb-0">
                     Governance / Management Objective
                   </h6>
@@ -132,10 +132,10 @@ watch(() => [serverOptions.value, designFactorId.value, assessmentId.value], () 
                   <td class="width-75px text-center">
                     {{ index + 1 }}
                   </td>
-                  <td>
-                    <div v-if="report.domain_kode" class="width-100px text-break text-wrap fw-bold"
+                  <td class="width-250px">
+                    <div v-if="report.domain_kode" class="width-225px text-break text-wrap fw-bold"
                       v-html="report?.domain_kode" />
-                    <div v-if="report.domain_ket" class="width-250px text-break text-wrap" v-html="report?.domain_ket" />
+                    <div v-if="report.domain_ket" class="width-225px text-break text-wrap" v-html="report?.domain_ket" />
                   </td>
                   <td class="text-center">
                     {{ report?.score || 0 }}
