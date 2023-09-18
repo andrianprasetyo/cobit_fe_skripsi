@@ -45,9 +45,7 @@ const formState = reactive({
   organisasi_id: '',
   organisasi_nama: '',
   organisasi_deskripsi: '',
-  /*
   pic_expire_at: ''
-  */
 })
 
 const listOrganisasi = reactive({
@@ -110,11 +108,9 @@ const rules = computed(() => {
     organisasi_deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi organisasi", requiredIf(!formState.organisasi_id))
     },
-    /*
     pic_expire_at: {
       required: helpers.withMessage("Silahkan isi tanggal kadaluarsa pic", required)
     }
-    */
   }
 })
 
@@ -232,9 +228,7 @@ const handleSubmit = async () => {
         end_date_quisioner: formState.end_date_quisioner,
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
-        /*
         pic_expire_at: formState.pic_expire_at
-        */
       }
 
 
@@ -352,7 +346,8 @@ onMounted(() => {
             <label class="form-label" for="deskripsi">Deskripsi Asesmen</label>
 
             <CKEditor id="deskripsi" tabindex="2" v-model="v$.deskripsi.$model"
-              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit" placeholder="Masukkan Deskripsi Asesmen" />
+              :isInvalid="!!v$.deskripsi.$errors?.length" :disabled="formState.loadingSubmit"
+              placeholder="Masukkan Deskripsi Asesmen" />
             <ErrorMessage v-if="v$.deskripsi.$errors" :errors="v$.deskripsi.$errors" />
           </div>
 
@@ -448,8 +443,9 @@ onMounted(() => {
           <div class="mb-3">
             <label class="form-label" for="organisasi_deskripsi">Deskripsi Organisasi</label>
 
-            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model" placeholder="Masukkan Deskripsi Organisasi"
-              :isInvalid="!!v$.organisasi_deskripsi.$errors?.length" :disabled="formState.loadingSubmit" />
+            <CKEditor id="organisasi_deskripsi" tabindex="6" v-model="v$.organisasi_deskripsi.$model"
+              placeholder="Masukkan Deskripsi Organisasi" :isInvalid="!!v$.organisasi_deskripsi.$errors?.length"
+              :disabled="formState.loadingSubmit" />
             <ErrorMessage v-if="v$.organisasi_deskripsi.$errors" :errors="v$.organisasi_deskripsi.$errors" />
           </div>
         </div>
@@ -561,14 +557,14 @@ onMounted(() => {
             </div>
           </template>
 
-          <!-- <div class="mb-3">
+          <div class="mb-3">
             <DateInput uid="pic_expire_at" v-model="v$.pic_expire_at.$model" label="Tanggal Kadaluarsa PIC" locale="id"
               model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Mulai Kadaluarsa PIC"
               :disabled="formState.loadingSubmit || !formState.start_date" tabindex="5"
               :isInvalid="v$.pic_expire_at.$errors?.length" :min-date="formState.start_date"
-              :enable-time-picker="false" />
+              :max-date="formState.end_date" :enable-time-picker="false" />
             <ErrorMessage :errors="v$.pic_expire_at.$errors" />
-          </div> -->
+          </div>
         </div>
       </div>
 

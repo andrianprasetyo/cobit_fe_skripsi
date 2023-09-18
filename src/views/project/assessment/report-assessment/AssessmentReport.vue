@@ -24,6 +24,17 @@ const router = useRouter()
 const appConfig = useAppConfig()
 const assessmentStore = useAssessmentStore()
 
+const props = defineProps({
+  isShowBreadCrumb: {
+    type: Boolean,
+    default: true
+  },
+  isToggleSidebar: {
+    type: Boolean,
+    default: true
+  }
+})
+
 /* ---------------------------------- STATE & COMPUTED --------------------------------- */
 const report = reactive({
   loading: false,
@@ -176,7 +187,10 @@ const handleSearchListGamo = debounce(async ({ search }) => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  appConfig.setMiniSidebar(true)
+  if (props.isToggleSidebar) {
+    appConfig.setMiniSidebar(true)
+  }
+
   handleSearchListTarget({ search: '' })
   handleSearchListGamo({ search: '' })
   /*
@@ -193,7 +207,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  appConfig.setMiniSidebar(false)
+  if (props.isToggleSidebar) {
+    appConfig.setMiniSidebar(false)
+  }
 })
 
 watch(() => [filter.value], value => {
@@ -218,7 +234,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
 <template>
   <div>
-    <BreadCrumb />
+    <BreadCrumb v-if="props.isShowBreadCrumb" />
 
     <section>
       <div class="card">
@@ -226,7 +242,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Report</h5>
+              <h5 class="card-title fw-semibold">Report Asesmen</h5>
               <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
             </div>
 
@@ -397,7 +413,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <template #item-gap_deskripsi="item">
                 <div class="d-flex flex-wrap">
                   <div v-if="item.item?.gap_deskripsi" class="width-250px text-break text-wrap"
-                    v-html="item.item?.gap_deskripsi" />
+                    :class="{ 'text-danger': item.item?.gap_minus }" v-html="item.item?.gap_deskripsi" />
 
                   <div v-else>
                     Tidak Ada Gap Deskripsi

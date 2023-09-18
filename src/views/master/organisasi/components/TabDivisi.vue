@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch, onMounted } from 'vue'
+import { reactive, ref, watch, onMounted, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
@@ -51,6 +51,10 @@ const serverOptions = ref({
 
 const filter = ref({
   search: ''
+})
+
+const organisasiTitle = computed(() => {
+  return route.query?.organisasi
 })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -175,6 +179,7 @@ watch(() => [serverOptions.value, filter.value], () => {
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
         <div class="mb-3 mb-sm-0">
           <h5 class="card-title fw-semibold">Divisi</h5>
+          <p v-if="organisasiTitle" class="card-subtitle mb-0">{{ organisasiTitle }}</p>
         </div>
 
         <div
