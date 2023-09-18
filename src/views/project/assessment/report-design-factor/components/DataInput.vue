@@ -16,6 +16,7 @@ const route = useRoute()
 const reportDesignFactor = reactive({
   loading: false,
   data: [],
+  header: [],
 })
 
 const assessmentId = computed(() => {
@@ -37,6 +38,7 @@ const getReportDesignFactorInput = async ({ assesment_id, design_faktor_id }) =>
       const data = response?.data
 
       reportDesignFactor.data = data?.list || []
+      reportDesignFactor.header = data?.headercol || []
       reportDesignFactor.loading = false
     }
   } catch (error) {
@@ -77,19 +79,20 @@ watch(() => [designFactorId.value, assessmentId.value], () => {
                     No
                   </h6>
                 </th>
-                <th class="align-middle">
-                  <h6 class="fs-3 fw-semibold mb-0">
+                <th class="width-250px align-middle">
+                  <h6 class="fs-3 fw-semibold mb-0 text-wrap text-break">
                     Value
                   </h6>
                 </th>
-                <th class="width-100px align-middle text-center">
+                <template v-if="Array.isArray(reportDesignFactor.header) && reportDesignFactor.header.length">
+                  <th v-for="(header, indexHeader) in reportDesignFactor.header"
+                    class="width-250px align-middle text-center" :key="`header-in-${indexHeader}`">
+                    <div class="fs-3 fw-semibold mb-0 text-wrap text-break" v-html="header" />
+                  </th>
+                </template>
+                <th class="align-middle text-center">
                   <h6 class="fs-3 fw-semibold mb-0">
-                    Importance
-                  </h6>
-                </th>
-                <th class="width-100px align-middle text-center">
-                  <h6 class="fs-3 fw-semibold mb-0">
-                    Baseline Score
+                    Baseline
                   </h6>
                 </th>
               </tr>
@@ -101,12 +104,16 @@ watch(() => [designFactorId.value, assessmentId.value], () => {
                   <td class="width-75px text-center">
                     {{ index + 1 }}
                   </td>
-                  <td>
-                    {{ report?.dfk_nama }}
+                  <td class="width-250px">
+                    <div class="text-wrap text-break">
+                      {{ report?.dfk_nama }}
+                    </div>
                   </td>
-                  <td class="text-center">
-                    {{ report?.avg_bobot }}
-                  </td>
+                  <template v-if="Array.isArray(report?.values) && report.values.length">
+                    <td v-for="(value, indexValue) in report.values" class="text-center" :key="`value-${indexValue}`">
+                      {{ value?.avg_bobot }}
+                    </td>
+                  </template>
                   <td class="text-center">
                     {{ report?.dfk_baseline }}
                   </td>
