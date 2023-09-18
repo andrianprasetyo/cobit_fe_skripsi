@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {limit, page, search, sortBy, sortType, organisasi_id} payload
+   * @param {{limit: String | Number, page : String | Number, search: String, sortBy: String, sortType: String, organisasi_id: String}} payload
    * @returns
    */
   getListAssessment(payload) {
@@ -18,7 +18,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {id: String} payload
    * @returns
    */
   getDetailAssessment(payload) {
@@ -27,7 +27,7 @@ export default {
 
   /**
    *
-   * @param {asessment, deskripsi, tahun, pic_nama, pic_email, pic_divisi, pic_jabatan, organisasi_id, organisasi_nama, organisasi_deskripsi, pic_divisi_id, pic_jabatan_id} payload
+   * @param {{asessment: String, deskripsi: String, tahun: String, pic_nama: String, pic_email: String, pic_divisi: String, pic_jabatan: String, organisasi_id: String, organisasi_nama: String, organisasi_deskripsi: String, pic_divisi_id: String, pic_jabatan_id : String}} payload
    * @returns
    */
   createAssessment(payload) {
@@ -36,7 +36,7 @@ export default {
 
   /**
    *
-   * @param {id, asessment, deskripsi} payload
+   * @param {id: String, asessment: String, deskripsi: String} payload
    * @returns
    */
   editAssessment(payload) {
@@ -45,7 +45,7 @@ export default {
 
   /**
    *
-   * @param {id} payload
+   * @param {{id: String}} payload
    * @returns
    */
   deleteAssessment(payload) {
@@ -54,7 +54,7 @@ export default {
 
   /**
    *
-   * @param {id, email} payload
+   * @param {{id: String, email: String}} payload
    * @returns
    */
   inviteResponden(payload) {
@@ -63,7 +63,7 @@ export default {
 
   /**
    *
-   * @param {id, file} data
+   * @param {{id: String, file: Object | BinaryData}} data
    * @returns
    */
   inviteRespondenByExcel(data) {
@@ -78,7 +78,7 @@ export default {
 
   /**
    *
-   * @param {id, status} payload
+   * @param {{id: String, status: String}} payload
    * @returns
    */
   setStatusAssessment(payload) {
@@ -87,7 +87,7 @@ export default {
 
   /**
    *
-   * @param {pic_nama, pic_email, pic_divisi, pic_jabatan} payload
+   * @param {{pic_nama: String, pic_email: String, pic_divisi: String, pic_jabatan: String}} payload
    * @returns
    */
   editPic(payload) {
@@ -96,7 +96,16 @@ export default {
 
   /**
    *
-   * @param {id, docs} payload
+   * @param {{id: String, expire_at: String}} payload
+   * @returns
+   */
+  editTanggalKadaluarsaPic(payload) {
+    return axiosClient.put(`assesment/pic/expire/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {{id: String, docs: String}} payload
    * @returns
    */
   uploadLaporan(payload) {
@@ -111,7 +120,7 @@ export default {
 
   /**
    *
-   * @param {limit, page, search, sortBy, sortType, assesment_id} payload
+   * @param {{limit: Number | String, page: Number | String, search: String, sortBy: String, sortType: String, assesment_id: String}} payload
    * @returns
    */
   getReportAssessment(payload) {
@@ -128,7 +137,7 @@ export default {
 
   /**
    *
-   * @param {domain_id, assesment_id} payload
+   * @param {{domain_id: String, assesment_id: String}} payload
    * @returns
    */
   getReportDetailOFIAssessment(payload) {

@@ -125,7 +125,8 @@ const onSubmit = async () => {
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
         pic_divisi_id: formState.pic_divisi?.id,
-        pic_jabatan_id: formState.pic_jabatan?.id
+        pic_jabatan_id: formState.pic_jabatan?.id,
+        
       })
 
       if (response) {
