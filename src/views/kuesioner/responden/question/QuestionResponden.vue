@@ -294,6 +294,7 @@ const handleFinish = async () => {
   }
 }
 
+/*
 const handleForceFinish = async () => {
   alert.info({
     title: `Apakah Anda Yakin untuk Menyelesaikan Kuesioner?`
@@ -308,6 +309,7 @@ const handleForceFinish = async () => {
     }
   })
 }
+*/
 
 const handleBack = async () => {
   if (quesioner.question.currentQuestion > 0) {
@@ -421,12 +423,12 @@ watch(() => [quesioner.question.currentQuestion], () => {
                   <!-- {{ progressPercentage(quesioner.question.currentQuestion - 1) }}% -->
                 </span>
 
-                <BaseButton v-if="!isLastQuestion && progressPercentageAnswered" @click="handleForceFinish"
+                <!-- <BaseButton v-if="!isLastQuestion && progressPercentageAnswered" @click="handleForceFinish"
                   class="btn btn-sm btn-light-success ms-2 text-primary" title="Selesaikan">
                   <template #icon-right>
                     <TablerIcon icon="CheckboxIcon" />
                   </template>
-                </BaseButton>
+                </BaseButton> -->
               </div>
             </div>
 
