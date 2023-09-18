@@ -10,6 +10,7 @@ import ModalEvidence from '@/views/project/assessment/capability/steps/component
 import ModalAverageCompliance from '@/views/project/assessment/capability/steps/components/ModalAverageCompliance.vue'
 import ModalViewDetailEvidence from '@/views/project/assessment/capability/steps/components/ModalViewDetailEvidence.vue'
 import ModalOFI from "@/views/project/assessment/capability/steps/components/ModalOFI.vue"
+import ModalHistory from '@/views/project/assessment/capability/steps/components/ModalHistory.vue'
 
 import CapabilityServices from '@/services/lib/capability'
 
@@ -32,6 +33,7 @@ const capability = reactive({
   isShowModalViewDetailEvidence: false,
   isShowModalAverageCompliance: false,
   isShowModalOFI: false,
+  isShowModalHistory: false
 })
 
 const valueAnwer = computed(() => {
@@ -143,6 +145,14 @@ const handleToggleModalOFI = ({ gamo }) => {
   }
 }
 
+const handleToggleModalHistory = ({ gamo }) => {
+  capability.isShowModalHistory = !capability.isShowModalHistory
+
+  if (capability.isShowModalHistory) {
+    assessmentStore.setCapabilitySelectedSubGamo(gamo)
+  }
+}
+
 const handleToggleModalViewDetailEvidence = ({ gamo }) => {
   capability.isShowModalViewDetailEvidence = !capability.isShowModalViewDetailEvidence
 
@@ -229,7 +239,7 @@ watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capabilit
 }, { deep: true, immediate: true })
 
 onMounted(() => {
-  assessmentStore.getCapabilityListMediaRepositoryAssessment({ assesment_id: route.params?.id, limit: 9 })
+  assessmentStore.getCapabilityListMediaRepositoryAssessment({ assesment_id: route.params?.id, limit: 12 })
 })
 
 </script>
@@ -411,6 +421,18 @@ onMounted(() => {
                         </span>
                       </template>
                     </BaseButton>
+
+                    <hr class="dropdown-divider d-none ">
+
+                    <BaseButton @click="handleToggleModalHistory({ gamo: item })"
+                      class=" d-none dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="HistoryIcon" />
+                        <span class="ms-2">
+                          History Perubahan
+                        </span>
+                      </template>
+                    </BaseButton>
                   </ul>
                 </td>
               </tr>
@@ -478,6 +500,7 @@ onMounted(() => {
       @close="handleToggleModalViewDetailEvidence" />
     <ModalAverageCompliance :is-show="capability.isShowModalAverageCompliance"
       @close="handleToggleModalAverageCompliance" />
+    <ModalHistory :is-show="capability.isShowModalHistory" @close="handleToggleModalHistory" />
   </section>
 </template>
 
