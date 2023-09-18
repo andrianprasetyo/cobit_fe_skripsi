@@ -64,9 +64,7 @@ export default {
    */
   getAverageComplianceLevelCapability(payload) {
     return axiosClient.get(
-      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&assesment_id=${
-        payload?.assesment_id
-      }`
+      `capabilityassesment/kalkulasi-by-domain?domain_id=${payload?.domain_id}&assesment_id=${payload?.assesment_id}`
     )
   },
 
@@ -78,6 +76,16 @@ export default {
   getSummaryCapability(payload) {
     return axiosClient.get(
       `capabilityassesment/summary-by-domain?assesment_id=${payload?.assesment_id}`
+    )
+  },
+
+  /**
+   * @param {{assesment_id: String, domain_id: String}} payload
+   * @returns
+   */
+  getHistoryGamoCapability(payload) {
+    return axiosClient.get(
+      `capabilityassessment/history-by-domain?assesment_id=${payload?.assesment_id}&domain_id=${payload?.domain_id}`
     )
   }
 }
