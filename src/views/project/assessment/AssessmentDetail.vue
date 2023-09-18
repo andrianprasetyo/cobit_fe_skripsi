@@ -8,6 +8,7 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import OverviewCard from '@/views/project/assessment/components/OverviewCard.vue'
 import RespondenCard from '@/views/project/assessment/components/RespondenCard.vue'
 import ModalEditPIC from '@/views/project/assessment/components/ModalEditPIC.vue'
+import ModalEditTanggalKadaluarsaPIC from '@/views/project/assessment/components/ModalEditTanggalKadaluarsaPIC.vue'
 
 import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useRoute, useRouter } from 'vue-router'
@@ -20,6 +21,8 @@ const router = useRouter()
 const assessment = useAssessmentStore()
 
 const isShowModalEditPIC = ref(false)
+
+const isShowModalEditTanggalKadaluarsaPIC = ref(false)
 
 const classStatus = computed(() => {
   return value => {
@@ -48,6 +51,10 @@ const handleBack = () => {
 
 const toggleModalEditPIC = () => {
   isShowModalEditPIC.value = !isShowModalEditPIC.value
+}
+
+const toggleModalEditTanggalKadaluarsaPIC = () => {
+  isShowModalEditTanggalKadaluarsaPIC.value = !isShowModalEditTanggalKadaluarsaPIC.value
 }
 
 const handleRefresh = () => {
@@ -178,6 +185,13 @@ onUnmounted(() => {
                   <TablerIcon icon="EditIcon" class="ms-1" />
                 </template>
               </BaseButton>
+
+              <BaseButton v-else-if="assessment.detail?.pic?.status === 'active'"
+                @click="toggleModalEditTanggalKadaluarsaPIC" title="Edit Tanggal Kadaluarsa PIC">
+                <template #icon-right>
+                  <TablerIcon icon="EditIcon" class="ms-1" />
+                </template>
+              </BaseButton>
             </div>
 
             <div class="row">
@@ -196,6 +210,18 @@ onUnmounted(() => {
                   </span>
 
                   <div>{{ assessment.detail?.pic?.email || '-' }}</div>
+                </div>
+
+                <div class="fs-2 mb-2 d-flex flex-column">
+                  <span class="fw-bolder">
+                    Tanggal Kadaluarsa PIC:
+                  </span>
+
+                  <div v-if="assessment.detail?.assesment_user?.expire_at">
+                    {{ formatDate({ value: assessment.detail?.assesment_user?.expire_at }) }}
+                  </div>
+
+                  <div v-else>-</div>
                 </div>
               </div>
 
@@ -239,5 +265,7 @@ onUnmounted(() => {
     </section>
 
     <ModalEditPIC :is-show="isShowModalEditPIC" @close="toggleModalEditPIC" @refresh="handleRefresh" />
+    <ModalEditTanggalKadaluarsaPIC :is-show="isShowModalEditTanggalKadaluarsaPIC"
+      @close="toggleModalEditTanggalKadaluarsaPIC" @refresh="handleRefresh" />
   </div>
 </template>
