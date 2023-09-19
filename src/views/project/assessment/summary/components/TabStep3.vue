@@ -96,7 +96,7 @@ const assessment = useAssessmentStore()
                   </template>
                   <td class="bg-light fw-bold border-0 width-250px text-center">
                     <span :class="[hasil?.assesmentcanvas?.step3_init_value < 0 ? 'text-danger' : 'text-primary']">
-                      {{ hasil?.assesmentcanvas?.step3_init_value }}
+                      {{ hasil?.assesmentcanvas?.step3_value }}
                     </span>
                   </td>
                 </template>

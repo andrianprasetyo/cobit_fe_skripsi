@@ -98,7 +98,7 @@ const assessment = useAssessmentStore()
                     <!-- Domain Scope 1 -->
                     <td v-else-if="indexAssessmentHasil === 4" class="bg-light fw-bold width-250px text-center">
                       <span :class="[hasil?.assesmentcanvas?.step2_init_value < 0 ? 'text-danger' : 'text-primary']">
-                        {{ hasil?.assesmentcanvas?.step2_init_value }}
+                        {{ hasil?.assesmentcanvas?.step2_value }}
                       </span>
                     </td>
                   </template>
