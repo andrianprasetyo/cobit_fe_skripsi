@@ -24,7 +24,7 @@ const props = defineProps({
   },
   colors: {
     type: Array,
-    default: () => ['#203058', '#EE1E25'],
+    default: () => ['#203058', '#EE1E25', '#427CCC', '#cc8b19', '#520dc2'],
   },
 })
 
