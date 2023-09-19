@@ -133,8 +133,8 @@ const suggessCapabilityLevel = computed(() => {
                 <template v-if="Array.isArray(hasil?.assesmenthasil) && hasil?.assesmenthasil?.length">
                   <!-- Domain Section 3 -->
                   <td class="bg-light fw-bold border-0 width-250px text-center">
-                    <span :class="[hasil?.assesmentcanvas?.step3_init_value < 0 ? 'text-danger' : 'text-primary']">
-                      {{ hasil?.assesmentcanvas?.step3_init_value }}
+                    <span :class="[hasil?.assesmentcanvas?.step3_value < 0 ? 'text-danger' : 'text-primary']">
+                      {{ hasil?.assesmentcanvas?.step3_value }}
                     </span>
                   </td>
                   <td>
@@ -148,7 +148,7 @@ const suggessCapabilityLevel = computed(() => {
                   </td>
                   <td class="text-center bg-light fw-bold">
                     {{ concludedScope({
-                      refinedScope: hasil?.assesmentcanvas?.step3_init_value, adjustment:
+                      refinedScope: hasil?.assesmentcanvas?.step3_value, adjustment:
                         hasil.assesmentcanvas.adjustment
                     }) }}
                   </td>
