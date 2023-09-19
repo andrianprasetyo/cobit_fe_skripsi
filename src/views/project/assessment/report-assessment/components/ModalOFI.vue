@@ -40,7 +40,17 @@ const copiedContent = computed(() => {
     plainText += `Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan ${assessmentStore.report?.selectedGamo?.target_level}\n`
     plainText += `(aktivitas COBIT untuk mencapai ${assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama} = ${assessmentStore.report?.selectedGamo?.target_level}) adalah :\n`
     reportOFI.data?.ofi.forEach((item) => {
-      plainText += `${item.ofi.replace(/<ol><li>/g, '\n').replace(/<\/li>/g, '')}\n`;
+      plainText += `${item.ofi
+        .replace(/<ol>|<ul>/g, `\n`)
+        .replace(/<li>/g, `- `)
+        .replace(/<\/li>/g, `\n`)
+        .replace(/<\/ol>|<\/ul>/g, "")
+        .replace(/<\/?[a-z][a-z0-9]*[^<>]*>/ig, '')
+        .replace(/&amp;/g, '&') // Replace &amp; with &
+        .replace(/&nbsp;/g, ' ')}` // Replace &nbsp; with space
+      // .replace(/\s+/g, ' ')}` // Replace multiple spaces with a single space
+
+      // plainText += `${item.ofi.replace(/((<ul>|<ol>)|<li>(.*)<\/li>|(<\/ul>|<\/ol>))/g, '$3')}`;
     })
 
     return plainText
@@ -80,7 +90,7 @@ const handleCopy = () => {
 }
 
 const handleExport = () => {
-  const url = `${appConfig.app.appHost}assesment/report/detail-ofi?domain_id=${assessmentStore.report.selectedGamo?.domain_id}&assesment_id=${assessmentStore.report.selectedGamo?.assesment_id}&capability_target_id=${assessmentStore.report.selectedGamo?.capability_target_id}&download=true`
+  const url = `${appConfig.app.appHost} assesment / report / detail - ofi ? domain_id = ${assessmentStore.report.selectedGamo?.domain_id}& assesment_id=${assessmentStore.report.selectedGamo?.assesment_id}& capability_target_id=${assessmentStore.report.selectedGamo?.capability_target_id}& download=true`
   window.open(url, '_blank');
 }
 
