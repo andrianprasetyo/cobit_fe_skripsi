@@ -134,7 +134,6 @@ watch(() => [assessmentStore.capability.selectedGamo], (value) => {
     <BreadCrumb />
 
     <section>
-
       <div v-if="assessmentStore.capability.listGamo?.length" class="card">
         <div class="card-body">
           <div class="mb-3">
@@ -203,7 +202,7 @@ watch(() => [assessmentStore.capability.selectedGamo], (value) => {
           <template #tab-content>
             <RouterView>
               <Transition name="fade-top" mode="out-in">
-                <KeepAlive :max="3">
+                <KeepAlive :max="2" :include="['summary']">
                   <component :is="ViewComponent[tab]" />
                 </KeepAlive>
               </Transition>
