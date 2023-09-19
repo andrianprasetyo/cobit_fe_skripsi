@@ -11,6 +11,10 @@ const toast = useBaseToast()
 export const useToast = defineStore({
   id: 'toast',
   actions: {
+    /**
+     *
+     * @param {{title: String, icon: Object | String, text: String, variant: String}} payload
+     */
     success(payload) {
       toast(
         {
@@ -28,6 +32,10 @@ export const useToast = defineStore({
       )
     },
 
+    /**
+     *
+     * @param {{title: String, icon: Object | String, text: String, variant: String}} payload
+     */
     info(payload) {
       toast.info(
         {
@@ -45,6 +53,10 @@ export const useToast = defineStore({
       )
     },
 
+    /**
+     *
+     * @param {{title: String, icon: Object | String, text: String, variant: String}} payload
+     */
     error(payload) {
       const isCanceled = axios.isCancel(payload?.error)
 
@@ -114,6 +126,10 @@ export const useToast = defineStore({
       }
     },
 
+    /**
+     *
+     * @param {{title: String, icon: Object | String, text: String, variant: String}} payload
+     */
     topCenter(payload) {
       toast(payload.title || 'Terjadi Kesalahan', {
         toastClassName: 'bg-primary',

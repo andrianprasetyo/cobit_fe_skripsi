@@ -1,17 +1,21 @@
 <script setup>
-import { reactive, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 import NoData from '@/components/EmptyPlaceholder/NoData.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+import BaseButton from '@/components/Button/BaseButton.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 
+import { useClipboard } from '@vueuse/core'
 import { useToast } from '@/stores/toast'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 const toast = useToast()
 const assessmentStore = useAssessmentStore()
+const { isSupported, copy, copied } = useClipboard()
 
 const props = defineProps({
   isShow: {
@@ -25,6 +29,24 @@ const emits = defineEmits(['close', 'refresh'])
 const reportOFI = reactive({
   loading: false,
   data: null
+})
+
+const copiedContent = computed(() => {
+  if (reportOFI.data?.ofi?.length) {
+    let plainText = "";
+
+    plainText += `Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan ${assessmentStore.report?.selectedGamo?.target_level}\n`
+    plainText += `(aktivitas COBIT untuk mencapai ${assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama} = ${assessmentStore.report?.selectedGamo?.target_level}) adalah :\n`
+    reportOFI.data?.ofi.forEach((item, index) => {
+      plainText += `${index + 1}. ${item.ofi.replace(/<\/?p>/g, '')}\n`;
+    })
+
+    return plainText
+  } else {
+    return ''
+  }
+
+
 })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -49,6 +71,13 @@ const handleClose = () => {
   emits('close', true)
 }
 
+const handleCopy = () => {
+  copy(copiedContent.value).catch(() => {
+    toast.error({ text: 'Gagal Menyalin Opportunity for Improvement' })
+  })
+}
+
+/* ---------------------------------- HOOKS --------------------------------- */
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     getReportDetailOFIAssessment({
@@ -93,27 +122,39 @@ watch(() => [props.isShow], () => {
 
       <hr v-if="reportOFI.data?.ofi.length" />
 
-      <div v-if="Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length"
-        class="rounded border p-3 mt-3">
-        <h6 class="lh-base">Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan {{
-          assessmentStore.report?.selectedGamo?.target_level }} <br />
-          <span class="text-primary">(aktivitas COBIT untuk mencapai {{
-            assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama
-          }} = {{ assessmentStore.report?.selectedGamo?.target_level }})
-          </span>
-          adalah:
-        </h6>
-        <ol>
-          <template v-for="(item, index) in reportOFI.data?.ofi" :key="`ofi-${index}-${item?.id}`">
-            <li v-if="item?.ofi" class="lh-base">
-              <div v-html="item?.ofi" />
-            </li>
-          </template>
-        </ol>
+
+      <div v-if="Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length" class="row rounded border p-3 mt-3">
+        <div class="col-12 col-md-10">
+          <h6 class="lh-base">Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan {{
+            assessmentStore.report?.selectedGamo?.target_level }} <br />
+            <span class="text-primary">(aktivitas COBIT untuk mencapai {{
+              assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama
+            }} = {{ assessmentStore.report?.selectedGamo?.target_level }})
+            </span>
+            adalah:
+          </h6>
+          <ol>
+            <template v-for="(item, index) in reportOFI.data?.ofi" :key="`ofi-${index}-${item?.id}`">
+              <li v-if="item?.ofi" class="lh-base">
+                <div v-html="item?.ofi" />
+              </li>
+            </template>
+          </ol>
+        </div>
+
+        <div v-if="isSupported && Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length"
+          class="col-12 col-md-2 text-center text-md-end mt-2 mt-md-0">
+          <BaseButton @click="handleCopy" :title="copied ? 'Tersalin' : 'Salin'"
+            :class="[copied ? 'btn btn-sm btn-success' : 'btn btn-sm btn-primary']">
+            <template #icon-left>
+              <TablerIcon :icon="copied ? 'ClipboardCheckIcon' : 'CopyIcon'" />
+            </template>
+          </BaseButton>
+
+        </div>
       </div>
 
-      <template
-        v-else-if="Array.isArray(reportOFI.data?.ofi) && !reportOFI.data?.ofi.length && !reportOFI.loading">
+      <template v-else-if="Array.isArray(reportOFI.data?.ofi) && !reportOFI.data?.ofi.length && !reportOFI.loading">
         <NoData title="Belum Ada Opportunity for Improvement Dibuat" />
       </template>
     </template>
