@@ -422,10 +422,10 @@ onMounted(() => {
                       </template>
                     </BaseButton>
 
-                    <hr class="dropdown-divider d-none ">
+                    <hr class="dropdown-divider">
 
                     <BaseButton @click="handleToggleModalHistory({ gamo: item })"
-                      class=" d-none dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
                         <TablerIcon icon="HistoryIcon" />
                         <span class="ms-2">
