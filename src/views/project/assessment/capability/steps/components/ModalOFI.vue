@@ -188,22 +188,22 @@ watch(() => [props.isShow], () => {
           <div class="mb-3">
             <BaseSelect :id="`list-target-ofi-${index}`" v-model="ofi.capability_target_id" label="Target"
               default-option="Pilih Target" :options="formState.listTarget.data[index].data" options-label="nama"
-              options-value="id" :is-invalid="!!v$.ofi.$each?.$response?.$errors[index].capability_target_id?.length" />
+              options-value="id" :is-invalid="!!v$.ofi.$each?.$response?.$errors[index]?.capability_target_id?.length" />
 
             <ErrorMessage
               v-if="Array.isArray(v$.ofi.$each?.$response?.$errors) && v$.ofi.$each?.$response?.$errors.length"
-              :errors="v$.ofi.$each?.$response?.$errors[index].capability_target_id" />
+              :errors="v$.ofi.$each?.$response?.$errors[index]?.capability_target_id" />
           </div>
 
           <div class="mb-3">
             <label class="form-label" :for="`ofi-input-${index}`">Opportunity for Improvement</label>
 
             <CKEditor :id="`ofi-input-${index}`" placeholder="Masukkan Opportunity for Improvement" v-model="ofi.ofi"
-              :isInvalid="!!v$.ofi.$each?.$response?.$errors[index].ofi?.length" />
+              :isInvalid="!!v$.ofi.$each?.$response?.$errors[index]?.ofi?.length" />
 
             <ErrorMessage
               v-if="Array.isArray(v$.ofi.$each?.$response?.$errors) && v$.ofi.$each?.$response?.$errors.length"
-              :errors="v$.ofi.$each?.$response?.$errors[index].ofi" />
+              :errors="v$.ofi.$each?.$response?.$errors[index]?.ofi" />
           </div>
         </template>
       </template>
