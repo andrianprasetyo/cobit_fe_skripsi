@@ -30,7 +30,7 @@ const summary = reactive({
     value: 'aggreed_capability_level'
   }, {
     text: 'Assessment',
-    value: 'assessment'
+    value: 'assessment',
   }
   ],
   meta: {
@@ -66,10 +66,10 @@ const assessmentTitle = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getSummaryGamo = async ({ limit, page, assessment_id }) => {
+const getSummaryGamo = async ({ limit, page, assessment_id, sortBy, sortType }) => {
   try {
     summary.loading = true
-    const response = await DomainServices.getSummaryGamo({ limit, page, assessment_id })
+    const response = await DomainServices.getSummaryGamo({ limit, page, assessment_id, sortBy, sortType })
 
     if (response) {
       const data = response?.data
@@ -95,7 +95,9 @@ watch(() => [serverOptions.value], () => {
   getSummaryGamo({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
-    assessment_id: route.params?.id
+    assessment_id: route.params?.id,
+    sortBy: serverOptions.value.sortBy,
+    sortType: serverOptions.value.sortType,
   })
 }, { deep: true })
 
@@ -103,7 +105,9 @@ onMounted(() => {
   getSummaryGamo({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
-    assessment_id: route.params?.id
+    assessment_id: route.params?.id,
+    sortBy: serverOptions.value.sortBy,
+    sortType: serverOptions.value.sortType,
   })
 })
 
