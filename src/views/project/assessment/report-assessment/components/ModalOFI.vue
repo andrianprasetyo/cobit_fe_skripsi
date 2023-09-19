@@ -12,7 +12,9 @@ import AssessmentServices from '@/services/lib/assessment'
 import { useClipboard } from '@vueuse/core'
 import { useToast } from '@/stores/toast'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useAppConfig } from '@/stores/appConfig'
 
+const appConfig = useAppConfig()
 const toast = useToast()
 const assessmentStore = useAssessmentStore()
 const { isSupported, copy, copied } = useClipboard()
@@ -37,8 +39,8 @@ const copiedContent = computed(() => {
 
     plainText += `Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan ${assessmentStore.report?.selectedGamo?.target_level}\n`
     plainText += `(aktivitas COBIT untuk mencapai ${assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama} = ${assessmentStore.report?.selectedGamo?.target_level}) adalah :\n`
-    reportOFI.data?.ofi.forEach((item, index) => {
-      plainText += `${index + 1}. ${item.ofi.replace(/<\/?p>/g, '')}\n`;
+    reportOFI.data?.ofi.forEach((item) => {
+      plainText += `${item.ofi.replace(/<ol><li>/g, '\n').replace(/<\/li>/g, '')}\n`;
     })
 
     return plainText
@@ -77,6 +79,11 @@ const handleCopy = () => {
   })
 }
 
+const handleExport = () => {
+  const url = `${appConfig.app.appHost}assesment/report/detail-ofi?domain_id=${assessmentStore.report.selectedGamo?.domain_id}&assesment_id=${assessmentStore.report.selectedGamo?.assesment_id}&capability_target_id=${assessmentStore.report.selectedGamo?.capability_target_id}&download=true`
+  window.open(url, '_blank');
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 watch(() => [props.isShow], () => {
   if (props.isShow) {
@@ -107,21 +114,33 @@ watch(() => [props.isShow], () => {
       </div>
 
       <div v-else>
-        <h4 class="fw-bolder">
-          {{ reportOFI.data?.domain?.kode }}
-        </h4>
-        <h6 v-html="reportOFI.data?.domain?.ket" />
+        <div class="row">
+          <div class="col-12 col-md-9">
+            <h4 class="fw-bolder">
+              {{ reportOFI.data?.domain?.kode }}
+            </h4>
+            <h6 v-html="reportOFI.data?.domain?.ket" />
 
-        <h6 class="text-primary">
-          ( Hasil Maturity:
-          <span class="fw-bolder">{{ assessmentStore.report?.selectedGamo?.hasil_assesment }}</span>;
-          {{ assessmentStore?.report?.selectedGamo?.target_organisasi?.target?.nama }}:
-          <span class="fw-bolder">{{ assessmentStore.report?.selectedGamo?.target_level }}</span> )
-        </h6>
+            <h6 class="text-primary">
+              ( Hasil Maturity:
+              <span class="fw-bolder">{{ assessmentStore.report?.selectedGamo?.hasil_assesment }}</span>;
+              {{ assessmentStore?.report?.selectedGamo?.target_organisasi?.target?.nama }}:
+              <span class="fw-bolder">{{ assessmentStore.report?.selectedGamo?.target_level }}</span> )
+            </h6>
+          </div>
+
+          <div class="col-12 col-md-3 text-start text-md-end d-none">
+            <BaseButton v-if="reportOFI.data?.ofi?.length" @click="handleExport" title="Export"
+              class="btn btn-outline-primary mt-2 mt-md-0">
+              <template #icon-left>
+                <TablerIcon icon="FileExportIcon" />
+              </template>
+            </BaseButton>
+          </div>
+        </div>
       </div>
 
-      <hr v-if="reportOFI.data?.ofi.length" />
-
+      <hr v-if="reportOFI.data?.ofi?.length" />
 
       <div v-if="Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length" class="row rounded border p-3 mt-3">
         <div class="col-12 col-md-10">
@@ -133,18 +152,18 @@ watch(() => [props.isShow], () => {
             </span>
             adalah:
           </h6>
-          <ol>
+          <ul class="ms-3" style="list-style-type:disc">
             <template v-for="(item, index) in reportOFI.data?.ofi" :key="`ofi-${index}-${item?.id}`">
               <li v-if="item?.ofi" class="lh-base">
                 <div v-html="item?.ofi" />
               </li>
             </template>
-          </ol>
+          </ul>
         </div>
 
         <div v-if="isSupported && Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length"
           class="col-12 col-md-2 text-center text-md-end mt-2 mt-md-0">
-          <BaseButton @click="handleCopy" :title="copied ? 'Tersalin' : 'Salin'"
+          <BaseButton @click="handleCopy" :title="copied ? 'Disalin' : 'Salin'"
             :class="[copied ? 'btn btn-sm btn-success' : 'btn btn-sm btn-primary']">
             <template #icon-left>
               <TablerIcon :icon="copied ? 'ClipboardCheckIcon' : 'CopyIcon'" />

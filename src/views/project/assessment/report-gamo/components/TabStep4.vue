@@ -18,7 +18,6 @@ const chartOptions = reactive({
       top: 1
     }
   },
-
 })
 
 const route = useRoute()
