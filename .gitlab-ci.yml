@@ -60,5 +60,5 @@ deploy main:
     - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - rsync -rav --delete dist/ msi@10.11.11.17:/home/msi/cobit.millennia-solusi.id/
+    - rsync -rav --delete dist/ msi@10.10.12.8:/home/msi/cobit.millennia-solusi.id/
     - ssh msi@10.10.12.8 "ln -s /home/msi/.htaccess /home/msi/cobit.millennia-solusi.id/.htaccess"
