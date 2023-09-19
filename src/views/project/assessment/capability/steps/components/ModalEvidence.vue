@@ -380,7 +380,7 @@ watch(() => [props.isShow], () => {
 
             <ErrorMessage
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
-              :errors="v$.evident.$each?.$response?.$errors[index].url" />
+              :errors="v$.evident.$each?.$response?.$errors[index]?.url" />
           </div>
 
           <!-- File -->
