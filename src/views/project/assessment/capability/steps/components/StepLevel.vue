@@ -320,8 +320,8 @@ onMounted(() => {
               <tr v-for="(item, index) in assessmentStore.capability.detailListLevel"
                 :key="`capability-level-item-${index}-${item?.id}`">
                 <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
-                  <div class="text-break text-center text-wrap fw-bold ">
-                    {{ item?.urutan }}
+                  <div v-tooltip="`Urutan GAMO - ${item?.urutan}`" class="text-break text-center text-wrap fw-bold ">
+                    {{ index + 1 }}
                   </div>
                 </td>
                 <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
