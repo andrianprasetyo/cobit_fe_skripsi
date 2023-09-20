@@ -109,7 +109,8 @@ const handleRefresh = () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
-    organisasi_id: route.params?.id
+    organisasi_id: route.params?.id,
+    organisasi_divisi_id: filter.value.divisi,
   })
 }
 

@@ -144,7 +144,7 @@ const getListQuestion = async ({ id, question }) => {
     }
   } catch (error) {
     questions.loading = false
-    toast.error({ error })
+    // toast.error({ error })
   }
 }
 
