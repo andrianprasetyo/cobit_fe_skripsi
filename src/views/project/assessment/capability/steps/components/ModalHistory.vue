@@ -131,10 +131,8 @@ watch(() => [props.isShow], () => {
                 <span class="text-dark d-block fw-normal">Melakukan Perubahan Data</span>
               </div>
 
-              <div class="collapse mt-3" :id="`collapse-${index}-${item?.id}`">
-                <div class="text-body json">
-                  {{ item?.after }}
-                </div>
+              <div class="collapse mt-3 w-100" :id="`collapse-${index}-${item?.id}`">
+                <json-viewer  class="d-block" :value="item?.after" :expand-depth=5 copyable boxed sort></json-viewer>
               </div>
             </div>
 
