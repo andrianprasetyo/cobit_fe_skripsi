@@ -255,6 +255,13 @@ onMounted(() => {
       <h5 class="card-title mb-3 mb-md-0 fw-semibold">Level {{ assessmentStore.capability.selectedLevel }}</h5>
 
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+        <BaseButton @click="handleToggleModalHistory" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
+          title="Lihat History Perubahan GAMO" :disabled="capability.loadingSubmit || capability.loading">
+          <template #icon-left>
+            <TablerIcon icon="HistoryIcon" />
+          </template>
+        </BaseButton>
+
         <BaseButton @click="handleToggleModalAverageCompliance" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
           title="Lihat Nilai Rata-rata" :disabled="capability.loadingSubmit || capability.loading">
           <template #icon-left>
@@ -422,7 +429,8 @@ onMounted(() => {
                       </template>
                     </BaseButton>
 
-                    <hr class="dropdown-divider">
+                    <!-- History In Dropdown -->
+                    <!-- <hr class="dropdown-divider">
 
                     <BaseButton @click="handleToggleModalHistory({ gamo: item })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
@@ -432,7 +440,7 @@ onMounted(() => {
                           History Perubahan
                         </span>
                       </template>
-                    </BaseButton>
+                    </BaseButton> -->
                   </ul>
                 </td>
               </tr>
