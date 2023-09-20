@@ -857,11 +857,11 @@ const router = createRouter({
           redirect: '/project/assessment',
           children: [
             {
-              name: 'Assessment',
+              name: 'ProjectList',
               path: '/project/assessment',
               component: () => import('@/views/project/assessment/AssessmentList.vue'),
               meta: {
-                pageTitle: 'Asesmen',
+                pageTitle: 'Project',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -881,11 +881,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'TambahAsesmen',
+              name: 'TambahProject',
               path: '/project/assessment/add',
               component: () => import('@/views/project/assessment/AssessmentAdd.vue'),
               meta: {
-                pageTitle: 'Tambah Asesmen',
+                pageTitle: 'Tambah Project',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -902,7 +902,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Tambah Asesmen',
+                    text: 'Tambah Project',
                     disabled: true,
                     href: '/project/assessment/add',
                     active: true
@@ -911,11 +911,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'DetailAsesmen',
+              name: 'DetailProject',
               path: '/project/assessment/:id/detail',
               component: () => import('@/views/project/assessment/AssessmentDetail.vue'),
               meta: {
-                pageTitle: 'Detail Asesmen',
+                pageTitle: 'Detail Project',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -932,7 +932,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Detail Asesmen',
+                    text: 'Detail Project',
                     disabled: true,
                     href: '/project/assessment/:id/detail',
                     active: true
@@ -941,11 +941,11 @@ const router = createRouter({
               }
             },
             {
-              name: 'EditAsesmen',
+              name: 'EditProject',
               path: '/project/assessment/:id/edit',
               component: () => import('@/views/project/assessment/AssessmentEdit.vue'),
               meta: {
-                pageTitle: 'Edit Asesmen',
+                pageTitle: 'Edit Project',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -962,7 +962,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Edit Asesmen',
+                    text: 'Edit Project',
                     disabled: true,
                     href: '/project/assessment/:id/edit',
                     active: true
@@ -1168,12 +1168,12 @@ const router = createRouter({
               }
             },
             {
-              name: 'ReportAsesmen',
+              name: 'ReportProject',
               path: '/project/assessment/:id/report-assessment',
               component: () =>
                 import('@/views/project/assessment/report-assessment/AssessmentReport.vue'),
               meta: {
-                pageTitle: 'Report Asesmen',
+                pageTitle: 'Report Project',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -1239,7 +1239,7 @@ const router = createRouter({
                   '@/views/project/assessment/report-rekapitulasi/AssessmentReportRekapitulasi.vue'
                 ),
               meta: {
-                pageTitle: 'Report Rekapitulasi Asesmen',
+                pageTitle: 'Report Rekapitulasi',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -1256,7 +1256,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Report Rekapitulasi Asesmen',
+                    text: 'Report Rekapitulasi',
                     disabled: true,
                     href: '/project/assessment/:id/report-rekaputilasi',
                     active: true

@@ -86,7 +86,7 @@ onUnmounted(() => {
           </template>
 
           <template #body>
-            <h4 class="card-title text-dark mb-3">Asesmen</h4>
+            <h4 class="card-title text-dark mb-3">Project</h4>
             <div class="d-flex flex-column">
               <div class="fs-2 mb-1 d-flex flex-column">
                 <span class="fw-bolder">

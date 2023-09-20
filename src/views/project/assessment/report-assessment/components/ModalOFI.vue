@@ -62,10 +62,10 @@ const copiedContent = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getReportDetailOFIAssessment = async ({ domain_id, assesment_id, capability_target_id }) => {
+const getReportDetailOFIAssessment = async ({ domain_id, assesment_id, capability_target_id, capability_assesment_id }) => {
   try {
     reportOFI.loading = true
-    const response = await AssessmentServices.getReportDetailOFIAssessment({ domain_id, assesment_id, capability_target_id })
+    const response = await AssessmentServices.getReportDetailOFIAssessment({ domain_id, assesment_id, capability_target_id, capability_assesment_id })
 
     if (response) {
       const data = response?.data
@@ -98,6 +98,7 @@ const handleExport = () => {
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     getReportDetailOFIAssessment({
+      capability_assesment_id: assessmentStore.report.selectedGamo?.id,
       domain_id: assessmentStore.report.selectedGamo?.domain_id,
       assesment_id: assessmentStore.report.selectedGamo?.assesment_id,
       capability_target_id: assessmentStore.report.selectedGamo?.capability_target_id

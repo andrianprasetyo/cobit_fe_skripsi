@@ -103,6 +103,10 @@ const handleDownloadFile = ({ url }) => {
                       </template>
                     </BaseButton>
                   </div>
+
+                  <div v-else class="ratio ratio-1x1">
+                    <img :src="pathSource(evidence?.docs?.docs?.path)" alt="Evidence" />
+                  </div>
                 </div>
 
                 <template v-else>

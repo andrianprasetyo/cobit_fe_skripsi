@@ -90,6 +90,10 @@ const handleDownloadExcel = ({ url }) => {
                   </template>
                 </BaseButton>
               </div>
+
+              <div v-else>
+                <img :src="pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path)" alt="Image File" />
+              </div>
             </div>
 
             <div v-else class="h-100 d-flex align-items-center justify-content-center">

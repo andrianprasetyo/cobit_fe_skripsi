@@ -103,15 +103,15 @@ const handleSubmit = async () => {
     <template #body>
       <div class="mb-3">
         <FilePond id="upload-media-file-pond" label="File" name="media-file-pond"
-          accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
-          :files="formState.files" v-on:updatefiles="onUpdateFiles" :allowFileSizeValidation="true" maxFileSize="5Mb"
-          :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'">
+          accepted=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf, image/*, .doc, .docx"
+          :files="formState.files" v-on:updatefiles="onUpdateFiles" :allowFileSizeValidation="true" maxFileSize="10Mb"
+          :fileValidateTypeLabelExpectedTypes="'File harus berupa Image, Excel, PDF, atau Word'">
         </FilePond>
 
         <div class="mt-1">
           <small>
-            <span class="text-danger fw-bold">Perhatian!</span> File yang diupload hanya diperbolehkan file excel atau
-            pdf
+            <span class="text-danger fw-bold">Perhatian!</span> File yang diupload hanya diperbolehkan file image, excel, pdf atau
+            word
           </small>
         </div>
       </div>

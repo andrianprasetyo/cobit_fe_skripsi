@@ -107,7 +107,7 @@ watch(() => [filter.value], value => {
     <div class="card">
       <div class="card-body">
         <div>
-          <h5 class="card-title fw-semibold">Chart Report Asesmen</h5>
+          <h5 class="card-title fw-semibold">Chart Report</h5>
           <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
         </div>
 

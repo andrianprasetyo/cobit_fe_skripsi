@@ -185,8 +185,8 @@ const selesaikanAsessment = async ({ id }) => {
 
     if (response) {
       toast.success({
-        title: 'Ubah Status Assessment',
-        text: `Berhasil Mengubah Status Assessment`
+        title: 'Ubah Status Project',
+        text: `Berhasil Mengubah Status Project`
       })
 
       handleRefresh()
@@ -206,8 +206,8 @@ const deleteAssessment = async ({ id }) => {
 
     if (response) {
       toast.success({
-        title: 'Hapus Assessment',
-        text: `Berhasil Menghapus Data Assessment`
+        title: 'Hapus Project',
+        text: `Berhasil Menghapus Data Project`
       })
       handleRefresh()
 
@@ -268,7 +268,7 @@ const handleNavigateReportRekapitulasi = ({ id, assessment }) => {
 
 const handleSelesaikanAssessment = ({ title, id }) => {
   alert.info({
-    title: `Apakah Anda Yakin untuk Menyelesaikan Assessment ${title}`
+    title: `Apakah Anda Yakin untuk Menyelesaikan Project ${title}`
   }).then(async (result) => {
     if (result.isConfirmed) {
       alert.loading()
@@ -337,15 +337,15 @@ watch(() => [serverOptions.value, filter.value], () => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Asesmen</h5>
+              <h5 class="card-title fw-semibold">Project</h5>
             </div>
 
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <SearchInput v-model="filter.search" placeholder="Cari Asesmen" />
+              <SearchInput v-model="filter.search" placeholder="Cari Project" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Asesmen">
+                title="Tambah Project">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -460,19 +460,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="EyeIcon" />
                         <span class="ms-2">
-                          Lihat Detail Asesmen
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <li>
-                    <BaseButton @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ClipboardTextIcon" />
-                        <span class="ms-2">
-                          Lihat Kapabilitas Asesmen
+                          Lihat Detail Project
                         </span>
                       </template>
                     </BaseButton>
@@ -484,7 +472,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="ChartDotsIcon" />
                         <span class="ms-2">
-                          Lihat Report Asesmen Berdasarkan Target
+                          Lihat Report Berdasarkan Target
                         </span>
                       </template>
                     </BaseButton>
@@ -497,7 +485,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #icon-left>
                         <TablerIcon icon="ChartGridDotsIcon" />
                         <span class="ms-2">
-                          Lihat Report Rekapitulasi Asesmen
+                          Lihat Report Rekapitulasi
                         </span>
                       </template>
                     </BaseButton>
@@ -506,6 +494,17 @@ watch(() => [serverOptions.value, filter.value], () => {
                   <template v-if="!isStatusCompleted(item?.item?.status)">
                     <li>
                       <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <BaseButton @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="ClipboardTextIcon" />
+                          <span class="ms-2">
+                            Atur Kapabilitas
+                          </span>
+                        </template>
+                      </BaseButton>
                     </li>
                     <li>
                       <BaseButton
@@ -525,7 +524,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <template #icon-left>
                           <TablerIcon icon="EditIcon" />
                           <span class="ms-2">
-                            Edit Asesmen
+                            Edit Project
                           </span>
                         </template>
                       </BaseButton>
@@ -536,7 +535,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <template #icon-left>
                           <TablerIcon icon="UploadIcon" />
                           <span class="ms-2">
-                            Upload Laporan Asesmen
+                            Upload Laporan Project
                           </span>
                         </template>
                       </BaseButton>
@@ -547,7 +546,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                         <template #icon-left>
                           <TablerIcon icon="CheckboxIcon" />
                           <span class="ms-2">
-                            Selesaikan Asesmen
+                            Selesaikan Project
                           </span>
                         </template>
                       </BaseButton>

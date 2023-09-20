@@ -96,8 +96,8 @@ const handleSubmit = async () => {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Edit Asesmen',
-          text: 'Berhasil Mengubah Data Asesmen'
+          title: 'Edit Project',
+          text: 'Berhasil Mengubah Data Project'
         })
         handleBack()
       }
@@ -140,7 +140,7 @@ onUnmounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Asesmen</h5>
+          <h5 class="card-title mb-9 fw-semibold">Project</h5>
 
           <div class="row mb-3">
             <div class="col-12 col-md-9">
