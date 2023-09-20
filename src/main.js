@@ -27,6 +27,7 @@ import setupApexCharts from '@/plugins/apexcharts'
 import setupLoadingOverlay from '@/plugins/loading-overlay'
 import setupVSelect from '@/plugins/v-select'
 import setupFloatingVue from '@/plugins/floating-vue'
+import setupJSONViewer from '@/plugins/json-viewer'
 
 import App from './App.vue'
 import router from './router'
@@ -44,5 +45,6 @@ setupApexCharts(app)
 setupLoadingOverlay(app)
 setupVSelect(app)
 setupFloatingVue(app)
+setupJSONViewer(app)
 
 app.mount('#app')
