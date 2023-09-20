@@ -80,12 +80,14 @@ export default {
   },
 
   /**
-   * @param {{assesment_id: String, domain_id: String}} payload
+   * @param {{assesment_id: String, domain_id: String, limit: String | Number, page: String | Number}} payload
    * @returns
    */
   getHistoryGamoCapability(payload) {
     return axiosClient.get(
-      `capabilityassessment/history-by-domain?assesment_id=${payload?.assesment_id}&domain_id=${payload?.domain_id}`
+      `capabilityassesment/answer/history?assesment_id=${payload?.assesment_id}&domain_id=${
+        payload?.domain_id
+      }&limit=${payload?.limit || 10}&page=${payload?.page || 1}`
     )
   }
 }
