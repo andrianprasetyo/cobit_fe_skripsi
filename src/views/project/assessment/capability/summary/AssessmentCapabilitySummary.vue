@@ -32,7 +32,7 @@ const isLastValueLevelNotNA = computed(() => {
 const indexIsLastValueLevelNA = computed(() => {
   return value => {
     if (Array.isArray(value) && value.length) {
-      const indexNA = value.findIndex(v => v?.label === 'N/A')
+      const indexNA = value.findIndex(v => v?.label === 'N/A' || !v?.label)
 
       if (indexNA !== -1) {
         return indexNA - 1
