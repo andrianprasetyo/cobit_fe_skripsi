@@ -99,7 +99,7 @@ const rulesPersentase = computed(() => {
     return {
       hasil: {
         required: helpers.withMessage('Silahkan isi persentase', required),
-        minValue: helpers.withMessage("Nilai Bobot / Persentase minimal 1", minValue(1)),
+        minValue: helpers.withMessage("Nilai Bobot / Persentase minimal 0", minValue(0)),
         mustBe100: helpers.withMessage("Nilai Bobot / Persentase Keseluruhan jika dijumlahkan harus 100", () => {
           let sum = 0
           questions.data[indexQuestion]?.komponen?.map((komponen) => {
