@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
@@ -50,15 +50,31 @@ const isPdf = computed(() => {
   }
 })
 
+const isImage = computed(() => {
+  return value => {
+    if (typeof value === 'string') {
+      const listExt = ['png', 'jpg', 'jpeg', 'svg', 'webp']
+      return listExt.includes(value)
+    } else {
+      return false
+    }
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClose = () => {
   emits('close', true)
 }
 
-const handleDownloadExcel = ({ url }) => {
+const handleDownloadFile = ({ url }) => {
   window.open(url, '_blank');
 }
 
+watch(() => [props.isShow], () => {
+  if (props.isShow) {
+    isErrorViewFile.value = false
+  }
+}, { deep: true })
 
 </script>
 
@@ -83,7 +99,7 @@ const handleDownloadExcel = ({ url }) => {
               <div v-else-if="isExcel(assessmentStore.capability.selectedMediaFile?.docs?.ext)"
                 class="d-flex justify-content-center align-items-center bg-light">
                 <BaseButton
-                  @click="handleDownloadExcel({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
+                  @click="handleDownloadFile({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
                   title="Download File">
                   <template #icon-left>
                     <TablerIcon icon="DownloadIcon" />
@@ -91,8 +107,20 @@ const handleDownloadExcel = ({ url }) => {
                 </BaseButton>
               </div>
 
-              <div v-else>
-                <img :src="pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path)" alt="Image File" />
+              <div v-else-if="isImage(assessmentStore.capability.selectedMediaFile?.docs?.ext)">
+                <img class="card-img-top img-responsive"
+                  :src="pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path)" alt="Image File"
+                  @error="isErrorViewFile = true" />
+              </div>
+
+              <div v-else class="d-flex justify-content-center align-items-center bg-light">
+                <BaseButton
+                  @click="handleDownloadFile({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
+                  title="Download File">
+                  <template #icon-left>
+                    <TablerIcon icon="DownloadIcon" />
+                  </template>
+                </BaseButton>
               </div>
             </div>
 

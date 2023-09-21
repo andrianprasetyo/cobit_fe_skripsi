@@ -12,6 +12,10 @@ import { filterMenu } from '@/utils/filterMenuByRoleType'
 
 import menu from '@/data/menu.json'
 
+import accessAdministrator from '@/data/accessAdministrator.json'
+import accessAssessor from '@/data/accessAssessor.json'
+import accessExternal from '@/data/accessExternal.json'
+
 export const useAuth = defineStore('auth', {
   state: () => ({
     account: null,
@@ -115,12 +119,22 @@ export const useAuth = defineStore('auth', {
           this.loggedInAt = new Date()
           this.isAuthenticated = true
 
+          const role_type = data?.user?.roleaktif?.role?.code
+
           const filteredMenu = filterMenu({
             menuData: menu,
-            role_type: data?.user?.roleaktif?.role?.code
+            role_type: role_type
           })
 
           this.menu = filteredMenu
+
+          if (role_type === 'administrator') {
+            this.setAccess(accessAdministrator)
+          } else if (role_type === 'assesor') {
+            this.setAccess(accessAssessor)
+          } else if (role_type === 'external') {
+            this.setAccess(accessExternal)
+          }
 
           setCookies({ cookies: { token: data?.access_token }, expires: data?.expires_in })
 

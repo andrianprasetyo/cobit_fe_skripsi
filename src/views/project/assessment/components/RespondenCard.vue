@@ -348,7 +348,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </li>
 
             <li>
-              <BaseButton @click="toggleModalSummaryGamo"
+              <BaseButton :access="['project-canvas']" @click="toggleModalSummaryGamo"
                 class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Summary GAMO">
                 <template #icon-left>
                   <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
@@ -379,7 +379,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <BaseButton @click="handleSelesaikanAssessment"
+                <BaseButton :access="['project-complete']" @click="handleSelesaikanAssessment"
                   class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
                   <template #icon-left>
                     <TablerIcon icon="CheckboxIcon" />

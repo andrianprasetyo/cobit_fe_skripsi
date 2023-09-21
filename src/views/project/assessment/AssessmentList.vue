@@ -344,8 +344,8 @@ watch(() => [serverOptions.value, filter.value], () => {
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
               <SearchInput v-model="filter.search" placeholder="Cari Project" />
 
-              <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Project">
+              <BaseButton :access="['project-add']" @click="handleNavigateAdd"
+                class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Project">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -496,7 +496,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <hr class="dropdown-divider">
                     </li>
                     <li>
-                      <BaseButton @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
+                      <BaseButton :access="['project-capability']"
+                        @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
                           <TablerIcon icon="ClipboardTextIcon" />
@@ -507,7 +508,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </BaseButton>
                     </li>
                     <li>
-                      <BaseButton
+                      <BaseButton :access="['project-target']"
                         @click="handleNavigateSettingTarget({ id: item?.item?.id, assessment: item.item?.nama })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
@@ -519,7 +520,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </BaseButton>
                     </li>
                     <li>
-                      <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"
+                      <BaseButton :access="['project-edit']" @click="handleNavigateEdit({ id: item?.item?.id })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
                           <TablerIcon icon="EditIcon" />
@@ -530,7 +531,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </BaseButton>
                     </li>
                     <li>
-                      <BaseButton @click="toggleModalUploadLaporan({ item: item?.item })"
+                      <BaseButton :access="['project-edit']" @click="toggleModalUploadLaporan({ item: item?.item })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
                           <TablerIcon icon="UploadIcon" />
@@ -541,7 +542,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                       </BaseButton>
                     </li>
                     <li>
-                      <BaseButton @click="handleSelesaikanAssessment({ title: item?.item?.nama, id: item?.item?.id })"
+                      <BaseButton :access="['project-edit']"
+                        @click="handleSelesaikanAssessment({ title: item?.item?.nama, id: item?.item?.id })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
                         <template #icon-left>
                           <TablerIcon icon="CheckboxIcon" />
@@ -565,7 +567,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <hr class="dropdown-divider">
                     </li>
                     <li>
-                      <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                      <BaseButton :access="['project-delete']"
+                        @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
                         class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
                         <template #icon-left>
                           <TablerIcon icon="TrashIcon" />

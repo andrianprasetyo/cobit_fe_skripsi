@@ -19,7 +19,7 @@
     "icon": null,
     "type": "menu",
     "urutan": 2,
-    "role_type": "[\"administrator\"]"
+    "role_type": "[\"administrator\", \"assesor\"]"
   },
   {
     "id": "98061b78-a961-4910-8756-d0e2161458bd",
@@ -30,7 +30,7 @@
     "icon": "AssemblyIcon",
     "type": "menu",
     "urutan": 3,
-    "role_type": "[\"administrator\"]",
+    "role_type": "[\"administrator\", \"assesor\"]",
     "children": [
       {
         "id": "98061bf4-3e16-43f1-b645-6cfbedbd7238",
@@ -74,7 +74,7 @@
         "icon": "BuildingCommunityIcon",
         "type": "menu",
         "urutan": 3,
-        "role_type": "[\"administrator\"]"
+        "role_type": "[\"administrator\", \"assesor\"]"
       }
     ]
   },
@@ -133,30 +133,17 @@
     "icon": null,
     "type": "menu",
     "urutan": 6,
-    "role_type": "[\"administrator\"]"
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
   },
   {
     "id": "1d8f2806-e1d7-4a98-8aeb-63f6f8043737",
     "parent_id": null,
     "title": "Project",
     "menu_key": "project",
-    "url": null,
+    "url": "/project/assessment",
     "icon": "ReportAnalyticsIcon",
     "type": "menu",
     "urutan": 7,
-    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]",
-    "children": [
-      {
-        "id": "5ab4e70f-0ea9-4dd5-acce-f3a3eb78724c",
-        "parent_id": "1d8f2806-e1d7-4a98-8aeb-63f6f8043737",
-        "title": "Asesmen",
-        "menu_key": "project-assessment",
-        "url": "/project/assessment",
-        "icon": "ReportAnalyticsIcon",
-        "type": "menu",
-        "urutan": 1,
-        "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
-      }
-    ]
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
   }
 ]

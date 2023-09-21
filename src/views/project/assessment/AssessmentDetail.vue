@@ -179,14 +179,14 @@ onUnmounted(() => {
             <div class="mb-3 d-flex flex-row justify-content-between align-items-center">
               <h4 class="card-title text-dark">PIC</h4>
 
-              <BaseButton v-if="assessment.detail?.pic?.status === 'pending'" @click="toggleModalEditPIC"
-                title="Edit PIC">
+              <BaseButton :access="['project-edit']" v-if="assessment.detail?.pic?.status === 'pending'"
+                @click="toggleModalEditPIC" title="Edit PIC">
                 <template #icon-right>
                   <TablerIcon icon="EditIcon" class="ms-1" />
                 </template>
               </BaseButton>
 
-              <BaseButton v-else-if="assessment.detail?.pic?.status === 'active'"
+              <BaseButton v-else-if="assessment.detail?.pic?.status === 'active'" :access="['project-edit']"
                 @click="toggleModalEditTanggalKadaluarsaPIC" title="Edit Tanggal Kadaluarsa PIC">
                 <template #icon-right>
                   <TablerIcon icon="EditIcon" class="ms-1" />
