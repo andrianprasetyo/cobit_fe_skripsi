@@ -38,6 +38,10 @@ const questions = reactive({
   data: [],
   loadingNavigation: false,
   navigation: [],
+  navigation_meta: {
+    total: 0,
+    terisi: 0,
+  },
   meta: {
     total: 0,
   },
@@ -121,6 +125,14 @@ const formatDate = computed(() => {
   }
 })
 
+const isAllQuestionAnswered = computed(() => {
+  if (questions.navigation_meta.terisi == questions.navigation_meta.total) {
+    return true
+  } else {
+    return false
+  }
+})
+
 const v$ = useVuelidate()
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -157,6 +169,7 @@ const getNavigationQuestion = async ({ assesment_id, responden_id }) => {
       const data = response?.data
 
       questions.navigation = data?.pertanyaan || []
+      questions.navigation_meta = data?.meta;
       questions.loadingNavigation = false
     }
   } catch (error) {
@@ -179,8 +192,9 @@ const saveJawaban = async ({ isLastQuestion = false }) => {
             currentQuestion: quesioner.question.currentQuestion + 1
           }
         })
+      } else {
+        scrollToTop()
       }
-      scrollToTop()
 
       return response
     }
@@ -230,6 +244,8 @@ const finishQuisioner = async () => {
           currentQuestion: 1
         }
       })
+
+      return response
     }
   } catch (error) {
     questions.loadingSubmit = false
@@ -280,17 +296,20 @@ const handleFinish = async () => {
       if (result.isConfirmed) {
         alert.loading()
         try {
-          const response = await saveJawaban({ isLastQuestion: true })
-
-          if (response) {
-            finishQuisioner()
-          }
+          await finishQuisioner()
         } catch (error) {
           alert.instance().close()
         }
 
       }
     })
+  }
+}
+
+const handleSaveLastJawaban = async () => {
+  const result = await v$.value.$validate()
+  if (result) {
+    saveJawaban({ isLastQuestion: true })
   }
 }
 
@@ -423,12 +442,12 @@ watch(() => [quesioner.question.currentQuestion], () => {
                   <!-- {{ progressPercentage(quesioner.question.currentQuestion - 1) }}% -->
                 </span>
 
-                <!-- <BaseButton v-if="!isLastQuestion && progressPercentageAnswered" @click="handleForceFinish"
+                <BaseButton v-if="isAllQuestionAnswered" @click="handleFinish"
                   class="btn btn-sm btn-light-success ms-2 text-primary" title="Selesaikan">
                   <template #icon-right>
                     <TablerIcon icon="CheckboxIcon" />
                   </template>
-                </BaseButton> -->
+                </BaseButton>
               </div>
             </div>
 
@@ -495,7 +514,9 @@ watch(() => [quesioner.question.currentQuestion], () => {
                               :state="jawaban" :rules="rulesPilihanGanda({ indexJawaban, indexKomponen, indexQuestion })"
                               :index="indexKomponen">
                               <template #default="{ v }">
-                                <td>
+                                <td :class="{
+                                  'bg-light-danger': v?.hasil?.$errors?.length
+                                }">
                                   <div
                                     class="form-check form-check-inline d-flex justify-content-center align-items-center">
                                     <input type="radio" class="form-check-input primary check-outline outline-primary"
@@ -518,7 +539,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
                                 <td class="width-250px">
                                   <div class="d-flex flex-column justify-content-center">
                                     <BaseInput :id="`input-${indexJawaban}-${indexKomponen}`" class="form-control"
-                                      type="number" :min="1" :max="100" :name="`input-${indexKomponen}`"
+                                      type="number" :min="0" :max="100" :name="`input-${indexKomponen}`"
                                       placeholder="Silakan isi persentase" v-model="v.hasil.$model"
                                       :is-invalid="!!v.hasil?.$errors?.length">
                                       <template #extra-input-group>
@@ -549,7 +570,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
       <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
         <div>
           <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Pertanyaan Sebelumnya"
-            class="btn btn-outline-primary" :disabled="questions.loadingSubmitBack"
+            class="btn btn-outline-primary" :disabled="questions.loadingSubmitBack || questions.loadingSubmit"
             :is-loading="questions.loadingSubmitBack">
             <template #icon-left>
               <TablerIcon icon="ChevronLeftIcon" />
@@ -558,15 +579,25 @@ watch(() => [quesioner.question.currentQuestion], () => {
         </div>
 
         <div>
-          <BaseButton v-if="isLastQuestion" @click="handleFinish" class="btn btn-success mt-2 mt-md-0"
-            title="Simpan dan Selesaikan" :disabled="questions.loadingSubmit" :is-loading="questions.loadingSubmit">
+          <BaseButton v-if="isLastQuestion && isAllQuestionAnswered" @click="handleFinish"
+            class="btn btn-success mt-2 mt-md-0" title="Selesaikan Kuesioner"
+            :disabled="questions.loadingSubmit || questions.loadingSubmitBack" :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="CheckboxIcon" />
             </template>
           </BaseButton>
 
-          <BaseButton v-else @click="handleNext" class="btn btn-primary mt-2 mt-md-0" title="Pertanyaan Selanjutnya"
-            :disabled="questions.loadingSubmit" :is-loading="questions.loadingSubmit">
+          <BaseButton v-else-if="isLastQuestion" @click="handleSaveLastJawaban" class="btn btn-primary mt-2 mt-md-0"
+            title="Simpan Jawaban" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
+            :is-loading="questions.loadingSubmit">
+            <template #icon-right>
+              <TablerIcon icon="DeviceFloppyIcon" />
+            </template>
+          </BaseButton>
+
+          <BaseButton v-else-if="!isLastQuestion" @click="handleNext" class="btn btn-primary mt-2 mt-md-0"
+            title="Pertanyaan Selanjutnya" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
+            :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="ChevronRightIcon" />
             </template>
@@ -577,7 +608,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
 
     <template v-else>
       <div class="d-flex flex-column align-items-center justify-content-center vh-100">
-        <NoData title="Kuesioner Tidak Ditemukan" />
+        <NoData source="/assets/images/illustrations/man-confusing-with-phone.svg"
+          title="Terjadi Kesalahan. Reload Halaman Untuk Menyegarkan Halaman" />
       </div>
     </template>
   </div>
@@ -589,5 +621,4 @@ watch(() => [quesioner.question.currentQuestion], () => {
   height: 40px !important;
   font-size: 12px !important;
   padding: 5px !important;
-}
-</style>
+}</style>
