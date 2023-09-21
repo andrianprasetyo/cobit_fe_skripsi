@@ -67,6 +67,9 @@ const handleSubmit = async () => {
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     setValueToForm()
+  } else {
+    formState.capability_answer_id = null
+    formState.note = null
   }
 }, { deep: true })
 
