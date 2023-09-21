@@ -178,7 +178,7 @@ const getNavigationQuestion = async ({ assesment_id, responden_id }) => {
   }
 }
 
-const saveJawaban = async ({ isLastQuestion = false }) => {
+const saveJawaban = async ({ isLastQuestion = false, withScrollToTop = true }) => {
   try {
     questions.loadingSubmit = true
     const response = await QuisionerServices.saveJawaban({ assesment_user_id: quesioner?.responden?.id, hasil: questions.data })
@@ -193,6 +193,10 @@ const saveJawaban = async ({ isLastQuestion = false }) => {
           }
         })
       } else {
+        scrollToTop()
+      }
+
+      if (withScrollToTop) {
         scrollToTop()
       }
 
@@ -309,7 +313,11 @@ const handleFinish = async () => {
 const handleSaveLastJawaban = async () => {
   const result = await v$.value.$validate()
   if (result) {
-    saveJawaban({ isLastQuestion: true })
+    const response = saveJawaban({ isLastQuestion: true, withScrollToTop: false })
+
+    if (response) {
+      getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
+    }
   }
 }
 
@@ -372,6 +380,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
   getListQuestion({
     id: quesioner?.responden?.id, question: quesioner.question.currentQuestion
   })
+
 
   if (!isLastQuestion.value) {
     getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
