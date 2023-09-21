@@ -315,6 +315,9 @@ const setValueToForm = () => {
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     setValueToForm()
+  } else {
+    formState.evident = [];
+    formState.listFileMediaRepository.data = [];
   }
 }, { deep: true })
 

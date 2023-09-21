@@ -144,6 +144,9 @@ const handleSubmit = async () => {
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     setValueToForm()
+  } else {
+    formState.ofi = [];
+    formState.listTarget.data = [];
   }
 }, { deep: true })
 
