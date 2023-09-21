@@ -47,7 +47,7 @@ const copiedContent = computed(() => {
         .replace(/<\/ol>|<\/ul>/g, "")
         .replace(/<\/?[a-z][a-z0-9]*[^<>]*>/ig, '')
         .replace(/&amp;/g, '&') // Replace &amp; with &
-        .replace(/&nbsp;/g, ' ')}` // Replace &nbsp; with space
+        .replace(/&nbsp;/g, ' ')}\n` // Replace &nbsp; with space
       // .replace(/\s+/g, ' ')}` // Replace multiple spaces with a single space
 
       // plainText += `${item.ofi.replace(/((<ul>|<ol>)|<li>(.*)<\/li>|(<\/ul>|<\/ol>))/g, '$3')}`;
