@@ -54,14 +54,14 @@ setInterval(() => {
     <div class="brand-logo d-flex align-items-center justify-content-center">
       <LinkMenuItem v-if="!layouts.miniSidebar" to="/" class="text-nowrap logo-img mt-3" @click="handleClickLogo">
         <div v-if="logo.isPlayAnimation" class="logo-shine"></div>
-        <img :src="app.appLogoImage" class="light-logo" height="50" alt="logo" />
+        <img :src="app.appLogoImage" class="light-logo" height="50" alt="logo" style="object-fit: cover;"  />
       </LinkMenuItem>
 
       <LinkMenuItem v-else to="/">
         <div v-if="logo.isPlayAnimation" :class="[logo.isShowFullLogo ? 'logo-shine mt-3' : 'logo-only-shine']"></div>
         <img :src="logo.isShowFullLogo ? app.appLogoImage : app.appLogoImageOnly"
           :height="logo.isShowFullLogo ? '50' : '40'" :class="[logo.isShowFullLogo ? 'text-nowrap logo-img mt-3' : '']"
-          alt="logo" />
+          alt="logo" style="object-fit: cover;" />
       </LinkMenuItem>
 
       <div @click="handleToggleMiniSidebar" class="close-btn d-lg-none d-block sidebartoggler cursor-pointer ms-3"

@@ -98,10 +98,12 @@ const handleExport = () => {
 watch(() => [props.isShow], () => {
   if (props.isShow) {
     getReportDetailOFIAssessment({
-      capability_assesment_id: assessmentStore.report.selectedGamo?.id,
       domain_id: assessmentStore.report.selectedGamo?.domain_id,
       assesment_id: assessmentStore.report.selectedGamo?.assesment_id,
-      capability_target_id: assessmentStore.report.selectedGamo?.capability_target_id
+      capability_target_id: assessmentStore.report.selectedGamo?.capability_target_id,
+      /*
+      capability_assesment_id: assessmentStore.report.selectedGamo?.capability_assesment_id,
+      */
     })
   } else {
     reportOFI.data = null
