@@ -227,8 +227,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Opportunity for Improvement"
-        :disabled="!formState.ofi.length">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Opportunity for Improvement">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>
