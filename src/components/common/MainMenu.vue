@@ -89,6 +89,12 @@ const isChildrenActiveMenu = computed(() => {
   };
 })
 
+const isHasURLAndURLStartsFromAndSpecialCase = computed(() => {
+  return item => {
+    return !item?.parent_id && !item?.children && currentRoutePath.value.startsWith(item?.url)
+  }
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const setActiveGroupId = value => {
   if (stateSidebar.activeGroupId !== value) {
@@ -182,10 +188,10 @@ defineExpose({
         <li v-else class="sidebar-item" :class="[isActiveNav(menuItem) ? 'selected' : '']">
           <!-- Navigation Item With URL -->
           <LinkMenuItem v-if="isHasURL(menuItem)" :to="menuItem?.url || '-'" class="sidebar-link"
-            :class="[isHasChildren(menuItem?.children) ? 'has-arrow' : '', isActiveNav(menuItem) ? 'active' : '']"
+            :class="[isHasChildren(menuItem?.children) ? 'has-arrow' : '', isActiveNav(menuItem) || isHasURLAndURLStartsFromAndSpecialCase(menuItem) ? 'active' : '']"
             @click="setActiveGroupId('')">
             <TablerIcon size=" 21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4"
-              :class="[isActiveNav(menuItem) ? 'text-secondary' : '']" />
+              :class="[isActiveNav(menuItem) || isHasURLAndURLStartsFromAndSpecialCase(menuItem) ? 'text-secondary' : '']" />
             <span class="hide-menu">{{ menuItem?.title }}</span>
           </LinkMenuItem>
 

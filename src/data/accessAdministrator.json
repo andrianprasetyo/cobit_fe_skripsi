@@ -1,0 +1,18 @@
+[
+  "dashboard",
+  "master",
+  "master-add",
+  "master-edit",
+  "master-delete",
+  "manuser",
+  "manuser-edit",
+  "manuser-delete",
+  "project",
+  "project-add",
+  "project-edit",
+  "project-delete",
+  "project-canvas",
+  "project-capability",
+  "project-target",
+  "project-complete"
+]

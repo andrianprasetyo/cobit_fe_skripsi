@@ -50,7 +50,7 @@ const isHasAccess = computed(() => {
 </script>
 
 <template>
-  <button ref="base-button" :type="props.type" v-bind="$attrs" :class="props.class"
+  <button v-if="(access && isHasAccess) || (!access)" ref="base-button" :type="props.type" v-bind="$attrs" :class="props.class"
     :disabled="(access && !isHasAccess) || props.disabled">
     <div v-if="props.isLoading" class="spinner-border spinner-border-sm" role="status">
       <span class="visually-hidden">Loading...</span>
