@@ -384,7 +384,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   <template #icon-left>
                     <TablerIcon icon="CheckboxIcon" />
                     <span class="ms-2">
-                      Selesaikan Asesmen
+                      Selesaikan Project
                     </span>
                   </template>
                 </BaseButton>

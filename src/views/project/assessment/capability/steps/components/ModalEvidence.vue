@@ -386,16 +386,16 @@ watch(() => [props.isShow], () => {
           <!-- File -->
           <div v-else-if="evident.tipe === 'file-upload'" class="mb-3">
             <FilePond ref="file_pond_upload" id="direct-upload-file-pond" label="File" name="direct-upload-file-pond"
-              accepted=".xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"
-              :files="formState.evident[index].files" :allowFileSizeValidation="true" maxFileSize="2Mb"
-              :fileValidateTypeLabelExpectedTypes="'File harus berupa Excel atau PDF'" :instant-upload="true"
-              v-on:initfile="$event => handleUploadFile({ file: $event, index })"
+              accepted=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf, image/*, .doc, .docx"
+              :files="formState.evident[index].files" :allowFileSizeValidation="true" maxFileSize="10Mb"
+              :fileValidateTypeLabelExpectedTypes="'File harus berupa Image, Excel, PDF, atau Word'"
+              :instant-upload="true" v-on:initfile="$event => handleUploadFile({ file: $event, index })"
               v-on:removefile="handleDeleteFile({ media_repositories_id: evident?.media_repositories_id, index })" />
 
             <div class="mt-1">
               <small>
-                <span class="text-danger fw-bold">Perhatian!</span> File yang diupload hanya diperbolehkan file excel atau
-                pdf
+                <span class="text-danger fw-bold">Perhatian!</span> File yang diupload hanya diperbolehkan file image,
+                excel, pdf atau word
               </small>
             </div>
           </div>

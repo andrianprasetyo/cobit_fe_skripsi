@@ -165,6 +165,10 @@ export default {
         payload?.capability_target_id
           ? `&capability_target_id=${payload?.capability_target_id}`
           : ''
+      }${
+        payload?.capability_assesment_id
+          ? `&capability_assesment_id=${payload?.capability_assesment_id}`
+          : ''
       }`
     )
   }

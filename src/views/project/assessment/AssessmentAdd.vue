@@ -261,8 +261,8 @@ const handleSubmit = async () => {
         loader.hide()
         formState.loadingSubmit = false
         toast.success({
-          title: 'Tambah Asesmen',
-          text: 'Berhasil Menambahkan Data Asesmen'
+          title: 'Tambah Project',
+          text: 'Berhasil Menambahkan Data Project'
         })
         handleBack()
       }
@@ -333,7 +333,7 @@ onMounted(() => {
     <section>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">Asesmen</h5>
+          <h5 class="card-title mb-9 fw-semibold">Project</h5>
 
           <div class="mb-3">
             <BaseInput id="assessment" v-model="v$.assessment.$model" label="Nama Asesmen"
