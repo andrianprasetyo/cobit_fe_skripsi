@@ -22,6 +22,9 @@ const designFactor = reactive({
   loading: false,
   data: [],
   headers: [{
+    text: 'Aksi',
+    value: 'action'
+  }, {
     text: 'Kode',
     value: 'kode',
     sortable: true
@@ -32,9 +35,6 @@ const designFactor = reactive({
   }, {
     text: 'Deskripsi',
     value: 'deskripsi',
-  }, {
-    text: 'Action',
-    value: 'action'
   }],
   meta: {
     current_page: 1,
@@ -223,79 +223,99 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Atur Question ${item.item?.kode || ''}`"
+                  @click="handleNavigateToQuestion({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="ClipboardListIcon" />
+                  </template>
+                </BaseButton>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateToOverview({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
-                      <template #icon-left>
-                        <TablerIcon icon="EyeIcon" />
-                        <span class="ms-2">
-                          Overview
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+                <BaseButton v-tooltip="`Atur Komponen ${item.item?.kode || ''}`"
+                  @click="handleNavigateToComponent({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="ListDetailsIcon" />
+                  </template>
+                </BaseButton>
 
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
+                <div class="dropdown dropstart">
+                  <BaseButton v-tooltip="`Lihat Aksi Lain`" class="btn btn-icon" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false">
+                    <template #icon-left>
+                      <TablerIcon icon="DotsIcon" />
+                    </template>
+                  </BaseButton>
 
-                  <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                      <BaseButton @click="handleNavigateToOverview({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
+                        <template #icon-left>
+                          <TablerIcon icon="EyeIcon" />
+                          <span class="ms-2">
+                            Overview
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
 
-                  <li>
-                    <BaseButton @click="handleNavigateToQuestion({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ClipboardListIcon" />
-                        <span class="ms-2">
-                          Question
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
 
-                  <li>
-                    <BaseButton @click="handleNavigateToComponent({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ListDetailsIcon" />
-                        <span class="ms-2">
-                          Komponen
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+                    <li>
+                      <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
+                          <span class="ms-2">
+                            Edit
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
 
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
+                    <!-- <li>
+                      <BaseButton @click="handleNavigateToQuestion({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="ClipboardListIcon" />
+                          <span class="ms-2">
+                            Question
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li> -->
 
-                  <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
-                      <template #icon-left>
-                        <TablerIcon icon="TrashIcon" />
-                        <span class="ms-2">
-                          Hapus
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                </ul>
+                    <!-- <li>
+                      <BaseButton @click="handleNavigateToComponent({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="ListDetailsIcon" />
+                          <span class="ms-2">
+                            Komponen
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li> -->
+
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                      <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        <template #icon-left>
+                          <TablerIcon icon="TrashIcon" />
+                          <span class="ms-2">
+                            Hapus
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </template>
           </DataTable>

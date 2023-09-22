@@ -27,31 +27,31 @@ const assessmentStore = useAssessmentStore()
 const assessment = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Nama',
-    value: 'nama',
-    sortable: true
-  }, {
-    text: 'Organisasi',
-    value: 'organisasi',
-  }, {
-    text: 'Periode Asesmen',
-    value: 'start_date',
-  }, {
-    text: 'Periode Kuesioner',
-    value: 'start_date_quisioner',
-  }, {
-    text: 'Nilai Minimal Target',
-    value: 'minimum_target',
-  },
-  {
-    text: 'Status',
-    value: 'status',
-    sortable: true
-  }, {
-    text: 'Action',
-    value: 'action',
-  },
+  headers: [
+    {
+      text: 'Aksi',
+      value: 'action',
+    }, {
+      text: 'Nama',
+      value: 'nama'
+    }, {
+      text: 'Organisasi',
+      value: 'organisasi',
+    }, {
+      text: 'Periode Asesmen',
+      value: 'start_date',
+    }, {
+      text: 'Periode Kuesioner',
+      value: 'start_date_quisioner',
+    }, {
+      text: 'Nilai Minimal Target',
+      value: 'minimum_target',
+    },
+    {
+      text: 'Status',
+      value: 'status',
+      sortable: true
+    },
   ],
   meta: {
     current_page: 1,
@@ -449,137 +449,158 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Lihat Detail Project ${item.item?.nama || ''}`"
+                  @click="handleNavigateDetail({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="EyeIcon" />
+                  </template>
+                </BaseButton>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateDetail({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EyeIcon" />
-                        <span class="ms-2">
-                          Lihat Detail Project
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+                <BaseButton v-tooltip="`Lihat Report Rekapitulasi Project ${item.item?.nama || ''}`"
+                  @click="handleNavigateReportRekapitulasi({ id: item?.item?.id, assessment: item.item?.nama })"
+                  class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="DeviceDesktopAnalyticsIcon" />
+                  </template>
+                </BaseButton>
 
-                  <li>
-                    <BaseButton @click="handleNavigateReport({ id: item?.item?.id, assessment: item.item?.nama })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ChartDotsIcon" />
-                        <span class="ms-2">
-                          Lihat Report Berdasarkan Target
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+                <div class="dropdown dropstart">
+                  <BaseButton v-tooltip="`Lihat Aksi Lain`" class="btn btn-icon" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false">
+                    <template #icon-left>
+                      <TablerIcon icon="DotsIcon" />
+                    </template>
+                  </BaseButton>
 
-                  <li>
-                    <BaseButton
-                      @click="handleNavigateReportRekapitulasi({ id: item?.item?.id, assessment: item.item?.nama })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="ChartGridDotsIcon" />
-                        <span class="ms-2">
-                          Lihat Report Rekapitulasi
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-
-                  <template v-if="!isStatusCompleted(item?.item?.status)">
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                      <BaseButton :access="['project-capability']"
-                        @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                        <template #icon-left>
-                          <TablerIcon icon="ClipboardTextIcon" />
-                          <span class="ms-2">
-                            Atur Kapabilitas
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
-                    <li>
-                      <BaseButton :access="['project-target']"
-                        @click="handleNavigateSettingTarget({ id: item?.item?.id, assessment: item.item?.nama })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                        <template #icon-left>
-                          <TablerIcon icon="TargetArrowIcon" />
-                          <span class="ms-2">
-                            Setting Target
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
-                    <li>
-                      <BaseButton :access="['project-edit']" @click="handleNavigateEdit({ id: item?.item?.id })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                        <template #icon-left>
-                          <TablerIcon icon="EditIcon" />
-                          <span class="ms-2">
-                            Edit Project
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
-                    <li>
-                      <BaseButton :access="['project-edit']" @click="toggleModalUploadLaporan({ item: item?.item })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                        <template #icon-left>
-                          <TablerIcon icon="UploadIcon" />
-                          <span class="ms-2">
-                            Upload Laporan Project
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
-                    <li>
-                      <BaseButton :access="['project-edit']"
-                        @click="handleSelesaikanAssessment({ title: item?.item?.nama, id: item?.item?.id })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
-                        <template #icon-left>
-                          <TablerIcon icon="CheckboxIcon" />
-                          <span class="ms-2">
-                            Selesaikan Project
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <!-- <li>
-                      <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <BaseButton @click="handleNavigateDetail({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
-                          <TablerIcon icon="ClipboardDataIcon" />
+                          <TablerIcon icon="EyeIcon" />
                           <span class="ms-2">
-                            Lihat Hasil Quisioner
+                            Lihat Detail Project
                           </span>
                         </template>
                       </BaseButton>
                     </li> -->
+
                     <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                      <BaseButton :access="['project-delete']"
-                        @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                      <BaseButton @click="handleNavigateReport({ id: item?.item?.id, assessment: item.item?.nama })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                         <template #icon-left>
-                          <TablerIcon icon="TrashIcon" />
+                          <TablerIcon icon="ChartDotsIcon" />
                           <span class="ms-2">
-                            Hapus
+                            Lihat Report Berdasarkan Target
                           </span>
                         </template>
                       </BaseButton>
                     </li>
-                  </template>
-                </ul>
+
+                    <!-- <li>
+                      <BaseButton
+                        @click="handleNavigateReportRekapitulasi({ id: item?.item?.id, assessment: item.item?.nama })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="ChartGridDotsIcon" />
+                          <span class="ms-2">
+                            Lihat Report Rekapitulasi
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li> -->
+
+                    <template v-if="!isStatusCompleted(item?.item?.status)">
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                      <li>
+                        <BaseButton :access="['project-capability']"
+                          @click="handleNavigateCapability({ id: item?.item?.id, assessment: item.item?.nama })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                          <template #icon-left>
+                            <TablerIcon icon="ClipboardTextIcon" />
+                            <span class="ms-2">
+                              Atur Kapabilitas
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                      <li>
+                        <BaseButton :access="['project-target']"
+                          @click="handleNavigateSettingTarget({ id: item?.item?.id, assessment: item.item?.nama })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                          <template #icon-left>
+                            <TablerIcon icon="TargetArrowIcon" />
+                            <span class="ms-2">
+                              Setting Target
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                      <li>
+                        <BaseButton :access="['project-edit']" @click="handleNavigateEdit({ id: item?.item?.id })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                          <template #icon-left>
+                            <TablerIcon icon="EditIcon" />
+                            <span class="ms-2">
+                              Edit Project
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                      <li>
+                        <BaseButton :access="['project-edit']" @click="toggleModalUploadLaporan({ item: item?.item })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                          <template #icon-left>
+                            <TablerIcon icon="UploadIcon" />
+                            <span class="ms-2">
+                              Upload Laporan Project
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                      <li>
+                        <BaseButton :access="['project-edit']"
+                          @click="handleSelesaikanAssessment({ title: item?.item?.nama, id: item?.item?.id })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
+                          <template #icon-left>
+                            <TablerIcon icon="CheckboxIcon" />
+                            <span class="ms-2">
+                              Selesaikan Project
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                      <!-- <li>
+                        <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                          <template #icon-left>
+                            <TablerIcon icon="ClipboardDataIcon" />
+                            <span class="ms-2">
+                              Lihat Hasil Quisioner
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li> -->
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                      <li>
+                        <BaseButton :access="['project-delete']"
+                          @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                          <template #icon-left>
+                            <TablerIcon icon="TrashIcon" />
+                            <span class="ms-2">
+                              Hapus
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
               </div>
             </template>
           </DataTable>

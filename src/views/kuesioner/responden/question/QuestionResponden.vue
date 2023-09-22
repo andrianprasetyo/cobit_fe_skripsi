@@ -197,8 +197,6 @@ const saveJawaban = async ({ isLastQuestion = false, withScrollToTop = true }) =
             currentQuestion: quesioner.question.currentQuestion + 1
           }
         })
-      } else {
-        scrollToTop()
       }
 
       if (withScrollToTop) {
@@ -319,10 +317,9 @@ const handleFinish = async () => {
 const handleSaveLastJawaban = async () => {
   const result = await v$.value.$validate()
   if (result) {
-    const response = saveJawaban({ isLastQuestion: true, withScrollToTop: false })
+    const response = await saveJawaban({ isLastQuestion: true, withScrollToTop: false })
 
     if (response) {
-
       try {
         questions.loadingLastSubmit = true
         const navigationResponse = await getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
@@ -398,7 +395,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
   })
 
 
-  if (!isLastQuestion.value) {
+  if (quesioner.question.currentQuestion <= questions.meta.total) {
     getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
   }
 }, { deep: true })
@@ -452,8 +449,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
           </div>
 
           <div class="card-body">
-            <LoadingOverlay :active="questions.loadingLastSubmit"/>
-            
+            <LoadingOverlay :active="questions.loadingLastSubmit" />
+
             <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3">
               <h6 class="mb-1 fs-4 fw-semibold">
                 Pertanyaan ke {{ quesioner.question.currentQuestion }}
@@ -547,6 +544,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
                                   <div
                                     class="form-check form-check-inline d-flex justify-content-center align-items-center">
                                     <input type="radio" class="form-check-input primary check-outline outline-primary"
+                                      style="transform: scale(1.15);"
                                       :class="[v?.hasil?.$errors?.length ? 'is-invalid' : '']" :checked="!!jawaban.hasil"
                                       :id="`radio-${indexJawaban}-${indexKomponen}`"
                                       @change="handleChangeHasil({ bobot: jawaban?.bobot, indexJawaban, indexKomponen, indexQuestion })"

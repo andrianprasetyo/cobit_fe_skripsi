@@ -32,6 +32,10 @@ const capabilityLevel = reactive({
       sortable: true
     },
     {
+      text: 'Aksi',
+      value: 'action',
+    },
+    {
       text: 'Sub Kode GAMO',
       value: 'subkode'
     }, {
@@ -47,9 +51,6 @@ const capabilityLevel = reactive({
       text: 'Weight',
       value: 'bobot',
       sortable: true
-    }, {
-      text: 'Action',
-      value: 'action',
     }],
   meta: {
     current_page: 1,
@@ -304,37 +305,55 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Edit ${item.item?.subkode || ''}`"
+                  @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="EditIcon" />
+                  </template>
+                </BaseButton>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <BaseButton v-tooltip="`Hapus ${item.item?.subkode || ''}`"
+                  @click="handleDelete({ title: item.item?.domain?.kode, id: item.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="TrashIcon" />
+                  </template>
+                </BaseButton>
 
-                  <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
 
-                  <li>
-                    <BaseButton @click="handleDelete({ title: item.item?.domain?.kode, id: item.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
-                      <template #icon-left>
-                        <TablerIcon icon="TrashIcon" />
-                        <span class="ms-2">
-                          Hapus
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                </ul>
+                <!-- Dropdown -->
+                <!-- <div class="dropdown dropstart">
+                  <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false" />
 
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                    <li>
+                      <BaseButton @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
+                          <span class="ms-2">
+                            Edit
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+
+                    <li>
+                      <BaseButton @click="handleDelete({ title: item.item?.domain?.kode, id: item.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        <template #icon-left>
+                          <TablerIcon icon="TrashIcon" />
+                          <span class="ms-2">
+                            Hapus
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </ul>
+
+                </div> -->
               </div>
             </template>
 

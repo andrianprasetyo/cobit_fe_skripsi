@@ -316,7 +316,7 @@ onMounted(() => {
                 <h6 class="fs-3 fw-semibold mb-0">Weight</h6>
               </th>
               <th class="align-middle text-center" rowspan="2">
-                <h6 class="fs-3 fw-semibold mb-0">Action</h6>
+                <h6 class="fs-3 fw-semibold mb-0">Aksi</h6>
               </th>
             </tr>
           </thead>
@@ -395,8 +395,12 @@ onMounted(() => {
                   {{ item?.bobot }}
                 </td>
                 <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
-                  <TablerIcon icon="DotsIcon" size="20" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                    id="dropdownMenuButton" aria-expanded="false" />
+                  <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-icon" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false">
+                    <template #icon-left>
+                      <TablerIcon icon="DotsIcon" />
+                    </template>
+                  </BaseButton>
 
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <BaseButton @click="handleToggleModalPenilaian({ gamo: item })"
