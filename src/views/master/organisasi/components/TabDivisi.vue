@@ -23,12 +23,14 @@ const divisi = reactive({
   loading: false,
   data: [],
   headers: [{
+    text: 'Aksi',
+    value: 'action',
+    width: 150
+  }, {
     text: 'Nama Divisi',
     value: 'nama',
-    sortable: true
-  }, {
-    text: 'Action',
-    value: 'action'
+    sortable: true,
+    width: 700
   },
   ],
   meta: {
@@ -218,33 +220,49 @@ watch(() => [serverOptions.value, filter.value], () => {
         </template>
 
         <template #item-action="item">
-          <div class="dropdown dropstart">
-            <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-              id="dropdownMenuButton" aria-expanded="false" />
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li>
-                <BaseButton @click="handleShowModalEdit({ item: item.item })"
-                  class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                  <template #icon-left>
-                    <TablerIcon icon="EditIcon" />
-                    <span class="ms-2">
-                      Edit
-                    </span>
-                  </template>
-                </BaseButton>
-              </li>
-              <li>
-                <BaseButton @click="handleDeleteDivisi({ title: item.item?.nama, id: item.item?.id })"
-                  class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
-                  <template #icon-left>
-                    <TablerIcon icon="TrashIcon" />
-                    <span class="ms-2">
-                      Hapus
-                    </span>
-                  </template>
-                </BaseButton>
-              </li>
-            </ul>
+          <div class="d-flex align-items-center">
+            <BaseButton v-tooltip="`Edit Divisi ${item.item?.nama || ''}`"
+              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon">
+              <template #icon-left>
+                <TablerIcon icon="EditIcon" />
+              </template>
+            </BaseButton>
+
+            <BaseButton v-tooltip="`Hapus Divisi ${item.item?.nama || ''}`"
+              @click="handleDeleteDivisi({ title: item.item?.nama, id: item.item?.id })" class="btn btn-icon">
+              <template #icon-left>
+                <TablerIcon icon="TrashIcon" />
+              </template>
+            </BaseButton>
+
+            <!-- <div class="dropdown dropstart">
+              <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+                id="dropdownMenuButton" aria-expanded="false" />
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li>
+                  <BaseButton @click="handleShowModalEdit({ item: item.item })"
+                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    <template #icon-left>
+                      <TablerIcon icon="EditIcon" />
+                      <span class="ms-2">
+                        Edit
+                      </span>
+                    </template>
+                  </BaseButton>
+                </li>
+                <li>
+                  <BaseButton @click="handleDeleteDivisi({ title: item.item?.nama, id: item.item?.id })"
+                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                    <template #icon-left>
+                      <TablerIcon icon="TrashIcon" />
+                      <span class="ms-2">
+                        Hapus
+                      </span>
+                    </template>
+                  </BaseButton>
+                </li>
+              </ul>
+            </div> -->
           </div>
         </template>
       </DataTable>

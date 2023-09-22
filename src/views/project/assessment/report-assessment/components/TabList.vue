@@ -26,28 +26,29 @@ const assessmentStore = useAssessmentStore()
 const report = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Governance and Management Objectives',
-    value: 'domain',
-  }, {
-    text: 'Target',
-    value: 'target_level',
-  }, {
-    text: 'Hasil Assesment',
-    value: 'hasil_assesment',
-  }, {
-    text: 'Gap Target',
-    value: 'gap_minus',
-  }, {
-    text: 'Gap Deskripsi',
-    value: 'gap_deskripsi',
-  }, {
-    text: 'Potensi Inisiatif',
-    value: 'potensi',
-  }, {
-    text: 'Action',
-    value: 'action',
-  },
+  headers: [
+    {
+      text: 'Aksi',
+      value: 'action',
+    }, {
+      text: 'Governance and Management Objectives',
+      value: 'domain',
+    }, {
+      text: 'Target',
+      value: 'target_level',
+    }, {
+      text: 'Hasil Assesment',
+      value: 'hasil_assesment',
+    }, {
+      text: 'Gap Target',
+      value: 'gap_minus',
+    }, {
+      text: 'Gap Deskripsi',
+      value: 'gap_deskripsi',
+    }, {
+      text: 'Potensi Inisiatif',
+      value: 'potensi',
+    },
   ],
   meta: {
     current_page: 1,
@@ -240,8 +241,8 @@ watch(() => [serverOptions.value, filter.value], () => {
               <label class="form-label" for="list-gamo-capability">Report Berdasarkan Target</label>
 
               <v-select id="filter-target" @search="(search) => handleSearchListTarget({ search })" :filterable="false"
-                :options="listTarget.data" v-model="filter.target_id" label="nama"
-                :reduce="state => state?.id" placeholder="Pilih Target" :select-on-key-codes="[]">
+                :options="listTarget.data" v-model="filter.target_id" label="nama" :reduce="state => state?.id"
+                placeholder="Pilih Target" :select-on-key-codes="[]">
                 <template #no-options>
                   {{ listTarget.loading ? 'Loading...' : 'Tidak ada Target Ditemukan' }}
                 </template>
@@ -407,23 +408,29 @@ watch(() => [serverOptions.value, filter.value], () => {
               </template>
 
               <template #item-action="item">
-                <div class="dropdown dropstart">
-                  <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                    id="dropdownMenuButton" aria-expanded="false" />
+                <div class="d-flex align-items-center">
+                  <div class="dropdown dropstart">
+                    <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-icon" data-bs-toggle="dropdown"
+                      id="dropdownMenuButton" aria-expanded="false">
+                      <template #icon-left>
+                        <TablerIcon icon="DotsIcon" />
+                      </template>
+                    </BaseButton>
 
-                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li>
-                      <BaseButton @click="handleToggleModalOfi({ item: item.item })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
-                        <template #icon-left>
-                          <TablerIcon icon="EyeIcon" />
-                          <span class="ms-2">
-                            Lihat Opportunity for Improvement
-                          </span>
-                        </template>
-                      </BaseButton>
-                    </li>
-                  </ul>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <li>
+                        <BaseButton @click="handleToggleModalOfi({ item: item.item })"
+                          class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
+                          <template #icon-left>
+                            <TablerIcon icon="EyeIcon" />
+                            <span class="ms-2">
+                              Lihat Opportunity for Improvement
+                            </span>
+                          </template>
+                        </BaseButton>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </template>
             </DataTable>

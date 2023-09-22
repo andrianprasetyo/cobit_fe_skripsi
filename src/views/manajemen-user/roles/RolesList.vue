@@ -28,6 +28,9 @@ const roles = reactive({
   loading: false,
   data: [],
   headers: [{
+    text: 'Aksi',
+    value: 'action'
+  }, {
     text: 'Nama',
     value: 'nama',
     sortable: true
@@ -43,9 +46,6 @@ const roles = reactive({
     text: 'Status',
     value: 'aktif',
     sortable: true
-  }, {
-    text: 'Action',
-    value: 'action'
   }],
   meta: {
     current_page: 1,
@@ -251,37 +251,46 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Edit Role ${item.item?.nama || ''}`"
+                  @click="handleNavigateToEdit({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="EditIcon" />
+                  </template>
+                </BaseButton>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
+                <!-- <div class="dropdown dropstart">
+                  <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false" />
 
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                      <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
 
-                    </BaseButton>
-                  </li>
+                          <span class="ms-2">
+                            Edit
+                          </span>
+                        </template>
 
-                  <!-- <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
-                      <template #icon-left>
-                        <TablerIcon icon="TrashIcon" />
-                        <span class="ms-2">
-                          Hapus
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li> -->
-                </ul>
+                      </BaseButton>
+                    </li>
+
+                    <li>
+                      <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        <template #icon-left>
+                          <TablerIcon icon="TrashIcon" />
+                          <span class="ms-2">
+                            Hapus
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </ul>
+                </div> -->
               </div>
             </template>
           </DataTable>

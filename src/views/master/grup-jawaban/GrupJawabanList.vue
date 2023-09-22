@@ -23,18 +23,20 @@ const router = useRouter()
 const groupAnswer = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Nama Grup Jawaban',
-    value: 'nama',
-    sortable: true
-  }, {
-    text: 'Jenis',
-    value: 'jenis',
-    sortable: true
-  }, {
-    text: 'Action',
-    value: 'action'
-  }],
+  headers: [
+    {
+      text: 'Aksi',
+      value: 'action',
+      width: 150
+    }, {
+      text: 'Nama Grup Jawaban',
+      value: 'nama',
+      sortable: true
+    }, {
+      text: 'Jenis',
+      value: 'jenis',
+      sortable: true
+    },],
   meta: {
     current_page: 1,
     per_page: 10,
@@ -222,7 +224,22 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
+              <BaseButton v-tooltip="`Edit ${item.item?.nama || ''}`" @click="handleNavigateToEdit({ id: item?.item?.id })"
+                class="btn btn-icon">
+                <template #icon-left>
+                  <TablerIcon icon="EditIcon" />
+                </template>
+              </BaseButton>
+
+              <BaseButton v-tooltip="`Hapus ${item.item?.nama || ''}`"
+                @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })" class="btn btn-icon">
+                <template #icon-left>
+                  <TablerIcon icon="TrashIcon" />
+                </template>
+              </BaseButton>
+
+              <!-- Dropdown -->
+              <!-- <div class="dropdown dropstart">
                 <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                   id="dropdownMenuButton" aria-expanded="false" />
 
@@ -250,7 +267,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                     </BaseButton>
                   </li>
                 </ul>
-              </div>
+              </div> -->
             </template>
           </DataTable>
         </div>

@@ -27,15 +27,16 @@ const organisasi = reactive({
   loading: false,
   data: [],
   headers: [{
+    text: 'Aksi',
+    value: 'action',
+    width: 150
+  }, {
     text: 'Nama',
     value: 'nama',
     sortable: true
   }, {
     text: 'Deskripsi',
     value: 'deskripsi',
-  }, {
-    text: 'Action',
-    value: 'action'
   },
   ],
   meta: {
@@ -214,53 +215,73 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Edit Organisasi ${item.item?.nama || ''}`"
+                  @click="handleNavigateEdit({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="EditIcon" />
+                  </template>
+                </BaseButton>
 
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
+                <BaseButton v-tooltip="`Lihat Daftar Divisi & Jabatan ${item.item?.nama || ''}`"
+                  @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="SubtaskIcon" />
+                  </template>
+                </BaseButton>
 
-                  <li>
-                    <BaseButton
-                      @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id, organisasi: item.item?.nama })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="SubtaskIcon" />
-                        <span class="ms-2">
-                          Lihat Daftar Divisi & Jabatan
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                  <!-- <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
-                      <template #icon-left>
-                        <TablerIcon icon="TrashIcon" />
-                        <span class="ms-2">
-                          Hapus
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li> -->
-                </ul>
+                <!-- <div class="dropdown dropstart">
+                  <BaseButton v-tooltip="`Lihat Aksi Lain`" class="btn btn-icon" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false">
+                    <template #icon-left>
+                      <TablerIcon icon="DotsIcon" />
+                    </template>
+                  </BaseButton>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                      <BaseButton @click="handleNavigateEdit({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
+                          <span class="ms-2">
+                            Edit
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                      <BaseButton
+                        @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id, organisasi: item.item?.nama })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="SubtaskIcon" />
+                          <span class="ms-2">
+                            Lihat Daftar Divisi & Jabatan
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <li>
+                      <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        <template #icon-left>
+                          <TablerIcon icon="TrashIcon" />
+                          <span class="ms-2">
+                            Hapus
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </ul>
+                </div> -->
               </div>
             </template>
-
           </DataTable>
         </div>
       </div>

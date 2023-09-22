@@ -10,8 +10,10 @@ const StepLevel = defineAsyncComponent({
 })
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
+import { useAlert } from '@/stores/alert'
 
 const assessmentStore = useAssessmentStore()
+const alert = useAlert()
 
 const ViewComponent = {
   '2': StepLevel,
@@ -37,7 +39,17 @@ const isStepsUnlocked = computed(() => {
 /* --------------------------------- METHODS -------------------------------- */
 const handleClickLevel = (level) => {
   if (isStepsUnlocked.value(level)) {
-    assessmentStore.setCapabilitySelectedLevel(level)
+    if (assessmentStore.getCapabilityIsEditedPenilaianSubGamo) {
+      alert.info({
+        title: `Terdapat Draft Perubahan yang Belum Anda Simpan, Apakah Tetap Pindah Level`
+      }).then((result) => {
+        if (result.isConfirmed) {
+          assessmentStore.setCapabilitySelectedLevel(level)
+        }
+      })
+    } else {
+      assessmentStore.setCapabilitySelectedLevel(level)
+    }
   }
 }
 
@@ -54,12 +66,12 @@ const handleClickLevel = (level) => {
             :is-completed="assessmentStore.capability.selectedLevel >= level.level"
             :disabled="!isStepsUnlocked(level.level)" @click="handleClickLevel(level.level)">
             <template #step>
-              <span v-if="isStepsUnlocked(level.level)" class="step cursor-pointer">
+              <span v-if="isStepsUnlocked(level.level)" v-tooltip="`Pindah Ke Level ${level.level}`"
+                class="step cursor-pointer">
                 {{ level.level }}
               </span>
-
               <span v-else>
-                <span class="step">
+                <span class="step" v-tooltip="`Level Terkunci`">
                   <TablerIcon icon="LockIcon" />
                 </span>
               </span>

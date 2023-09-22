@@ -24,6 +24,9 @@ const users = reactive({
   loading: false,
   data: [],
   headers: [{
+    text: 'Aksi',
+    value: 'action'
+  }, {
     text: 'Nama',
     value: 'nama',
     sortable: true
@@ -40,9 +43,6 @@ const users = reactive({
   }, {
     text: 'Roles',
     value: 'roles'
-  }, {
-    text: 'Action',
-    value: 'action'
   }],
   meta: {
     current_page: 1,
@@ -333,39 +333,56 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Edit User ${item.item?.username || ''}`"
+                  @click="handleNavigateToEdit({ id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="EditIcon" />
+                  </template>
+                </BaseButton>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
+                <BaseButton v-if="item.item?.status === 'pending'"
+                  v-tooltip="`Kirim Ulang Email Aktivasi ${item.item?.email || ''}`"
+                  @click="handleSendReaktivasi({ title: item.item?.email, id: item?.item?.id })" class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="SendIcon" />
+                  </template>
+                </BaseButton>
 
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
 
-                    </BaseButton>
-                  </li>
-                  <li v-if="item.item?.status === 'pending'">
-                    <BaseButton @click="handleSendReaktivasi({ title: item.item?.email, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="SendIcon" />
+                <!-- <div class="dropdown dropstart">
+                  <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false" />
 
-                        <span class="ms-2">
-                          Kirim Ulang Email Aktivasi
-                        </span>
-                      </template>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                      <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
 
-                    </BaseButton>
-                  </li>
-                </ul>
+                          <span class="ms-2">
+                            Edit
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <li v-if="item.item?.status === 'pending'">
+                      <BaseButton @click="handleSendReaktivasi({ title: item.item?.email, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="SendIcon" />
+
+                          <span class="ms-2">
+                            Kirim Ulang Email Aktivasi
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </ul>
+                </div> -->
               </div>
+
             </template>
           </DataTable>
         </div>

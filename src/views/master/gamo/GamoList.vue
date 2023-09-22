@@ -21,20 +21,22 @@ const router = useRouter()
 const domain = reactive({
   loading: false,
   data: [],
-  headers: [{
-    text: 'Kode',
-    value: 'kode',
-    sortable: true
-  }, {
-    text: 'Deskripsi',
-    value: 'ket',
-  }, {
-    text: 'Translate atau Terjemahan',
-    value: 'translate',
-  }, {
-    text: 'Action',
-    value: 'action'
-  }],
+  headers: [
+    {
+      text: 'Aksi',
+      value: 'action',
+      width: 100,
+    }, {
+      text: 'Kode',
+      value: 'kode',
+      sortable: true
+    }, {
+      text: 'Deskripsi',
+      value: 'ket',
+    }, {
+      text: 'Translate atau Terjemahan',
+      value: 'translate',
+    },],
   meta: {
     current_page: 1,
     per_page: 10,
@@ -231,23 +233,37 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="dropdown dropstart">
-                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                  id="dropdownMenuButton" aria-expanded="false" />
+              <div class="d-flex align-items-center">
+                <BaseButton v-tooltip="`Capability Level ${item.item?.kode || ''}`"
+                  @click="handleNavigateToCapabilityLevel({ id: item?.item?.id, title: item.item?.kode })"
+                  class="btn btn-icon">
+                  <template #icon-left>
+                    <TablerIcon icon="ChartBarIcon" />
+                  </template>
+                </BaseButton>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li>
-                    <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                      <template #icon-left>
-                        <TablerIcon icon="EditIcon" />
-                        <span class="ms-2">
-                          Edit
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                  <li>
+                <!-- Dropdown -->
+                <div class="dropdown dropstart">
+                  <BaseButton v-tooltip="`Lihat Aksi Lain`" class="btn btn-icon" data-bs-toggle="dropdown"
+                    id="dropdownMenuButton" aria-expanded="false">
+                    <template #icon-left>
+                      <TablerIcon icon="DotsIcon" />
+                    </template>
+                  </BaseButton>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                      <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        <template #icon-left>
+                          <TablerIcon icon="EditIcon" />
+                          <span class="ms-2">
+                            Edit
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                    <!-- <li>
                     <BaseButton @click="handleNavigateToCapabilityLevel({ id: item?.item?.id, title: item.item?.kode })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
                       <template #icon-left>
@@ -257,22 +273,23 @@ watch(() => [serverOptions.value, filter.value], () => {
                         </span>
                       </template>
                     </BaseButton>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li>
-                    <BaseButton @click="handleDelete({ title: item?.item?.kode, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
-                      <template #icon-left>
-                        <TablerIcon icon="TrashIcon" />
-                        <span class="ms-2">
-                          Hapus
-                        </span>
-                      </template>
-                    </BaseButton>
-                  </li>
-                </ul>
+                  </li> -->
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <BaseButton @click="handleDelete({ title: item?.item?.kode, id: item?.item?.id })"
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        <template #icon-left>
+                          <TablerIcon icon="TrashIcon" />
+                          <span class="ms-2">
+                            Hapus
+                          </span>
+                        </template>
+                      </BaseButton>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </template>
           </DataTable>
