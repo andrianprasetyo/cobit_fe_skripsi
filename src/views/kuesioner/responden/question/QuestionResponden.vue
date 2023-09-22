@@ -9,6 +9,7 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import NoData from '@/components/EmptyPlaceholder/NoData.vue'
+import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 
 import QuisionerServices from '@/services/lib/quisioner'
 
@@ -35,6 +36,7 @@ const questions = reactive({
   loading: false,
   loadingSubmit: false,
   loadingSubmitBack: false,
+  loadingLastSubmit: false,
   data: [],
   loadingNavigation: false,
   navigation: [],
@@ -171,10 +173,13 @@ const getNavigationQuestion = async ({ assesment_id, responden_id }) => {
       questions.navigation = data?.pertanyaan || []
       questions.navigation_meta = data?.meta;
       questions.loadingNavigation = false
+
+      return response
     }
   } catch (error) {
     questions.loadingNavigation = false
     toast.error({ error })
+    throw error
   }
 }
 
@@ -254,6 +259,7 @@ const finishQuisioner = async () => {
   } catch (error) {
     questions.loadingSubmit = false
     toast.error({ error })
+    throw error
   }
 }
 
@@ -316,7 +322,17 @@ const handleSaveLastJawaban = async () => {
     const response = saveJawaban({ isLastQuestion: true, withScrollToTop: false })
 
     if (response) {
-      getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
+
+      try {
+        questions.loadingLastSubmit = true
+        const navigationResponse = await getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
+
+        if (navigationResponse) {
+          questions.loadingLastSubmit = false
+        }
+      } catch (error) {
+        questions.loadingLastSubmit = false
+      }
     }
   }
 }
@@ -436,6 +452,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
           </div>
 
           <div class="card-body">
+            <LoadingOverlay :active="questions.loadingLastSubmit"/>
+            
             <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3">
               <h6 class="mb-1 fs-4 fw-semibold">
                 Pertanyaan ke {{ quesioner.question.currentQuestion }}
@@ -451,7 +469,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
                   <!-- {{ progressPercentage(quesioner.question.currentQuestion - 1) }}% -->
                 </span>
 
-                <BaseButton v-if="isAllQuestionAnswered" @click="handleFinish"
+                <BaseButton v-if="isAllQuestionAnswered && !isLastQuestion" @click="handleFinish"
                   class="btn btn-sm btn-light-success ms-2 text-primary" title="Selesaikan">
                   <template #icon-right>
                     <TablerIcon icon="CheckboxIcon" />
@@ -578,7 +596,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
 
       <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
         <div>
-          <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Pertanyaan Sebelumnya"
+          <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Sebelumnya"
             class="btn btn-outline-primary" :disabled="questions.loadingSubmitBack || questions.loadingSubmit"
             :is-loading="questions.loadingSubmitBack">
             <template #icon-left>
@@ -597,7 +615,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
           </BaseButton>
 
           <BaseButton v-else-if="isLastQuestion" @click="handleSaveLastJawaban" class="btn btn-primary mt-2 mt-md-0"
-            title="Simpan Jawaban" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
+            title="Simpan Jawaban Terakhir" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
             :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="DeviceFloppyIcon" />
@@ -605,7 +623,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
           </BaseButton>
 
           <BaseButton v-else-if="!isLastQuestion" @click="handleNext" class="btn btn-primary mt-2 mt-md-0"
-            title="Pertanyaan Selanjutnya" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
+            title="Simpan dan Selanjutnya" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
             :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="ChevronRightIcon" />
@@ -630,4 +648,5 @@ watch(() => [quesioner.question.currentQuestion], () => {
   height: 40px !important;
   font-size: 12px !important;
   padding: 5px !important;
-}</style>
+}
+</style>
