@@ -31,7 +31,11 @@ coverage
 package-lock.json
 yarn.lock
 
-#ENV
+# ENV
+*.env
+*.env.development
+*.env.production
+
 .env
 .env.development
 .env.production
