@@ -504,7 +504,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
             <div class="table-responsive rounded-2 mb-4 mt-4">
               <div class="mh-100vh">
                 <table class="table border text-nowrap mb-0 align-middle">
-                  <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary position-sticky top-0">
+                  <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary position-sticky top-0" style="z-index: 1001 !important;">
                     <tr>
                       <th class="width-200px align-middle"></th>
                       <template v-if="Array.isArray(question?.grup?.jawabans) && question?.grup?.jawabans.length">
@@ -613,7 +613,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
           </BaseButton>
 
           <BaseButton v-else-if="isLastQuestion" @click="handleSaveLastJawaban" class="btn btn-primary mt-2 mt-md-0"
-            title="Simpan Jawaban Terakhir" :disabled="questions.loadingSubmit || questions.loadingSubmitBack"
+            title="Simpan Jawaban Terakhir" :disabled="questions.loadingSubmit || questions.loadingSubmitBack || questions.loadingLastSubmit"
             :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="DeviceFloppyIcon" />

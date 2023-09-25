@@ -1,13 +1,16 @@
 <script setup>
-import { reactive, computed, onMounted, ref } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
-import FilePond from '@/components/FilePond/FilePond.vue'
 import BaseAvatar from '@/components/Avatar/BaseAvatar.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+
+/*
+import FilePond from '@/components/FilePond/FilePond.vue'
+*/
 
 import AccountServices from '@/services/lib/account'
 
@@ -33,9 +36,13 @@ const formState = reactive({
   username: '',
   status: '',
   avatars: [],
+  pathAvatars: null,
+  isNewFile: false
 })
 
+/*
 const filePondAvatar = ref(null)
+*/
 
 const { account } = storeToRefs(auth)
 
@@ -100,6 +107,29 @@ const labelAkunInternal = computed(() => {
 const v$ = useVuelidate(rules, formState, { $autoDirty: false })
 
 /* --------------------------------- METHODS -------------------------------- */
+/*
+const onUpdateFiles = async ({ files, newFile = false }) => {
+  if (newFile && files && files?.length) {
+    const listFile = []
+    files.map((item) => listFile.push(item.file))
+    formState.avatars = listFile
+    formState.isNewFile = newFile
+  } else {
+    formState.avatars = []
+  }
+}
+*/
+
+const handleUploadAvatar = (event) => {
+  const files = event.target.files || event.dataTransfer.files;
+
+  if (files) {
+    formState.avatars = [files[0]]
+    formState.pathAvatars = URL.createObjectURL(files[0])
+    formState.isNewFile = true
+  }
+}
+
 const getMyAccount = async () => {
   const loader = loading.show()
   try {
@@ -118,6 +148,7 @@ const getMyAccount = async () => {
         const avatar = { ...data?.avatar, path: `${appConfig.app.appHostMedia}${data?.avatar?.path}` }
         const avatarFile = new File([avatar], data?.avatar?.filename, { type: data?.avatar?.type })
         formState.avatars = [avatarFile]
+        formState.pathAvatars = `${appConfig.app.appHostMedia}${data?.avatar?.path}`
       }
 
       formState.loading = false
@@ -130,15 +161,6 @@ const getMyAccount = async () => {
   }
 }
 
-const onUpdateFiles = (files) => {
-  if (files && files?.length) {
-    const listFile = []
-    files.map((item) => listFile.push(item.file))
-    formState.avatars = listFile
-  } else {
-    formState.avatars = []
-  }
-}
 
 const onSubmit = async () => {
   const result = await v$.value.$validate()
@@ -151,7 +173,7 @@ const onSubmit = async () => {
 
       formData.append('nama', formState.nama)
 
-      if (formState.avatars && formState.avatars.length) {
+      if (formState.isNewFile && formState.avatars && formState.avatars.length) {
         formData.append('avatar', formState.avatars[0])
       }
 
@@ -244,8 +266,17 @@ onMounted(() => {
               </div>
 
               <div class="mb-3">
-                <FilePond ref="filePondAvatar" label="Foto Profil" name="avatar" :files="formState.avatars"
-                  v-on:updatefiles="onUpdateFiles" />
+                <!-- <FilePond ref="filePondAvatar" label="Foto Profil" name="avatar" :files="formState.avatars"
+                  v-on:updatefiles="$event => onUpdateFiles({ files: $event, newFile: true })" /> -->
+
+                <BaseInput id="avatar" type="file" label="Foto Profil" name="avatar" v-on:change="handleUploadAvatar"
+                  accept="image/*" />
+
+                <template v-if="Array.isArray(formState.avatars) && formState.avatars.length && formState.pathAvatars">
+                  <img class="img-thumbnail rounded img-responsive mt-3" style="object-fit: cover;"
+                    :src="formState.pathAvatars" alt="avatar-form">
+                </template>
+
                 <ErrorMessage :errors="v$.avatars.$errors" />
               </div>
 
