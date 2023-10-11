@@ -60,13 +60,15 @@ export const useToast = defineStore({
     error(payload) {
       const isCanceled = axios.isCancel(payload?.error)
 
+      const isTokenExpired = payload?.error?.response?.status === 401 && typeof payload?.error?.response?.data?.message === 'string' && payload?.error?.response?.data?.message?.includes('expired')
+
       const isTimeout =
         payload?.error?.code === 'ECONNABORTED' && payload?.error?.message.includes('timeout')
 
       const isNetworkError =
         payload?.error?.code === 'ERR_NETWORK' && payload?.error?.message?.includes('Network Error')
 
-      if (!isCanceled && !isTimeout && !isNetworkError) {
+      if (!isCanceled && !isTimeout && !isNetworkError && !isTokenExpired) {
         if (
           payload?.error?.response &&
           payload?.error?.response?.status !== 404 &&
