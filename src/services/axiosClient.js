@@ -56,9 +56,7 @@ axiosClient.interceptors.response.use(
     const auth = useAuth()
 
     const toast = useToast()
-
-    const isTokenExpired = error?.response?.status === 401 && typeof error?.response?.data?.message === 'string' && error?.response?.data?.message?.includes('expired')
-
+    
     const isNetworkError =
       error?.code === 'ERR_NETWORK' && error?.message?.includes('Network Error')
 
@@ -74,14 +72,10 @@ axiosClient.interceptors.response.use(
       toast.topCenter({ title: 'Aplikasi terlalu lama merespon request' })
     }
 
-    if (error?.response?.status === 401 && !isTokenExpired) {
+    if (error?.response?.status === 401) {
       auth.resetState()
       auth.redirectToLogin()
 
-    } else if(error?.response?.status === 401 && isTokenExpired && auth.isTokenExpired) {
-      auth.refreshToken()
-      
-      // Kalau Maintenance
     } else if (error?.response?.status == 503) {
       toast.error({
         title: 'Aplikasi Sedang Maintenance',

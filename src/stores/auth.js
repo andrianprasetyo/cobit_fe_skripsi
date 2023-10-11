@@ -54,7 +54,7 @@ export const useAuth = defineStore('auth', {
     getIsEksternal(state) {
       return state.account?.roleaktif?.role?.code === 'eksternal'
     },
-    getIsTokenExpired(state){
+    getIsTokenAlmostExpired(state){
       const currentDateEpoch = new Date().getTime();
     
       const expiresIn = state.expiresIn;
@@ -64,7 +64,7 @@ export const useAuth = defineStore('auth', {
         const epochLoggedIn = new Date(loggedInAt).getTime()
         const epochExpired = epochLoggedIn + expiresIn
 
-        if(currentDateEpoch >= epochExpired){
+        if(currentDateEpoch < epochExpired){
           return true
         }
       } else {
