@@ -77,7 +77,7 @@ const isShowFilterOrganisasi = ref(false)
 
 const serverOptions = ref({
   page: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 1,
   sortBy: '',
   sortType: '',
 });
@@ -449,7 +449,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="d-flex align-items-start">
+              <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Lihat Detail Project ${item.item?.nama || ''}`"
                   @click="handleNavigateDetail({ id: item?.item?.id })" class="btn btn-icon">
                   <template #icon-left>
