@@ -21013,8 +21013,8 @@ fieldset:disabled .btn {
   --bs-dropdown-header-color: var(--bs-dark);
   --bs-dropdown-header-padding-x: 1rem;
   --bs-dropdown-header-padding-y: 0.5rem;
-  position: relative !important;
-  z-index: 100001 !important;
+  position: absolute;
+  z-index: var(--bs-dropdown-zindex);
   display: none;
   min-width: var(--bs-dropdown-min-width);
   padding: var(--bs-dropdown-padding-y) var(--bs-dropdown-padding-x);
