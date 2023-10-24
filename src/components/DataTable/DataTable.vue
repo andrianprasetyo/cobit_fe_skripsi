@@ -199,9 +199,4 @@ const limitVisiblePages = computed(() => {
 /* .vue3-easy-data-table div.vue3-easy-data-table__main {
     min-height: auto;
 } */
-
-/* Custom Min Height With Dropdown */
-.vue3-easy-data-table div.vue3-easy-data-table__main {
-    min-height: 350px !important;
-}
 </style>
