@@ -449,7 +449,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-start">
                 <BaseButton v-tooltip="`Lihat Detail Project ${item.item?.nama || ''}`"
                   @click="handleNavigateDetail({ id: item?.item?.id })" class="btn btn-icon">
                   <template #icon-left>
