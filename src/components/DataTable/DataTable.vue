@@ -195,7 +195,13 @@ const limitVisiblePages = computed(() => {
   --easy-table-buttons-pagination-border: 1px solid #e0e0e0;
 }
 
-.vue3-easy-data-table div.vue3-easy-data-table__main {
+/* Auto */
+/* .vue3-easy-data-table div.vue3-easy-data-table__main {
     min-height: auto;
+} */
+
+/* Custom Min Height With Dropdown */
+.vue3-easy-data-table div.vue3-easy-data-table__main {
+    min-height: 350px !important;
 }
 </style>
