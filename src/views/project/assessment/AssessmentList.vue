@@ -77,7 +77,7 @@ const isShowFilterOrganisasi = ref(false)
 
 const serverOptions = ref({
   page: 1,
-  rowsPerPage: 1,
+  rowsPerPage: 10,
   sortBy: '',
   sortType: '',
 });
