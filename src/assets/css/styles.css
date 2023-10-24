@@ -585,3 +585,8 @@ body {
   background: var(--bs-primary);
   border-radius: 3px;
 }
+
+/* Custom Min Height With Dropdown */
+.vue3-easy-data-table div.vue3-easy-data-table__main {
+  min-height: 350px !important;
+}
