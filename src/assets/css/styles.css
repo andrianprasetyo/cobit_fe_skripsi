@@ -590,3 +590,11 @@ body {
 .vue3-easy-data-table div.vue3-easy-data-table__main {
   min-height: 350px !important;
 }
+
+.padding-container-admin {
+  padding-top: 80px !important;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
