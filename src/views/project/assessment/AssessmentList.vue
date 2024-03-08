@@ -522,7 +522,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                           <template #icon-left>
                             <TablerIcon icon="ClipboardTextIcon" />
                             <span class="ms-2">
-                              Atur Kapabilitas
+                              Asesmen
                             </span>
                           </template>
                         </BaseButton>

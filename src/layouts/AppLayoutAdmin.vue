@@ -21,7 +21,7 @@ const { layouts } = useAppConfig();
     <div class="body-wrapper">
       <HeaderLayout />
 
-      <div class="container-fluid">
+      <div class="px-4 padding-container-admin">
         <RouterView v-slot="{ route }">
           <Transition :name="layouts.routerTransition" mode="out-in">
             <component :is="props.Component" :key="route.path" />

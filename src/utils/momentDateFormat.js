@@ -69,6 +69,22 @@ export function isAfter({ date1, date2 }) {
   return moment(date1).isAfter(date2)
 }
 
+export function isBefore({ date1, date2 }) {
+  if (typeof date1 !== 'string' || typeof date2 !== 'string') {
+    return
+  }
+
+  return moment(date1).isBefore(date2)
+}
+
+export function isSameOrBefore({ date1, date2 }) {
+  if (typeof date1 !== 'string' || typeof date2 !== 'string') {
+    return
+  }
+
+  return moment(date1).isSameOrBefore({ date2 })
+}
+
 export function getNextDateByNumber({ value, number }) {
   if (value && typeof value === 'string') {
     return moment(value).day(number)

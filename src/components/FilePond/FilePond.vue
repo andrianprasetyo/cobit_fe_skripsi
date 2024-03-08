@@ -5,8 +5,8 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js'
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
 
-import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
+import "@/assets/css/filepond.min.css";
+import "@/assets/css/filepond-plugin-image-preview.min.css";
 
 const props = defineProps({
   placeholder: {
@@ -61,8 +61,8 @@ defineExpose({
       <slot name="extra-label" />
     </div>
 
-    <FilePond ref="filePondRef" :label-idle="props.placeholder" :accepted-file-types="props.accepted" :files="props.files"
-      v-bind="$attrs" labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan"
+    <FilePond ref="filePondRef" :label-idle="props.placeholder" :accepted-file-types="props.accepted"
+      :files="props.files" v-bind="$attrs" labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan"
       labelMaxFileSizeExceeded="File terlalu besar" labelMaxFileSize="Maksimal file size yaitu {filesize}"
       labelMaxTotalFileSizeExceeded="Melebihi maksimal size file yang diijinkan"
       labelMaxTotalFileSize="Total Maksimal file size yaitu {filesize}" :instant-upload="props.instantUpload"

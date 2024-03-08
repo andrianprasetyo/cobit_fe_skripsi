@@ -17,7 +17,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useKuesionerStore } from '@/views/kuesioner/kuesionerStore'
-import { formatDateMoments } from '@/utils/momentDateFormat'
+import { formatDateMoments, isSameOrBefore, isSameOrAfter } from '@/utils/momentDateFormat'
 
 const router = useRouter()
 const route = useRoute()
@@ -66,11 +66,14 @@ const formatDate = computed(() => {
 })
 
 const isKuesionerAvailable = computed(() => {
-  const start_date = Date.parse(formState?.detail?.assesment?.start_date_quisioner)
-  const end_date = Date.parse(formState?.detail?.assesment?.end_date_quisioner)
-  const today = Date.parse(new Date(Date.now()))
+  const start_date = new Date(formState?.detail?.assesment?.start_date_quisioner).toDateString()
+  const end_date = new Date(formState?.detail?.assesment?.end_date_quisioner).toDateString()
+  const today = new Date().toDateString()
 
-  const isAvailable = today >= start_date && today <= end_date;
+  const isPassed = isSameOrAfter({ date1: today, date2: start_date })
+  const isNotExpired = isSameOrBefore({ date1: today, date2: end_date })
+
+  const isAvailable = isPassed && isNotExpired;
 
   return isAvailable
 })
@@ -223,9 +226,9 @@ watch(() => [formState.divisi], () => {
                 <h5 class="fw-bolder text-white mb-1">{{ formState?.detail?.assesment?.organisasi?.nama }}</h5>
                 <p class="mb-0 text-white">
                   Periode : {{ formatDate({ value: formState.detail?.assesment?.start_date }) }} s/d {{ formatDate({
-                    value:
-                      formState.detail?.assesment?.end_date
-                  }) }}
+      value:
+        formState.detail?.assesment?.end_date
+    }) }}
                 </p>
               </div>
 
@@ -245,25 +248,25 @@ watch(() => [formState.divisi], () => {
                 <strong>Perhatian.</strong> Periode Kuisioner Belum Dimulai atau Sudah Terlewat.
                 <br />
                 <strong>Periode Kuesioner :</strong> {{ formatDate({
-                  value:
-                    formState.detail?.assesment?.start_date_quisioner
-                }) }} s/d {{
-  formatDate({
-    value:
-      formState.detail?.assesment?.end_date_quisioner
-  }) }}.
+      value:
+        formState.detail?.assesment?.start_date_quisioner
+    }) }} s/d {{
+      formatDate({
+        value:
+          formState.detail?.assesment?.end_date_quisioner
+      }) }}.
               </div>
             </BaseAlert>
 
             <BaseAlert v-else-if="isKuesionerAvailable" variant="primary">
               <strong>Periode Kuesioner : </strong> {{ formatDate({
-                value:
-                  formState.detail?.assesment?.start_date_quisioner
-              }) }} s/d {{
-  formatDate({
-    value:
-      formState.detail?.assesment?.end_date_quisioner
-  }) }}
+      value:
+        formState.detail?.assesment?.start_date_quisioner
+    }) }} s/d {{
+      formatDate({
+        value:
+          formState.detail?.assesment?.end_date_quisioner
+      }) }}
             </BaseAlert>
 
             <hr />
