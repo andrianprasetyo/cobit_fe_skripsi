@@ -27,8 +27,8 @@ const assessment = useAssessmentStore()
                 <template v-for="(df, indexDf) in assessment.reportCanvasSummary?.df" :key="`${indexDf}-${df?.id}`">
                   <th v-if="indexDf <= 3" class="width-200px align-middle position-sticky top-0" rowspan="1">
                     <!-- Design Factor Header Section 2-->
-                    <div class="d-flex flex-wrap">
-                      <div class="width-150px text-break text-wrap text-center">
+                    <div class="d-flex flex-wrap justify-content-center align-items-center">
+                      <div class="width-150px d-flex text-break text-wrap text-center">
                         <h6 class="fs-3 fw-semibold mb-0">
                           {{ df?.nama }}
                         </h6>

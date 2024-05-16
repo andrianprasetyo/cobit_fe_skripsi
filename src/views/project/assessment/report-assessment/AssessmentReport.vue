@@ -10,6 +10,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
 import { useAppConfig } from '@/stores/appConfig'
+import { useAuth } from '@/stores/auth'
 
 const TabList = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report-assessment/components/TabList.vue'),
@@ -23,6 +24,7 @@ const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
 const route = useRoute()
+const auth = useAuth()
 const assessmentStore = useAssessmentStore()
 
 const tab_report = ref("list")
@@ -70,6 +72,8 @@ watch(() => queryTabReport.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
+  auth.setMenuToProject()
+  
   if (props.isToggleSidebar) {
     appConfig.setMiniSidebar(true)
     if (assessmentTitle.value) {

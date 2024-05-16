@@ -1,6 +1,5 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
@@ -43,8 +42,6 @@ const formState = reactive({
 /*
 const filePondAvatar = ref(null)
 */
-
-const { account } = storeToRefs(auth)
 
 const rules = computed(() => {
   return {
@@ -211,27 +208,28 @@ onMounted(() => {
         <div class="card w-100 position-relative overflow-hidden">
           <div class="card-body p-4">
             <div class="text-center mb-4">
-              <BaseAvatar :source="`${appConfig.app.appHostMedia}${account?.avatar?.path}`" width="120" height="120" />
+              <BaseAvatar :source="`${appConfig.app.appHostMedia}${auth.account?.avatar?.path}`" width="120"
+                height="120" />
 
-              <h5 class="card-title fw-semibold mt-4">{{ account?.nama }}</h5>
+              <h5 class="card-title fw-semibold mt-4">{{ auth.account?.nama }}</h5>
               <span class="badge rounded-pill font-medium text-capitalize fw-bold"
-                :class="classBadgeStatus(account?.status)">
-                {{ labelStatus(account?.status) }}
+                :class="classBadgeStatus(auth.account?.status)">
+                {{ labelStatus(auth.account?.status) }}
               </span>
             </div>
 
             <ul class="list-unstyled mb-0">
               <li class="d-flex align-items-center gap-3 mb-4">
                 <TablerIcon icon="UserIcon" class="text-dark fs-6" />
-                <h6 class="fs-3 fw-semibold mb-0">{{ account?.username || '-' }}</h6>
+                <h6 class="fs-3 fw-semibold mb-0">{{ auth.account?.username || '-' }}</h6>
               </li>
               <li class="d-flex align-items-center gap-3 mb-4">
                 <TablerIcon icon="MailIcon" class="text-dark fs-6" />
-                <h6 class="fs-3 fw-semibold mb-0">{{ account?.email || '-' }}</h6>
+                <h6 class="fs-3 fw-semibold mb-0">{{ auth.account?.email || '-' }}</h6>
               </li>
               <li class="d-flex align-items-center gap-3 mb-4">
                 <TablerIcon icon="UserCheckIcon" class="text-dark fs-6" />
-                <h6 class="fs-3 fw-semibold mb-0">Akun {{ labelAkunInternal(account?.internal) }}</h6>
+                <h6 class="fs-3 fw-semibold mb-0">Akun {{ labelAkunInternal(auth.account?.internal) }}</h6>
               </li>
             </ul>
           </div>

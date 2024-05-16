@@ -28,7 +28,7 @@ const assessment = useAssessmentStore()
                   <!-- Design Factor Header Section 2-->
                   <th v-if="indexDf >= 4" class="width-200px align-middle">
                     <!-- Design Factor Header-->
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex flex-wrap justify-content-center align-items-center">
                       <div class="width-150px text-break text-wrap text-center">
                         <h6 class="fs-3 fw-semibold mb-0">
                           {{ df?.nama }}

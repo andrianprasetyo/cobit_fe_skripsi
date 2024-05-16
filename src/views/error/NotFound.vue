@@ -1,8 +1,13 @@
 <script setup>
 import { RouterLink, useRoute } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 
 const route = useRoute()
+const auth = useAuth()
 
+const handleMenuToDefault = () => {
+  auth.setMenuToDefault()
+}
 </script>
 
 <template>
@@ -14,7 +19,7 @@ const route = useRoute()
             <img :src="route.meta?.background_picture" alt="illustration" width="400" class="img-fluid">
             <h1 class="fw-semibold mb-7 fs-9 mt-4">Oops!!!</h1>
             <h4 class="fw-semibold mb-7">Sepertinya halaman yang anda cari <br /> tidak ditemukan.</h4>
-            <RouterLink to="/" class="btn btn-primary">
+            <RouterLink to="/" class="btn btn-primary" @click="handleMenuToDefault">
               Kembali ke Halaman Awal
             </RouterLink>
           </div>

@@ -1,4 +1,4 @@
-import { defineStore, getActivePinia } from 'pinia'
+import { acceptHMRUpdate, defineStore, getActivePinia } from 'pinia'
 
 import AuthServices from '@/services/lib/auth'
 
@@ -11,6 +11,7 @@ import { getCookies, removeAllCookies, setCookies } from '@/utils/cookies'
 import { filterMenu } from '@/utils/filterMenuByRoleType'
 
 import menu from '@/data/menu.json'
+import menuProject from '@/data/menuProject.json'
 
 import accessAdministrator from '@/data/accessAdministrator.json'
 import accessAssessor from '@/data/accessAssessor.json'
@@ -20,7 +21,7 @@ export const useAuth = defineStore('auth', {
   state: () => ({
     account: null,
     access: [],
-    menu: menu,
+    menu: [],
     listRole: [],
     isAuthenticated: false,
     expiresIn: null,
@@ -54,17 +55,17 @@ export const useAuth = defineStore('auth', {
     getIsEksternal(state) {
       return state.account?.roleaktif?.role?.code === 'eksternal'
     },
-    getIsTokenAlmostExpired(state){
-      const currentDateEpoch = new Date().getTime();
-    
-      const expiresIn = state.expiresIn;
-      const loggedInAt = state.loggedInAt;
+    getIsTokenAlmostExpired(state) {
+      const currentDateEpoch = new Date().getTime()
 
-      if(expiresIn && loggedInAt){
+      const expiresIn = state.expiresIn
+      const loggedInAt = state.loggedInAt
+
+      if (expiresIn && loggedInAt) {
         const epochLoggedIn = new Date(loggedInAt).getTime()
         const epochExpired = epochLoggedIn + expiresIn
 
-        if(currentDateEpoch < epochExpired){
+        if (currentDateEpoch < epochExpired) {
           return true
         }
       } else {
@@ -84,6 +85,12 @@ export const useAuth = defineStore('auth', {
     },
     setMenu(payload) {
       this.menu = payload
+    },
+    setMenuToDefault() {
+      this.menu = menu
+    },
+    setMenuToProject() {
+      this.menu = menuProject
     },
     setExpiresIn(payload) {
       this.expiresIn = payload
@@ -214,3 +221,8 @@ export const useAuth = defineStore('auth', {
     enabled: true
   }
 })
+
+// make sure to pass the right store definition, `useAuth` in this case.
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useAuth, import.meta.hot))
+}

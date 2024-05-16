@@ -47,7 +47,7 @@ const suggessCapabilityLevel = computed(() => {
                 </h6>
               </th>
               <th class="bg-primary text-white border-0 width-250px align-middle" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-225px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0 text-white">
                       Refined Scope: Governance/Management Objectives Score
@@ -56,7 +56,7 @@ const suggessCapabilityLevel = computed(() => {
                 </div>
               </th>
               <th class="width-150px align-middle border-0" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-125px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0">
                       Adjustment (between -100 and +100)
@@ -65,7 +65,7 @@ const suggessCapabilityLevel = computed(() => {
                 </div>
               </th>
               <th class="width-250px align-middle border-0" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-225px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0">
                       Reason
@@ -74,7 +74,7 @@ const suggessCapabilityLevel = computed(() => {
                 </div>
               </th>
               <th class="bg-primary text-white border-0 align-middle" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-200px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0 text-white">
                       Concluded Scope: Governance/Management Objectives Priority
@@ -83,7 +83,7 @@ const suggessCapabilityLevel = computed(() => {
                 </div>
               </th>
               <th class="bg-primary text-white border-0 align-middle" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-150px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0 text-white">
                       Suggested Target Capability Level
@@ -92,7 +92,7 @@ const suggessCapabilityLevel = computed(() => {
                 </div>
               </th>
               <th class="align-middle border-0" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-150px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0">
                       Agreed Target Capability Level
@@ -101,7 +101,7 @@ const suggessCapabilityLevel = computed(() => {
                 </div>
               </th>
               <th class="width-250px align-middle border-0" rowspan="2">
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap justify-content-center align-items-center">
                   <div class="width-225px text-break text-wrap text-center">
                     <h6 class="fs-3 fw-semibold mb-0">
                       Reason
@@ -148,9 +148,9 @@ const suggessCapabilityLevel = computed(() => {
                   </td>
                   <td class="text-center bg-light fw-bold">
                     {{ concludedScope({
-                      refinedScope: hasil?.assesmentcanvas?.step3_value, adjustment:
-                        hasil.assesmentcanvas.adjustment
-                    }) }}
+                refinedScope: hasil?.assesmentcanvas?.step3_value, adjustment:
+                  hasil.assesmentcanvas.adjustment
+              }) }}
                   </td>
                   <td class="text-center bg-light fw-bold">
                     {{ hasil?.assesmentcanvas?.suggest_capability_level }}

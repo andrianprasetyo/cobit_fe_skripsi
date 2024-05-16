@@ -10,6 +10,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
 import { useAppConfig } from '@/stores/appConfig'
+import { useAuth } from '@/stores/auth'
 
 const TabGamo = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report-gamo/components/TabGamo.vue')
@@ -31,6 +32,7 @@ const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
 const route = useRoute()
+const auth = useAuth()
 const assessmentStore = useAssessmentStore()
 
 const props = defineProps({
@@ -95,6 +97,8 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
+  auth.setMenuToProject()
+  
   if (props.isToggleSidebar) {
     appConfig.setMiniSidebar(true)
     if (assessmentTitle.value) {
