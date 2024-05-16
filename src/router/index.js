@@ -863,6 +863,36 @@ const router = createRouter({
           redirect: '/project/assessment',
           children: [
             {
+              name: 'DashboardProject',
+              path: '/project/assessment/:id/dashboard',
+              component: () => import('@/views/project/assessment/dashboard/AssessmentDashboard.vue'),
+              meta: {
+                pageTitle: 'Dashboard Project',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Dashboard Project',
+                    disabled: true,
+                    href: '/project/assessment/:id/dashboard',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
               name: 'ProjectList',
               path: '/project/assessment',
               component: () => import('@/views/project/assessment/AssessmentList.vue'),
@@ -1427,7 +1457,6 @@ const router = createRouter({
         }
       ]
     },
-
     {
       path: '/auth',
       redirect: '/auth/login',

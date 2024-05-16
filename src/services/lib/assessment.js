@@ -171,5 +171,14 @@ export default {
           : ''
       }`
     )
+  },
+
+  /**
+   *
+   * @param {{assesment_id: String}} payload
+   * @returns
+   */
+  getDashboardAssessment(payload) {
+    return axiosClient.get(`dashboard/assesment/report?assesment_id=${payload?.assesment_id}`)
   }
 }

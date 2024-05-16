@@ -186,7 +186,7 @@ const handleNavigateEdit = ({ id }) => {
 }
 
 const handleNavigateDetail = ({ id }) => {
-  router.push({ path: `/project/assessment/${id}/detail` })
+  router.push({ path: `/project/assessment/${id}/dashboard` })
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -291,3 +291,4 @@ watch(() => [serverOptions.value, filter.value], () => {
   border-radius: 1rem;
 }
 </style>
+
