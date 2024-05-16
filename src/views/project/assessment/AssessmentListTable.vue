@@ -211,7 +211,7 @@ const handleNavigateEdit = ({ id }) => {
 }
 
 const handleNavigateDetail = ({ id }) => {
-  router.push({ path: `/project/assessment/${id}/detail` })
+  router.push({ path: `/project/assessment/${id}/dashboard` })
 }
 
 const handleSearchOrganisasi = debounce(async ({ search }) => {
@@ -417,3 +417,4 @@ watch(() => [serverOptions.value, filter.value], () => {
     </div>
   </section>
 </template>
+

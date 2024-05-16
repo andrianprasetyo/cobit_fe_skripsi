@@ -223,7 +223,7 @@ defineExpose({
             :class="[isHasChildren(menuItem?.children) ? 'has-arrow' : '', isActiveNav(menuItem) || isHasURLAndURLStartsFromAndSpecialCase(menuItem) ? 'active' : '']"
             @click="setActiveGroupId('')">
             <TablerIcon size=" 21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4"
-              :class="[isActiveNav(menuItem) || isHasURLAndURLStartsFromAndSpecialCase(menuItem) ? 'text-secondary' : '']" />
+              :class="[isActiveNav(menuItem) || isHasURLAndURLStartsFromAndSpecialCase(menuItem) ? 'text-white' : '']" />
             <span class="hide-menu">{{ menuItem?.title }}</span>
           </LinkMenuItem>
 
@@ -233,7 +233,7 @@ defineExpose({
             :class="[isActiveCollapsedNav(menuItem?.children) ? 'active' : '']" aria-expanded="false"
             @click="setActiveGroupId(menuItem?.id)">
             <TablerIcon size="21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4"
-              :class="[isActiveCollapsedNav(menuItem?.children) ? 'text-secondary' : '']" />
+              :class="[isActiveCollapsedNav(menuItem?.children) ? 'text-white' : '']" />
             <span class="hide-menu">{{ menuItem?.title }}</span>
           </a>
 
@@ -250,7 +250,7 @@ defineExpose({
 
                 <!-- Static Icons -->
                 <TablerIcon size="8" :icon="isChildrenActiveMenu(children) ? 'CircleFilledIcon' : 'CircleIcon'"
-                  class="nav-small-cap-icon fs-4" :class="[isChildrenActiveMenu(children) ? 'text-secondary' : '']" />
+                  class="nav-small-cap-icon fs-4" :class="[isChildrenActiveMenu(children) ? 'text-white' : '']" />
                 <span class="hide-menu">{{ children?.title }}</span>
               </LinkMenuItem>
 

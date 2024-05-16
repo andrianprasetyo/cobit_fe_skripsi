@@ -31,6 +31,10 @@ const props = defineProps({
   isToggleSidebar: {
     type: Boolean,
     default: true
+  },
+  isShowBackButton: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -70,7 +74,7 @@ const handleClickView = ({ design_factor_id, design_factor, kode, mounted = true
 }
 
 const handleBack = () => {
-  router.back()
+  router.push("/project/assessment/")
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -82,7 +86,7 @@ watch(() => queryView.value, (value) => {
 
 onMounted(() => {
   auth.setMenuToProject()
-  
+
   if (props.isToggleSidebar) {
     appConfig.setMiniSidebar(true)
     if (assessmentTitle.value) {
@@ -147,7 +151,7 @@ onUnmounted(() => {
         </template>
       </BaseTab>
 
-      <div class="card">
+      <div v-if="props.isShowBackButton" class="card">
         <div class="card-body">
           <div class="d-flex flex-column flex-md-row align-items-center">
             <div>

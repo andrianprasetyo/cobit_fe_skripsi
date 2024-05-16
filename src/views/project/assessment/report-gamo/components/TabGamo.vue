@@ -8,11 +8,12 @@ import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import DomainServices from '@/services/lib/domain'
 
 import { useToast } from '@/stores/toast'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAppConfig } from '@/stores/appConfig'
 
 const toast = useToast()
 const route = useRoute()
+const router = useRouter()
 const appConfig = useAppConfig()
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -65,6 +66,10 @@ const assessmentTitle = computed(() => {
   return route.query?.assessment
 })
 
+const assessmentId = computed(() => {
+  return route.params?.id
+})
+
 /* --------------------------------- METHODS -------------------------------- */
 const getSummaryGamo = async ({ limit, page, assessment_id, sortBy, sortType }) => {
   try {
@@ -89,13 +94,17 @@ const exportSummaryGamo = async () => {
   window.open(url, '_blank');
 }
 
+const handleNavigateToAdjustSummaryGamo = () => {
+  router.push(`/project/assessment/${assessmentId.value}/summary?assessment=${assessmentTitle.value}`)
+}
+
 
 /* ---------------------------------- HOOKS --------------------------------- */
 watch(() => [serverOptions.value], () => {
   getSummaryGamo({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
-    assessment_id: route.params?.id,
+    assessment_id: assessmentId.value,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
   })
@@ -105,7 +114,7 @@ onMounted(() => {
   getSummaryGamo({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
-    assessment_id: route.params?.id,
+    assessment_id: assessmentId.value,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
   })
@@ -126,10 +135,17 @@ onMounted(() => {
 
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-          <BaseButton @click="exportSummaryGamo" class="btn btn-outline-primary" title="Export Summary"
+          <BaseButton @click="exportSummaryGamo" class="btn btn-outline-primary" title="Export Summary GAMO"
             :disabled="summary.loading">
             <template #icon-right>
               <TablerIcon size="16" icon="FileExportIcon" />
+            </template>
+          </BaseButton>
+
+          <BaseButton @click="handleNavigateToAdjustSummaryGamo" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0"
+            title="Adjust / Sesuaikan GAMO">
+            <template #icon-right>
+              <TablerIcon size="16" icon="AdjustmentsIcon" />
             </template>
           </BaseButton>
         </div>
