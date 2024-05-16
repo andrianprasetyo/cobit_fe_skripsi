@@ -25,7 +25,6 @@ const toast = useToast()
 const router = useRouter()
 const loading = useLoading()
 
-
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const formState = reactive({
   loadingSubmit: false,
@@ -322,8 +321,6 @@ onMounted(() => {
     })
   }
 })
-
-
 </script>
 
 <template>
@@ -381,8 +378,8 @@ onMounted(() => {
             </div>
 
             <div class="col-12 col-md-6">
-              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model" label="Tanggal Selesai Kuesioner"
-                locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model"
+                label="Tanggal Selesai Kuesioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
                 placeholder="Silahkan Pilih Tanggal Selesai Kuesioner"
                 :disabled="formState.loadingSubmit || !formState.start_date_quisioner" tabindex="6"
                 :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"

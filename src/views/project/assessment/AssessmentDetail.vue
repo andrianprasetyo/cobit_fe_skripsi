@@ -52,7 +52,7 @@ const currentHash = computed(() => route.hash)
 
 /* --------------------------------- METHODS -------------------------------- */
 const handleBack = () => {
-  router.back()
+  router.push("/project/assessment")
 }
 
 const toggleModalEditPIC = () => {
