@@ -14,6 +14,8 @@ import OrganisasiServices from '@/services/lib/organisasi'
 
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
+import { useAuth } from '@/stores/auth'
+
 import { useRouter } from 'vue-router'
 import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
@@ -21,6 +23,7 @@ import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
+const auth = useAuth()
 const assessmentStore = useAssessmentStore()
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -302,6 +305,7 @@ const handleSearchOrganisasi = debounce(async ({ search }) => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  auth.setMenuToDefault()
   getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
   getListOrganisasi({ limit: 10, page: 1 })
 })
@@ -322,8 +326,6 @@ watch(() => [serverOptions.value, filter.value], () => {
     organisasi_id: filter.value.organisasi_id
   })
 }, { deep: true })
-
-
 
 </script>
 
@@ -423,9 +425,9 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #item-start_date_quisioner="item">
               <div v-if="item.item?.start_date_quisioner" class="d-flex w-100">
                 {{ formatDate({ value: item.item?.start_date_quisioner }) }} s/d {{ formatDate({
-                  value:
-                    item.item?.end_date_quisioner
-                }) }}
+                value:
+                  item.item?.end_date_quisioner
+              }) }}
               </div>
 
               <div v-else>

@@ -14,11 +14,15 @@ import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useRoute, useRouter } from 'vue-router'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
+import { useAuth } from '@/stores/auth'
+import { useScrollTo } from '@/hooks/useScrollTo'
 
 const title = useTitle()
 const route = useRoute()
 const router = useRouter()
+const auth = useAuth()
 const assessment = useAssessmentStore()
+const scrollTo = useScrollTo()
 
 const isShowModalEditPIC = ref(false)
 
@@ -44,6 +48,8 @@ const formatDate = computed(() => {
   }
 })
 
+const currentHash = computed(() => route.hash)
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleBack = () => {
   router.back()
@@ -61,8 +67,18 @@ const handleRefresh = () => {
   assessment.getDetailAssessment({ id: route.params?.id })
 }
 
+const handleScrollToElement = (target) => {
+  scrollTo(target)
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  auth.setMenuToProject()
+
+  if (currentHash.value) {
+    handleScrollToElement(currentHash.value)
+  }
+
   assessment.getDetailAssessment({ id: route.params?.id }).then(() => {
     title.value = `Detail ${assessment.detail?.nama || ''}`
   })
@@ -71,7 +87,6 @@ onMounted(() => {
 onUnmounted(() => {
   assessment.resetState()
 })
-
 </script>
 
 <template>
@@ -107,9 +122,9 @@ onUnmounted(() => {
 
                 <div v-if="assessment.detail?.start_date">
                   {{ formatDate({ value: assessment.detail?.start_date }) }} s/d {{ formatDate({
-                    value:
-                      assessment.detail?.end_date
-                  }) }}
+                  value:
+                    assessment.detail?.end_date
+                }) }}
                 </div>
 
                 <div v-else>
@@ -122,9 +137,9 @@ onUnmounted(() => {
 
                 <div v-if="assessment.detail?.start_date_quisioner">
                   {{ formatDate({ value: assessment.detail?.start_date_quisioner }) }} s/d {{ formatDate({
-                    value:
-                      assessment.detail?.end_date_quisioner
-                  }) }}
+                  value:
+                    assessment.detail?.end_date_quisioner
+                }) }}
                 </div>
 
                 <div v-else>

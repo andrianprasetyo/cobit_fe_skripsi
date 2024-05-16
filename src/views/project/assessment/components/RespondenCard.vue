@@ -296,7 +296,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 </script>
 
 <template>
-  <div class="card mt-4">
+  <div id="responden-table-card" class="card mt-4">
     <div class="card-body">
       <div
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
@@ -438,7 +438,8 @@ watch(() => [serverOptions.value, filter.value], () => {
 
         <template #item-status="item">
           <div class="d-flex justify-content-center align-items-center w-100">
-            <span class="badge rounded-pill font-medium text-capitalize fw-bold" :class="classStatus(item?.item?.status)">
+            <span class="badge rounded-pill font-medium text-capitalize fw-bold"
+              :class="classStatus(item?.item?.status)">
               {{ item?.item?.status }}
             </span>
           </div>

@@ -28,12 +28,12 @@ const props = defineProps({
   }
 })
 
-const { access: listAccess } = useAuth()
+const auth = useAuth()
 
 const isHasAccess = computed(() => {
   if (props.access && Array.isArray(props.access)) {
     for (let i in props.access) {
-      let isIncluded = listAccess.includes(props.access[i])
+      let isIncluded = auth.access.includes(props.access[i])
 
       if (isIncluded) {
         return true
@@ -50,8 +50,8 @@ const isHasAccess = computed(() => {
 </script>
 
 <template>
-  <button v-if="(access && isHasAccess) || (!access)" ref="base-button" :type="props.type" v-bind="$attrs" :class="props.class"
-    :disabled="(access && !isHasAccess) || props.disabled">
+  <button v-if="(access && isHasAccess) || (!access)" ref="base-button" :type="props.type" v-bind="$attrs"
+    :class="props.class" :disabled="(access && !isHasAccess) || props.disabled">
     <div v-if="props.isLoading" class="spinner-border spinner-border-sm" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>

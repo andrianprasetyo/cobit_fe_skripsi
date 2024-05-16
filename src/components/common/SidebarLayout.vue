@@ -54,7 +54,7 @@ setInterval(() => {
     <div class="brand-logo d-flex align-items-center justify-content-center">
       <LinkMenuItem v-if="!layouts.miniSidebar" to="/" class="text-nowrap logo-img mt-3" @click="handleClickLogo">
         <div v-if="logo.isPlayAnimation" class="logo-shine"></div>
-        <img :src="app.appLogoImage" class="light-logo" height="50" alt="logo" style="object-fit: cover;"  />
+        <img :src="app.appLogoImage" class="light-logo" height="50" alt="logo" style="object-fit: cover;" />
       </LinkMenuItem>
 
       <LinkMenuItem v-else to="/">

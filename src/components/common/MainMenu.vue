@@ -11,7 +11,7 @@ import { useWindowSize } from '@vueuse/core';
 
 const route = useRoute()
 const appConfig = useAppConfig()
-const { menu } = useAuth()
+const auth = useAuth()
 const { width } = useWindowSize()
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -29,12 +29,24 @@ const isHasURL = computed(() => {
   return item => item?.url && item?.url !== "-";
 })
 
+const currentRouteHash = computed(() => {
+  return route.hash
+})
+
 const currentRoutePath = computed(() => {
   return route.path
 })
 
 const isActiveNav = computed(() => {
-  return item => !item?.parent_id && !item?.children && currentRoutePath.value.toString() === item?.url
+  return item => {
+    if (item?.type === 'navigation') {
+      return false
+    } else if (item?.hash) {
+      return !item?.parent_id && !item?.children && currentRoutePath.value.toString() === item?.url && item?.hash === currentRouteHash.value
+    } else {
+      return !item?.parent_id && !item?.children && currentRoutePath.value.toString() === item?.url
+    }
+  }
 })
 
 const isActiveCollapsedNav = computed(() => {
@@ -91,7 +103,26 @@ const isChildrenActiveMenu = computed(() => {
 
 const isHasURLAndURLStartsFromAndSpecialCase = computed(() => {
   return item => {
-    return !item?.parent_id && !item?.children && currentRoutePath.value.startsWith(item?.url)
+    if (item?.type === 'navigation') {
+      return false
+    } else if (item?.hash) {
+      return !item?.parent_id && !item?.children && currentRoutePath.value.startsWith(hrefWithParams.value(item?.url)) && currentRouteHash.value === item?.hash
+    } else {
+      return !item?.parent_id && !item?.children && currentRoutePath.value.startsWith(hrefWithParams.value(item?.url)) && !currentRouteHash.value
+    }
+  }
+})
+
+const hrefWithParams = computed(() => {
+  return value => {
+    if (typeof value === 'string') {
+      let replaceLink = value.replace(
+        /:(\w+)/g,
+        (match, key) => route.params[key] || match
+      );
+
+      return replaceLink;
+    }
   }
 })
 
@@ -118,8 +149,8 @@ const resetStateSidebar = () => {
 }
 
 onMounted(() => {
-  if (menu && Array.isArray(menu)) {
-    menu.map(item => {
+  if (auth.menu && Array.isArray(auth.menu)) {
+    auth.menu.map(item => {
       const children = item?.children;
 
       if (children && Array.isArray(children)) {
@@ -177,7 +208,7 @@ defineExpose({
   <nav class="sidebar-nav scroll-sidebar my-3" data-simplebar>
     <ul id="sidebarnav">
       <!-- Menu Level 1 -->
-      <template v-for="menuItem in menu" :key="menuItem.id">
+      <template v-for="menuItem in auth.menu" :key="menuItem.id">
         <!-- Navigation Header -->
         <li v-if="menuItem.menu_key.includes('header')" class="nav-small-cap">
           <TablerIcon size="21" icon="DotsIcon" class="nav-small-cap-icon fs-4" />
@@ -187,7 +218,8 @@ defineExpose({
         <!-- Navigation Item  -->
         <li v-else class="sidebar-item" :class="[isActiveNav(menuItem) ? 'selected' : '']">
           <!-- Navigation Item With URL -->
-          <LinkMenuItem v-if="isHasURL(menuItem)" :to="menuItem?.url || '-'" class="sidebar-link"
+          <LinkMenuItem v-if="isHasURL(menuItem)" :hash="menuItem.hash"
+            :to="menuItem?.url ? hrefWithParams(menuItem?.url) : '-'" class="sidebar-link"
             :class="[isHasChildren(menuItem?.children) ? 'has-arrow' : '', isActiveNav(menuItem) || isHasURLAndURLStartsFromAndSpecialCase(menuItem) ? 'active' : '']"
             @click="setActiveGroupId('')">
             <TablerIcon size=" 21" :icon="menuItem?.icon" class="nav-small-cap-icon fs-4"
@@ -209,7 +241,7 @@ defineExpose({
             :class="[isActiveCollapsedNav(menuItem?.children) ? 'in' : '']">
             <!-- Menu Level Ke 2 -->
             <template v-for="children in menuItem?.children" :key="children?.id">
-              <LinkMenuItem v-if="isHasURL(children)" :to="children?.url || '-'"
+              <LinkMenuItem v-if="isHasURL(children)" :hash="menuItem.hash" :to="hrefWithParams(children?.url) || '-'"
                 class="sidebar-link ms-1 d-flex align-items-center"
                 :class="[isHasChildren(children?.children) ? 'has-arrow' : '', isChildrenActiveMenu(children) ? 'active fw-bolder' : '']"
                 @click="setActiveChildrenGroupId(children?.id)">

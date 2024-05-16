@@ -11,6 +11,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
 import { useAppConfig } from '@/stores/appConfig'
+import { useAuth } from '@/stores/auth'
 
 const TabStep2 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/summary/components/TabStep2.vue')
@@ -28,6 +29,7 @@ const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
 const route = useRoute()
+const auth = useAuth()
 const assessment = useAssessmentStore()
 
 /* ---------------------------------- STATE & COMPUTED --------------------------------- */
@@ -97,6 +99,7 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
+  auth.setMenuToProject()
   appConfig.setMiniSidebar(true)
   getReportCanvasAssessment()
 })
@@ -157,7 +160,8 @@ onUnmounted(() => {
                   aria-selected="true">
                   <div class="d-flex flex-row align-items-center">
                     <TablerIcon icon="SquareNumber2Icon" class="me-2" />
-                    <span class="d-none d-md-block width-200px text-truncate">Step 2 : Determine the initial scope of the
+                    <span class="d-none d-md-block width-200px text-truncate">Step 2 : Determine the initial scope of
+                      the
                       Governance System</span>
                   </div>
                 </BaseButton>

@@ -14,11 +14,13 @@ import AssessmentServices from '@/services/lib/assessment'
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers, minValue, maxValue } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
+import { useAuth } from '@/stores/auth'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
 
+const auth = useAuth()
 const title = useTitle()
 const toast = useToast()
 const route = useRoute()
@@ -112,6 +114,8 @@ const handleSubmit = async () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  auth.setMenuToProject()
+
   assessment.getDetailAssessment({ id: route.params?.id }).then((response) => {
     const data = response?.data
 
@@ -151,9 +155,9 @@ onUnmounted(() => {
             </div>
 
             <div class="col-12 col-md-3">
-              <BaseInput id="minimum_target" type="number" v-model="v$.minimum_target.$model" label="Nilai Minimal Target"
-                placeholder="Masukkan Nilai Minimal Target" tabindex="2" :isInvalid="v$.minimum_target.$errors?.length"
-                :disabled="formState.loadingSubmit" />
+              <BaseInput id="minimum_target" type="number" v-model="v$.minimum_target.$model"
+                label="Nilai Minimal Target" placeholder="Masukkan Nilai Minimal Target" tabindex="2"
+                :isInvalid="v$.minimum_target.$errors?.length" :disabled="formState.loadingSubmit" />
               <ErrorMessage :errors="v$.minimum_target.$errors" />
             </div>
           </div>
@@ -195,8 +199,8 @@ onUnmounted(() => {
             </div>
 
             <div class="col-12 col-md-6">
-              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model" label="Tanggal Selesai Kuesioner"
-                locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
+              <DateInput uid="end_date_quisioner" v-model="v$.end_date_quisioner.$model"
+                label="Tanggal Selesai Kuesioner" locale="id" model-type="yyyy-MM-dd" format="dd/MM/yyyy"
                 placeholder="Silahkan Pilih Tanggal Selesai Kuesioner"
                 :disabled="formState.loadingSubmit || !formState.start_date" tabindex="7"
                 :isInvalid="v$.end_date_quisioner.$errors?.length" :min-date="formState.start_date_quisioner"

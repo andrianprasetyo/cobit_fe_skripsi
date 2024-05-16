@@ -11,12 +11,14 @@ import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
 import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 
+import { useAuth } from '@/stores/auth'
 import { useAppConfig } from '@/stores/appConfig'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 const appConfig = useAppConfig()
 const router = useRouter()
 const route = useRoute()
+const auth = useAuth()
 const assessmentStore = useAssessmentStore()
 
 const TabStep = defineAsyncComponent({
@@ -102,6 +104,7 @@ watch(() => queryView.value, (value) => {
 }, { deep: true, immediate: true })
 
 onMounted(() => {
+  auth.setMenuToProject()
   appConfig.setMiniSidebar(true)
   assessmentStore.getCapabilityListTargetAssessment({
     assesment_id: route.params?.id,
@@ -167,8 +170,8 @@ watch(() => [assessmentStore.capability.selectedGamo], (value) => {
             <li class="nav-item" role="presentation">
               <BaseButton @click="handleClickView('step')"
                 class="nav-link d-flex align-items-center justify-content-center fs-3"
-                :class="[tab === 'step' ? 'active' : '']" :id="`pills-step-tab`" role="tab" :aria-controls="`pills-step`"
-                aria-selected="true">
+                :class="[tab === 'step' ? 'active' : '']" :id="`pills-step-tab`" role="tab"
+                :aria-controls="`pills-step`" aria-selected="true">
                 <div class="d-flex flex-row align-items-center">
                   <TablerIcon :icon="`ChartBarIcon`" class="me-2" />
                   <span class="d-none d-md-block text-truncate">Level</span>

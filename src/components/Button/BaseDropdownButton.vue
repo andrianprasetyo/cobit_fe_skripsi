@@ -40,12 +40,12 @@ const props = defineProps({
   }
 })
 
-const { access: listAccess } = useAuth()
+const auth = useAuth()
 
 const isHasAccess = computed(() => {
   if (props.access && Array.isArray(props.access)) {
     for (let i in props.access) {
-      let isIncluded = listAccess.includes(props.access[i])
+      let isIncluded = auth.access.includes(props.access[i])
 
       if (isIncluded) {
         return true

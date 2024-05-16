@@ -12,11 +12,13 @@ import AssessmentTargetServices from '@/services/lib/assessment-target'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useRouter, useRoute } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
 const route = useRoute()
+const auth = useAuth()
 
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -148,6 +150,7 @@ const handleNavigateAdd = () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  auth.setMenuToProject()
   getListTarget({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, assesment_id: assessmentId.value })
 })
 

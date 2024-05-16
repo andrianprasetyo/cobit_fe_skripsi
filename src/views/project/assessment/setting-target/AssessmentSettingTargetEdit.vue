@@ -15,11 +15,13 @@ import { required, helpers, maxValue } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
+import { useAuth } from '@/stores/auth'
 
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const loading = useLoading()
+const auth = useAuth()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const formState = reactive({
@@ -118,6 +120,8 @@ const handleSubmit = async () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  auth.setMenuToProject()
+  
   getListTargetGamoByTargetId({ target_id: assessmentTargetId.value })
 
   if (assessmentTargetNama.value) {

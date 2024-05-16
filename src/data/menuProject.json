@@ -1,0 +1,157 @@
+[
+  {
+    "id": "ba87df5a-97fe-4e4b-bc76-ef5824047cc9",
+    "parent_id": null,
+    "title": "Semua Project",
+    "menu_key": "project",
+    "url": "/project",
+    "icon": "ArrowLeftIcon",
+    "type": "navigation",
+    "urutan": 0,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "33a93576-13cd-4499-bb79-667c851c2df0",
+    "parent_id": null,
+    "title": "Project",
+    "menu_key": "header-project",
+    "url": null,
+    "icon": null,
+    "type": "menu",
+    "urutan": 1,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "305f809b-c531-4b0e-88a8-49a0bef14da6",
+    "parent_id": null,
+    "title": "Dashboard",
+    "menu_key": "dashboard",
+    "url": "/project/assessment/:id/dashboard",
+    "icon": "SmartHomeIcon",
+    "type": "menu",
+    "urutan": 2,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "4d129e30-111c-4bcd-8736-4267535678ba",
+    "parent_id": null,
+    "title": "Kuesioner dan Hasil",
+    "menu_key": "header-project",
+    "url": null,
+    "icon": null,
+    "type": "menu",
+    "urutan": 3,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "6d54b384-8f5d-44d1-b7c2-add3d1b1a61f",
+    "parent_id": null,
+    "title": "Setting Target",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/setting-target",
+    "icon": "TargetArrowIcon",
+    "type": "menu",
+    "urutan": 4,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "28eada13-ddf8-4442-929b-75c569f33ccf",
+    "parent_id": null,
+    "title": "Responden",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/detail",
+    "hash": "#responden-table-card",
+    "icon": "UsersIcon",
+    "type": "menu",
+    "urutan": 5,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "6d54b384-8f5d-44d1-b7c2-add3d1b1a61f",
+    "parent_id": null,
+    "title": "Hasil Kuesioner",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/result-kuesioner",
+    "icon": "CheckupListIcon",
+    "type": "menu",
+    "urutan": 6,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "5f7a84d4-8ac5-4468-9722-743d86b86d4e",
+    "parent_id": null,
+    "title": "Design Factor",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/report-design-factor",
+    "icon": "ChartDonutIcon",
+    "type": "menu",
+    "urutan": 7,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "463a1a5f-66be-49cb-a363-bf2b6c83700c",
+    "parent_id": null,
+    "title": "GAMO",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/report-gamo",
+    "icon": "ChartHistogramIcon",
+    "type": "menu",
+    "urutan": 8,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "61194d7e-a40c-49cb-917e-113abba503d1",
+    "parent_id": null,
+    "title": "Asesmen",
+    "menu_key": "header-project",
+    "url": null,
+    "icon": null,
+    "type": "menu",
+    "urutan": 9,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "66f25f8d-e711-49e5-8df3-69396ce14d85",
+    "parent_id": null,
+    "title": "Kapabilitas Asesmen",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/capability",
+    "icon": "ClipboardTextIcon",
+    "type": "menu",
+    "urutan": 10,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "4b6c0d57-953f-4a1f-a13a-3ca3ff1328a4",
+    "parent_id": null,
+    "title": "Rekapitulasi",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/report-rekapitulasi",
+    "icon": "DeviceDesktopAnalyticsIcon",
+    "type": "menu",
+    "urutan": 11,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "1daaf006-e09a-49f8-bdcf-cd090a96f3e5",
+    "parent_id": null,
+    "title": "Pengaturan",
+    "menu_key": "header-project",
+    "url": null,
+    "icon": null,
+    "type": "menu",
+    "urutan": 12,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "3a5d6803-7a67-4cf3-9582-1f5cbec27774",
+    "parent_id": null,
+    "title": "Detail Project",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/detail",
+    "icon": "ReportAnalyticsIcon",
+    "type": "menu",
+    "urutan": 13,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  }
+]
