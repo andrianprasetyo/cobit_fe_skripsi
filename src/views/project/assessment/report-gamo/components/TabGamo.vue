@@ -95,7 +95,7 @@ const exportSummaryGamo = async () => {
 }
 
 const handleNavigateToAdjustSummaryGamo = () => {
-  router.push(`/project/assessment/${assessmentId.value}/summary?assessment=${assessmentTitle.value}`)
+  router.push(`/project/assessment/${assessmentId.value}/summary${assessmentTitle.value ? `?assessment=${assessmentTitle.value}` : ''}`)
 }
 
 

@@ -865,7 +865,8 @@ const router = createRouter({
             {
               name: 'DashboardProject',
               path: '/project/assessment/:id/dashboard',
-              component: () => import('@/views/project/assessment/dashboard/AssessmentDashboard.vue'),
+              component: () =>
+                import('@/views/project/assessment/dashboard/AssessmentDashboard.vue'),
               meta: {
                 pageTitle: 'Dashboard Project',
                 layout: 'AppLayoutAdmin',
@@ -1295,6 +1296,37 @@ const router = createRouter({
                     text: 'Report Rekapitulasi',
                     disabled: true,
                     href: '/project/assessment/:id/report-rekaputilasi',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'ResultKuesionerProject',
+              path: '/project/assessment/:id/result-kuesioner',
+              component: () =>
+                import('@/views/project/assessment/result-kuesioner/AssessmentResultKuesioner.vue'),
+              meta: {
+                pageTitle: 'Hasil Kuesioner',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Hasil Kuesioner',
+                    disabled: true,
+                    href: '/project/assessment/:id/result-kuesioner',
                     active: true
                   }
                 ]

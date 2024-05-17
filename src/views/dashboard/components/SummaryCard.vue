@@ -1,6 +1,6 @@
 <script setup>
+import LoadingSkeleton from '@/components/Loading/LoadingSkeleton.vue';
 import Spinner from '@/components/Loading/LoadingSpinner.vue';
-
 
 const props = defineProps({
   value: {
@@ -31,13 +31,12 @@ const props = defineProps({
     default: false
   }
 })
-
-
 </script>
 
 <template>
   <div :class="props.classContainer">
-    <div class="card">
+    <LoadingSkeleton v-if="props.isLoading" class="skeleton-card" />
+    <div v-else class="card">
       <div class="card-body">
         <div class="d-flex flex-row align-items-center">
           <div v-if="props.isShowIcon"
@@ -61,3 +60,11 @@ const props = defineProps({
     </div>
   </div>
 </template>
+
+<style scoped>
+.skeleton-card {
+  height: 110px;
+  width: 100%;
+  border-radius: 1rem;
+}
+</style>

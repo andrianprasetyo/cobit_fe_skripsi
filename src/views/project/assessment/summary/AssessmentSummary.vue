@@ -61,7 +61,7 @@ const handleClickView = (value) => {
 }
 
 const handleBack = () => {
-  router.back()
+  router.push("/project/assessment")
 }
 
 const getReportCanvasAssessment = () => {

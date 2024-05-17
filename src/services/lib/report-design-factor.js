@@ -27,5 +27,21 @@ export default {
         payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''
       }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}`
     )
+  },
+
+  /**
+   *
+   * @param {{assessment_id: String, design_faktor_id: String}} payload
+   * @returns
+   */
+  getReportChartDesignFactor(payload) {
+    const assessmentIdParam = payload?.assessment_id ? `assesment_id=${payload?.assessment_id}` : ''
+    const designFactorIdParam = payload?.design_faktor_id
+      ? `&design_faktor_id=${payload?.design_faktor_id}`
+      : ''
+
+    return axiosClient.get(
+      `assesment/report/design-faktor-risk-out/chart?${assessmentIdParam}${designFactorIdParam}`
+    )
   }
 }
