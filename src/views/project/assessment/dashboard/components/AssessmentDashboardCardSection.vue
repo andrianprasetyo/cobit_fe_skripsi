@@ -5,7 +5,7 @@ import { useToast } from '@/stores/toast'
 
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton.vue'
-import AssessmentDashboardCardItem from '@/views/project/assessment/dashboard/components/AssessmentDashboardCardItem.vue'
+import SummaryCard from '@/views/dashboard/components/SummaryCard.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 
@@ -54,29 +54,26 @@ onMounted(() => {
     </template>
 
     <template v-else>
-      <AssessmentDashboardCardItem class="col-12 col-md-4 d-flex align-items-strech"
-        :is-loading="assessmentDashboard.loading" title="Total Responden" :value="assessmentDashboard.data?.responden"
-        variant="warning">
+      <SummaryCard :is-loading="assessmentDashboard.loading" label="Total Responden"
+        :value="assessmentDashboard.data?.responden" variant="primary">
         <template #icon>
-          <TablerIcon icon="UsersIcon" size="24" class="text-warning" />
+          <TablerIcon icon="UsersIcon" />
         </template>
-      </AssessmentDashboardCardItem>
+      </SummaryCard>
 
-      <AssessmentDashboardCardItem class="col-12 col-md-4 d-flex align-items-strech"
-        :is-loading="assessmentDashboard.loading" title="Total Gamo yang Perlu Diasesmen"
-        :value="assessmentDashboard.data?.gamo" variant="success">
+      <SummaryCard :is-loading="assessmentDashboard.loading" label="Total Gamo yang Perlu Diasesmen"
+        :value="assessmentDashboard.data?.gamo" variant="primary">
         <template #icon>
-          <TablerIcon icon="ChartHistogramIcon" size="24" class="text-success" />
+          <TablerIcon icon="ChartHistogramIcon" />
         </template>
-      </AssessmentDashboardCardItem>
+      </SummaryCard>
 
-      <AssessmentDashboardCardItem class="col-12 col-md-4 d-flex align-items-strech"
-        :is-loading="assessmentDashboard.loading" title="Total Asesmen Target Aktif"
-        :value="assessmentDashboard.data?.capability_taget" variant="info">
+      <SummaryCard :is-loading="assessmentDashboard.loading" label="Total Asesmen Target Aktif"
+        :value="assessmentDashboard.data?.capability_taget" variant="primary">
         <template #icon>
-          <TablerIcon icon="TargetArrowIcon" size="24" class="text-info" />
+          <TablerIcon icon="TargetArrowIcon" />
         </template>
-      </AssessmentDashboardCardItem>
+      </SummaryCard>
     </template>
   </div>
 </template>

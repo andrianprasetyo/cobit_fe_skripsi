@@ -2,18 +2,21 @@
 import { onMounted } from 'vue'
 import { useTitle } from '@vueuse/core'
 import { useRoute } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
-import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
+import AssessmentDashboardBanner from '@/views/project/assessment/dashboard/components/AssessmentDashboardBanner.vue'
 import AssessmentDashboardCardSection from '@/views/project/assessment/dashboard/components/AssessmentDashboardCardSection.vue'
-import AssessmentReportDesignFactor from '@/views/project/assessment/report-design-factor/AssessmentReportDesignFactor.vue'
+import AssessmentDashboardDesignFactorChart from '@/views/project/assessment/dashboard/components/AssessmentDashboardDesignFactorChart.vue'
 
+const auth = useAuth()
 const route = useRoute()
 const title = useTitle()
 const assessment = useAssessmentStore()
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  auth.setMenuToProject()
   assessment.getDetailAssessment({ id: route.params?.id }).then(() => {
     title.value = `Dashboard Project ${assessment.detail?.nama || ''}`
   })
@@ -22,12 +25,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <BreadCrumb />
+    <AssessmentDashboardBanner />
 
     <section>
       <AssessmentDashboardCardSection />
-      <hr />
-      <AssessmentReportDesignFactor :isShowBreadCrumb="false" :isShowBackButton="false" />
+      <AssessmentDashboardDesignFactorChart />
     </section>
   </div>
 </template>

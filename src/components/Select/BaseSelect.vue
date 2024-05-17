@@ -1,4 +1,3 @@
-
 <script setup>
 import { computed } from 'vue'
 
@@ -13,7 +12,8 @@ const props = defineProps({
     default: "text",
   },
   label: {
-    type: [String, Number]
+    type: [String, Number],
+    default: ''
   },
   labelClass: {
     type: [String, Object, Array],
@@ -30,6 +30,10 @@ const props = defineProps({
   isInvalid: {
     type: [Boolean, Number],
     default: false,
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
   },
   modelValue: {
     type: [Number, String,]
@@ -73,7 +77,7 @@ const value = computed({
     <select v-bind="$attrs" :class="[props.class, props.isInvalid ? 'is-invalid' : '']" :disabled="disabled"
       v-model="value">
       <option value="">
-        {{ props.defaultOption }}
+        {{ props.isLoading ? 'Loading...' : props.defaultOption }}
       </option>
 
       <slot v-if="slots['options']" name="options" />

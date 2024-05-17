@@ -62,5 +62,19 @@ export default {
         payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''
       }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}`
     )
+  },
+
+  /**
+   *
+   * @param {{assesment_id: String, assesment_users_id: String}} payload
+   * @returns
+   */
+  getResultKuesioner(payload) {
+    const assesmentIdParam = payload?.assesment_id ? `?assesment_id=${payload?.assesment_id}` : ''
+    const assesmentUsersIdParam = payload?.assesment_users_id
+      ? `?assesment_users_id=${payload?.assesment_users_id}`
+      : ''
+
+    return axiosClient.get(`responden/quisioner/list${assesmentIdParam}${assesmentUsersIdParam}`)
   }
 }
