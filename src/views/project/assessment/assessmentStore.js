@@ -14,6 +14,7 @@ const loading = useLoading()
 
 export const useAssessmentStore = defineStore('assessment', {
   state: () => ({
+    loading: false,
     selectedAssessment: null,
     detail: null,
     reportChart: {
@@ -65,12 +66,17 @@ export const useAssessmentStore = defineStore('assessment', {
       return state.reportCanvasSummary
     },
 
-    getIsAnyDelayReportCanvasSummary(state){
-      if(Array.isArray(state.reportCanvasSummary?.hasil) && state.reportCanvasSummary?.hasil?.length){
-        return state.reportCanvasSummary?.hasil.every(item => item?.assesmentcanvas?.step2_init_value == 0)
+    getIsAnyDelayReportCanvasSummary(state) {
+      if (
+        Array.isArray(state.reportCanvasSummary?.hasil) &&
+        state.reportCanvasSummary?.hasil?.length
+      ) {
+        return state.reportCanvasSummary?.hasil.every(
+          (item) => item?.assesmentcanvas?.step2_init_value == 0
+        )
       }
 
-      return false 
+      return false
     },
 
     getCapabilitySelectedGamo(state) {
@@ -153,6 +159,7 @@ export const useAssessmentStore = defineStore('assessment', {
     async getDetailAssessment(payload) {
       const toast = useToast()
       const loader = loading.show()
+      this.loading = true
 
       try {
         const response = await AssessmentServices.getDetailAssessment({ id: payload?.id })
@@ -161,11 +168,13 @@ export const useAssessmentStore = defineStore('assessment', {
           const data = response?.data
 
           this.detail = data
+          this.loading = false
           loader.hide()
 
           return response
         }
       } catch (error) {
+        this.loading = false
         loader.hide()
         toast.error({ error })
         throw error

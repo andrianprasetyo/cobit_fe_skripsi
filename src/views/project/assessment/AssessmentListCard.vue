@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, onMounted, watch } from 'vue'
+import { reactive, ref, onMounted, watch, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
@@ -8,9 +8,9 @@ import LoadingSkeleton from '@/components/Loading/LoadingSkeleton.vue'
 import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 import EasyPagination from '@/components/Pagination/EasyPagination.vue'
 import AssessmentListCardItem from '@/views/project/assessment/components/AssessmentListCardItem.vue'
+import ModalFilterListCard from '@/views/project/assessment/components/ModalFilterListCard.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
-import OrganisasiServices from '@/services/lib/organisasi'
 
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
@@ -59,18 +59,8 @@ const assessment = reactive({
     total: 0,
     total_page: 0
   },
-  isShowModalUploadLaporan: false
-})
-
-const organisasi = reactive({
-  loading: false,
-  data: [],
-  meta: {
-    current_page: 1,
-    per_page: 12,
-    total: 0,
-    total_page: 0
-  },
+  isShowModalUploadLaporan: false,
+  openModalFilter: false
 })
 
 const serverOptions = ref({
@@ -83,6 +73,10 @@ const serverOptions = ref({
 const filter = ref({
   search: '',
   organisasi_id: ''
+})
+
+const isActiveFilter = computed(() => {
+  return Object.keys(filter.value).some((key) => filter.value[key])
 })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -107,24 +101,6 @@ const getListAssessment = async ({ limit, page, sortBy, sortType, search, organi
     }
   } catch (error) {
     assessment.loading = false
-    toast.error({ error })
-  }
-}
-
-const getListOrganisasi = async ({ limit, page, search }) => {
-  try {
-    organisasi.loading = true
-    const response = await OrganisasiServices.getListOrganisasi({ limit, page, search })
-
-    if (response) {
-      const data = response?.data
-
-      organisasi.data = data?.list || []
-      organisasi.meta = data?.meta
-      organisasi.loading = false
-    }
-  } catch (error) {
-    organisasi.loading = false
     toast.error({ error })
   }
 }
@@ -189,11 +165,23 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/dashboard` })
 }
 
+const toggleModalFilter = () => {
+  assessment.openModalFilter = !assessment.openModalFilter
+}
+
+const handleSubmitFilter = (payload) => {
+  filter.value.organisasi_id = payload?.organisasi_id
+}
+
+const handleResetFilter = () => {
+  filter.value.organisasi_id = ''
+  filter.value.search = ''
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   auth.setMenuToDefault()
   getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
-  getListOrganisasi({ limit: 10, page: 1 })
 })
 
 watch(() => [filter.value], value => {
@@ -234,6 +222,20 @@ watch(() => [serverOptions.value, filter.value], () => {
               class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Project">
               <template #icon-left>
                 <TablerIcon size="16" icon="PlusIcon" />
+              </template>
+            </BaseButton>
+
+            <BaseButton @click="toggleModalFilter" class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0"
+              title="Filter">
+              <template #icon-left>
+                <TablerIcon size="16" icon="FilterIcon" />
+              </template>
+            </BaseButton>
+
+            <BaseButton v-if="isActiveFilter" @click="handleResetFilter" v-tooltip="`Reset Filter`"
+              class="btn btn-danger ms-0 ms-md-3 mt-3 mt-md-0" title="Reset">
+              <template #icon-left>
+                <TablerIcon size="16" icon="ReloadIcon" />
               </template>
             </BaseButton>
           </div>
@@ -281,6 +283,9 @@ watch(() => [serverOptions.value, filter.value], () => {
           v-model:server-options="serverOptions" :filter="filter" />
       </div>
     </div>
+
+    <ModalFilterListCard :open="assessment.openModalFilter" @close="toggleModalFilter" @submit="handleSubmitFilter"
+      :active-filter="filter" />
   </section>
 </template>
 
@@ -291,4 +296,3 @@ watch(() => [serverOptions.value, filter.value], () => {
   border-radius: 1rem;
 }
 </style>
-
