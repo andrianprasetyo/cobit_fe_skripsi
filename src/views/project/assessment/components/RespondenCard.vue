@@ -5,9 +5,12 @@ import DataTable from '@/components/DataTable/DataTable.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import SearchInput from '@/components/Input/SearchInput.vue'
+import BaseSwitchInput from '@/components/Input/BaseSwitchInput.vue'
+import BaseLightBadge from '@/components/Badge/BaseLightBadge.vue'
 
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
 import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
+import ModalUploadLaporan from '@/views/project/assessment/components/ModalUploadLaporan.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 import RespondenServices from '@/services/lib/responden'
@@ -45,6 +48,9 @@ const responden = reactive({
     text: 'Status',
     value: 'status'
   }, {
+    text: 'Kuesioner Diproses',
+    value: 'quesioner_processed'
+  }, {
     text: 'Action',
     value: 'action'
   },
@@ -55,8 +61,10 @@ const responden = reactive({
     total: 0,
     total_page: 0
   },
+  isOnEditProcessedKuesioner: false,
   isShowModalInviteResponden: false,
-  isShowModalSummaryGamo: false
+  isShowModalSummaryGamo: false,
+  isShowModalUploadLaporan: false,
 })
 
 const serverOptions = ref({
@@ -73,6 +81,8 @@ const filter = ref({
 const isAssessmentDone = computed(() => {
   return assessmentStore?.detail?.status === 'completed'
 })
+
+const assessmentId = computed(() => route?.params?.id)
 
 
 const classStatus = computed(() => {
@@ -93,6 +103,26 @@ const classStatus = computed(() => {
       return 'bg-light-warning text-warning'
     } else {
       return 'bg-dark text-white'
+    }
+  }
+})
+
+const variantRespondenKuesioner = computed(() => {
+  return value => {
+    if (value) {
+      return 'success'
+    } else {
+      return 'danger'
+    }
+  }
+})
+
+const textRespondenKuesioner = computed(() => {
+  return value => {
+    if (value) {
+      return 'Ya'
+    } else {
+      return 'Tidak'
     }
   }
 })
@@ -271,6 +301,71 @@ const exportHasilQuisioner = async () => {
   window.open(url, '_blank');
 }
 
+const handleEditProcessedKuesioner = (value) => {
+  responden.isOnEditProcessedKuesioner = value
+
+  if (!value) {
+    handleRefresh()
+  }
+}
+
+const setProcessedKuesioner = async ({ assesment_id, assesment_user_id }) => {
+  try {
+    const response = await RespondenServices.setProcessedKuesioner({ assesment_id, assesment_user_id })
+
+    if (response) {
+      toast.success({
+        title: 'Data Kuesioner Responden Terpilih',
+        text: `Berhasil Memproses Data Kuesioner Responden yang dipilih`
+      })
+
+      handleRefresh()
+      responden.isOnEditProcessedKuesioner = false
+
+      return response
+    }
+
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
+const handleSetProcessedKuesioner = () => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Merubah Data Kuesioner Yang Diproses ?`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const assesment_user_id = [];
+
+        responden.data.map(item => {
+          if (item?.status === 'done' && item?.quesioner_processed) {
+            assesment_user_id.push(item?.id)
+          }
+        })
+
+        const response = await setProcessedKuesioner({ assesment_id: assessmentId.value, assesment_user_id: [assesment_user_id[0]] })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
+const toggleModalUploadLaporan = () => {
+  responden.isShowModalUploadLaporan = !responden.isShowModalUploadLaporan
+
+  if (responden.isShowModalUploadLaporan) {
+    assessmentStore.setSeletedAssessment(assessmentStore.detail)
+  }
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListResponden({ limit: 10, page: 1, assesment_id: route.params?.id })
@@ -307,6 +402,32 @@ watch(() => [serverOptions.value, filter.value], () => {
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <SearchInput v-model="filter.search" placeholder="Cari Responden" />
+
+          <template v-if="responden.isOnEditProcessedKuesioner">
+            <BaseButton class="btn btn-success ms-0 mt-3 mt-md-0 ms-md-3"
+              title="Simpan Perubahan Kuesioner Yang Diproses" id="saveProcessedKuesioner"
+              @click="handleSetProcessedKuesioner">
+              <template #icon-right>
+                <TablerIcon icon="DeviceFloppyIcon" class="ms-2" />
+              </template>
+            </BaseButton>
+
+            <BaseButton class="btn btn-outline-danger ms-0 mt-3 mt-md-0 ms-md-3" title="Batalkan"
+              id="cancelProcessedKuesioner" @click="handleEditProcessedKuesioner(false)">
+              <template #icon-right>
+                <TablerIcon icon="XIcon" class="ms-2" />
+              </template>
+            </BaseButton>
+          </template>
+
+          <template v-else>
+            <BaseButton class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Sesuaikan Kuesioner Yang Diproses"
+              id="changesProcessedKuesioner" @click="handleEditProcessedKuesioner(true)">
+              <template #icon-right>
+                <TablerIcon icon="EditIcon" class="ms-2" />
+              </template>
+            </BaseButton>
+          </template>
 
           <BaseButton class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Action" data-bs-toggle="dropdown"
             id="dropdownMenuMore" aria-expanded="false">
@@ -379,6 +500,17 @@ watch(() => [serverOptions.value, filter.value], () => {
                 <hr class="dropdown-divider">
               </li>
               <li>
+                <BaseButton :access="['project-complete']" @click="toggleModalUploadLaporan"
+                  class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
+                  <template #icon-left>
+                    <TablerIcon icon="UploadIcon" />
+                    <span class="ms-2">
+                      Upload Laporan Project
+                    </span>
+                  </template>
+                </BaseButton>
+              </li>
+              <li>
                 <BaseButton :access="['project-complete']" @click="handleSelesaikanAssessment"
                   class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
                   <template #icon-left>
@@ -401,6 +533,12 @@ watch(() => [serverOptions.value, filter.value], () => {
         :server-items-length="responden.meta.total" v-model:server-options="serverOptions" fixed-header>
 
         <template #header-status="header">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            {{ header.item.text }}
+          </div>
+        </template>
+
+        <template #header-quesioner_processed="header">
           <div class="d-flex justify-content-center align-items-center w-100">
             {{ header.item.text }}
           </div>
@@ -442,6 +580,22 @@ watch(() => [serverOptions.value, filter.value], () => {
               :class="classStatus(item?.item?.status)">
               {{ item?.item?.status }}
             </span>
+          </div>
+        </template>
+
+        <template #item-quesioner_processed="item">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            <template v-if="item?.item?.status === 'done'">
+
+              <div v-if="item?.item?.index >= 1 && responden.isOnEditProcessedKuesioner">
+                <BaseSwitchInput :id="`switch-${item?.item?.nama}-${item?.item?.status}`" :disabled="responden.loading"
+                  v-model="responden.data[item.item.index - 1].quesioner_processed" active-text="Diproses"
+                  in-active-text="Jangan Diproses" />
+              </div>
+
+              <BaseLightBadge v-else :title="textRespondenKuesioner(!!item?.item?.quesioner_processed)"
+                :variant="variantRespondenKuesioner(!!item?.item?.quesioner_processed)" />
+            </template>
           </div>
         </template>
 
@@ -498,5 +652,8 @@ watch(() => [serverOptions.value, filter.value], () => {
       @refresh="handleRefresh" />
 
     <ModalSummaryGamo :is-show="responden.isShowModalSummaryGamo" @close="toggleModalSummaryGamo" />
+
+    <ModalUploadLaporan :is-show="responden.isShowModalUploadLaporan" @close="toggleModalUploadLaporan"
+      @refresh="handleRefresh" />
   </div>
 </template>

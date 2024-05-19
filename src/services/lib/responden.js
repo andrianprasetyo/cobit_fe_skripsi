@@ -76,5 +76,14 @@ export default {
       : ''
 
     return axiosClient.get(`responden/quisioner/list${assesmentIdParam}${assesmentUsersIdParam}`)
+  },
+
+  /**
+   *
+   * @param {{assesment_id: String, assesment_user_id: Array}} payload
+   * @return
+   */
+  setProcessedKuesioner(payload) {
+    return axiosClient.post(`quisioner/responden/set-finish`, payload)
   }
 }
