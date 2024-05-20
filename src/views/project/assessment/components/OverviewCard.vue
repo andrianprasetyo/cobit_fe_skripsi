@@ -11,6 +11,9 @@ const props = defineProps({
 <template>
   <div class="col-12 col-md-12" v-bind="$attrs">
     <div class="card rounded-3">
+      <div class="card-header">
+        <slot name="header" />
+      </div>
       <div class="card-body">
         <div class="d-flex align-items-baseline">
           <span class="flex-shrink-0">

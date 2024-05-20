@@ -59,8 +59,7 @@
     "parent_id": null,
     "title": "Responden",
     "menu_key": "project",
-    "url": "/project/assessment/:id/detail",
-    "hash": "#responden-table-card",
+    "url": "/project/assessment/:id/responden",
     "icon": "UsersIcon",
     "type": "menu",
     "urutan": 5,
@@ -94,7 +93,7 @@
     "title": "GAMO",
     "menu_key": "project",
     "url": "/project/assessment/:id/report-gamo",
-    "icon": "ChartHistogramIcon",
+    "icon": "SettingsStarIcon",
     "type": "menu",
     "urutan": 8,
     "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
@@ -152,6 +151,17 @@
     "icon": "ReportAnalyticsIcon",
     "type": "menu",
     "urutan": 13,
+    "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "9264645f-3d58-4ff3-a382-4a59a4f755e7",
+    "parent_id": null,
+    "title": "Laporan Project",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/report-project",
+    "icon": "ReportIcon",
+    "type": "menu",
+    "urutan": 14,
     "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
   }
 ]

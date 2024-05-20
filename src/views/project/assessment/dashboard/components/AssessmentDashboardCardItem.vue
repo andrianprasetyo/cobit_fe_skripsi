@@ -32,7 +32,7 @@ const props = defineProps({
   <div :class="props.class">
     <div class="card w-100">
       <div class="card-body">
-        <div :class="`p-2 bg-light-${props.variant} rounded-2 d-inline-block mb-3`">
+        <div :class="`bg-light-${props.variant} rounded-2 d-inline-block mb-3`">
           <slot v-if="slots['icon']" name="icon" />
 
           <TablerIcon v-else icon="PinIcon" size="24" :class="`text-${props.variant}`" />

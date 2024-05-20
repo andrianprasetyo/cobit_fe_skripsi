@@ -13,12 +13,14 @@ import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 
 import { useAuth } from '@/stores/auth'
 import { useAppConfig } from '@/stores/appConfig'
+import { useTitle } from '@vueuse/core'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 const appConfig = useAppConfig()
 const router = useRouter()
 const route = useRoute()
 const auth = useAuth()
+const title = useTitle()
 const assessmentStore = useAssessmentStore()
 
 const TabStep = defineAsyncComponent({
@@ -110,6 +112,8 @@ onMounted(() => {
     assesment_id: route.params?.id,
   })
 
+  title.value = `Kapabilitas Asesmen ${assessmentStore.detail?.nama || ''}`
+
   assessmentStore.getCapabilityListGamoAssessment({
     assesment_id: route.params?.id,
     limit: 100
@@ -121,13 +125,14 @@ onUnmounted(() => {
   assessmentStore.resetState()
 })
 
-watch(() => [assessmentStore.capability.selectedGamo], (value) => {
-  if (value) {
+watch(() => [assessmentStore.capability.selectedGamo], () => {
+  if (assessmentStore.capability.selectedGamo?.id) {
     assessmentStore.getCapabilityListLevelAssessment({
       domain_id: assessmentStore.capability.selectedGamo?.id,
+    }).then(() => {
+      assessmentStore.setCapabilitySelectedLevel('2')
     })
 
-    assessmentStore.setCapabilitySelectedLevel('2')
   }
 }, { deep: true, immediate: true })
 

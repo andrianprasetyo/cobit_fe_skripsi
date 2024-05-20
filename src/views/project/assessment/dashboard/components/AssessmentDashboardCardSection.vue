@@ -64,7 +64,7 @@ onMounted(() => {
       <SummaryCard :is-loading="assessmentDashboard.loading" label="Total Gamo yang Perlu Diasesmen"
         :value="assessmentDashboard.data?.gamo" variant="primary">
         <template #icon>
-          <TablerIcon icon="ChartHistogramIcon" />
+          <TablerIcon icon="SettingsStarIcon" />
         </template>
       </SummaryCard>
 

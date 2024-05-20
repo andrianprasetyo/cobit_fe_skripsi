@@ -1331,6 +1331,68 @@ const router = createRouter({
                   }
                 ]
               }
+            },
+            {
+              name: 'RespondenProject',
+              path: '/project/assessment/:id/responden',
+              component: () =>
+                import('@/views/project/assessment/responden/AssessmentResponden.vue'),
+              meta: {
+                pageTitle: 'Responden',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Responden',
+                    disabled: true,
+                    href: '/project/assessment/:id/responden',
+                    active: true
+                  }
+                ]
+              }
+            },
+            {
+              name: 'ReportProject',
+              path: '/project/assessment/:id/report-project',
+              component: () =>
+                import('@/views/project/assessment/report-project/AssessmentReportProject.vue'),
+              meta: {
+                pageTitle: 'Laporan Project',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Laporan Project',
+                    disabled: true,
+                    href: '/project/assessment/:id/report-project',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },

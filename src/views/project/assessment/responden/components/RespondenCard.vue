@@ -341,7 +341,7 @@ watch(() => [serverOptions.value, filter.value], () => {
       <div
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
         <div class="mb-3 mb-sm-0">
-          <h5 class="card-title fw-semibold">Responden</h5>
+          <h5 class="card-title fw-semibold">Daftar Responden</h5>
         </div>
 
         <div

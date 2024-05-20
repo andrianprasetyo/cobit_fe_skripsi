@@ -13,12 +13,16 @@ import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/stores/auth'
+import { useTitle } from '@vueuse/core'
+import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
 const route = useRoute()
 const auth = useAuth()
+const title = useTitle()
+const assessmentStore = useAssessmentStore()
 
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -151,6 +155,7 @@ const handleNavigateAdd = () => {
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   auth.setMenuToProject()
+  title.value = `Setting Target ${assessmentStore.detail?.nama || ''}`
   getListTarget({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, assesment_id: assessmentId.value })
 })
 

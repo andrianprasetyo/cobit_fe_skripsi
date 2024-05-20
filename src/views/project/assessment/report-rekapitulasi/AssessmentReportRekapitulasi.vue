@@ -102,7 +102,7 @@ onUnmounted(() => {
               :class="[report === 'gamo' ? 'active' : '']" id="pills-gamo-tab" role="tab" aria-controls="pills-gamo"
               aria-selected="true">
               <div class="d-flex flex-row align-items-center">
-                <TablerIcon icon="ChartHistogramIcon" class="me-2" />
+                <TablerIcon icon="SettingsStarIcon" class="me-2" />
                 <span class="d-none d-md-block text-truncate">Report Governance and Management
                   Objectives (GAMO)</span>
               </div>

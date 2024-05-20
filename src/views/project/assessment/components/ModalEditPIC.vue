@@ -68,7 +68,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
+const v$ = useVuelidate(rules, formState, { $rewardEarly: true, $scope: false })
 
 /* --------------------------------- METHODS -------------------------------- */
 const handleSearchJabatan = debounce(async ({ search }) => {
@@ -126,7 +126,7 @@ const onSubmit = async () => {
         pic_email: formState.pic_email,
         pic_divisi_id: formState.pic_divisi?.id,
         pic_jabatan_id: formState.pic_jabatan?.id,
-        
+
       })
 
       if (response) {

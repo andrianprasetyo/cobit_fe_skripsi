@@ -32,16 +32,17 @@ onMounted(() => {
 
 <template>
   <LoadingSkeleton v-if="assessmentStore.capability.loadingListGamo" class="skeleton-gamo-card" />
-  <div v-else class="card w-100 container-dashboard-card-content overflow-auto">
-    <div class="card-body">
+  <div v-else class="card w-100">
+    <div class="card-header">
       <div
-        class="mb-4 d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
+        class="d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
         <div class="w-100 mb-3 mb-md-0">
           <h5 class="card-title fw-semibold">Daftar GAMO</h5>
           <p class="card-subtitle mb-0">Daftar Gamo yang Perlu Diasesmen</p>
         </div>
       </div>
-
+    </div>
+    <div class="card-body container-dashboard-content overflow-auto">
       <template v-if="Array.isArray(assessmentStore.capability.listGamo) && assessmentStore.capability.listGamo.length">
         <div v-for="(item, index) in assessmentStore.capability.listGamo" :key="`gamo-${index}-${item?.id}`"
           class="d-flex align-items-center justify-content-between mb-4"
@@ -71,8 +72,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.container-dashboard-card-content {
-  height: calc(100vh);
+.container-dashboard-content {
+  height: calc(100vh - 200px);
 }
 
 .skeleton-gamo-card {

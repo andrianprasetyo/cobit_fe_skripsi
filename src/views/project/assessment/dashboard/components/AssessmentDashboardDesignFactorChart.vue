@@ -65,10 +65,10 @@ watch(() => [assessmentDesignFactorChart.selectedDesignFactorId], () => {
 </script>
 
 <template>
-  <div class="card w-100 container-dashboard-card-content overflow-auto">
-    <div class="card-body position-relative">
+  <div class="card w-100">
+    <div class="card-header">
       <div
-        class="mb-4 d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
+        class="d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
         <div class="w-100 mb-3 mb-md-0">
           <h5 class="card-title fw-semibold">Grafik Design Factor</h5>
           <p class="card-subtitle mb-0">Berdasarkan Data Kuesioner yang telah diproses</p>
@@ -80,16 +80,19 @@ watch(() => [assessmentDesignFactorChart.selectedDesignFactorId], () => {
             options-label="nama" options-value="id" :disabled="assessmentDesignFactorChart.loading" />
         </div>
       </div>
-
+    </div>
+    <div class="card-body position-relative d-flex flex-column justify-content-center  overflow-auto">
       <LoadingOverlay :active="assessmentDesignFactorChart.loading" />
-      <ApexChartsRadar :height="525" :categories="assessmentDesignFactorChart.data.categories"
-        :series="assessmentDesignFactorChart.data.series" />
+      <div>
+        <ApexChartsRadar :height="400" :categories="assessmentDesignFactorChart.data.categories"
+          :series="assessmentDesignFactorChart.data.series" />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.container-dashboard-card-content {
-  height: calc(100vh);
+.container-dashboard-content {
+  height: calc(100vh - 400px);
 }
 </style>
