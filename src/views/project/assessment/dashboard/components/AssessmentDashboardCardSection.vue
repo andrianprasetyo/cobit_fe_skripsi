@@ -68,7 +68,7 @@ onMounted(() => {
         </template>
       </SummaryCard>
 
-      <SummaryCard :is-loading="assessmentDashboard.loading" label="Total Asesmen Target Aktif"
+      <SummaryCard :is-loading="assessmentDashboard.loading" label="Total Target Aktif"
         :value="assessmentDashboard.data?.capability_taget" variant="primary">
         <template #icon>
           <TablerIcon icon="TargetArrowIcon" />

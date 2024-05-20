@@ -1,14 +1,10 @@
 <script setup>
 import { reactive, ref, onMounted, watch, computed } from 'vue'
 
-import BaseButton from '@/components/Button/BaseButton.vue'
-import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
-import SearchInput from '@/components/Input/SearchInput.vue'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton.vue'
 import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 import EasyPagination from '@/components/Pagination/EasyPagination.vue'
 import AssessmentListCardItem from '@/views/project/assessment/components/AssessmentListCardItem.vue'
-import ModalFilterListCard from '@/views/project/assessment/components/ModalFilterListCard.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 
@@ -16,12 +12,13 @@ import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useAuth } from '@/stores/auth'
 
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
 const auth = useAuth()
+const route = useRoute()
 
 /* ---------------------------------- STATE --------------------------------- */
 const assessment = reactive({
@@ -59,8 +56,6 @@ const assessment = reactive({
     total: 0,
     total_page: 0
   },
-  isShowModalUploadLaporan: false,
-  openModalFilter: false
 })
 
 const serverOptions = ref({
@@ -70,14 +65,10 @@ const serverOptions = ref({
   sortType: '',
 });
 
-const filter = ref({
-  search: '',
-  organisasi_id: ''
-})
-
-const isActiveFilter = computed(() => {
-  return Object.keys(filter.value).some((key) => filter.value[key])
-})
+const filter = computed(() => ({
+  search: route.query?.search,
+  organisasi_id: route.query?.organisasi_id
+}))
 
 /* --------------------------------- METHODS -------------------------------- */
 const resetServerOptions = () => {
@@ -153,10 +144,6 @@ const handleDelete = ({ title, id }) => {
   })
 }
 
-const handleNavigateAdd = () => {
-  router.push('/project/assessment/add')
-}
-
 const handleNavigateEdit = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/edit` })
 }
@@ -165,23 +152,10 @@ const handleNavigateDetail = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/dashboard` })
 }
 
-const toggleModalFilter = () => {
-  assessment.openModalFilter = !assessment.openModalFilter
-}
-
-const handleSubmitFilter = (payload) => {
-  filter.value.organisasi_id = payload?.organisasi_id
-}
-
-const handleResetFilter = () => {
-  filter.value.organisasi_id = ''
-  filter.value.search = ''
-}
-
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   auth.setMenuToDefault()
-  getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
+  getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, search: filter.value.search, organisasi_id: filter.value.organisasi_id })
 })
 
 watch(() => [filter.value], value => {
@@ -205,43 +179,6 @@ watch(() => [serverOptions.value, filter.value], () => {
 
 <template>
   <section>
-    <div class="card">
-      <div class="card-header">
-        <div
-          class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-          <div class="mb-3 mb-sm-0">
-            <h5 class="card-title fw-semibold">Project</h5>
-            <p class="card-subtitle mb-0">Daftar Project yang terdaftar di Aplikasi</p>
-          </div>
-
-          <div
-            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-            <SearchInput v-model="filter.search" placeholder="Cari Project" />
-
-            <BaseButton :access="['project-add']" @click="handleNavigateAdd"
-              class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Project">
-              <template #icon-left>
-                <TablerIcon size="16" icon="PlusIcon" />
-              </template>
-            </BaseButton>
-
-            <BaseButton @click="toggleModalFilter" class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0"
-              title="Filter">
-              <template #icon-left>
-                <TablerIcon size="16" icon="FilterIcon" />
-              </template>
-            </BaseButton>
-
-            <BaseButton v-if="isActiveFilter" @click="handleResetFilter" v-tooltip="`Reset Filter`"
-              class="btn btn-danger ms-0 ms-md-3 mt-3 mt-md-0" title="Reset">
-              <template #icon-left>
-                <TablerIcon size="16" icon="ReloadIcon" />
-              </template>
-            </BaseButton>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="row">
       <template v-if="assessment.loading">
@@ -284,8 +221,7 @@ watch(() => [serverOptions.value, filter.value], () => {
       </div>
     </div>
 
-    <ModalFilterListCard :open="assessment.openModalFilter" @close="toggleModalFilter" @submit="handleSubmitFilter"
-      :active-filter="filter" />
+
   </section>
 </template>
 

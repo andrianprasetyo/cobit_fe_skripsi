@@ -84,6 +84,6 @@ export default {
    * @return
    */
   setProcessedKuesioner(payload) {
-    return axiosClient.post(`quisioner/responden/set-finish`, payload)
+    return axiosClient.put(`quisioner/responden/update-all`, payload)
   }
 }
