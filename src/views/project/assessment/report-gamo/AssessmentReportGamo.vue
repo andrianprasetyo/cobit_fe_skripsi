@@ -107,6 +107,8 @@ onMounted(() => {
     appConfig.setMiniSidebar(true)
     if (assessmentTitle.value) {
       title.value = `Report GAMO ${assessmentTitle.value || ''}`
+    } else {
+      title.value = `Report GAMO ${assessmentStore.detail?.nama || ''}`
     }
   }
 })

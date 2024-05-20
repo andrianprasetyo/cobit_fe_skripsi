@@ -43,7 +43,7 @@ const rules = computed(() => {
   }
 })
 
-const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
+const v$ = useVuelidate(rules, formState, { $rewardEarly: true, $scope: false })
 
 /* --------------------------------- METHODS -------------------------------- */
 
@@ -115,7 +115,8 @@ watch(() => [props.isShow], () => {
         <DateInput uid="expire_at" v-model="v$.expire_at.$model" label="Tanggal Kadaluarsa PIC" locale="id"
           model-type="yyyy-MM-dd" format="dd/MM/yyyy" placeholder="Silahkan Pilih Tanggal Kadaluarsa PIC"
           :disabled="formState.loadingSubmit" tabindex="1" :isInvalid="v$.expire_at.$errors?.length"
-          :min-date="assessment.detail?.start_date" :max-date="assessment.detail?.end_date" :enable-time-picker="false" />
+          :min-date="assessment.detail?.start_date" :max-date="assessment.detail?.end_date"
+          :enable-time-picker="false" />
         <ErrorMessage :errors="v$.expire_at.$errors" />
       </div>
     </template>

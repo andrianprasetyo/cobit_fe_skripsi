@@ -1,12 +1,13 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, reactive } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+import BaseInput from '@/components/Input/BaseInput.vue'
+import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
 import OverviewCard from '@/views/project/assessment/components/OverviewCard.vue'
-import RespondenCard from '@/views/project/assessment/components/RespondenCard.vue'
 import ModalEditPIC from '@/views/project/assessment/components/ModalEditPIC.vue'
 import ModalEditTanggalKadaluarsaPIC from '@/views/project/assessment/components/ModalEditTanggalKadaluarsaPIC.vue'
 
@@ -16,13 +17,27 @@ import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useTitle } from '@vueuse/core'
 import { useAuth } from '@/stores/auth'
 import { useScrollTo } from '@/hooks/useScrollTo'
+import { useVuelidate } from "@vuelidate/core"
+import { useToast } from '@/stores/toast'
+import { useAlert } from '@/stores/alert'
+import { required, helpers, sameAs } from "@vuelidate/validators";
+
+import AssessmentServices from '@/services/lib/assessment'
 
 const title = useTitle()
 const route = useRoute()
 const router = useRouter()
 const auth = useAuth()
+const alert = useAlert()
+const toast = useToast()
 const assessment = useAssessmentStore()
 const scrollTo = useScrollTo()
+
+/* ---------------------------- STATE & COMPUTED ---------------------------- */
+const formState = reactive({
+  loadingSubmit: false,
+  delete_confirmation_word: '',
+})
 
 const isShowModalEditPIC = ref(false)
 
@@ -52,6 +67,17 @@ const currentHash = computed(() => route.hash)
 
 const assessmentId = computed(() => route.params?.id)
 
+const rules = computed(() => {
+  return {
+    delete_confirmation_word: {
+      required: helpers.withMessage('Silahkan isi kalimat konfirmasi untuk hapus project', required),
+      sameAs: helpers.withMessage('Kalimat konfirmasi tidak valid', sameAs(`Hapus Project ${assessment.detail?.nama || ''}`))
+    },
+  }
+})
+
+const v$ = useVuelidate(rules, formState, { $scope: false })
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleBack = () => {
   router.push("/project/assessment")
@@ -76,6 +102,93 @@ const handleRefresh = () => {
 const handleScrollToElement = (target) => {
   scrollTo(target)
 }
+
+const deleteAssessment = async ({ id }) => {
+  formState.loadingSubmit = true
+  try {
+    const response = await AssessmentServices.deleteAssessment({ id })
+
+    if (response) {
+      formState.loadingSubmit = false
+      toast.success({
+        title: 'Hapus Project',
+        text: `Berhasil Menghapus Data Project`
+      })
+      handleBack()
+
+      return response
+    }
+  } catch (error) {
+    formState.loadingSubmit = false
+    toast.error({ error })
+    throw error
+  }
+}
+
+const handleDeleteAssessment = async ({ title, id }) => {
+  const result = await v$.value.$validate()
+
+  if (result) {
+    alert.info({
+      title: `Apakah Anda Yakin untuk Menghapus ${title}`
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        alert.loading()
+        try {
+          const response = await deleteAssessment({ id })
+
+          if (response) {
+            alert.instance().close()
+          }
+        } catch (error) {
+          alert.instance().close()
+        }
+      }
+    })
+  }
+}
+
+const selesaikanAsessment = async ({ id }) => {
+  try {
+    const response = await AssessmentServices.setStatusAssessment({ id, status: 'completed' })
+
+    if (response) {
+      toast.success({
+        title: 'Ubah Status Project',
+        text: `Berhasil Mengubah Status Project`
+      })
+
+      handleBack()
+
+      return response
+    }
+
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
+const handleSelesaikanAssessment = ({ title, id }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menyelesaikan Project ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await selesaikanAsessment({ id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
+
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
@@ -106,64 +219,76 @@ onUnmounted(() => {
             <TablerIcon icon="ClipboardTextIcon" size="36" class="text-primary" />
           </template>
 
-          <template #body>
-            <div class="mb-3 d-flex flex-row justify-content-between align-items-center">
-              <h4 class="card-title text-dark mb-3">Project</h4>
+          <template #header>
+            <div class="d-flex flex-row justify-content-between align-items-center">
+              <h4 class="card-title text-dark mb-0">Project</h4>
 
-              <BaseButton :access="['project-edit']" @click="handleNavigateEdit({ id: assessmentId })"
-                title="Edit Project">
-                <template #icon-right>
-                  <TablerIcon icon="EditIcon" class="ms-1" />
-                </template>
-              </BaseButton>
+              <div
+                class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+                <BaseButton :access="['project-edit']" title="Edit Project"
+                  @click="handleNavigateEdit({ id: assessmentId })">
+                  <template #icon-right>
+                    <TablerIcon icon="EditIcon" class="ms-1" />
+                  </template>
+                </BaseButton>
+
+                <BaseButton v-if="assessment.detail?.status === 'ongoing'" :access="['project-edit']"
+                  class="btn btn-success ms-0 mt-3 mt-md-0 ms-md-3" title="Selesaikan Project"
+                  @click="handleSelesaikanAssessment({ title: assessment.detail?.nama, id: assessmentId })">
+                  <template #icon-right>
+                    <TablerIcon size="16" icon="CheckboxIcon" />
+                  </template>
+                </BaseButton>
+              </div>
             </div>
+          </template>
+
+          <template #body>
             <div class="d-flex flex-column">
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">
-                  Nama:
+              <div class="fs-2 mb-2 d-flex flex-column">
+                <h6 class="mb-0 fw-semibold"> Nama : </h6>
+
+                <span class="fs-3">{{ assessment.detail?.nama || "-" }}</span>
+              </div>
+
+              <div class="fs-2 mb-2 d-flex flex-column">
+                <h6 class="mb-0 fw-semibold"> Deskripsi : </h6>
+
+                <div class="fs-3 mb-0" v-html="assessment.detail?.deskripsi || ' - '" />
+              </div>
+
+              <div class="fs-2 mb-2 d-flex flex-column">
+                <h6 class="mb-0 fw-semibold"> Periode Asesmen : </h6>
+
+                <span v-if="assessment.detail?.start_date" class="fs-3">
+                  {{ formatDate({ value: assessment.detail?.start_date }) }} s/d {{ formatDate({
+                  value:
+                    assessment.detail?.end_date
+                }) }}
                 </span>
 
-                <div>{{ assessment.detail?.nama || '-' }}</div>
-              </div>
-
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">Deskripsi:</span>
-
-                <div v-html="assessment.detail?.deskripsi || ' - '" />
-              </div>
-
-              <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">Periode Asesmen:</span>
-
-                <div v-if="assessment.detail?.start_date">
-                  {{ formatDate({ value: assessment.detail?.start_date }) }} s/d {{ formatDate({
-                value:
-                  assessment.detail?.end_date
-              }) }}
-                </div>
-
-                <div v-else>
+                <span v-else class="fs-3">
                   -
-                </div>
+                </span>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">Periode Kuesioner:</span>
+                <h6 class="mb-0 fw-semibold"> Periode Kuesioner : </h6>
 
-                <div v-if="assessment.detail?.start_date_quisioner">
+                <span v-if="assessment.detail?.start_date_quisioner" class="fs-3">
                   {{ formatDate({ value: assessment.detail?.start_date_quisioner }) }} s/d {{ formatDate({
-                value:
-                  assessment.detail?.end_date_quisioner
-              }) }}
-                </div>
+                  value:
+                    assessment.detail?.end_date_quisioner
+                }) }}
+                </span>
 
-                <div v-else>
+                <span v-else class="fs-3">
                   -
-                </div>
+                </span>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">Status:</span>
+                <h6 class="mb-0 fw-semibold"> Status : </h6>
 
                 <div>
                   <span class="badge rounded-pill text-capitalize fw-bold"
@@ -181,21 +306,22 @@ onUnmounted(() => {
             <TablerIcon icon="BuildingSkyscraperIcon" size="36" class="text-primary" />
           </template>
 
+          <template #header>
+            <h4 class="card-title text-dark mb-0">Organisasi</h4>
+          </template>
+
           <template #body>
-            <h4 class="card-title text-dark mb-3">Organisasi</h4>
             <div class="d-flex flex-column">
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">
-                  Nama:
-                </span>
+                <h6 class="mb-0 fw-semibold"> Nama : </h6>
 
-                <div>{{ assessment.detail?.organisasi?.nama || '-' }}</div>
+                <span class="fs-3">{{ assessment.detail?.organisasi?.nama || '-' }}</span>
               </div>
 
               <div class="fs-2 mb-1 d-flex flex-column">
-                <span class="fw-bolder">Deskripsi:</span>
+                <h6 class="mb-0 fw-semibold"> Deskripsi : </h6>
 
-                <div v-html="assessment.detail?.organisasi?.deskripsi || ' - '" />
+                <div class="fs-3" v-html="assessment.detail?.organisasi?.deskripsi || ' - '" />
               </div>
             </div>
           </template>
@@ -205,9 +331,9 @@ onUnmounted(() => {
             <TablerIcon icon="UserCheckIcon" size="36" class="text-primary" />
           </template>
 
-          <template #body>
-            <div class="mb-3 d-flex flex-row justify-content-between align-items-center">
-              <h4 class="card-title text-dark">PIC</h4>
+          <template #header>
+            <div class="d-flex flex-row justify-content-between align-items-center">
+              <h4 class="card-title text-primary mb-0">PIC</h4>
 
               <BaseButton :access="['project-edit']" v-if="assessment.detail?.pic?.status === 'pending'"
                 @click="toggleModalEditPIC" title="Edit PIC">
@@ -223,53 +349,45 @@ onUnmounted(() => {
                 </template>
               </BaseButton>
             </div>
+          </template>
 
+          <template #body>
             <div class="row">
               <div class="col-12 col-md-6">
                 <div class="fs-2 mb-2 d-flex flex-column">
-                  <span class="fw-bolder">
-                    Nama:
-                  </span>
+                  <h6 class="mb-0 fw-semibold"> Nama : </h6>
 
-                  <div>{{ assessment.detail?.pic?.nama || "-" }}</div>
+                  <span class="fs-3">{{ assessment.detail?.pic?.nama || "-" }}</span>
                 </div>
 
                 <div class="fs-2 mb-2 d-flex flex-column">
-                  <span class="fw-bolder">
-                    Email:
-                  </span>
+                  <h6 class="mb-0 fw-semibold"> Email : </h6>
 
-                  <div>{{ assessment.detail?.pic?.email || '-' }}</div>
+                  <span class="fs-3">{{ assessment.detail?.pic?.email || '-' }}</span>
                 </div>
 
                 <div class="fs-2 mb-2 d-flex flex-column">
-                  <span class="fw-bolder">
-                    Tanggal Kadaluarsa PIC:
-                  </span>
+                  <h6 class="mb-0 fw-semibold"> Tanggal Kadaluarsa PIC : </h6>
 
-                  <div v-if="assessment.detail?.assesment_user?.expire_at">
+                  <span v-if="assessment.detail?.assesment_user?.expire_at" class="fs-3">
                     {{ formatDate({ value: assessment.detail?.assesment_user?.expire_at }) }}
-                  </div>
+                  </span>
 
-                  <div v-else>-</div>
+                  <span class="fs-3" v-else>-</span>
                 </div>
               </div>
 
               <div class="col-12 col-md-6">
                 <div class="fs-2 mb-2 d-flex flex-column">
-                  <span class="fw-bolder">
-                    Divisi:
-                  </span>
+                  <h6 class="mb-0 fw-semibold"> Divisi : </h6>
 
-                  <div>{{ assessment.detail?.pic?.divisi?.nama || '-' }}</div>
+                  <span class="fs-3">{{ assessment.detail?.pic?.divisi?.nama || '-' }}</span>
                 </div>
 
                 <div class="fs-2 mb-2 d-flex flex-column">
-                  <span class="fw-bolder">
-                    Jabatan:
-                  </span>
+                  <h6 class="mb-0 fw-semibold"> Jabatan : </h6>
 
-                  <div>{{ assessment.detail?.pic?.jabatan?.nama || '-' }}</div>
+                  <span class="fs-3">{{ assessment.detail?.pic?.jabatan?.nama || '-' }}</span>
                 </div>
               </div>
             </div>
@@ -277,7 +395,34 @@ onUnmounted(() => {
         </OverviewCard>
       </div>
 
-      <RespondenCard />
+      <div class="card">
+        <div class="card-header bg-light-danger">
+          <h5 class="card-title fw-semibold text-danger">Hapus Project</h5>
+        </div>
+        <div class="card-body">
+          <p class="fs-3 mb-2">
+            Menghapus project akan menghapus file, repository dan semua data terkait.
+          </p>
+
+          <div class="mb-3">
+            <BaseInput id="delete-confirmation-word"
+              :label="`Untuk Menghapus, Masukkan Kalimat 'Hapus Project ${assessment.detail?.nama || ''}' pada Kolom dibawah ini`"
+              placeholder="Masukkan Kalimat Konfirmasi" v-model="v$.delete_confirmation_word.$model"
+              :isInvalid="!!v$.delete_confirmation_word.$errors?.length" :disabled="formState.loadingSubmit" />
+
+            <ErrorMessage :only-show-one="true" :errors="v$.delete_confirmation_word.$errors" />
+          </div>
+
+          <div>
+            <BaseButton class="btn btn-danger" title="Hapus Project"
+              @click="handleDeleteAssessment({ title: assessment.detail?.nama, id: assessmentId })">
+              <template #icon-right>
+                <TablerIcon icon="TrashIcon" />
+              </template>
+            </BaseButton>
+          </div>
+        </div>
+      </div>
 
       <div class="card mt-4">
         <div class="card-body">

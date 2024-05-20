@@ -16,7 +16,7 @@ const props = defineProps({
   },
   classContainer: {
     type: String,
-    default: 'col-lg-4 col-md-6'
+    default: 'col-lg-4 col-md-6 d-flex align-items-strech'
   },
   isLoading: {
     type: Boolean,
@@ -36,14 +36,14 @@ const props = defineProps({
 <template>
   <div :class="props.classContainer">
     <LoadingSkeleton v-if="props.isLoading" class="skeleton-card" />
-    <div v-else class="card">
+    <div v-else class="card w-100">
       <div class="card-body">
         <div class="d-flex flex-row align-items-center">
           <div v-if="props.isShowIcon"
-            :class="`round-40 rounded-circle text-white d-flex align-items-center justify-content-center bg-${props.variant}`">
+            :class="` me-3 badge-summary rounded-circle text-white d-flex align-items-center justify-content-center bg-${props.variant}`">
             <slot name="icon" />
           </div>
-          <div class="ms-3 align-self-center">
+          <div class="align-self-center">
             <template v-if="props.isLoading">
               <Spinner class="text-start mb-50" size="small" />
             </template>
@@ -52,7 +52,7 @@ const props = defineProps({
               <slot v-if="props.isCustomSlotValue" name="value" />
               <h3 v-else class="mb-0 fs-6">{{ props.value }}</h3>
 
-              <span class="text-muted">{{ props.label }}</span>
+              <small class="text-muted">{{ props.label }}</small>
             </template>
           </div>
         </div>
@@ -66,5 +66,10 @@ const props = defineProps({
   height: 110px;
   width: 100%;
   border-radius: 1rem;
+}
+
+.badge-summary {
+  width: 40px !important;
+  height: 40px !important;
 }
 </style>

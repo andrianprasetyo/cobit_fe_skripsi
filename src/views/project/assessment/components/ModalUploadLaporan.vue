@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
@@ -9,6 +9,7 @@ import FilePond from '@/components/FilePond/FilePond.vue'
 import AssessmentServices from '@/services/lib/assessment'
 
 import { useToast } from '@/stores/toast'
+import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
@@ -23,6 +24,7 @@ const emits = defineEmits(['close', 'refresh'])
 
 const assessmentStore = useAssessmentStore()
 const toast = useToast()
+const route = useRoute()
 const loading = useLoading()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
@@ -30,6 +32,8 @@ const formState = reactive({
   loadingSubmit: false,
   files: [],
 })
+
+const assessmentId = computed(() => route.params?.id)
 
 /* --------------------------------- METHODS -------------------------------- */
 const onUpdateFiles = (files) => {
@@ -53,7 +57,7 @@ const handleSubmit = async () => {
   try {
     const formData = new FormData()
 
-    formData.append('id', assessmentStore?.selectedAssessment?.id)
+    formData.append('id', assessmentStore?.selectedAssessment?.id || assessmentId.value)
 
     if (Array.isArray(formState.files) && formState.files.length) {
       formData.append('docs', formState.files[0])
@@ -81,8 +85,8 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <BaseModal id="upload_media_file" :order="3" :open="props.isShow" :showBtnCloseFooter="false" classNameModal="modal-lg"
-    @close="handleClose">
+  <BaseModal id="upload_media_file" :order="3" :open="props.isShow" :showBtnCloseFooter="false"
+    classNameModal="modal-lg" @close="handleClose">
     <template #header>
       <h4 class="modal-title">
         Upload Laporan
