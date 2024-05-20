@@ -1,16 +1,16 @@
 <script setup>
-import { defineAsyncComponent, ref, computed, watch, onMounted } from 'vue'
+import { defineAsyncComponent, ref, computed, watch, onMounted, onUnmounted, reactive } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseTab from '@/components/Tab/BaseTab.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
+import SearchInput from '@/components/Input/SearchInput.vue'
+import ModalFilterListCard from '@/views/project/assessment/components/ModalFilterListCard.vue'
 
 import { useAuth } from '@/stores/auth'
 import { useAppConfig } from '@/stores/appConfig'
-import { onUnmounted } from 'vue'
-
 
 const router = useRouter()
 const route = useRoute()
@@ -28,6 +28,19 @@ const TabProjectListTable = defineAsyncComponent({
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const tab = ref("grid")
 
+const assessment = reactive({
+  openModalFilter: false
+})
+
+const filter = computed(() => ({
+  search: route.query?.search,
+  organisasi_id: route.query?.organisasi_id
+}))
+
+const isActiveFilter = computed(() => {
+  return Object.keys(filter.value).some((key) => filter.value[key])
+})
+
 const ViewComponent = {
   'grid': TabProjectListCard,
   'table': TabProjectListTable
@@ -43,6 +56,25 @@ const handleClickView = (view) => {
     query: { ...route.query, view }
   })
 }
+
+const handleNavigateAdd = () => {
+  router.push('/project/assessment/add')
+}
+
+const toggleModalFilter = () => {
+  assessment.openModalFilter = !assessment.openModalFilter
+}
+
+const handleFilterList = (payload) => {
+  router.replace({
+    query: { ...payload }
+  })
+}
+
+const handleResetFilter = () => {
+  router.replace({ query: null })
+}
+
 
 /* ---------------------------------- HOOKS --------------------------------- */
 watch(() => queryView.value, (value) => {
@@ -67,9 +99,61 @@ onUnmounted(() => {
     <BreadCrumb />
 
     <section>
+      <div class="card mb-0">
+        <div class="card-header">
+          <div
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+            <div class="mb-3 mb-sm-0">
+              <h5 class="card-title fw-semibold">Project</h5>
+              <p class="card-subtitle mb-0">Daftar Project yang terdaftar di Aplikasi</p>
+            </div>
+
+            <div
+              class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+              <SearchInput v-model="filter.search" placeholder="Cari Project" :is-append-to-query="true" />
+
+              <BaseButton :access="['project-add']" @click="handleNavigateAdd"
+                class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Project">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="PlusIcon" />
+                </template>
+              </BaseButton>
+
+              <BaseButton @click="toggleModalFilter" class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0"
+                title="Filter">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="FilterIcon" />
+                </template>
+              </BaseButton>
+
+              <BaseButton v-if="isActiveFilter" @click="handleResetFilter" v-tooltip="`Reset Filter`"
+                class="btn btn-danger ms-0 ms-md-3 mt-3 mt-md-0" title="Reset">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="ReloadIcon" />
+                </template>
+              </BaseButton>
+
+              <BaseButton v-if="tab === 'table'" class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0"
+                @click="handleClickView('grid')" v-tooltip="`Lihat Tampilan Grid`">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="LayoutGridIcon" />
+                </template>
+              </BaseButton>
+
+              <BaseButton v-else class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0"
+                v-tooltip="`Lihat Tampilan Table`" @click="handleClickView('table')">
+                <template #icon-left>
+                  <TablerIcon size="16" icon="ListDetailsIcon" />
+                </template>
+              </BaseButton>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <BaseTab class="nav nav-pills nav-fill">
         <template #tab-navigation>
-          <li class="nav-item" role="presentation">
+          <li class="nav-item d-none" role="presentation">
             <BaseButton @click="handleClickView('grid')"
               class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center fs-3 py-3 rounded rounded-2"
               :class="[tab === 'grid' ? 'active' : '']" id="pills-grid-tab" role="tab" aria-controls="pills-grid"
@@ -80,7 +164,7 @@ onUnmounted(() => {
               </div>
             </BaseButton>
           </li>
-          <li class="nav-item" role="presentation">
+          <li class="nav-item d-none" role="presentation">
             <BaseButton @click="handleClickView('table')"
               class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center fs-3 py-3 rounded rounded-2"
               :class="[tab === 'table' ? 'active' : '']" id="pills-table-tab" role="tab" aria-controls="pills-table"
@@ -104,5 +188,8 @@ onUnmounted(() => {
         </template>
       </BaseTab>
     </section>
+
+    <ModalFilterListCard :open="assessment.openModalFilter" @close="toggleModalFilter" @submit="handleFilterList"
+      :active-filter="filter" />
   </div>
 </template>

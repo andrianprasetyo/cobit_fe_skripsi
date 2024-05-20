@@ -126,9 +126,10 @@ watch(() => [assessmentStore.capability.selectedGamo], (value) => {
     assessmentStore.getCapabilityListLevelAssessment({
       domain_id: assessmentStore.capability.selectedGamo?.id,
     })
+
+    assessmentStore.setCapabilitySelectedLevel('2')
   }
-  assessmentStore.setCapabilitySelectedLevel('2')
-}, { deep: true })
+}, { deep: true, immediate: true })
 
 </script>
 

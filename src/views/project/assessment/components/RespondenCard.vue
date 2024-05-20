@@ -12,12 +12,11 @@ import ModalInviteResponden from '@/views/project/assessment/components/ModalInv
 import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
 import ModalUploadLaporan from '@/views/project/assessment/components/ModalUploadLaporan.vue'
 
-import AssessmentServices from '@/services/lib/assessment'
 import RespondenServices from '@/services/lib/responden'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useToast } from '@/stores/toast'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useAlert } from '@/stores/alert'
 import { useAppConfig } from '@/stores/appConfig'
 
@@ -25,7 +24,6 @@ const toast = useToast()
 const assessmentStore = useAssessmentStore()
 const route = useRoute()
 const alert = useAlert()
-const router = useRouter()
 const appConfig = useAppConfig()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
@@ -84,7 +82,6 @@ const isAssessmentDone = computed(() => {
 
 const assessmentId = computed(() => route?.params?.id)
 
-
 const classStatus = computed(() => {
   return value => {
     const isOngoing = value === 'ongoing' || value === 'active'
@@ -126,7 +123,6 @@ const textRespondenKuesioner = computed(() => {
     }
   }
 })
-
 
 /* --------------------------------- METHODS -------------------------------- */
 const resetServerOptions = () => {
@@ -237,60 +233,6 @@ const handleDeleteResponden = ({ title, id }) => {
   })
 }
 
-const handleNavigateReportGamo = () => {
-  router.push({
-    path: `/project/assessment/${route.params?.id}/report-gamo`,
-    query: { assessment: assessmentStore.detail?.nama }
-  })
-}
-
-const handleNavigateReportDesignFactor = () => {
-  router.push({
-    path: `/project/assessment/${route.params?.id}/report-design-factor`,
-    query: { assessment: assessmentStore.detail?.nama }
-  })
-}
-
-const selesaikanAsessment = async ({ id }) => {
-  try {
-    const response = await AssessmentServices.setStatusAssessment({ id, status: 'completed' })
-
-    if (response) {
-      toast.success({
-        title: 'Ubah Status Asesmen',
-        text: `Berhasil Mengubah Status Asesmen`
-      })
-
-      assessmentStore.getDetailAssessment({ id })
-
-      return response
-    }
-
-  } catch (error) {
-    toast.error({ error })
-    throw error
-  }
-}
-
-const handleSelesaikanAssessment = () => {
-  alert.info({
-    title: `Apakah Anda Yakin untuk Menyelesaikan Asesmen`
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      alert.loading()
-      try {
-        const response = await selesaikanAsessment({ id: route.params?.id })
-
-        if (response) {
-          alert.instance().close()
-        }
-      } catch (error) {
-        alert.instance().close()
-      }
-    }
-  })
-}
-
 const exportResponden = async () => {
   const url = `${appConfig.app.appHost}responden/users/download?id=${route.params?.id}`
   window.open(url, '_blank');
@@ -309,9 +251,9 @@ const handleEditProcessedKuesioner = (value) => {
   }
 }
 
-const setProcessedKuesioner = async ({ assesment_id, assesment_user_id }) => {
+const setProcessedKuesioner = async ({ assesment_id, data }) => {
   try {
-    const response = await RespondenServices.setProcessedKuesioner({ assesment_id, assesment_user_id })
+    const response = await RespondenServices.setProcessedKuesioner({ assesment_id, data })
 
     if (response) {
       toast.success({
@@ -338,15 +280,18 @@ const handleSetProcessedKuesioner = () => {
     if (result.isConfirmed) {
       alert.loading()
       try {
-        const assesment_user_id = [];
+        const data = [];
 
         responden.data.map(item => {
-          if (item?.status === 'done' && item?.quesioner_processed) {
-            assesment_user_id.push(item?.id)
+          if (item?.status === 'done') {
+            data.push({
+              id: item?.id,
+              quesioner_processed: !!item?.quesioner_processed
+            })
           }
         })
 
-        const response = await setProcessedKuesioner({ assesment_id: assessmentId.value, assesment_user_id: [assesment_user_id[0]] })
+        const response = await setProcessedKuesioner({ assesment_id: assessmentId.value, data })
 
         if (response) {
           alert.instance().close()
@@ -391,7 +336,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 </script>
 
 <template>
-  <div id="responden-table-card" class="card mt-4">
+  <div id="responden-table-card" class="card">
     <div class="card-body">
       <div
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mb-7">
@@ -463,68 +408,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                 </template>
               </BaseButton>
             </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <BaseButton :access="['project-canvas']" @click="toggleModalSummaryGamo"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Summary GAMO">
-                <template #icon-left>
-                  <TablerIcon size="16" icon="ClipboardDataIcon" class="me-2" />
-                </template>
-              </BaseButton>
-            </li>
-
-            <li>
-              <BaseButton @click="handleNavigateReportGamo"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report GAMO">
-                <template #icon-left>
-                  <TablerIcon size="16" icon="ChartHistogramIcon" class="me-2" />
-                </template>
-              </BaseButton>
-            </li>
-
-            <li>
-              <BaseButton @click="handleNavigateReportDesignFactor"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Report Design Factor">
-                <template #icon-left>
-                  <TablerIcon size="16" icon="ChartDonutIcon" class="me-2" />
-                </template>
-              </BaseButton>
-            </li>
-
-            <template v-if="!isAssessmentDone">
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li>
-                <BaseButton :access="['project-complete']" @click="toggleModalUploadLaporan"
-                  class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-primary">
-                  <template #icon-left>
-                    <TablerIcon icon="UploadIcon" />
-                    <span class="ms-2">
-                      Upload Laporan Project
-                    </span>
-                  </template>
-                </BaseButton>
-              </li>
-              <li>
-                <BaseButton :access="['project-complete']" @click="handleSelesaikanAssessment"
-                  class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-success">
-                  <template #icon-left>
-                    <TablerIcon icon="CheckboxIcon" />
-                    <span class="ms-2">
-                      Selesaikan Project
-                    </span>
-                  </template>
-                </BaseButton>
-              </li>
-            </template>
           </ul>
-
-
         </div>
 
       </div>

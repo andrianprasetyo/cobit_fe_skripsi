@@ -23,6 +23,7 @@ export const useAssessmentStore = defineStore('assessment', {
     },
     reportCanvasSummary: null,
     capability: {
+      loadingListGamo: false,
       listTarget: [],
       listGamo: [],
       selectedGamo: null,
@@ -122,6 +123,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setCapabilitySelectedLevel(payload) {
       this.capability.selectedLevel = payload
+    },
+
+    setCapabilitySelectedGamoAssessment(payload) {
+      this.capability.selectedGamo = payload
     },
 
     setCapabilitySelectedSubGamo(payload) {
@@ -363,6 +368,8 @@ export const useAssessmentStore = defineStore('assessment', {
       const toast = useToast()
       const loader = loading.show()
 
+      this.capability.loadingListGamo = true
+
       try {
         const response = await CapabilityServices.getListGamoCapability({
           assesment_id: payload?.assesment_id,
@@ -375,10 +382,12 @@ export const useAssessmentStore = defineStore('assessment', {
           const data = response.data
           this.capability.listGamo = data?.list || []
 
+          this.capability.loadingListGamo = false
           loader.hide()
           return response
         }
       } catch (error) {
+        this.capability.loadingListGamo = false
         loader.hide()
         toast.error({ error })
         throw error

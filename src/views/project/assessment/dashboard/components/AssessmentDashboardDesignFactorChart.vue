@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, computed } from 'vue'
+import { reactive, onMounted, computed, watch } from 'vue'
 import { useToast } from '@/stores/toast'
 import { useRoute } from 'vue-router'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
@@ -9,7 +9,6 @@ import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 import BaseSelect from '@/components/Select/BaseSelect.vue'
 
 import ReportDesignFactorServices from '@/services/lib/report-design-factor'
-import { watch } from 'vue'
 
 const toast = useToast()
 const route = useRoute()
@@ -66,13 +65,13 @@ watch(() => [assessmentDesignFactorChart.selectedDesignFactorId], () => {
 </script>
 
 <template>
-  <div class="card">
+  <div class="card w-100 container-dashboard-card-content overflow-auto">
     <div class="card-body position-relative">
       <div
         class="mb-4 d-flex flex-column flex-md-row justify-content-start justify-content-md-between align-items-md-center">
         <div class="w-100 mb-3 mb-md-0">
           <h5 class="card-title fw-semibold">Grafik Design Factor</h5>
-          <p class="card-subtitle mb-0">Berdasarkan Data Kuesioner Responden yang telah diproses</p>
+          <p class="card-subtitle mb-0">Berdasarkan Data Kuesioner yang telah diproses</p>
         </div>
 
         <div class="w-100">
@@ -83,8 +82,14 @@ watch(() => [assessmentDesignFactorChart.selectedDesignFactorId], () => {
       </div>
 
       <LoadingOverlay :active="assessmentDesignFactorChart.loading" />
-      <ApexChartsRadar :height="400" :categories="assessmentDesignFactorChart.data.categories"
+      <ApexChartsRadar :height="525" :categories="assessmentDesignFactorChart.data.categories"
         :series="assessmentDesignFactorChart.data.series" />
     </div>
   </div>
 </template>
+
+<style scoped>
+.container-dashboard-card-content {
+  height: calc(100vh);
+}
+</style>

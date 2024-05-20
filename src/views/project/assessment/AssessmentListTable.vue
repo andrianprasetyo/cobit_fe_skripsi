@@ -5,7 +5,6 @@ import debounce from 'lodash.debounce'
 import DataTable from '@/components/DataTable/DataTable.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
-import SearchInput from '@/components/Input/SearchInput.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
 import OrganisasiServices from '@/services/lib/organisasi'
@@ -14,12 +13,13 @@ import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useAuth } from '@/stores/auth'
 
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { formatDateMoments } from '@/utils/momentDateFormat'
 
 const toast = useToast()
 const alert = useAlert()
 const router = useRouter()
+const route = useRoute()
 const auth = useAuth()
 
 /* ---------------------------------- STATE --------------------------------- */
@@ -85,10 +85,10 @@ const serverOptions = ref({
   sortType: '',
 });
 
-const filter = ref({
-  search: '',
-  organisasi_id: ''
-})
+const filter = computed(() => ({
+  search: route.query?.search,
+  organisasi_id: route.query?.organisasi_id
+}))
 
 const classStatus = computed(() => {
   return value => {
@@ -202,10 +202,6 @@ const handleDelete = ({ title, id }) => {
   })
 }
 
-const handleNavigateAdd = () => {
-  router.push('/project/assessment/add')
-}
-
 const handleNavigateEdit = ({ id }) => {
   router.push({ path: `/project/assessment/${id}/edit` })
 }
@@ -232,7 +228,7 @@ const handleSearchOrganisasi = debounce(async ({ search }) => {
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   auth.setMenuToDefault()
-  getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page })
+  getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, search: filter.value.search, organisasi_id: filter.value.organisasi_id })
   getListOrganisasi({ limit: 10, page: 1 })
 })
 
@@ -258,36 +254,14 @@ watch(() => [serverOptions.value, filter.value], () => {
 <template>
   <section>
     <div class="card">
-      <div class="card-header">
-        <div
-          class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-          <div class="mb-3 mb-sm-0">
-            <h5 class="card-title fw-semibold">Project</h5>
-            <p class="card-subtitle mb-0">Daftar Project yang terdaftar di Aplikasi</p>
-          </div>
-
-          <div
-            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-            <SearchInput v-model="filter.search" placeholder="Cari Project" />
-
-            <BaseButton :access="['project-add']" @click="handleNavigateAdd"
-              class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Project">
-              <template #icon-left>
-                <TablerIcon size="16" icon="PlusIcon" />
-              </template>
-            </BaseButton>
-          </div>
-        </div>
-      </div>
       <div class="card-body">
-
         <DataTable :headers="assessment.headers" :items="assessment.data" :loading="assessment.loading"
           :server-items-length="assessment.meta.total" v-model:server-options="serverOptions" fixed-header>
           <template #header-organisasi="header">
             <div class="filter-column w-100">
               {{ header.item.text }}
 
-              <TablerIcon icon="FilterCogIcon" class="ms-1 cursor-pointer"
+              <TablerIcon icon="FilterCogIcon" class="ms-1 cursor-pointer d-none"
                 :class="[isShowFilterOrganisasi ? 'text-secondary' : '']"
                 @click.stop="isShowFilterOrganisasi = !isShowFilterOrganisasi" />
 
@@ -357,9 +331,9 @@ watch(() => [serverOptions.value, filter.value], () => {
           <template #item-start_date_quisioner="item">
             <div v-if="item.item?.start_date_quisioner" class="d-flex w-100">
               {{ formatDate({ value: item.item?.start_date_quisioner }) }} s/d {{ formatDate({
-              value:
-                item.item?.end_date_quisioner
-            }) }}
+          value:
+            item.item?.end_date_quisioner
+        }) }}
             </div>
 
             <div v-else>
@@ -417,4 +391,3 @@ watch(() => [serverOptions.value, filter.value], () => {
     </div>
   </section>
 </template>
-

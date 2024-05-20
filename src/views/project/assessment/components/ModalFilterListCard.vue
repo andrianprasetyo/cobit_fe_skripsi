@@ -59,7 +59,7 @@ const handleClose = () => {
 }
 
 const handleSubmit = () => {
-  emit('submit', filterState)
+  emit('submit', { organisasi_id: filterState.organisasi_id })
   handleClose()
 }
 
