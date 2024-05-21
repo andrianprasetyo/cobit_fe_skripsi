@@ -16,6 +16,14 @@ import { useToast } from '@/stores/toast'
 import { useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
+const intVersionRegex = /^\d+$/
+
+const majorMinorVersionRegex = /^\d+\.\d+$/
+
+const semanticVersionRegex = /^(\d+)\.(\d+)\.(\d+)$/
+
+const complexVersioningRegex = /^(\d+)\.(\d+)\.(\d+)(-[\da-zA-Z-]+(\.\d+)*)?$/
+
 const props = defineProps({
   isShow: {
     type: Boolean,
@@ -59,7 +67,8 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan nama file", required)
     },
     version: {
-      required: helpers.withMessage('Silahkan isi versi laporan', required)
+      required: helpers.withMessage('Silahkan isi versi laporan', required),
+      isComplexVersioning: helpers.withMessage('Kode Version tidak valid (Contoh: 1 / 1.0 / 1.0.1 / 1.0.1-alpha)', value => intVersionRegex.test(value) || complexVersioningRegex.test(value) || semanticVersionRegex.test(value) || majorMinorVersionRegex.test(value)),
     }
   }
 })
@@ -185,8 +194,16 @@ watch(() => props.isShow, () => {
 
       <div class="mb-3">
         <BaseInput id="version-laporan" label="Versi File" v-model="v$.version.$model" placeholder="Masukkan Versi File"
-          :isInvalid="!!v$.version.$errors?.length" :tabindex="3" :disabled="formState.isLoading" />
-        <ErrorMessage :errors="v$.version.$errors" />
+          :isInvalid="!!v$.version.$errors?.length" :tabindex="3" :disabled="formState.isLoading">
+          <template #extra-label>
+            <div v-tooltip="`Kode Version yang diperkenankan seperti: 1, 1.0, 1.0.1, 1.0.1-aplha, dsb`"
+              class="d-flex align-items-center cursor-pointer">
+              <TablerIcon icon="InfoSquareRoundedIcon" size="18" class="text-primary me-1 mb-1" />
+              <span class="fw-bold mb-0 text-primary">Info Kode Version</span>
+            </div>
+          </template>
+        </BaseInput>
+        <ErrorMessage :only-show-one="true" :errors="v$.version.$errors" />
       </div>
     </template>
 
