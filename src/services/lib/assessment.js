@@ -114,8 +114,38 @@ export default {
       data: payload,
       headers: {
         'Content-Type': 'multipart/form-data'
-      }
+      },
+      timeout: 3000 * 60 // 3 Minutes (60 x 3000)
     })
+  },
+
+  /**
+   *
+   * @param {{parent_id: String, assessment_id: String}} payload
+   * @returns
+   */
+  getHistoryLaporan(payload) {
+    return axiosClient.get(
+      `assesment/docs/list?parent_id=${payload?.parent_id}&assesment_id=${payload?.assessment_id}`
+    )
+  },
+
+  /**
+   *
+   * @param {{id: String}} payload
+   * @returns
+   */
+  deleteLaporan(payload) {
+    return axiosClient.delete(`assesment/docs/remove/${payload?.id}`)
+  },
+
+  /**
+   *
+   * @param {{assessment_id: String}} payload
+   * @returns
+   */
+  getListLaporan(payload) {
+    return axiosClient.get(`assesment/docs/list?assesment_id=${payload?.assessment_id}`)
   },
 
   /**
