@@ -62,10 +62,10 @@ defineExpose({
     </div>
 
     <FilePond ref="filePondRef" :label-idle="props.placeholder" :accepted-file-types="props.accepted"
-      :files="props.files" v-bind="$attrs" labelFileTypeNotAllowed="Terdapat Beberapa file Yang Tidak Diijinkan"
-      labelMaxFileSizeExceeded="File terlalu besar" labelMaxFileSize="Maksimal file size yaitu {filesize}"
+      :files="props.files" v-bind="$attrs" labelFileTypeNotAllowed="Terdapat Beberapa File Yang Tidak Diijinkan"
+      labelMaxFileSizeExceeded="File terlalu besar" labelMaxFileSize="Maksimal File size yaitu {filesize}"
       labelMaxTotalFileSizeExceeded="Melebihi maksimal size file yang diijinkan"
-      labelMaxTotalFileSize="Total Maksimal file size yaitu {filesize}" :instant-upload="props.instantUpload"
+      labelMaxTotalFileSize="Total Maksimal File Size yaitu {filesize}" :instant-upload="props.instantUpload"
       :allowFileSizeValidation="props.allowFileSizeValidation" />
   </div>
 </template>

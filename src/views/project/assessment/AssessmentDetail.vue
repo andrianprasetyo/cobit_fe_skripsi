@@ -71,7 +71,7 @@ const rules = computed(() => {
   return {
     delete_confirmation_word: {
       required: helpers.withMessage('Silahkan isi kalimat konfirmasi untuk hapus project', required),
-      sameAs: helpers.withMessage('Kalimat konfirmasi tidak valid', sameAs(`Hapus Project ${assessment.detail?.nama || ''}`))
+      sameAs: helpers.withMessage('Kalimat konfirmasi tidak valid', sameAs(`HapusProject${assessment.detail?.nama?.replaceAll(' ', '') || ''}`))
     },
   }
 })
@@ -406,7 +406,7 @@ onUnmounted(() => {
 
           <div class="mb-3">
             <BaseInput id="delete-confirmation-word"
-              :label="`Untuk Menghapus, Masukkan Kalimat 'Hapus Project ${assessment.detail?.nama || ''}' pada Kolom dibawah ini`"
+              :label="`Untuk Menghapus, Masukkan Kalimat 'HapusProject${assessment.detail?.nama?.replaceAll(' ', '') || ''}' pada Kolom dibawah ini`"
               placeholder="Masukkan Kalimat Konfirmasi" v-model="v$.delete_confirmation_word.$model"
               :isInvalid="!!v$.delete_confirmation_word.$errors?.length" :disabled="formState.loadingSubmit" />
 

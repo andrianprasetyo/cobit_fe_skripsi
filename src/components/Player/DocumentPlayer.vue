@@ -42,13 +42,13 @@ const handleOnError = () => {
 <style scoped>
 .skeleton-player-iframe {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   border-radius: 0.5rem;
 }
 
 .document-player-iframe {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   border-radius: 0.5rem;
   border: none;
   background-color: #ddd;
