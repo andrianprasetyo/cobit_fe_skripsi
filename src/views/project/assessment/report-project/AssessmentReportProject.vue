@@ -16,6 +16,7 @@ import { useTitle } from '@vueuse/core'
 import { useToast } from '@/stores/toast'
 import { useAlert } from '@/stores/alert'
 import { useDownloadFileFromURL } from '@/hooks/useDownloadFileFromURL'
+import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
 import AssessmentServices from '@/services/lib/assessment'
@@ -40,6 +41,12 @@ const reportProjectState = reactive({
 })
 
 const assessmentId = computed(() => route.params?.id)
+
+const formatDate = computed(() => {
+  return value => {
+    return formatDateMoments({ value: value?.value })
+  }
+})
 
 /* --------------------------------- METHODS -------------------------------- */
 const getListLaporan = async ({ assessment_id }) => {
@@ -191,10 +198,13 @@ onMounted(() => {
                       <TablerIcon icon="ReportIcon" />
                     </div>
                     <div class="ms-3 w-75 d-flex flex-column justify-content-center">
-                      <h6 class="mb-0 text-truncate">{{ reportItem?.name }}</h6>
+                      <h6 class="mb-0 text-truncate"><span class="fw-bolder">{{ reportItem?.name }}</span>  <span class="fw-lighter">| Versi {{ reportItem?.version }}</span></h6>
+
+                      <!-- <span class="fs-3 text-truncate text-body-color d-block w-85 mb-0">
+                      </span> -->
 
                       <span class="fs-3 text-truncate text-body-color d-block w-85 mb-0">
-                        Versi {{ reportItem?.version }}
+                        Terakhir Update : {{ formatDate({ value: reportItem?.updated_at }) }}
                       </span>
 
                       <div class="mt-2 d-flex align-items-center">

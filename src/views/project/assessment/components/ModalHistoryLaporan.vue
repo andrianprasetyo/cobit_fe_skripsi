@@ -12,6 +12,7 @@ import AssessmentServices from '@/services/lib/assessment'
 
 import { useToast } from '@/stores/toast'
 import { useRoute } from 'vue-router'
+import { useDownloadFileFromURL } from '@/hooks/useDownloadFileFromURL'
 import { formatDateMoments } from '@/utils/momentDateFormat'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
@@ -30,6 +31,7 @@ const emits = defineEmits(['close', 'refresh'])
 
 const route = useRoute()
 const toast = useToast()
+const downloadFile = useDownloadFileFromURL()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const historyState = reactive({
@@ -76,6 +78,10 @@ const handleClose = () => {
 
 const handleSelectedLaporan = (laporan) => {
   historyState.selectedLaporan = laporan
+}
+
+const handleDownloadLaporan = ({ url, fileName }) => {
+  downloadFile.downloadFileFromUrl({ url, fileName })
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
@@ -129,6 +135,14 @@ watch(() => props.isShow,
                           title="Lihat Laporan" @click="handleSelectedLaporan(item)">
                           <template #icon-right>
                             <TablerIcon icon="ChevronRightIcon" />
+                          </template>
+                        </BaseButton>
+
+                        <BaseButton v-if="item?.file?.url" class="btn btn-sm btn-outline-info mt-2"
+                          title="Download Laporan"
+                          @click="handleDownloadLaporan({ url: item?.file?.url, fileName: item?.name })">
+                          <template #icon-right>
+                            <TablerIcon icon="DownloadIcon" />
                           </template>
                         </BaseButton>
                       </div>
