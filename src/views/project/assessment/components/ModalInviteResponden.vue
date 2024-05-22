@@ -11,12 +11,14 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import FilePond from '@/components/FilePond/FilePond.vue'
 
 import { useVuelidate } from "@vuelidate/core";
+import { useRoute } from 'vue-router'
 import { helpers, requiredIf, email } from "@vuelidate/validators";
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 import { useAppConfig } from '@/stores/appConfig'
 
 const assessment = useAssessmentStore()
 const appConfig = useAppConfig()
+const route = useRoute()
 
 const props = defineProps({
   isShow: {
@@ -128,7 +130,7 @@ const handleRefreshList = () => {
 const inviteRespondenByEmail = async () => {
   try {
     formState.loadingSubmit = true
-    const response = await assessment.inviteResponden({ id: assessment.selectedAssessment?.id, email: formState.emails })
+    const response = await assessment.inviteResponden({ id: assessment?.selectedAssessment?.id || route.params?.id, email: formState.emails })
 
     if (response) {
       formState.loadingSubmit = false
@@ -146,7 +148,7 @@ const inviteRespondenByExcel = async () => {
     formState.loadingSubmit = true
 
     let payload = {
-      id: assessment?.selectedAssessment?.id,
+      id: assessment?.selectedAssessment?.id || route.params?.id,
       file: formState?.files.length ? formState.files[0] : null
     }
 
@@ -185,8 +187,8 @@ const handleSubmit = () => {
     <template #body>
       <div class="mb-3">
         <BaseSelect id="invite_by" v-model="v$.inviteBy.$model" label="Undang Melalui" tabindex="1"
-          default-option="Pilih Cara Undang" :options="formState.inviteByList" options-label="label" options-value="value"
-          :disabled="formState.loadingSubmit" :isInvalid="!!v$.inviteBy.$errors?.length" />
+          default-option="Pilih Cara Undang" :options="formState.inviteByList" options-label="label"
+          options-value="value" :disabled="formState.loadingSubmit" :isInvalid="!!v$.inviteBy.$errors?.length" />
 
         <ErrorMessage :errors="v$.inviteBy.$errors" />
       </div>
