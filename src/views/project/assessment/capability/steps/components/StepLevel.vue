@@ -254,16 +254,18 @@ onMounted(() => {
     <div class="d-flex flex-row justify-content-between align-items-center">
       <h5 class="card-title mb-3 mb-md-0 fw-semibold">Level {{ assessmentStore.capability.selectedLevel }}</h5>
 
-      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+      <div
+        class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
         <BaseButton @click="handleToggleModalHistory" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-          title="Lihat History Perubahan GAMO" :disabled="capability.loadingSubmit || capability.loading">
+          title="Lihat History Perubahan Data" :disabled="capability.loadingSubmit || capability.loading">
           <template #icon-left>
             <TablerIcon icon="HistoryIcon" />
           </template>
         </BaseButton>
 
-        <BaseButton @click="handleToggleModalAverageCompliance" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-          title="Lihat Nilai Rata-rata" :disabled="capability.loadingSubmit || capability.loading">
+        <BaseButton @click="handleToggleModalAverageCompliance"
+          class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Lihat Nilai Rata-rata"
+          :disabled="capability.loadingSubmit || capability.loading">
           <template #icon-left>
             <TablerIcon icon="GraphIcon" />
           </template>
@@ -365,7 +367,8 @@ onMounted(() => {
                       </template>
 
                       <span v-else class="fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base">
-                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="HelpCircleIcon" class="text-body" size="24" />
+                        <TablerIcon v-tooltip="`Belum Ada Evidence`" icon="HelpCircleIcon" class="text-body"
+                          size="24" />
                       </span>
                     </div>
                   </div>
@@ -374,17 +377,20 @@ onMounted(() => {
                   <div class="d-flex flex-wrap justify-content-center">
                     <div class="d-flex flex-column width-75px">
                       <template v-if="item?.capabilityass?.capability_answer_id">
-                        <h6 class="fs-3 fw-semibold text-break text-wrap">
-                          {{ valueAnwer(item?.capabilityass?.capability_answer_id)?.nama }}
-                          ({{ valueAnwer(item?.capabilityass?.capability_answer_id)?.label }})
-                        </h6>
-                        <h6 class="fs-3 mb-0">
-                          {{ valueAnwer(item?.capabilityass?.capability_answer_id)?.bobot }}
-                        </h6>
+                        <div @click="handleToggleModalPenilaian({ gamo: item })" class="cursor-pointer">
+                          <h6 class="fs-3 fw-semibold text-break text-wrap">
+                            {{ valueAnwer(item?.capabilityass?.capability_answer_id)?.nama }}
+                            ({{ valueAnwer(item?.capabilityass?.capability_answer_id)?.label }})
+                          </h6>
+                          <h6 class="fs-3 mb-0">
+                            {{ valueAnwer(item?.capabilityass?.capability_answer_id)?.bobot }}
+                          </h6>
+                        </div>
                       </template>
 
                       <template v-else>
-                        <span class="fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base">
+                        <span v-tooltip="`Ketuk Untuk Menambahkan Penilaian`" class="cursor-pointer fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base"
+                          @click="handleToggleModalPenilaian({ gamo: item })">
                           Belum Dinilai
                         </span>
                       </template>
@@ -395,7 +401,7 @@ onMounted(() => {
                   {{ item?.bobot }}
                 </td>
                 <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
-                  <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-icon" data-bs-toggle="dropdown"
+                  <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-sm btn-primary btn-icon" data-bs-toggle="dropdown"
                     id="dropdownMenuButton" aria-expanded="false">
                     <template #icon-left>
                       <TablerIcon icon="DotsIcon" />
@@ -490,7 +496,8 @@ onMounted(() => {
                 <td colspan="2" class="bg-primary">
                   <h6 class="fs-3 fw-semibold mb-0 text-center text-white">
                     <!-- Computing Front End -->
-                    {{ isFinite(totalCompliances) ? Math.fround(parseFloat(totalCompliances).toFixed(2)).toFixed(2) : 0 }}
+                    {{ isFinite(totalCompliances) ? Math.fround(parseFloat(totalCompliances).toFixed(2)).toFixed(2) : 0
+                    }}
 
                     <!-- From Backend -->
                     <!-- {{ assessmentStore.capability.detailTotalBobot.result ?

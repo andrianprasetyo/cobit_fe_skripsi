@@ -11,6 +11,7 @@ import BaseLightBadge from '@/components/Badge/BaseLightBadge.vue'
 import ModalInviteResponden from '@/views/project/assessment/components/ModalInviteResponden.vue'
 import ModalSummaryGamo from '@/views/project/assessment/components/ModalSummaryGamo.vue'
 import ModalUploadLaporan from '@/views/project/assessment/components/ModalUploadLaporan.vue'
+import ModalViewHasilKuesioner from '@/views/project/assessment/components/ModalViewHasilKuesioner.vue'
 
 import RespondenServices from '@/services/lib/responden'
 
@@ -63,6 +64,7 @@ const responden = reactive({
   isShowModalInviteResponden: false,
   isShowModalSummaryGamo: false,
   isShowModalUploadLaporan: false,
+  isShowModalResultKuesioner: false
 })
 
 const serverOptions = ref({
@@ -145,6 +147,14 @@ const toggleModalSummaryGamo = () => {
 
   if (responden.isShowModalSummaryGamo) {
     assessmentStore.setSeletedAssessment(assessmentStore.detail)
+  }
+}
+
+const toggleModalResultKuesioner = (selectedData) => {
+  responden.isShowModalResultKuesioner = !responden.isShowModalResultKuesioner
+
+  if (responden.isShowModalResultKuesioner) {
+    assessmentStore.setSelectedResponden(selectedData)
   }
 }
 
@@ -485,7 +495,6 @@ watch(() => [serverOptions.value, filter.value], () => {
 
         <template #item-action="item">
           <template v-if="!isAssessmentDone">
-
             <div v-if="item.item?.status === 'diundang'" class="dropdown dropstart">
               <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                 id="dropdownMenuButton" aria-expanded="false" />
@@ -528,6 +537,11 @@ watch(() => [serverOptions.value, filter.value], () => {
               </ul>
             </div>
           </template>
+
+          <div v-if="item?.item?.status === 'done'">
+            <TablerIcon v-tooltip="`Lihat Hasil Kuesioner ${item?.item?.nama || ''}`" icon="CheckupListIcon"
+              class="text-muted cursor-pointer" @click="toggleModalResultKuesioner(item?.item)" />
+          </div>
         </template>
       </DataTable>
     </div>
@@ -538,6 +552,9 @@ watch(() => [serverOptions.value, filter.value], () => {
     <ModalSummaryGamo :is-show="responden.isShowModalSummaryGamo" @close="toggleModalSummaryGamo" />
 
     <ModalUploadLaporan :is-show="responden.isShowModalUploadLaporan" @close="toggleModalUploadLaporan"
+      @refresh="handleRefresh" />
+
+    <ModalViewHasilKuesioner :is-show="responden.isShowModalResultKuesioner" @close="toggleModalResultKuesioner"
       @refresh="handleRefresh" />
   </div>
 </template>
