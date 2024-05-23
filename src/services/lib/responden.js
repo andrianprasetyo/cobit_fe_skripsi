@@ -70,12 +70,13 @@ export default {
    * @returns
    */
   getResultKuesioner(payload) {
-    const assesmentIdParam = payload?.assesment_id ? `?assesment_id=${payload?.assesment_id}` : ''
     const assesmentUsersIdParam = payload?.assesment_users_id
-      ? `?assesment_users_id=${payload?.assesment_users_id}`
+      ? `&assesment_users_id=${payload?.assesment_users_id}`
       : ''
 
-    return axiosClient.get(`responden/quisioner/list${assesmentIdParam}${assesmentUsersIdParam}`)
+    return axiosClient.get(
+      `responden/quisioner/list?assesment_id=${payload?.assesment_id}${assesmentUsersIdParam}`
+    )
   },
 
   /**

@@ -440,10 +440,10 @@ watch(() => [quesioner.question.currentQuestion], () => {
               <template v-for="(item, index) in questions.navigation" :key="`navigation-${index}`">
                 <BaseButton @click="handleClickNavigation({ number: item?.urutan })" class="btn btn-navigation-question"
                   :class="{
-                    'btn-success': item?.terisi && item.urutan !== quesioner.question.currentQuestion,
-                    'btn-primary': item?.urutan === quesioner.question.currentQuestion,
-                    'btn-outline-dark': !item?.terisi && item?.urutan !== quesioner.question.currentQuestion
-                  }" :title="item?.urutan" />
+      'btn-success': item?.terisi && item.urutan !== quesioner.question.currentQuestion,
+      'btn-primary': item?.urutan === quesioner.question.currentQuestion,
+      'btn-outline-dark': !item?.terisi && item?.urutan !== quesioner.question.currentQuestion
+    }" :title="item?.urutan" />
               </template>
             </div>
           </div>
@@ -504,7 +504,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
             <div class="table-responsive rounded-2 mb-4 mt-4">
               <div class="mh-100vh">
                 <table class="table border text-nowrap mb-0 align-middle">
-                  <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary position-sticky top-0" style="z-index: 1001 !important;">
+                  <thead v-if="question?.grup?.jenis === 'pilgan'" class="text-primary position-sticky top-0"
+                    style="z-index: 1001 !important;">
                     <tr>
                       <th class="width-200px align-middle"></th>
                       <template v-if="Array.isArray(question?.grup?.jawabans) && question?.grup?.jawabans.length">
@@ -535,18 +536,19 @@ watch(() => [quesioner.question.currentQuestion], () => {
                           <!-- If Jenis Pilihan Ganda -->
                           <template v-if="question?.grup?.jenis === 'pilgan'">
                             <ValidateEach v-for="(jawaban, indexJawaban) in komponen?.jawabans" :key="indexJawaban"
-                              :state="jawaban" :rules="rulesPilihanGanda({ indexJawaban, indexKomponen, indexQuestion })"
+                              :state="jawaban"
+                              :rules="rulesPilihanGanda({ indexJawaban, indexKomponen, indexQuestion })"
                               :index="indexKomponen">
                               <template #default="{ v }">
                                 <td :class="{
-                                  'bg-light-danger': v?.hasil?.$errors?.length
-                                }">
+      'bg-light-danger': v?.hasil?.$errors?.length
+    }">
                                   <div
                                     class="form-check form-check-inline d-flex justify-content-center align-items-center">
                                     <input type="radio" class="form-check-input primary check-outline outline-primary"
                                       style="transform: scale(1.15);"
-                                      :class="[v?.hasil?.$errors?.length ? 'is-invalid' : '']" :checked="!!jawaban.hasil"
-                                      :id="`radio-${indexJawaban}-${indexKomponen}`"
+                                      :class="[v?.hasil?.$errors?.length ? 'is-invalid' : '']"
+                                      :checked="!!jawaban.hasil" :id="`radio-${indexJawaban}-${indexKomponen}`"
                                       @change="handleChangeHasil({ bobot: jawaban?.bobot, indexJawaban, indexKomponen, indexQuestion })"
                                       :name="`radio-komponen-${indexKomponen}`" />
                                   </div>
@@ -613,7 +615,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
           </BaseButton>
 
           <BaseButton v-else-if="isLastQuestion" @click="handleSaveLastJawaban" class="btn btn-primary mt-2 mt-md-0"
-            title="Simpan Jawaban Terakhir" :disabled="questions.loadingSubmit || questions.loadingSubmitBack || questions.loadingLastSubmit"
+            title="Simpan Jawaban Terakhir"
+            :disabled="questions.loadingSubmit || questions.loadingSubmitBack || questions.loadingLastSubmit"
             :is-loading="questions.loadingSubmit">
             <template #icon-right>
               <TablerIcon icon="DeviceFloppyIcon" />

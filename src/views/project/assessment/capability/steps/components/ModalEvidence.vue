@@ -333,14 +333,21 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #body>
-      <div class="mb-4 text-center">
-        <h6>
+      <div class="mb-4 rounded border p-4">
+        <h6 class="text-center">
           Management Practice Code
         </h6>
-        <h4 class="fw-bolder">
+        <h4 class="fw-bolder text-center">
           {{ assessmentStore.capability?.selectedSubGamo?.subkode }}
         </h4>
+        <hr />
+        <p class="mb-1 fs-2">Activities</p>
+        <div style="font-weight: bold !important;" v-html="assessmentStore.capability.selectedSubGamo?.translate" />
+        <p class="mb-1 fs-2">Translate</p>
+        <div style="font-weight: bold !important; font-style: italic !important;"
+          v-html="assessmentStore.capability.selectedSubGamo?.kegiatan" />
       </div>
+      
       <template v-if="formState.evident.length">
         <template v-for="(evident, index) in formState.evident" :key="`evident-form-${index}`">
 

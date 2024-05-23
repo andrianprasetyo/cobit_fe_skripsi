@@ -68,9 +68,11 @@ const formatDate = computed(() => {
 const isKuesionerAvailable = computed(() => {
   const start_date = new Date(formState?.detail?.assesment?.start_date_quisioner).toDateString()
   const end_date = new Date(formState?.detail?.assesment?.end_date_quisioner).toDateString()
+
   const today = new Date().toDateString()
 
   const isPassed = isSameOrAfter({ date1: today, date2: start_date })
+
   const isNotExpired = isSameOrBefore({ date1: today, date2: end_date })
 
   const isAvailable = isPassed && isNotExpired;
@@ -188,6 +190,12 @@ const onSubmit = async () => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
+  quesioner.$patch({
+    question: {
+      currentQuestion: 1
+    }
+  })
+
   getDetailQuisionerRespondenByCode().then(() => {
     if (formState.detail?.assesment?.organisasi?.id) {
       handleSearchDivisi({ search: '' })

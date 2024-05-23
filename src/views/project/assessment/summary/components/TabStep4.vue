@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import BaseInput from '@/components/Input/BaseInput.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
 import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
 
@@ -14,8 +15,8 @@ const concludedScope = computed(() => {
   }
 })
 
-/*
-const suggessCapabilityLevel = computed(() => {
+
+const agreedCapabilityLevel = computed(() => {
   return value => {
     if (value >= 75) {
       return 4
@@ -28,7 +29,6 @@ const suggessCapabilityLevel = computed(() => {
     }
   }
 })
-*/
 
 </script>
 
@@ -156,7 +156,18 @@ const suggessCapabilityLevel = computed(() => {
                     {{ hasil?.assesmentcanvas?.suggest_capability_level }}
                   </td>
                   <td class="text-center">
-                    {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
+                    <span>
+                      {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
+                    </span>
+                    <template v-if="assessment.reportCanvasSummary.hasil[indexHasil].assesmentcanvas.adjustment">
+                      <TablerIcon icon="ArrowRightIcon" size="14" class="mx-1 mb-2" />
+                      <span class="text-primary fw-bold">
+                        {{ agreedCapabilityLevel(concludedScope({
+                refinedScope: hasil?.assesmentcanvas?.step3_value, adjustment:
+                  hasil.assesmentcanvas.adjustment
+              })) }}
+                      </span>
+                    </template>
                   </td>
                   <td class="text-center">
                     <BaseInput type="text-area" :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"

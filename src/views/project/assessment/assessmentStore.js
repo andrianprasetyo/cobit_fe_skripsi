@@ -16,6 +16,7 @@ export const useAssessmentStore = defineStore('assessment', {
   state: () => ({
     loading: false,
     selectedAssessment: null,
+    selectedResponden: null,
     detail: null,
     reportChart: {
       nonAdjustment: null,
@@ -159,6 +160,10 @@ export const useAssessmentStore = defineStore('assessment', {
 
     setReportSelectedGamo(payload) {
       this.report.selectedGamo = payload
+    },
+
+    setSelectedResponden(payload) {
+      this.selectedResponden = payload
     },
 
     async getDetailAssessment(payload) {

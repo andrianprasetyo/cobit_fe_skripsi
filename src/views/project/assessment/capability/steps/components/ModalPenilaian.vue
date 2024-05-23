@@ -85,13 +85,19 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #body>
-      <div class="mb-4 text-center">
-        <h6>
+      <div class="mb-4 rounded border p-4">
+        <h6 class="text-center">
           Management Practice Code
         </h6>
-        <h4 class="fw-bolder">
+        <h4 class="fw-bolder text-center">
           {{ assessmentStore.capability?.selectedSubGamo?.subkode }}
         </h4>
+        <hr />
+        <p class="mb-1 fs-2">Activities</p>
+        <div style="font-weight: bold !important;" v-html="assessmentStore.capability.selectedSubGamo?.translate" />
+        <p class="mb-1 fs-2">Translate</p>
+        <div style="font-weight: bold !important; font-style: italic !important;"
+          v-html="assessmentStore.capability.selectedSubGamo?.kegiatan" />
       </div>
 
       <div class="mb-3">
@@ -132,9 +138,8 @@ watch(() => [props.isShow], () => {
                       <div class="form-check form-check-inline d-flex justify-content-center align-items-center">
                         <input type="radio" :id="`radio-answer-${index}`"
                           class="form-check-input primary check-outline outline-primary" :class="{
-                            'is-invalid': v$?.capability_answer_id?.$errors?.length
-                          }" v-model="v$.capability_answer_id.$model" :value="answer.id"
-                          :name="`radio-answer-${index}`" />
+    'is-invalid': v$?.capability_answer_id?.$errors?.length
+  }" v-model="v$.capability_answer_id.$model" :value="answer.id" :name="`radio-answer-${index}`" />
                       </div>
                     </td>
                   </template>

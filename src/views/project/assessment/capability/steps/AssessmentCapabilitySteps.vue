@@ -26,7 +26,7 @@ const isStepsUnlocked = computed(() => {
   return level => {
     const isOverlapped = level < assessmentStore.capability.selectedLevel
     const isCurrentLevel = level == assessmentStore.capability.selectedLevel
-    const isNextLevelUnlocked = assessmentStore.getCapabilityIsComplianceEnough >= 0.85 && (level == +assessmentStore.capability.selectedLevel + 1)
+    const isNextLevelUnlocked = assessmentStore.getCapabilityIsComplianceEnough > 0.85 && (level == +assessmentStore.capability.selectedLevel + 1)
 
     if (isOverlapped || isCurrentLevel || isNextLevelUnlocked) {
       return true

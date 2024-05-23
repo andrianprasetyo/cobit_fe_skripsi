@@ -170,21 +170,8 @@ const formatDate = computed(() => {
               </h6>
             </div>
           </div>
-
-          <div class="d-flex align-items-center mt-3">
-            <div class="bg-info-subtle rounded me-8 p-8 d-flex align-items-center justify-content-center">
-              <TablerIcon icon="TargetArrowIcon" class="text-primary" />
-            </div>
-            <div>
-              <p class="fs-3 mb-0 fw-normal">Nilai Minimal Target</p>
-              <h6 class="fw-semibold text-dark mb-0">
-                {{ props.minimum_target }}
-              </h6>
-            </div>
-          </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>

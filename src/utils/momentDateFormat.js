@@ -58,7 +58,7 @@ export function isSameOrAfter({ date1, date2 }) {
     return
   }
 
-  return moment(date1).isSameOrAfter({ date2 })
+  return moment(date1).isSameOrAfter(date2)
 }
 
 export function isAfter({ date1, date2 }) {
