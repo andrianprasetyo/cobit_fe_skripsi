@@ -28,6 +28,11 @@ const TabStep4 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report-gamo/components/TabStep4.vue')
 })
 
+const TabDiagramAdjustment = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/report-gamo/components/TabDiagramAdjustment.vue')
+})
+
+
 const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
@@ -57,7 +62,8 @@ const ViewComponent = {
   gamo: TabGamo,
   step2: TabStep2,
   step3: TabStep3,
-  step4: TabStep4
+  step4: TabStep4,
+  diagram_adjustment: TabDiagramAdjustment,
 }
 
 const queryView = computed(() => {
@@ -93,6 +99,9 @@ watch(() => queryView.value, (value) => {
       break;
     case 'step4':
       tab.value = 'step4'
+      break;
+    case 'diagram_adjustment':
+      tab.value = 'diagram_adjustment'
       break;
     default:
       tab.value = 'gamo';
@@ -173,6 +182,17 @@ onUnmounted(() => {
                 <TablerIcon icon="SquareNumber4Icon" class="me-2" />
                 <span class="d-none d-md-block width-150px text-truncate">Step 4 : Conclude the Scope of the Governance
                   System</span>
+              </div>
+            </BaseButton>
+          </li>
+          <li class="nav-item" role="presentation">
+            <BaseButton @click="handleClickView('diagram_adjustment')"
+              class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
+              :class="[tab === 'diagram_adjustment' ? 'active' : '']" id="pills-diagram_adjustment-tab" role="tab"
+              aria-controls="pills-diagram_adjustment" aria-selected="true">
+              <div class="d-flex flex-row align-items-center">
+                <TablerIcon icon="SquareNumber5Icon" class="me-2" />
+                <span class="d-none d-md-block width-150px text-truncate">Diagram Adjustment</span>
               </div>
             </BaseButton>
           </li>

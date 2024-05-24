@@ -22,6 +22,7 @@ export const useAssessmentStore = defineStore('assessment', {
       nonAdjustment: null,
       adjustment: null
     },
+    diagramAdjustment: null,
     reportCanvasSummary: null,
     capability: {
       loadingListGamo: false,
@@ -306,6 +307,30 @@ export const useAssessmentStore = defineStore('assessment', {
           const data = response?.data
 
           this.reportCanvasSummary = data
+
+          loader.hide()
+          return response
+        }
+      } catch (error) {
+        loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getDiagramAdjustmentAssesment(payload) {
+      const toast = useToast()
+      const loader = loading.show()
+
+      try {
+        const response = await ReportServices.getDiagramAdjustmentAssesment({
+          assessment_id: payload?.assessment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.diagramAdjustment = data
 
           loader.hide()
           return response

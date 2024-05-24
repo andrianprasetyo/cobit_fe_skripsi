@@ -77,7 +77,14 @@ const handleSearchListTarget = debounce(async ({ search }) => {
       const data = response?.data
 
       listTarget.loading = false
-      listTarget.data = data?.list || []
+
+      let list = []
+
+      if (Array.isArray(data?.list) && data?.list?.length) {
+        list = [{ id: 'all', nama: 'Semua Target' }, ...data.list]
+
+        listTarget.data = list
+      }
     }
 
   } catch (error) {
@@ -147,8 +154,8 @@ watch(() => [filter.value], value => {
 
         <LoadingOverlay :active="report.loading" />
 
-        <ApexChartsRadar v-if="filter.target_id" :height="1000" :categories="report.data?.categories || []" :options="chartOptions"
-          :series="report.data?.series || []" />
+        <ApexChartsRadar v-if="filter.target_id" :height="1000" :categories="report.data?.categories || []"
+          :options="chartOptions" :series="report.data?.series || []" />
       </div>
     </div>
   </div>

@@ -150,7 +150,10 @@ const handleSearchListTarget = debounce(async ({ search }) => {
       const data = response?.data
 
       listTarget.loading = false
-      listTarget.data = data?.list || []
+
+      if (Array.isArray(data?.list) && data?.list?.length) {
+        listTarget.data = data?.list || []
+      }
     }
 
   } catch (error) {
@@ -279,9 +282,10 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </div>
 
                   <div class="filter-menu filter-status-menu mt-2" v-if="isShowFilterGamo">
-                    <v-select id="filter-gamo" @search="(search) => handleSearchListGamo({ search })" :filterable="false"
-                      :options="listGamo.data" v-model="filter.domain_id" :disabled="listGamo.loading" label="nama"
-                      :reduce="state => state?.id" placeholder="Cari GAMO" :select-on-key-codes="[]">
+                    <v-select id="filter-gamo" @search="(search) => handleSearchListGamo({ search })"
+                      :filterable="false" :options="listGamo.data" v-model="filter.domain_id"
+                      :disabled="listGamo.loading" label="nama" :reduce="state => state?.id" placeholder="Cari GAMO"
+                      :select-on-key-codes="[]">
                       <template #no-options>
                         Tidak ada GAMO Ditemukan
                       </template>
@@ -328,25 +332,25 @@ watch(() => [serverOptions.value, filter.value], () => {
                       <template #no-options>
                         Tidak ada Target Ditemukan
                       </template>
-  
-                      <template #option="option">
+
+<template #option="option">
                         <div class="d-flex flex-row align-items-center py-1 width-150px">
                           <span class="me-2 fw-bold text-truncate">
                             {{ option.nama }}
                           </span>
                         </div>
                       </template>
-  
-                      <template #selected-option="option">
+
+<template #selected-option="option">
                         <div class="d-flex flex-row align-items-center py-1 width-150px ">
                           <span class="me-2 fw-bold text-truncate">
                             {{ option.nama }}
                           </span>
                         </div>
                       </template>
-                    </v-select>
-                  </div>
-                </div> -->
+</v-select>
+</div>
+</div> -->
               </template>
 
               <template #header-hasil_assesment="header">
@@ -363,7 +367,8 @@ watch(() => [serverOptions.value, filter.value], () => {
 
               <template #item-domain="item">
                 <div class="d-flex flex-wrap flex-column">
-                  <div v-if="item.item?.kode" class="width-250px text-break text-wrap fw-bold" v-html="item.item?.kode" />
+                  <div v-if="item.item?.kode" class="width-250px text-break text-wrap fw-bold"
+                    v-html="item.item?.kode" />
                   <div v-if="item.item?.ket" class="width-250px text-break text-wrap" v-html="item.item?.ket" />
                 </div>
               </template>

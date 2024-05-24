@@ -162,7 +162,7 @@ onMounted(() => {
           <div
             class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">Laporan Project</h5>
+              <h5 class="card-title fw-semibold">Laporan</h5>
             </div>
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">

@@ -27,8 +27,11 @@ const summary = reactive({
     text: 'Target Capability Level',
     value: 'suggest_capability_level',
   }, {
-    text: 'Target Capability Adjustment',
+    text: 'Hasil Adjustment',
     value: 'aggreed_capability_level'
+  }, {
+    text: 'Target Default',
+    value: 'target'
   }, {
     text: 'Assessment',
     value: 'assessment',
@@ -172,6 +175,12 @@ onMounted(() => {
           </div>
         </template>
 
+        <template #header-target="header">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            {{ header.item.text }}
+          </div>
+        </template>
+
         <template #item-kode="item">
           <div class="d-flex flex-column">
             <div v-if="item.item?.kode" class="width-250px text-break text-wrap fw-bold" v-html="item.item?.kode" />
@@ -188,6 +197,12 @@ onMounted(() => {
         <template #item-aggreed_capability_level="item">
           <div class="d-flex justify-content-center align-items-center w-100">
             {{ item.item.aggreed_capability_level }}
+          </div>
+        </template>
+
+        <template #item-target="item">
+          <div class="d-flex justify-content-center align-items-center w-100">
+            {{ item.item.target || "-" }}
           </div>
         </template>
 
