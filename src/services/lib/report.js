@@ -53,5 +53,14 @@ export default {
    */
   getReportChartAdjustmentAssessment(payload) {
     return axiosClient.get(`domain/chart/list-adjustment?assesment_id=${payload?.assessment_id}`)
+  },
+
+  /**
+   *
+   * @param {assessment_id} payload
+   * @returns
+   */
+  getDiagramAdjustmentAssesment(payload) {
+    return axiosClient.get(`domain/assesment/chart?assesment_id=${payload?.assessment_id}`)
   }
 }

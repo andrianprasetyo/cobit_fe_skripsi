@@ -1369,7 +1369,7 @@ const router = createRouter({
               component: () =>
                 import('@/views/project/assessment/report-project/AssessmentReportProject.vue'),
               meta: {
-                pageTitle: 'Laporan Project',
+                pageTitle: 'Laporan',
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -1386,7 +1386,7 @@ const router = createRouter({
                     active: false
                   },
                   {
-                    text: 'Laporan Project',
+                    text: 'Laporan',
                     disabled: true,
                     href: '/project/assessment/:id/report-project',
                     active: true
