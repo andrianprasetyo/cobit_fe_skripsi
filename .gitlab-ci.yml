@@ -8,8 +8,8 @@ build dev:
   only: 
   - dev
   script:
-    - npm install 
-    - npm run build
+    - yarn install --pure-lockfile --cache-folder .yarn
+    - yarn run build
   artifacts:
     expire_in: 1 day
     paths:
