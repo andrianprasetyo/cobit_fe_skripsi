@@ -8,8 +8,8 @@ build dev:
   only: 
   - dev
   script:
-    - yarn install 
-    - yarn build
+    - npm install 
+    - npm run build
   artifacts:
     expire_in: 1 day
     paths:
