@@ -60,7 +60,7 @@ export default {
    * @param {assessment_id} payload
    * @returns
    */
-  getDiagramAdjustmentAssesment(payload) {
+  getChartAdjustmentAssesment(payload) {
     return axiosClient.get(`domain/assesment/chart?assesment_id=${payload?.assessment_id}`)
   }
 }

@@ -29,7 +29,7 @@ const assessmentTitle = computed(() => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  assessmentStore.getDiagramAdjustmentAssesment({ assessment_id: route.params?.id })
+  assessmentStore.getChartAdjustmentAssesment({ assessment_id: route.params?.id })
 })
 
 </script>
@@ -38,12 +38,12 @@ onMounted(() => {
   <div class="card">
     <div class="card-body">
       <div>
-        <h5 class="card-title fw-semibold">Diagram Adjustment</h5>
+        <h5 class="card-title fw-semibold">Hasil Adjustment</h5>
         <p v-if="assessmentTitle" class="card-subtitle mb-0">{{ assessmentTitle }}</p>
       </div>
 
-      <ApexChartsRadar :height="1000" :categories="assessmentStore.diagramAdjustment?.categories || []"
-        :options="chartOptions" :series="assessmentStore.diagramAdjustment?.series || []" />
+      <ApexChartsRadar :height="1000" :categories="assessmentStore.chartAdjustment?.categories || []"
+        :options="chartOptions" :series="assessmentStore.chartAdjustment?.series || []" />
     </div>
   </div>
 </template>

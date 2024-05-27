@@ -28,8 +28,8 @@ const TabStep4 = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report-gamo/components/TabStep4.vue')
 })
 
-const TabDiagramAdjustment = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/report-gamo/components/TabDiagramAdjustment.vue')
+const TabChartAdjustment = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/report-gamo/components/TabChartAdjustment.vue')
 })
 
 
@@ -63,7 +63,7 @@ const ViewComponent = {
   step2: TabStep2,
   step3: TabStep3,
   step4: TabStep4,
-  diagram_adjustment: TabDiagramAdjustment,
+  chart_adjustment: TabChartAdjustment,
 }
 
 const queryView = computed(() => {
@@ -100,8 +100,8 @@ watch(() => queryView.value, (value) => {
     case 'step4':
       tab.value = 'step4'
       break;
-    case 'diagram_adjustment':
-      tab.value = 'diagram_adjustment'
+    case 'chart_adjustment':
+      tab.value = 'chart_adjustment'
       break;
     default:
       tab.value = 'gamo';
@@ -186,10 +186,10 @@ onUnmounted(() => {
             </BaseButton>
           </li>
           <li class="nav-item" role="presentation">
-            <BaseButton @click="handleClickView('diagram_adjustment')"
+            <BaseButton @click="handleClickView('chart_adjustment')"
               class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
-              :class="[tab === 'diagram_adjustment' ? 'active' : '']" id="pills-diagram_adjustment-tab" role="tab"
-              aria-controls="pills-diagram_adjustment" aria-selected="true">
+              :class="[tab === 'chart_adjustment' ? 'active' : '']" id="pills-chart_adjustment-tab" role="tab"
+              aria-controls="pills-chart_adjustment" aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber5Icon" class="me-2" />
                 <span class="d-none d-md-block width-150px text-truncate">Diagram Adjustment</span>

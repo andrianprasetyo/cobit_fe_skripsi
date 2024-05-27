@@ -30,7 +30,7 @@ const summary = reactive({
     text: 'Hasil Adjustment',
     value: 'aggreed_capability_level'
   }, {
-    text: 'Target Default',
+    text: 'Target BUMN',
     value: 'target'
   }, {
     text: 'Assessment',
