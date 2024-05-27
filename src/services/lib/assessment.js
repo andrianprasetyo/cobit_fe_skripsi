@@ -170,9 +170,26 @@ export default {
    * @param {{limit: Number | String, page: Number | String, search: String, sortBy: String, sortType: String, assesment_id: String}} payload
    * @returns
    */
-  getReportChartAssessment(payload) {
+  getReportChartLegacyAssessment(payload) {
     return axiosClient.get(
       `assesment/report/chart?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
+        payload?.search ? `&search=${payload?.search}` : ''
+      }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
+        payload?.sortType ? `&sortType=${payload?.sortType}` : ''
+      }${payload?.assesment_id ? `&assesment_id=${payload?.assesment_id}` : ''}${
+        payload?.target_id ? `&target_id=${payload?.target_id}` : ''
+      }${payload?.domain_id ? `&domain_id=${payload?.domain_id}` : ''}`
+    )
+  },
+
+  /**
+   *
+   * @param {{limit: Number | String, page: Number | String, search: String, sortBy: String, sortType: String, assesment_id: String}} payload
+   * @returns
+   */
+  getReportChartAssessment(payload) {
+    return axiosClient.get(
+      `assesment/report/chart/all-target?limit=${payload?.limit || 10}&page=${payload?.page || 1}${
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
