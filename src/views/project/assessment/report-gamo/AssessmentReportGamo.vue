@@ -192,7 +192,7 @@ onUnmounted(() => {
               aria-controls="pills-chart_adjustment" aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="SquareNumber5Icon" class="me-2" />
-                <span class="d-none d-md-block width-150px text-truncate">Diagram Adjustment</span>
+                <span class="d-none d-md-block width-150px text-truncate">Hasil Adjustment</span>
               </div>
             </BaseButton>
           </li>
