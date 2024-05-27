@@ -41,6 +41,9 @@ const summary = reactive({
     text: 'Agreed Target Capability Level',
     value: 'aggreed_capability_level'
   }, {
+    text: 'Target BUMN',
+    value: 'target'
+  }, {
     text: 'Assessment',
     value: 'assessment'
   }
@@ -149,7 +152,8 @@ watch(() => [serverOptions.value, props.isShow], () => {
           </BaseButton>
 
           <BaseButton v-if="assessment.selectedAssessment.status !== 'completed'" @click="handleNavigateToAdjust"
-            class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Adjust / Sesuaikan GAMO" :disabled="summary.loading">
+            class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Adjust / Sesuaikan GAMO"
+            :disabled="summary.loading">
             <template #icon-right>
               <TablerIcon size="16" icon="AdjustmentsIcon" />
             </template>

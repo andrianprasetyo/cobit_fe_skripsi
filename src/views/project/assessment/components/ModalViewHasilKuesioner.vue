@@ -100,7 +100,9 @@ watch(() => props.isShow,
               <div class="row">
                 <div class="col-12 col-md-4 mb-3 mb-md-0">
                   <p class="mb-1 fs-2">Organisasi</p>
-                  <h6 class="fw-semibold mb-0">{{ assessment?.selectedResponden?.organisasi?.nama || "-" }}</h6>
+                  <h6 class="fw-semibold mb-0">
+                    {{ assessment?.selectedResponden?.assesment?.organisasi?.nama || "-" }}
+                  </h6>
                 </div>
                 <div class="col-12 col-md-4 mb-3 mb-md-0">
                   <p class="mb-1 fs-2">Divisi</p>
