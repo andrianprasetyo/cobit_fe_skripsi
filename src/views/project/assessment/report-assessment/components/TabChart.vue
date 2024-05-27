@@ -39,10 +39,10 @@ const assessmentId = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getReportChartAssessment = async ({ assesment_id, target_id }) => {
+const getReportChartAssessment = async ({ assesment_id }) => {
   try {
     report.loading = true
-    const response = await AssessmentServices.getReportChartAssessment({ assesment_id, target_id })
+    const response = await AssessmentServices.getReportChartAssessment({ assesment_id })
 
     if (response) {
       const data = response?.data
@@ -58,7 +58,7 @@ const getReportChartAssessment = async ({ assesment_id, target_id }) => {
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
-  getReportChartAssessment({ assesment_id: assessmentId.value, target_id: 'all' })
+  getReportChartAssessment({ assesment_id: assessmentId.value })
 })
 
 </script>
