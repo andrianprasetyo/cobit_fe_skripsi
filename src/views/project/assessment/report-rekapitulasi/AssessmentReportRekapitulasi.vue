@@ -127,7 +127,7 @@ onUnmounted(() => {
               aria-controls="pills-assessment" aria-selected="true">
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon icon="ChartDotsIcon" class="me-2" />
-                <span class="d-none d-md-block text-truncate">Report Asesmen Berdasarkan Target</span>
+                <span class="d-none d-md-block text-truncate">Report Asesmen</span>
               </div>
             </BaseButton>
           </li>

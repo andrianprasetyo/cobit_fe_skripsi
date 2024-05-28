@@ -20,6 +20,10 @@ const TabChart = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/report-assessment/components/TabChart.vue')
 })
 
+const TabSummary = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/summary/AssessmentCapabilitySummary.vue')
+})
+
 const appConfig = useAppConfig()
 const title = useTitle()
 const router = useRouter()
@@ -46,7 +50,8 @@ const props = defineProps({
 
 const ViewComponent = {
   list: TabList,
-  chart: TabChart
+  chart: TabChart,
+  summary: TabSummary
 }
 
 const queryTabReport = computed(() => {
@@ -122,6 +127,18 @@ onUnmounted(() => {
               <div class="d-flex flex-row align-items-center">
                 <TablerIcon :icon="`ChartDotsIcon`" class="me-2" />
                 <span class="d-none d-md-block text-truncate">Chart</span>
+              </div>
+            </BaseButton>
+          </li>
+
+          <li class="nav-item" role="presentation">
+            <BaseButton @click="handleClickTab({ tab_report: 'summary' })"
+              class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
+              :class="[tab_report === 'summary' ? 'active' : '']" :id="`pills-summary-tab`" role="tab"
+              :aria-controls="`pills-summary`" aria-selected="true">
+              <div class="d-flex flex-row align-items-center">
+                <TablerIcon :icon="`ClipboardDataIcon`" class="me-2" />
+                <span class="d-none d-md-block text-truncate">Summary</span>
               </div>
             </BaseButton>
           </li>
