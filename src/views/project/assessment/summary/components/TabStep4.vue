@@ -157,7 +157,7 @@ const agreedCapabilityLevel = computed(() => {
                   </td>
                   <td class="text-center">
                     <span>
-                      {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
+                      {{ hasil?.assesmentcanvas?.suggest_capability_level }}
                     </span>
                     <template v-if="assessment.reportCanvasSummary.hasil[indexHasil].assesmentcanvas.adjustment">
                       <TablerIcon icon="ArrowRightIcon" size="14" class="mx-1 mb-2" />
