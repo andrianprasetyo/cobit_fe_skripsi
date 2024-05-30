@@ -101,6 +101,9 @@ onMounted(() => {
                   <h6 class="fs-3 fw-semibold mb-0">Governance and Management Objectives</h6>
                 </th>
                 <th class="align-middle text-center" rowspan="2">
+                  <h6 class="fs-3 fw-semibold mb-0">Target Adjustment</h6>
+                </th>
+                <th class="align-middle text-center" rowspan="2">
                   <h6 class="fs-3 fw-semibold mb-0">Hasil Assessment</h6>
                 </th>
                 <th class="align-middle text-center" rowspan="1"
@@ -124,6 +127,9 @@ onMounted(() => {
                 <td>
                   <div class="fw-bolder">{{ item?.kode }}</div>
                   <div v-html="item.ket" />
+                </td>
+                <td class="text-center">
+                  {{ item?.target_adjustment }}
                 </td>
                 <td class="text-center">
                   {{ item?.total }}
