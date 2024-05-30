@@ -17,6 +17,13 @@ const chartOptions = reactive({
       top: 1
     }
   },
+  /* Y Axis Config Min & Max
+  yaxis: {
+    min: -5,
+    stepSize: 2,
+    // max: 100,
+  }
+  */
 })
 
 const route = useRoute()
