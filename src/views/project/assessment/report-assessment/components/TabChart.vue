@@ -28,6 +28,11 @@ const chartOptions = reactive({
       top: 1
     }
   },
+  yaxis: {
+    min: -5,
+    stepSize: 2,
+    // max: 100,
+  }
 })
 
 const assessmentTitle = computed(() => {
