@@ -29,6 +29,14 @@ function userHasMenuAccess(to, from, next) {
 }
 */
 
+function setMenuToProject(_, __, next) {
+  const auth = useAuth()
+
+  auth.setMenuToProject()
+
+  return next()
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: (to, from) => {
@@ -863,37 +871,6 @@ const router = createRouter({
           redirect: '/project/assessment',
           children: [
             {
-              name: 'DashboardProject',
-              path: '/project/assessment/:id/dashboard',
-              component: () =>
-                import('@/views/project/assessment/dashboard/AssessmentDashboard.vue'),
-              meta: {
-                pageTitle: 'Dashboard Project',
-                layout: 'AppLayoutAdmin',
-                requiredAuth: true,
-                breadcrumb: [
-                  {
-                    text: 'Project',
-                    disabled: false,
-                    href: '/project',
-                    active: false
-                  },
-                  {
-                    text: 'Asesmen',
-                    disabled: false,
-                    href: '/project/assessment',
-                    active: false
-                  },
-                  {
-                    text: 'Dashboard Project',
-                    disabled: true,
-                    href: '/project/assessment/:id/dashboard',
-                    active: true
-                  }
-                ]
-              }
-            },
-            {
               name: 'ProjectList',
               path: '/project/assessment',
               component: () => import('@/views/project/assessment/AssessmentList.vue'),
@@ -948,6 +925,38 @@ const router = createRouter({
               }
             },
             {
+              name: 'DashboardProject',
+              path: '/project/assessment/:id/dashboard',
+              component: () =>
+                import('@/views/project/assessment/dashboard/AssessmentDashboard.vue'),
+              meta: {
+                pageTitle: 'Dashboard Project',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Dashboard Project',
+                    disabled: true,
+                    href: '/project/assessment/:id/dashboard',
+                    active: true
+                  }
+                ]
+              },
+              beforeEnter: setMenuToProject
+            },
+            {
               name: 'DetailProject',
               path: '/project/assessment/:id/detail',
               component: () => import('@/views/project/assessment/AssessmentDetail.vue'),
@@ -975,7 +984,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'EditProject',
@@ -1005,7 +1015,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'SummaryGAMO',
@@ -1035,7 +1046,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'ReportGAMO',
@@ -1066,7 +1078,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'CapabilityAssesmen',
@@ -1097,7 +1110,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'SettingTargetAssesmen',
@@ -1128,7 +1142,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'TambahTargetAssesmen',
@@ -1165,7 +1180,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'EditTargetAssesmen',
@@ -1202,7 +1218,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'ReportProject',
@@ -1233,7 +1250,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'ReportDesignFactor',
@@ -1266,7 +1284,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'ReportRekapitulasi',
@@ -1299,7 +1318,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'ResultKuesionerProject',
@@ -1330,7 +1350,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'RespondenProject',
@@ -1361,7 +1382,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             },
             {
               name: 'ReportProject',
@@ -1392,7 +1414,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: setMenuToProject
             }
           ]
         },
