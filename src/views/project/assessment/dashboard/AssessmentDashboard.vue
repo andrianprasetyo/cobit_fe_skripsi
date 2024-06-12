@@ -9,6 +9,7 @@ import AssessmentDashboardBanner from '@/views/project/assessment/dashboard/comp
 import AssessmentDashboardCardSection from '@/views/project/assessment/dashboard/components/AssessmentDashboardCardSection.vue'
 import AssessmentDashboardDesignFactorChart from '@/views/project/assessment/dashboard/components/AssessmentDashboardDesignFactorChart.vue'
 import AssessmentDashboardListGamo from '@/views/project/assessment/dashboard/components/AssessmentDashboardListGamo.vue'
+import TabChartAdjustment from '@/views/project/assessment/report-gamo/components/TabChartAdjustment.vue'
 
 const auth = useAuth()
 const route = useRoute()
@@ -30,6 +31,12 @@ onMounted(() => {
 
     <section>
       <AssessmentDashboardCardSection />
+
+      <div class="row">
+        <div class="col-12">
+          <TabChartAdjustment />
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-12 col-md-8 d-flex align-items-strech">
