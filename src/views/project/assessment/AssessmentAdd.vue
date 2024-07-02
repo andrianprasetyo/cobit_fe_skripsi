@@ -83,23 +83,23 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan tanggal selesai kuesioner", required)
     },
     pic_nama: {
-      required: helpers.withMessage("Silahkan isi nama PIC", required)
+      required: helpers.withMessage("Silahkan isi nama PIC", requiredIf(false))
     },
     pic_email: {
-      required: helpers.withMessage("Silahkan isi email PIC", required),
+      required: helpers.withMessage("Silahkan isi email PIC", requiredIf(false)),
       email: helpers.withMessage("Alamat email tidak valid", email)
     },
     pic_divisi: {
-      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(!formState.organisasi_id))
+      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(false)) // requiredIf(!formState.organisasi_id))
     },
     pic_jabatan: {
-      requiredIf: helpers.withMessage("Silahkan isi jabatan PIC", requiredIf(!formState.organisasi_id))
+      requiredIf: helpers.withMessage("Silahkan isi jabatan PIC", requiredIf(false)) // requiredIf(!formState.organisasi_id)
     },
     pic_divisi_id: {
-      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(formState.organisasi_id))
+      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(false)) // requiredIf(formState.organisasi_id)
     },
     pic_jabatan_id: {
-      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(formState.organisasi_id))
+      requiredIf: helpers.withMessage("Silahkan isi divisi PIC", requiredIf(false)) // requiredIf(formState.organisasi_id)
     },
     organisasi_nama: {
       requiredIf: helpers.withMessage("Silahkan isi nama organisasi", requiredIf(!formState.organisasi_id))
@@ -108,7 +108,7 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan isi deskripsi organisasi", requiredIf(!formState.organisasi_id))
     },
     pic_expire_at: {
-      required: helpers.withMessage("Silahkan isi tanggal kadaluarsa pic", required)
+      required: helpers.withMessage("Silahkan isi tanggal kadaluarsa pic", requiredIf(false)) // required
     }
   }
 })
@@ -225,11 +225,19 @@ const handleSubmit = async () => {
         end_date: formState.end_date,
         start_date_quisioner: formState.start_date_quisioner,
         end_date_quisioner: formState.end_date_quisioner,
-        pic_nama: formState.pic_nama,
-        pic_email: formState.pic_email,
-        pic_expire_at: formState.pic_expire_at
       }
 
+      if (formState.pic_nama) {
+        payload.pic_nama = formState.pic_nama
+      }
+
+      if (formState.pic_email) {
+        payload.pic_email = formState.pic_email
+      }
+
+      if (formState.pic_expire_at) {
+        payload.pic_expire_at = formState.pic_expire_at
+      }
 
       if (formState.organisasi_id) {
         payload.organisasi_id = formState.organisasi_id
