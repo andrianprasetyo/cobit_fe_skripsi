@@ -104,6 +104,14 @@ export default {
   },
 
   /**
+   * @param {{id: String, organisasi_id: String}} payload
+   * @returns
+   */
+  editOrganisasi(payload) {
+    return axiosClient.put(`assesment/org/${payload?.id}/change`, payload)
+  },
+
+  /**
    *
    * @param {{id: String, docs: String}} payload
    * @returns

@@ -10,6 +10,7 @@ import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import OverviewCard from '@/views/project/assessment/components/OverviewCard.vue'
 import ModalEditPIC from '@/views/project/assessment/components/ModalEditPIC.vue'
 import ModalEditTanggalKadaluarsaPIC from '@/views/project/assessment/components/ModalEditTanggalKadaluarsaPIC.vue'
+import ModalEditOrganisasi from '@/views/project/assessment/components/ModalEditOrganisasi.vue'
 
 import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useRoute, useRouter } from 'vue-router'
@@ -42,6 +43,8 @@ const formState = reactive({
 const isShowModalEditPIC = ref(false)
 
 const isShowModalEditTanggalKadaluarsaPIC = ref(false)
+
+const isShowModalEditOrganisasi = ref(false)
 
 const classStatus = computed(() => {
   return value => {
@@ -89,6 +92,10 @@ const toggleModalEditPIC = () => {
 
 const toggleModalEditTanggalKadaluarsaPIC = () => {
   isShowModalEditTanggalKadaluarsaPIC.value = !isShowModalEditTanggalKadaluarsaPIC.value
+}
+
+const toggleModalEditOrganisasi = () => {
+  isShowModalEditOrganisasi.value = !isShowModalEditOrganisasi.value
 }
 
 const handleNavigateEdit = ({ id }) => {
@@ -187,8 +194,6 @@ const handleSelesaikanAssessment = ({ title, id }) => {
     }
   })
 }
-
-
 
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
@@ -307,7 +312,16 @@ onUnmounted(() => {
           </template>
 
           <template #header>
-            <h4 class="card-title text-dark mb-0">Organisasi</h4>
+            <div class="d-flex flex-row justify-content-between align-items-center">
+              <h4 class="card-title text-dark mb-0">Organisasi</h4>
+
+              <BaseButton :access="['project-edit']" v-if="assessment.detail?.pic?.status === 'pending'"
+                @click="toggleModalEditOrganisasi" title="Ganti Organisasi">
+                <template #icon-right>
+                  <TablerIcon icon="EditIcon" class="ms-1" />
+                </template>
+              </BaseButton>
+            </div>
           </template>
 
           <template #body>
@@ -442,5 +456,7 @@ onUnmounted(() => {
     <ModalEditPIC :is-show="isShowModalEditPIC" @close="toggleModalEditPIC" @refresh="handleRefresh" />
     <ModalEditTanggalKadaluarsaPIC :is-show="isShowModalEditTanggalKadaluarsaPIC"
       @close="toggleModalEditTanggalKadaluarsaPIC" @refresh="handleRefresh" />
+    <ModalEditOrganisasi :is-show="isShowModalEditOrganisasi" @close="toggleModalEditOrganisasi"
+      @refresh="handleRefresh" />
   </div>
 </template>
