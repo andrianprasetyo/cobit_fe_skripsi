@@ -29,8 +29,8 @@ const chartOptions = reactive({
     }
   },
   yaxis: {
-    min: -5,
-    stepSize: 2,
+    min: 0,
+    stepSize: 1,
     // max: 100,
   }
 })
