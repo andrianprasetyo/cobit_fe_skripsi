@@ -390,7 +390,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="auth.getIsAdministrator" class="card">
+      <div v-if="auth.getIsAdministrator || auth.getIsAssessor" class="card">
         <div class="card-body">
           <h5 class="card-title mb-9 fw-semibold">Organisasi</h5>
 

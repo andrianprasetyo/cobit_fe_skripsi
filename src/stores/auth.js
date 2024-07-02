@@ -11,6 +11,8 @@ import { getCookies, removeAllCookies, setCookies } from '@/utils/cookies'
 import { filterMenu } from '@/utils/filterMenuByRoleType'
 
 import menu from '@/data/menu.json'
+import menuAssessor from '@/data/menuAssessor.json'
+import menuExternal from '@/data/menuExternal.json'
 import menuProject from '@/data/menuProject.json'
 
 import accessAdministrator from '@/data/accessAdministrator.json'
@@ -52,6 +54,9 @@ export const useAuth = defineStore('auth', {
     getIsAdministrator(state) {
       return state.account?.roleaktif?.role?.code === 'administrator'
     },
+    getIsAssessor() {
+      return state.account?.roleaktif?.role?.code === 'assesor'
+    },
     getIsEksternal(state) {
       return state.account?.roleaktif?.role?.code === 'eksternal'
     },
@@ -89,8 +94,23 @@ export const useAuth = defineStore('auth', {
     setMenuToDefault() {
       this.menu = menu
     },
+    setMenuToDefaultAssessor() {
+      this.menu = menuAssessor
+    },
+    setMenuToDefaultExternal() {
+      this.menu = menuExternal
+    },
     setMenuToProject() {
       this.menu = menuProject
+    },
+    setAccessToDefault() {
+      this.access = accessAdministrator
+    },
+    setAccessToAssessor() {
+      this.access = accessAssessor
+    },
+    setAccessToExternal() {
+      this.access = accessExternal
     },
     setExpiresIn(payload) {
       this.expiresIn = payload
