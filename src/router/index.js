@@ -618,7 +618,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiList.vue'),
               meta: {
                 pageTitle: 'Organisasi',
-                key: ['master', 'master-organisasi', 'manuser-organisasi',],
+                key: ['master-organisasi'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -644,7 +644,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Organisasi',
-                key: ['master-add', 'master-organisasi-add', 'manuser-organisasi-add'],
+                key: ['master-organisasi-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -676,7 +676,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiEdit.vue'),
               meta: {
                 pageTitle: 'Edit Organisasi',
-                key: ['master-edit', 'master-organisasi-edit', 'manuser-organisasi-edit'],
+                key: ['master-organisasi-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -708,7 +708,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiDivisiDanJabatan.vue'),
               meta: {
                 pageTitle: 'Divisi & Jabatan Organisasi',
-                key: ['master', 'master-organisasi', 'manuser-organisasi'],
+                key: ['master-organisasi'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [

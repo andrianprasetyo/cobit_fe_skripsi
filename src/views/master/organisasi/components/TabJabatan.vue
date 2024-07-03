@@ -220,7 +220,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           <SearchInput v-model="filter.search" placeholder="Cari Jabatan" />
 
           <BaseButton @click="toggleModalJabatan" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Tambah Jabatan" :access="['manuser-organisasi-add', 'manuser-add']">
+            title="Tambah Jabatan" :access="['master-organisasi-add']">
             <template #icon-left>
               <TablerIcon size="16" icon="PlusIcon" />
             </template>
@@ -271,7 +271,7 @@ watch(() => [serverOptions.value, filter.value], () => {
         <template #item-action="item">
           <div class="d-flex align-items-center">
             <BaseButton v-tooltip="`Edit Jabatan ${item.item?.nama || ''}`"
-              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon" :access="['manuser-organisasi-add', 'manuser-add', 'manuser-organisasi-edit', 'manuser-edit']">
+              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon" :access="['master-organisasi-add', 'master-organisasi-edit']">
               <template #icon-left>
                 <TablerIcon icon="EditIcon" />
               </template>
@@ -279,7 +279,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <BaseButton v-tooltip="`Hapus Jabatan ${item.item?.nama || ''}`"
               @click="handleDeleteJabatan({ title: item.item?.nama, id: item.item?.id })" class="btn btn-icon"
-              :access="['manuser-organisasi-delete', 'manuser-delete']">
+              :access="['master-organisasi-delete']">
               <template #icon-left>
                 <TablerIcon icon="TrashIcon" />
               </template>

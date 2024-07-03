@@ -165,7 +165,7 @@ watch(() => [props.isOnEdit], () => {
 
     <template #footer>
       <BaseButton @click="onSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-        :is-loading="formState.loadingSubmit" :access="['manuser-organisasi-add', 'manuser-add', 'manuser-organisasi-edit', 'manuser-edit']">
+        :is-loading="formState.loadingSubmit" :access="['master-organisasi-add', 'master-organisasi-edit']">
         <template #icon-left>
           <TablerIcon icon="DeviceFloppyIcon" />
         </template>
