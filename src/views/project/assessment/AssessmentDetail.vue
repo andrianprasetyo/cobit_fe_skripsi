@@ -409,7 +409,7 @@ onUnmounted(() => {
         </OverviewCard>
       </div>
 
-      <div class="card">
+      <div class="card" v-if="auth.getIsAdministrator || auth.getIsAssessor">
         <div class="card-header bg-light-danger">
           <h5 class="card-title fw-semibold text-danger">Hapus Project</h5>
         </div>
@@ -429,7 +429,7 @@ onUnmounted(() => {
 
           <div>
             <BaseButton class="btn btn-danger" title="Hapus Project"
-              @click="handleDeleteAssessment({ title: assessment.detail?.nama, id: assessmentId })">
+              @click="handleDeleteAssessment({ title: assessment.detail?.nama, id: assessmentId })" :access="['project-delete']">
               <template #icon-right>
                 <TablerIcon icon="TrashIcon" />
               </template>

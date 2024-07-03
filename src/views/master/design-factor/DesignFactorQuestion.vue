@@ -288,7 +288,7 @@ onMounted(() => {
 
               <div>
                 <BaseButton @click="handleHapusQuestion({ title: question?.pertanyaan, id: question?.id, index: index })"
-                  class="btn btn-outline-danger" title="Hapus Question">
+                  class="btn btn-outline-danger" title="Hapus Question" :access="['master-add', 'master-edit', 'master-delete']">
                   <template #icon-left>
                     <TablerIcon icon="TrashIcon" />
                   </template>
@@ -360,7 +360,7 @@ onMounted(() => {
       </template>
 
       <div class="mt-2 d-flex justify-content-center align-items-center">
-        <BaseButton @click="handleTambahQuestion" title="Tambah Question">
+        <BaseButton @click="handleTambahQuestion" title="Tambah Question" :access="['master-add', 'master-edit', 'master-delete']">
           <template #icon-left>
             <TablerIcon icon="PlusIcon" />
           </template>
@@ -380,7 +380,8 @@ onMounted(() => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan Perubahan"
-                :disabled="formState.loadingSubmit || !formState.questions.length" :is-loading="formState.loadingSubmit">
+                :disabled="formState.loadingSubmit || !formState.questions.length" :is-loading="formState.loadingSubmit"
+                :access="['master-add', 'master-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

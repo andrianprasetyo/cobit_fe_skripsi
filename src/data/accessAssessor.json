@@ -1,5 +1,8 @@
 [
   "dashboard",
+  "manuser-organisasi-add",
+  "manuser-organisasi-edit",
+  "manuser-organisasi-delete",
   "project",
   "project-add",
   "project-edit",

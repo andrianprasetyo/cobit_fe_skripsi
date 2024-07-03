@@ -194,7 +194,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari Organisasi" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Organisasi">
+                title="Tambah Organisasi" :access="['manuser-organisasi-add', 'manuser-add']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -217,14 +217,15 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #item-action="item">
               <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Edit Organisasi ${item.item?.nama || ''}`"
-                  @click="handleNavigateEdit({ id: item?.item?.id })" class="btn btn-icon">
+                  @click="handleNavigateEdit({ id: item?.item?.id })" class="btn btn-icon" :access="['manuser-organisasi-edit', 'manuser-edit']">
                   <template #icon-left>
                     <TablerIcon icon="EditIcon" />
                   </template>
                 </BaseButton>
 
                 <BaseButton v-tooltip="`Lihat Daftar Divisi & Jabatan ${item.item?.nama || ''}`"
-                  @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id })" class="btn btn-icon">
+                  @click="handleNavigateDivisiDanJabatan({ id: item?.item?.id })" class="btn btn-icon"
+                  :access="['manuser-organisasi', 'manuser']">
                   <template #icon-left>
                     <TablerIcon icon="SubtaskIcon" />
                   </template>

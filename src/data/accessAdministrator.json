@@ -5,6 +5,7 @@
   "master-edit",
   "master-delete",
   "manuser",
+  "manuser-add",
   "manuser-edit",
   "manuser-delete",
   "project",

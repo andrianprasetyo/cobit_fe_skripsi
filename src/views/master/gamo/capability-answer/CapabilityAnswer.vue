@@ -249,7 +249,7 @@ onUnmounted(() => {
           </template>
 
           <div class="mt-5 d-flex justify-content-center align-items-center">
-            <BaseButton @click="handleTambahJawaban" title="Tambah Jawaban">
+            <BaseButton @click="handleTambahJawaban" title="Tambah Jawaban" :access="['master-add', 'master-edit']">
               <template #icon-left>
                 <TablerIcon icon="PlusIcon" />
               </template>
@@ -272,7 +272,8 @@ onUnmounted(() => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan"
-                :disabled="formState.loadingSubmit || !formState.jawaban.length" :is-loading="formState.loadingSubmit">
+                :disabled="formState.loadingSubmit || !formState.jawaban.length" :is-loading="formState.loadingSubmit"
+                :access="['master-add', 'master-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

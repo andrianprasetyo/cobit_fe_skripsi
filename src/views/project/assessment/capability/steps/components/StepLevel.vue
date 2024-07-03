@@ -402,7 +402,7 @@ onMounted(() => {
                 </td>
                 <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-sm btn-primary btn-icon" data-bs-toggle="dropdown"
-                    id="dropdownMenuButton" aria-expanded="false">
+                    id="dropdownMenuButton" aria-expanded="false" :access="['project-add', 'project-edit' ]">
                     <template #icon-left>
                       <TablerIcon icon="DotsIcon" />
                     </template>
@@ -410,7 +410,7 @@ onMounted(() => {
 
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <BaseButton @click="handleToggleModalPenilaian({ gamo: item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-add', 'project-edit' ]">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />
                         <span class="ms-2">
@@ -420,7 +420,7 @@ onMounted(() => {
                     </BaseButton>
 
                     <BaseButton @click="handleToggleModalEvidence({ gamo: item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-add', 'project-edit' ]">
                       <template #icon-left>
                         <TablerIcon icon="FileTextIcon" />
                         <span class="ms-2">
@@ -430,7 +430,7 @@ onMounted(() => {
                     </BaseButton>
 
                     <BaseButton @click="handleToggleModalOFI({ gamo: item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-add', 'project-edit' ]">
                       <template #icon-left>
                         <TablerIcon icon="FileStarIcon" />
                         <span class="ms-2">

@@ -124,7 +124,7 @@ const handleSubmit = async () => {
 
     <template #footer>
       <BaseButton @click="handleSubmit" title="Upload" :disabled="!formState.files.length || formState.loadingSubmit"
-        :isLoading="formState.loadingSubmit">
+        :isLoading="formState.loadingSubmit" :access="['project', 'project-add', 'project-edit']">
         <template #icon-left>
           <TablerIcon icon="UploadIcon" />
         </template>

@@ -132,7 +132,7 @@ watch(() => props.isShow,
                       <div class="mt-2">
                         <BaseButton class="btn btn-sm"
                           :class="[historyState.selectedLaporan?.id === item?.id ? 'btn-primary' : 'btn-outline-primary']"
-                          title="Lihat Laporan" @click="handleSelectedLaporan(item)">
+                          title="Lihat Laporan" @click="handleSelectedLaporan(item)" :access="['project']">
                           <template #icon-right>
                             <TablerIcon icon="ChevronRightIcon" />
                           </template>
@@ -140,7 +140,7 @@ watch(() => props.isShow,
 
                         <BaseButton v-if="item?.file?.url" class="btn btn-sm btn-outline-info mt-2"
                           title="Download Laporan"
-                          @click="handleDownloadLaporan({ url: item?.file?.url, fileName: item?.name })">
+                          @click="handleDownloadLaporan({ url: item?.file?.url, fileName: item?.name })" :access="['project']">
                           <template #icon-right>
                             <TablerIcon icon="DownloadIcon" />
                           </template>

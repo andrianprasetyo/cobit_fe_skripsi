@@ -90,8 +90,8 @@ const formatDate = computed(() => {
       @click.stop="($event) => emits('handle-detail', $event)">
       <div class="position-absolute" style="top: 20px; right: 20px">
         <div class="dropdown dropstart">
-          <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-sm btn-primary" data-bs-toggle="dropdown"
-            id="dropdownMenuButton" aria-expanded="false" @click.stop="">
+          <BaseButton :access="['project-edit']" v-tooltip="`Lihat Aksi`" class="btn btn-sm btn-primary" data-bs-toggle="dropdown"
+            id="dropdownMenuButton" aria-expanded="false" @click.stop="" >
             <template #icon-left>
               <TablerIcon icon="DotsIcon" />
             </template>

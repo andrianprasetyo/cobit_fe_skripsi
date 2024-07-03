@@ -186,7 +186,7 @@ watch(() => [props.isShow], () => {
 
             <div>
               <BaseButton @click="handleHapusOFI({ title: index + 1, index: index })" class="btn btn-outline-danger"
-                title="Hapus Opportunity for Improvement">
+                title="Hapus Opportunity for Improvement" :access="['project-add', 'project-edit' ]">
                 <template #icon-left>
                   <TablerIcon icon="TrashIcon" />
                 </template>
@@ -225,7 +225,7 @@ watch(() => [props.isShow], () => {
 
       <div v-if="formState.ofi.length < assessmentStore.capability.listTarget?.length"
         class="mt-5 d-flex justify-content-center align-items-center">
-        <BaseButton @click="handleTambahOFI" title="Tambah Opportunity for Improvement">
+        <BaseButton @click="handleTambahOFI" title="Tambah Opportunity for Improvement" :access="['project-add', 'project-edit' ]">
           <template #icon-left>
             <TablerIcon icon="PlusIcon" />
           </template>
@@ -234,7 +234,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Opportunity for Improvement">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Opportunity for Improvement" :access="['project-add', 'project-edit' ]">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

@@ -213,7 +213,7 @@ onMounted(() => {
 
                   <div>
                     <BaseButton @click="handleHapusKomponen({ id: komponen?.id, title: komponen?.nama, index: index })"
-                      class="btn btn-outline-danger" title="Hapus Komponen">
+                      class="btn btn-outline-danger" title="Hapus Komponen" :access="['master-add', 'master-edit', 'master-delete']">
                       <template #icon-left>
                         <TablerIcon icon="TrashIcon" />
                       </template>
@@ -268,7 +268,7 @@ onMounted(() => {
             </template>
 
             <div class="mt-5 d-flex justify-content-center align-items-center">
-              <BaseButton @click="handleTambahKomponen" title="Tambah Komponen">
+              <BaseButton @click="handleTambahKomponen" title="Tambah Komponen" :access="['master-add', 'master-edit', 'master-delete']">
                 <template #icon-left>
                   <TablerIcon icon="PlusIcon" />
                 </template>
@@ -292,7 +292,7 @@ onMounted(() => {
             <div>
               <BaseButton @click="handleSubmit" title="Simpan Perubahan"
                 :disabled="formState.loadingSubmit || !formState.df_komponen.length"
-                :is-loading="formState.loadingSubmit">
+                :is-loading="formState.loadingSubmit" :access="['master-add', 'master-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

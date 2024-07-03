@@ -224,7 +224,7 @@ onUnmounted(() => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit">
+                :is-loading="formState.loadingSubmit" :access="['project-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

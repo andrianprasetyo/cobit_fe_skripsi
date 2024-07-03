@@ -1,10 +1,9 @@
 import Cookies from 'js-cookie'
 
-export const setCookies = ({ cookies, expires }) => {
+export const setCookies = ({ cookies }) => {
   Object.keys(cookies).forEach((key) => {
     Cookies.set(key, cookies[key], {
-      secure: true,
-      expires: expires
+      secure: false,
     })
   })
 }

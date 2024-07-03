@@ -358,7 +358,7 @@ watch(() => [props.isShow], () => {
 
             <div>
               <BaseButton @click="handleHapusEvident({ title: index + 1, index: index })" class="btn btn-outline-danger"
-                title="Hapus Evidence">
+                title="Hapus Evidence" :access="['project-add', 'project-edit' ]">
                 <template #icon-left>
                   <TablerIcon icon="TrashIcon" />
                 </template>
@@ -461,7 +461,7 @@ watch(() => [props.isShow], () => {
       </template>
 
       <div class="mt-5 d-flex justify-content-center align-items-center">
-        <BaseButton @click="handleTambahEvident" title="Tambah Evidence">
+        <BaseButton @click="handleTambahEvident" title="Tambah Evidence" :access="['project-add', 'project-edit' ]">
           <template #icon-left>
             <TablerIcon icon="PlusIcon" />
           </template>
@@ -470,7 +470,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Evidence">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Evidence" :access="['project-add', 'project-edit' ]">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

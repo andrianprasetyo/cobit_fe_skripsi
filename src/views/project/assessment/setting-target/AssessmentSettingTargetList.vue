@@ -198,7 +198,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari Target" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Target">
+                title="Tambah Target" :access="['project-edit']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -224,7 +224,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
                     <BaseButton @click="handleNavigateEdit({ id: item?.item?.id, target: item?.item?.nama })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />
                         <span class="ms-2">
@@ -238,7 +238,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
                   <li>
                     <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger" :access="['project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="TrashIcon" />
                         <span class="ms-2">

@@ -209,7 +209,7 @@ watch(() => props.isShow, () => {
 
     <template #footer>
       <BaseButton @click="handleSubmit" :title="`${props.isOnEdit ? 'Simpan Perubahan' : 'Upload'} Laporan`"
-        :disabled="formState.loadingSubmit" :isLoading="formState.loadingSubmit">
+        :disabled="formState.loadingSubmit" :isLoading="formState.loadingSubmit" :access="['project-add', 'project-edit']">
         <template #icon-left>
           <TablerIcon :icon="props.isOnEdit ? 'DeviceFloppyIcon' : 'UploadIcon'" />
         </template>
