@@ -54,7 +54,7 @@ export const useAuth = defineStore('auth', {
     getIsAdministrator(state) {
       return state.account?.roleaktif?.role?.code === 'administrator'
     },
-    getIsAssessor() {
+    getIsAssessor(state) {
       return state.account?.roleaktif?.role?.code === 'assesor'
     },
     getIsEksternal(state) {
