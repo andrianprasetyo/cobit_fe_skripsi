@@ -253,7 +253,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #item-action="item">
               <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Edit Role ${item.item?.nama || ''}`"
-                  @click="handleNavigateToEdit({ id: item?.item?.id })" class="btn btn-icon">
+                  @click="handleNavigateToEdit({ id: item?.item?.id })" class="btn btn-icon" :access="['manuser-edit']">
                   <template #icon-left>
                     <TablerIcon icon="EditIcon" />
                   </template>

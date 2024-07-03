@@ -257,17 +257,17 @@ onMounted(() => {
 
             <div>
               <BaseDropdownButton @click.stop="handleSubmit({ isSaveAndClear: false })" title="Simpan"
-                :disabled="formState.loadingSubmit" :is-loading="formState.loadingSubmit">
+                :disabled="formState.loadingSubmit" :is-loading="formState.loadingSubmit" :access="['master-add']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>
 
                 <template #dropdown>
                   <BaseButton @click.stop="handleSubmit({ isSaveAndClear: true })" class="dropdown-item w-100"
-                    title="Simpan & Reset">
+                    title="Simpan & Reset" :access="['master-add']">
                   </BaseButton>
 
-                  <BaseButton @click.stop="handleResetState" type="button" class="dropdown-item w-100" title="Reset">
+                  <BaseButton @click.stop="handleResetState" type="button" class="dropdown-item w-100" title="Reset" :access="['master-add']">
                   </BaseButton>
                 </template>
               </BaseDropdownButton>

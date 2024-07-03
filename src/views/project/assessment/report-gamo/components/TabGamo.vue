@@ -139,14 +139,14 @@ onMounted(() => {
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <BaseButton @click="exportSummaryGamo" class="btn btn-outline-primary" title="Export Summary GAMO"
-            :disabled="summary.loading">
+            :disabled="summary.loading" :access="['project']">
             <template #icon-right>
               <TablerIcon size="16" icon="FileExportIcon" />
             </template>
           </BaseButton>
 
           <BaseButton @click="handleNavigateToAdjustSummaryGamo" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0"
-            title="Adjust / Sesuaikan GAMO">
+            title="Adjust / Sesuaikan GAMO" :access="['project-add', 'project-edit']">
             <template #icon-right>
               <TablerIcon size="16" icon="AdjustmentsIcon" />
             </template>

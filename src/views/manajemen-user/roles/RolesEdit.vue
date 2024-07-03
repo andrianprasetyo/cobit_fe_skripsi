@@ -168,7 +168,7 @@ onMounted(() => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit">
+                :is-loading="formState.loadingSubmit" :access="['manuser-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

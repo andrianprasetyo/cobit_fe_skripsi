@@ -198,7 +198,8 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari Grup Jawaban" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
-                title="Tambah Grup Jawaban">
+                title="Tambah Grup Jawaban"
+                :access="['master-add']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -226,14 +227,14 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <template #item-action="item">
               <BaseButton v-tooltip="`Edit ${item.item?.nama || ''}`" @click="handleNavigateToEdit({ id: item?.item?.id })"
-                class="btn btn-icon">
+                class="btn btn-icon" :access="['master-edit']">
                 <template #icon-left>
                   <TablerIcon icon="EditIcon" />
                 </template>
               </BaseButton>
 
               <BaseButton v-tooltip="`Hapus ${item.item?.nama || ''}`"
-                @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })" class="btn btn-icon">
+                @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })" class="btn btn-icon" :access="['master-delete']">
                 <template #icon-left>
                   <TablerIcon icon="TrashIcon" />
                 </template>

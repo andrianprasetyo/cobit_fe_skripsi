@@ -112,7 +112,7 @@ const handleSubmit = async () => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit">
+                :is-loading="formState.loadingSubmit" :access="['manuser-add']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

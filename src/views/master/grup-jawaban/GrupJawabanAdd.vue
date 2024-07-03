@@ -189,7 +189,8 @@ const handleSubmit = async () => {
 
                 <div class="col-12 col-md-1 d-flex justify-content-center align-items-center mb-2 mb-md-0">
                   <BaseButton @click="handleRemoveJawaban(index)" class="btn btn-outline-danger w-100"
-                    :class="[v$.jawaban.$each?.$response?.$errors[index]?.name?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']">
+                    :class="[v$.jawaban.$each?.$response?.$errors[index]?.name?.length || v$.jawaban.$each?.$response?.$errors[index]?.bobot?.length ? 'mt-1' : 'mt-4']"
+                    :access="['master-add', 'master-edit', 'master-delete']">
                     <TablerIcon icon="TrashIcon" />
                   </BaseButton>
                 </div>
@@ -202,7 +203,7 @@ const handleSubmit = async () => {
 
             <div v-if="(isJenisPersentase && !formState.jawaban.length) || isJenisPilgan"
               class="mt-2 d-flex justify-content-center align-items-center">
-              <BaseButton @click="handleTambahJawaban" title="Tambah Jawaban">
+              <BaseButton @click="handleTambahJawaban" title="Tambah Jawaban" :access="['master-add', 'master-edit', 'master-delete']">
                 <template #icon-left>
                   <TablerIcon icon="PlusIcon" />
                 </template>
@@ -223,7 +224,7 @@ const handleSubmit = async () => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit">
+                :is-loading="formState.loadingSubmit" :access="['master-add']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>

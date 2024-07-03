@@ -188,7 +188,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <SearchInput v-model="filter.search" placeholder="Cari Divisi" />
 
-          <BaseButton @click="toggleModalDivisi" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Divisi">
+          <BaseButton @click="toggleModalDivisi" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Divisi" :access="['manuser-organisasi-add', 'manuser-add', 'manuser-organisasi-edit', 'manuser-edit']">
             <template #icon-left>
               <TablerIcon size="16" icon="PlusIcon" />
             </template>
@@ -222,14 +222,15 @@ watch(() => [serverOptions.value, filter.value], () => {
         <template #item-action="item">
           <div class="d-flex align-items-center">
             <BaseButton v-tooltip="`Edit Divisi ${item.item?.nama || ''}`"
-              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon">
+              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon" :access="['manuser-organisasi-add', 'manuser-add', 'manuser-organisasi-edit', 'manuser-edit']">
               <template #icon-left>
                 <TablerIcon icon="EditIcon" />
               </template>
             </BaseButton>
 
             <BaseButton v-tooltip="`Hapus Divisi ${item.item?.nama || ''}`"
-              @click="handleDeleteDivisi({ title: item.item?.nama, id: item.item?.id })" class="btn btn-icon">
+              @click="handleDeleteDivisi({ title: item.item?.nama, id: item.item?.id })" class="btn btn-icon"
+              :access="['manuser-organisasi-delete', 'manuser-delete']">
               <template #icon-left>
                 <TablerIcon icon="TrashIcon" />
               </template>

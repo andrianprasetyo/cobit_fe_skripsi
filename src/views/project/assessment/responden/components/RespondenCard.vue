@@ -361,14 +361,14 @@ watch(() => [serverOptions.value, filter.value], () => {
           <template v-if="responden.isOnEditProcessedKuesioner">
             <BaseButton class="btn btn-success ms-0 mt-3 mt-md-0 ms-md-3"
               title="Simpan Perubahan Kuesioner Yang Diproses" id="saveProcessedKuesioner"
-              @click="handleSetProcessedKuesioner">
+              @click="handleSetProcessedKuesioner" :access="['project-edit']">
               <template #icon-right>
                 <TablerIcon icon="DeviceFloppyIcon" class="ms-2" />
               </template>
             </BaseButton>
 
             <BaseButton class="btn btn-outline-danger ms-0 mt-3 mt-md-0 ms-md-3" title="Batalkan"
-              id="cancelProcessedKuesioner" @click="handleEditProcessedKuesioner(false)">
+              id="cancelProcessedKuesioner" @click="handleEditProcessedKuesioner(false)" :access="['project-edit']">
               <template #icon-right>
                 <TablerIcon icon="XIcon" class="ms-2" />
               </template>
@@ -377,7 +377,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
           <template v-else>
             <BaseButton class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Sesuaikan Kuesioner Yang Diproses"
-              id="changesProcessedKuesioner" @click="handleEditProcessedKuesioner(true)">
+              id="changesProcessedKuesioner" @click="handleEditProcessedKuesioner(true)" :access="['project-edit']">
               <template #icon-right>
                 <TablerIcon icon="EditIcon" class="ms-2" />
               </template>
@@ -385,7 +385,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           </template>
 
           <BaseButton class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Action" data-bs-toggle="dropdown"
-            id="dropdownMenuMore" aria-expanded="false">
+            id="dropdownMenuMore" aria-expanded="false" :access="['project']">
             <template #icon-right>
               <TablerIcon icon="DotsIcon" class="ms-2" />
             </template>
@@ -394,7 +394,8 @@ watch(() => [serverOptions.value, filter.value], () => {
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuMore">
             <li v-if="!isAssessmentDone">
               <BaseButton @click="toggleModalInviteResponden"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Undang Responden">
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Undang Responden"
+                :access="['project-edit']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="SendIcon" class="me-2" />
                 </template>
@@ -403,7 +404,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <li>
               <BaseButton @click="exportResponden" class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
-                title="Export Responden">
+                title="Export Responden" :access="['project']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="FileExportIcon" class="me-2" />
                 </template>
@@ -412,7 +413,8 @@ watch(() => [serverOptions.value, filter.value], () => {
 
             <li>
               <BaseButton @click="exportHasilQuisioner"
-                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Export Hasil Kuesioner">
+                class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Export Hasil Kuesioner"
+                :access="['project']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="CheckupListIcon" class="me-2" />
                 </template>
@@ -501,7 +503,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <li>
                   <BaseButton @click="reinviteResponden({ id: item.item?.id, email: item?.item?.email })"
-                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-edit']">
                     <template #icon-left>
                       <TablerIcon icon="MailIcon" />
                       <span class="ms-2">
@@ -514,7 +516,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                 <li>
                   <BaseButton
                     @click="handleDeleteResponden({ title: item.item?.nama || item.item?.email, id: item.item?.id })"
-                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger"
+                    :access="['project-edit']">
                     <template #icon-left>
                       <TablerIcon icon="TrashIcon" />
                       <span class="ms-2">

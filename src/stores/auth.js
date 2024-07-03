@@ -92,13 +92,13 @@ export const useAuth = defineStore('auth', {
       this.menu = payload
     },
     setMenuToDefault() {
-      this.menu = menu
-    },
-    setMenuToDefaultAssessor() {
-      this.menu = menuAssessor
-    },
-    setMenuToDefaultExternal() {
-      this.menu = menuExternal
+      if (this.account?.roleaktif?.role?.code === 'administrator') {
+        this.menu = menu
+      } else if (this.account?.roleaktif?.role?.code === 'assesor') {
+        this.menu = menuAssessor
+      } else if (this.account?.roleaktif?.role?.code === 'eksternal') {
+        this.menu = menuExternal
+      }
     },
     setMenuToProject() {
       this.menu = menuProject
@@ -176,7 +176,7 @@ export const useAuth = defineStore('auth', {
             this.setAccess(accessAdministrator)
           } else if (role_type === 'assesor') {
             this.setAccess(accessAssessor)
-          } else if (role_type === 'external') {
+          } else if (role_type === 'eksternal') {
             this.setAccess(accessExternal)
           }
 

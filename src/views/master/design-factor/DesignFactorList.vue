@@ -190,7 +190,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari Design Factor" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Design Factor">
+                title="Tambah Design Factor" :access="['master-add']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -265,7 +265,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
                     <li>
                       <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['master-edit']">
                         <template #icon-left>
                           <TablerIcon icon="EditIcon" />
                           <span class="ms-2">

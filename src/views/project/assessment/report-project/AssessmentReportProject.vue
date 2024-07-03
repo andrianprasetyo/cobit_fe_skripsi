@@ -166,7 +166,7 @@ onMounted(() => {
             </div>
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-              <BaseButton class="btn btn-primary" title="Upload Laporan" @click="handleAddLaporan">
+              <BaseButton class="btn btn-primary" title="Upload Laporan" @click="handleAddLaporan" :access="['project-add', 'project-edit']">
                 <template #icon-right>
                   <TablerIcon icon="UploadIcon" />
                 </template>

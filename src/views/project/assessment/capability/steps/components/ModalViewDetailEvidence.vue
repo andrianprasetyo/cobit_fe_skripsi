@@ -114,7 +114,7 @@ watch(() => [props.isShow], () => {
                   <div v-else-if="isExcel(evidence?.docs?.docs?.ext)"
                     class="d-flex justify-content-center align-items-center bg-light">
                     <BaseButton @click="handleDownloadFile({ url: pathSource(evidence?.docs?.docs?.path) })"
-                      title="Download File">
+                      title="Download File" :access="['project', 'project-add', 'project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="DownloadIcon" />
                       </template>
@@ -130,7 +130,7 @@ watch(() => [props.isShow], () => {
                   <div v-else class="d-flex justify-content-center align-items-center bg-light">
                     <BaseButton
                       @click="handleDownloadFile({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
-                      title="Download File">
+                      title="Download File" :access="['project', 'project-add', 'project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="DownloadIcon" />
                       </template>

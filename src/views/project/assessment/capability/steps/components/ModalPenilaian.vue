@@ -161,7 +161,7 @@ watch(() => [props.isShow], () => {
 
     <template #footer>
       <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Penilaian"
-        :disabled="!formState.capability_answer_id">
+        :disabled="!formState.capability_answer_id" :access="['project-add', 'project-edit' ]">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

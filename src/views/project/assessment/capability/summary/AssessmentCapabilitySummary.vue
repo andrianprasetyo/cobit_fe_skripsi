@@ -81,7 +81,7 @@ onMounted(() => {
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <BaseButton @click="handleExport" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Export Summary">
+            title="Export Summary" :access="['project']">
             <template #icon-left>
               <TablerIcon icon="FileExportIcon" />
             </template>

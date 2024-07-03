@@ -217,7 +217,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari Capability Level" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Tambah Capability Level">
+                title="Tambah Capability Level" :access="['master-add']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -307,14 +307,15 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #item-action="item">
               <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Edit ${item.item?.subkode || ''}`"
-                  @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })" class="btn btn-icon">
+                  @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })" class="btn btn-icon" :access="['master-edit']">
                   <template #icon-left>
                     <TablerIcon icon="EditIcon" />
                   </template>
                 </BaseButton>
 
                 <BaseButton v-tooltip="`Hapus ${item.item?.subkode || ''}`"
-                  @click="handleDelete({ title: item.item?.domain?.kode, id: item.item?.id })" class="btn btn-icon">
+                  @click="handleDelete({ title: item.item?.domain?.kode, id: item.item?.id })" class="btn btn-icon"
+                  :access="['master-delete']">
                   <template #icon-left>
                     <TablerIcon icon="TrashIcon" />
                   </template>

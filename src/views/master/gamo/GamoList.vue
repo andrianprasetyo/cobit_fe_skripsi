@@ -191,14 +191,14 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari GAMO" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
-                title="Tambah GAMO">
+                title="Tambah GAMO" :access="['master-add']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
               </BaseButton>
 
               <BaseButton @click="handleNavigateToCapabilityAnswer"
-                class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0 " title="Atur Jawaban Capability">
+                class="btn btn-outline-primary ms-0 ms-md-3 mt-3 mt-md-0 " title="Atur Jawaban Capability" :access="['master-add', 'master-edit']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="AdjustmentsIcon" />
                 </template>
@@ -236,7 +236,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Capability Level ${item.item?.kode || ''}`"
                   @click="handleNavigateToCapabilityLevel({ id: item?.item?.id, title: item.item?.kode })"
-                  class="btn btn-icon">
+                  class="btn btn-icon" :access="['master']">
                   <template #icon-left>
                     <TablerIcon icon="ChartBarIcon" />
                   </template>
@@ -254,7 +254,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li>
                       <BaseButton @click="handleNavigateToEdit({ id: item?.item?.id })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['master-edit']">
                         <template #icon-left>
                           <TablerIcon icon="EditIcon" />
                           <span class="ms-2">
@@ -279,7 +279,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                     </li>
                     <li>
                       <BaseButton @click="handleDelete({ title: item?.item?.kode, id: item?.item?.id })"
-                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger">
+                        class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger"
+                        :access="['master-delete']">
                         <template #icon-left>
                           <TablerIcon icon="TrashIcon" />
                           <span class="ms-2">

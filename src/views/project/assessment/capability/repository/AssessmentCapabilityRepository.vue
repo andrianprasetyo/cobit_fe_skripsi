@@ -212,7 +212,7 @@ watch(() => [serverOptions.value, filter.value], () => {
           <SearchInput v-model="filter.search" placeholder="Cari File" />
 
           <BaseButton @click="handleToggleModalUploadMediaFile" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Upload File">
+            title="Upload File" :access="['project', 'project-add', 'project-edit']">
             <template #icon-left>
               <TablerIcon icon="UploadIcon" />
             </template>

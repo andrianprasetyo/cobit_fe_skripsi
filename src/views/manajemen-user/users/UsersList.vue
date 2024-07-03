@@ -249,7 +249,7 @@ watch(() => [serverOptions.value, filter.value], () => {
               <SearchInput v-model="filter.search" placeholder="Cari Users" />
 
               <BaseButton @click="handleNavigateAdd" class="btn btn-primary ms-0 ms-md-3 mt-3 mt-md-0 "
-                title="Tambah Users">
+                title="Tambah Users" :access="['manuser-add']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="PlusIcon" />
                 </template>
@@ -335,7 +335,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #item-action="item">
               <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Edit User ${item.item?.username || ''}`"
-                  @click="handleNavigateToEdit({ id: item?.item?.id })" class="btn btn-icon">
+                  @click="handleNavigateToEdit({ id: item?.item?.id })" class="btn btn-icon" :access="['manuser-edit']">
                   <template #icon-left>
                     <TablerIcon icon="EditIcon" />
                   </template>

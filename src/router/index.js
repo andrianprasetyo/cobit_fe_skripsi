@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAppConfig } from '@/stores/appConfig'
 import { useAuth } from '@/stores/auth'
-
-/* Check Access Meta
-
-import { useAuth } from '@/stores/auth'
 import { useToast } from 'vue-toastification'
 
+import ToastificationContent from '@/components/Toastification/ToastificationContent.vue'
+
+/* 
+  Check Access Meta
+*/
 
 function userHasMenuAccess(to, from, next) {
   const { key } = to.meta
@@ -18,16 +19,22 @@ function userHasMenuAccess(to, from, next) {
       let isIncluded = auth.access.includes(key[i])
 
       if (isIncluded) {
-        return next
+        return next()
       } else {
-        toast.error({ title: 'Akses Ditolak', text: `Anda Tidak Memiliki Akses` })
+        toast.error({
+          component: ToastificationContent,
+          props: {
+            title: 'Akses Ditolak',
+            text: `Anda Tidak Memiliki Akses`,
+            icon: 'AlertTriangleIcon'
+          }
+        })
 
         return next(from.fullPath)
       }
     }
   }
 }
-*/
 
 function setMenuToProject(_, __, next) {
   const auth = useAuth()
@@ -98,6 +105,7 @@ const router = createRouter({
               component: () => import('@/views/master/grup-jawaban/GrupJawabanList.vue'),
               meta: {
                 pageTitle: 'Grup Jawaban',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -114,7 +122,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahGrupJawaban',
@@ -123,6 +132,7 @@ const router = createRouter({
               meta: {
                 pageTitle: 'Tambah Grup Jawaban',
                 layout: 'AppLayoutAdmin',
+                key: ['master-add'],
                 requiredAuth: true,
                 breadcrumb: [
                   {
@@ -144,7 +154,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditGrupJawaban',
@@ -153,6 +164,7 @@ const router = createRouter({
               meta: {
                 pageTitle: 'Edit Grup Jawaban',
                 layout: 'AppLayoutAdmin',
+                key: ['master-edit'],
                 requiredAuth: true,
                 breadcrumb: [
                   {
@@ -174,7 +186,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
 
             {
@@ -183,6 +196,7 @@ const router = createRouter({
               component: () => import('@/views/master/design-factor/DesignFactorList.vue'),
               meta: {
                 pageTitle: 'Design Factor',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -199,7 +213,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahDesignFactor',
@@ -207,6 +222,7 @@ const router = createRouter({
               component: () => import('@/views/master/design-factor/DesignFactorAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Design Factor',
+                key: ['master-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -229,7 +245,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditDesignFactor',
@@ -237,6 +254,7 @@ const router = createRouter({
               component: () => import('@/views/master/design-factor/DesignFactorEdit.vue'),
               meta: {
                 pageTitle: 'Edit Design Factor',
+                key: ['master-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -259,7 +277,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'QuestionDesignFactor',
@@ -267,6 +286,7 @@ const router = createRouter({
               component: () => import('@/views/master/design-factor/DesignFactorQuestion.vue'),
               meta: {
                 pageTitle: 'Question Design Factor',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -289,7 +309,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'KomponenDesignFactor',
@@ -297,6 +318,7 @@ const router = createRouter({
               component: () => import('@/views/master/design-factor/DesignFactorComponent.vue'),
               meta: {
                 pageTitle: 'Komponen Design Factor',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -319,7 +341,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'OverviewDesignFactor',
@@ -328,6 +351,7 @@ const router = createRouter({
               meta: {
                 pageTitle: 'Overview Design Factor',
                 layout: 'AppLayoutAdmin',
+                key: ['master'],
                 requiredAuth: true,
                 breadcrumb: [
                   {
@@ -349,7 +373,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
 
             {
@@ -358,6 +383,7 @@ const router = createRouter({
               component: () => import('@/views/master/gamo/GamoList.vue'),
               meta: {
                 pageTitle: 'Governance and Management Objectives (GAMO)',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -374,7 +400,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahGAMO',
@@ -382,6 +409,7 @@ const router = createRouter({
               component: () => import('@/views/master/gamo/GamoAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Governance and Management Objectives (GAMO)',
+                key: ['master-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -404,7 +432,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditGAMO',
@@ -412,6 +441,7 @@ const router = createRouter({
               component: () => import('@/views/master/gamo/GamoEdit.vue'),
               meta: {
                 pageTitle: 'Edit Governance and Management Objectives (GAMO)',
+                key: ['master-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -434,7 +464,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
 
             {
@@ -443,6 +474,7 @@ const router = createRouter({
               component: () => import('@/views/master/gamo/capability-answer/CapabilityAnswer.vue'),
               meta: {
                 pageTitle: 'Jawaban Capability',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -465,7 +497,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'CapabilityLevel',
@@ -474,6 +507,7 @@ const router = createRouter({
                 import('@/views/master/gamo/capability-level/CapabilityLevelList.vue'),
               meta: {
                 pageTitle: 'Capability Level',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -496,7 +530,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahCapabilityLevel',
@@ -505,6 +540,7 @@ const router = createRouter({
                 import('@/views/master/gamo/capability-level/CapabilityLevelAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Capability Level',
+                key: ['master-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -533,7 +569,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditCapabilityLevel',
@@ -542,6 +579,7 @@ const router = createRouter({
                 import('@/views/master/gamo/capability-level/CapabilityLevelEdit.vue'),
               meta: {
                 pageTitle: 'Edit Capability Level',
+                key: ['master-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -570,7 +608,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
 
             {
@@ -579,6 +618,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiList.vue'),
               meta: {
                 pageTitle: 'Organisasi',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -595,7 +635,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahOrganisasi',
@@ -603,6 +644,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Organisasi',
+                key: ['master-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -625,7 +667,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditOrganisasi',
@@ -633,6 +676,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiEdit.vue'),
               meta: {
                 pageTitle: 'Edit Organisasi',
+                key: ['master-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -655,7 +699,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'DivisiOrganisasi',
@@ -663,6 +708,7 @@ const router = createRouter({
               component: () => import('@/views/master/organisasi/OrganisasiDivisiDanJabatan.vue'),
               meta: {
                 pageTitle: 'Divisi & Jabatan Organisasi',
+                key: ['master'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -685,7 +731,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             }
           ]
         },
@@ -700,6 +747,7 @@ const router = createRouter({
               component: () => import('@/views/manajemen-user/users/UsersList.vue'),
               meta: {
                 pageTitle: 'Users',
+                key: ['manuser'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -716,7 +764,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahUsers',
@@ -724,6 +773,7 @@ const router = createRouter({
               component: () => import('@/views/manajemen-user/users/UsersAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Users',
+                key: ['manuser-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -746,7 +796,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditUsers',
@@ -754,6 +805,7 @@ const router = createRouter({
               component: () => import('@/views/manajemen-user/users/UsersEdit.vue'),
               meta: {
                 pageTitle: 'Edit Users',
+                key: ['manuser-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -776,7 +828,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
 
             {
@@ -785,6 +838,7 @@ const router = createRouter({
               component: () => import('@/views/manajemen-user/roles/RolesList.vue'),
               meta: {
                 pageTitle: 'Roles',
+                key: ['manuser'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -801,7 +855,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'TambahRoles',
@@ -809,6 +864,7 @@ const router = createRouter({
               component: () => import('@/views/manajemen-user/roles/RolesAdd.vue'),
               meta: {
                 pageTitle: 'Tambah Roles',
+                key: ['manuser-add'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -831,7 +887,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             },
             {
               name: 'EditRoles',
@@ -839,6 +896,7 @@ const router = createRouter({
               component: () => import('@/views/manajemen-user/roles/RolesEdit.vue'),
               meta: {
                 pageTitle: 'Edit Roles',
+                key: ['manuser-edit'],
                 layout: 'AppLayoutAdmin',
                 requiredAuth: true,
                 breadcrumb: [
@@ -861,7 +919,8 @@ const router = createRouter({
                     active: true
                   }
                 ]
-              }
+              },
+              beforeEnter: userHasMenuAccess
             }
           ]
         },

@@ -100,7 +100,7 @@ watch(() => [props.isShow], () => {
                 class="d-flex justify-content-center align-items-center bg-light">
                 <BaseButton
                   @click="handleDownloadFile({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
-                  title="Download File">
+                  title="Download File" :access="['project', 'project-add', 'project-edit']">
                   <template #icon-left>
                     <TablerIcon icon="DownloadIcon" />
                   </template>
@@ -116,7 +116,7 @@ watch(() => [props.isShow], () => {
               <div v-else class="d-flex justify-content-center align-items-center bg-light">
                 <BaseButton
                   @click="handleDownloadFile({ url: pathSource(assessmentStore.capability.selectedMediaFile?.docs?.path) })"
-                  title="Download File">
+                  title="Download File" :access="['project', 'project-add', 'project-edit']">
                   <template #icon-left>
                     <TablerIcon icon="DownloadIcon" />
                   </template>

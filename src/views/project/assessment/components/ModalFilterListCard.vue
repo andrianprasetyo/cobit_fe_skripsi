@@ -120,7 +120,7 @@ watch(
     </template>
 
     <template #footer>
-      <BaseButton title="Filter" @click="handleSubmit" :disabled="!filterState.organisasi_id" />
+      <BaseButton title="Filter" @click="handleSubmit" :disabled="!filterState.organisasi_id" :access="['project']" />
     </template>
   </BaseModal>
 </template>

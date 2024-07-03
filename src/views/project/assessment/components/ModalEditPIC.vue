@@ -263,7 +263,7 @@ watch(() => [formState.pic_divisi], () => {
 
     <template #footer>
       <BaseButton @click="onSubmit" title="Simpan Perubahan" :disabled="formState.loadingSubmit"
-        :is-loading="formState.loadingSubmit">
+        :is-loading="formState.loadingSubmit" :access="['project-add', 'project-edit']">
         <template #icon-left>
           <TablerIcon icon="DeviceFloppyIcon" />
         </template>

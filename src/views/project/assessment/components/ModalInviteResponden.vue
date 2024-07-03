@@ -267,7 +267,7 @@ const handleSubmit = () => {
     <template #footer>
       <BaseButton @click="handleSubmit" title="Simpan"
         :disabled="formState.loadingSubmit || (isInviteByEmail && !formState.emails.length) || (isInviteByExcel && !formState.files.length)"
-        :is-loading="formState.loadingSubmit">
+        :is-loading="formState.loadingSubmit" :access="['project-add', 'project-edit']">
         <template #icon-left>
           <TablerIcon icon="DeviceFloppyIcon" />
         </template>
