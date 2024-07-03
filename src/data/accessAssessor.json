@@ -1,9 +1,9 @@
 [
   "dashboard",
-  "manuser-organisasi",
-  "manuser-organisasi-add",
-  "manuser-organisasi-edit",
-  "manuser-organisasi-delete",
+  "master-organisasi",
+  "master-organisasi-add",
+  "master-organisasi-edit",
+  "master-organisasi-delete",
   "project",
   "project-add",
   "project-edit",
