@@ -12,7 +12,7 @@ export default {
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
-      }`
+      }${payload?.nopaging ? `&nopaging=${payload?.nopaging}` : ''}`
     )
   },
 

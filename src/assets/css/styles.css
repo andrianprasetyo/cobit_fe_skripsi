@@ -349,7 +349,6 @@ body {
   min-width: 1000px;
 }
 
-
 /* Transitions */
 
 /* Zoom Fade */
@@ -597,4 +596,8 @@ body {
 
 .cursor-not-allowed {
   cursor: not-allowed;
+}
+
+.vue3-easy-data-table__main thead > tr > th:nth-child(1) {
+  width: 75px !important;
 }

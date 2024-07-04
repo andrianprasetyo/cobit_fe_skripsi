@@ -12,11 +12,12 @@ import OrganisasiServices from '@/services/lib/organisasi'
 
 import { useAlert } from '@/stores/alert'
 import { useToast } from '@/stores/toast'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const alert = useAlert()
 const toast = useToast()
 const route = useRoute()
+const router = useRouter()
 
 /* ---------------------------------- STATE --------------------------------- */
 const divisi = reactive({
@@ -149,6 +150,15 @@ const toggleModalDivisi = () => {
   }
 }
 
+const handleNavigateToMappingDesignFactor = ({ organisasi_nama, divisi_nama, organisasi_id, divisi_id }) => {
+  router.push({
+    path: `/master/organisasi/${organisasi_id}/divisi-dan-jabatan/${divisi_id}/mapping-design-factor`, query: {
+      organisasi: organisasi_nama,
+      divisi: divisi_nama
+    }
+  })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 
 onMounted(() => {
@@ -188,7 +198,8 @@ watch(() => [serverOptions.value, filter.value], () => {
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <SearchInput v-model="filter.search" placeholder="Cari Divisi" />
 
-          <BaseButton @click="toggleModalDivisi" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Divisi" :access="['master-organisasi-add', 'master-organisasi-edit']">
+          <BaseButton @click="toggleModalDivisi" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Tambah Divisi"
+            :access="['master-organisasi-add', 'master-organisasi-edit']">
             <template #icon-left>
               <TablerIcon size="16" icon="PlusIcon" />
             </template>
@@ -210,7 +221,7 @@ watch(() => [serverOptions.value, filter.value], () => {
                 <h6 class="fw-semibold mb-0 text-dark mb-3">Daftar Jabatan {{ item.item?.nama }} :</h6>
                 <ol>
                   <li v-for="(jabatan, index) in item.item.jabatans" :key="`jabatan-${index}-${jabatan?.id}`">{{
-                    jabatan?.nama }}</li>
+            jabatan?.nama }}</li>
                 </ol>
               </template>
 
@@ -221,8 +232,18 @@ watch(() => [serverOptions.value, filter.value], () => {
 
         <template #item-action="item">
           <div class="d-flex align-items-center">
+            <BaseButton v-if="item?.item?.is_specific_df"
+              v-tooltip="`Atur Design Factor Untuk Divisi ${item.item?.nama || ''}`"
+              @click="handleNavigateToMappingDesignFactor({ organisasi_id: item?.item?.organisasi?.id, divisi_id: item?.item?.id, organisasi_nama: item?.item?.organisasi?.nama, divisi_nama: item?.item?.nama })"
+              class="btn btn-icon" :access="['master-organisasi-add', 'master-organisasi-edit']">
+              <template #icon-left>
+                <TablerIcon icon="ClipboardListIcon" />
+              </template>
+            </BaseButton>
+
             <BaseButton v-tooltip="`Edit Divisi ${item.item?.nama || ''}`"
-              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon" :access="['master-organisasi-add', 'master-organisasi-edit']">
+              @click="handleShowModalEdit({ item: item.item })" class="btn btn-icon"
+              :access="['master-organisasi-add', 'master-organisasi-edit']">
               <template #icon-left>
                 <TablerIcon icon="EditIcon" />
               </template>

@@ -92,7 +92,8 @@ const limitVisiblePages = computed(() => {
     <Vue3EasyDataTable ref="dataTable" table-class-name="customize-table pb-0"
       header-item-class-name="text-center align-middle" :headers="props.headers" :items="props.items" buttons-pagination
       show-index border-cell rows-per-page-message="Per Halaman" :rows-items="props.rowsItems" show-index-symbol='No'
-      rows-of-page-separator-message="dari" theme-color="#203058" hide-footer :max-pagination-number="5" v-bind="$attrs">
+      rows-of-page-separator-message="dari" theme-color="#203058" hide-footer :max-pagination-number="5"
+      v-bind="$attrs">
 
       <template #loading>
         <slot v-if="slots['loading']" name="loading" />

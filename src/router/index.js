@@ -733,6 +733,45 @@ const router = createRouter({
                 ]
               },
               beforeEnter: userHasMenuAccess
+            },
+            {
+              name: 'OrganisasiDivisiMappingDesignFactor',
+              path: '/master/organisasi/:id/divisi-dan-jabatan/:divisi_id/mapping-design-factor',
+              component: () =>
+                import('@/views/master/organisasi/OrganisasiDivisiMappingDesignFactor.vue'),
+              meta: {
+                pageTitle: 'Atur Design Factor Berdasarkan Divisi',
+                key: ['master-organisasi-edit'],
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Master',
+                    disabled: false,
+                    href: '/master',
+                    active: false
+                  },
+                  {
+                    text: 'Organisasi',
+                    disabled: false,
+                    href: '/master/organisasi',
+                    active: false
+                  },
+                  {
+                    text: 'Divisi & Jabatan Organisasi',
+                    disabled: false,
+                    href: '/master/organisasi/:id/divisi-dan-jabatan',
+                    active: false
+                  },
+                  {
+                    text: 'Atur Design Factor Berdasarkan Divisi',
+                    disabled: true,
+                    href: '/master/organisasi/:id/divisi-dan-jabatan/:divisi_id/mapping-design-factor',
+                    active: true
+                  }
+                ]
+              },
+              beforeEnter: userHasMenuAccess
             }
           ]
         },
