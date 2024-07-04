@@ -59,10 +59,10 @@ export default {
 
   /**
    *
-   * @param {assesment_user_id} payload
+   * @param {responden_id, assesment_id} payload
    * @returns
    */
   backToFillFormData(payload) {
-    return axiosClient.post(`quisioner/response/back-form-fill-data`, payload)
+    return axiosClient.post(`quisioner/responden/reset`, payload)
   }
 }

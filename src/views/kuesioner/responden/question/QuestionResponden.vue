@@ -20,11 +20,12 @@ import { formatDateMoments } from '@/utils/momentDateFormat'
 
 import { useToast } from '@/stores/toast'
 import { useKuesionerStore } from '@/views/kuesioner/kuesionerStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAlert } from '@/stores/alert'
 
 const alert = useAlert()
 const router = useRouter()
+const route = useRoute()
 const toast = useToast()
 const quesioner = useKuesionerStore()
 
@@ -48,6 +49,8 @@ const questions = reactive({
     total: 0,
   },
 })
+
+const codeQuery = computed(() => route.query?.code)
 
 const isLastQuestion = computed(() => {
   if (quesioner.question.currentQuestion === questions.meta.total) {
@@ -263,7 +266,10 @@ const finishQuisioner = async () => {
 
 const backToFillFormData = async () => {
   try {
-    const response = await QuisionerServices.backToFillFormData({ assesment_user_id: quesioner?.responden?.id });
+    const response = await QuisionerServices.backToFillFormData({
+      responden_id: quesioner?.responden?.id,
+      assesment_id: quesioner?.responden?.assesment_id
+    });
 
     if (response) {
       quesioner.$patch({
@@ -397,8 +403,7 @@ const handleBackToFillFormData = () => {
         const response = await backToFillFormData()
 
         if (response) {
-          const data = response?.data;
-          handleNavigateToFillFormData({ code: data?.code })
+          handleNavigateToFillFormData({ code: codeQuery.value })
           alert.instance().close()
         }
       } catch (error) {
@@ -485,7 +490,7 @@ watch(() => [quesioner.question.currentQuestion], () => {
           <div class="card-header">
             <div class="d-flex">
               <BaseButton v-tooltip="`Kembali ke Pengisian Data Diri`"
-                class="btn btn-navigation-question btn-danger me-3 d-none" @click="handleBackToFillFormData">
+                class="btn btn-navigation-question btn-danger me-3" @click="handleBackToFillFormData">
                 <template #icon-left>
                   <TablerIcon icon="ArrowLeftIcon" />
                 </template>
