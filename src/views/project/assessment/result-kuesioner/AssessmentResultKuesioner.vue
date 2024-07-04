@@ -135,9 +135,11 @@ onMounted(() => {
                   <template v-for="(headerItem, headerIndex) in resultKuesioner.data.header"
                     :key="`header-${headerItem?.id}-${headerItem?.nama}-${headerItem?.sorting}-${headerIndex}`">
                     <th class="text-center bg-light text-primary" colspan="2">
+                      <p class="mb-1 fst-italic fw-light">{{ headerItem?.kode }}</p>
                       <span>
                         {{ headerItem?.nama }}
                       </span>
+
                     </th>
                   </template>
                 </tr>
@@ -162,17 +164,20 @@ onMounted(() => {
                   :key="`kuesioner-${kuesionerItem?.id}-${kuesionerItem?.nama}-${kuesionerIndex}`">
                   <tr>
                     <td class="width-75px text-center align-content-center sticky-col">{{ kuesionerIndex + 1 }}</td>
-                    <td class="width-150px text-center align-content-center sticky-col">{{ kuesionerItem?.nama_responden
-                      }}</td>
-                    <td class="width-150px text-center align-content-center sticky-col">{{ kuesionerItem?.nama_jabatan
-                      }}</td>
-                    <td class="width-150px text-center align-content-center sticky-col">{{ kuesionerItem?.nama_divisi }}
+                    <td class="width-150px text-center align-content-center sticky-col">
+                      {{ kuesionerItem?.nama_responden }}
+                    </td>
+                    <td class="width-150px text-center align-content-center sticky-col">
+                      {{ kuesionerItem?.nama_jabatan }}
+                    </td>
+                    <td class="width-150px text-center align-content-center sticky-col">
+                      {{ kuesionerItem?.nama_divisi }}
                     </td>
 
                     <template
                       v-if="Array.isArray(kuesionerItem?.jawaban_quesioner) && kuesionerItem?.jawaban_quesioner?.length">
                       <template v-for="(jawabanKuesioner, indexJawabanKuesioner) in kuesionerItem?.jawaban_quesioner"
-                        :key="`jawaban-kuesioner-${indexJawabanKuesioner}`">
+                        :key="`jawaban-kuesioner-${jawabanKuesioner?.jawaban?.id}-${indexJawabanKuesioner}`">
                         <td class="text-center align-content-center">
                           {{ jawabanKuesioner?.jawaban?.jawaban }}
                         </td>
