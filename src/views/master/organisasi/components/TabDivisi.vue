@@ -232,8 +232,7 @@ watch(() => [serverOptions.value, filter.value], () => {
 
         <template #item-action="item">
           <div class="d-flex align-items-center">
-            <BaseButton v-if="item?.item?.is_specific_df"
-              v-tooltip="`Atur Design Factor Untuk Divisi ${item.item?.nama || ''}`"
+            <BaseButton v-tooltip="`Atur Design Factor Untuk Divisi ${item.item?.nama || ''}`"
               @click="handleNavigateToMappingDesignFactor({ organisasi_id: item?.item?.organisasi?.id, divisi_id: item?.item?.id, organisasi_nama: item?.item?.organisasi?.nama, divisi_nama: item?.item?.nama })"
               class="btn btn-icon" :access="['master-organisasi-add', 'master-organisasi-edit']">
               <template #icon-left>

@@ -25,8 +25,10 @@ const formState = reactive({
   loadingSubmit: false,
   nama: '',
   deskripsi: '',
+  /*
   divisi: [],
   jabatan: []
+  */
 })
 
 const rules = computed(() => {
@@ -37,12 +39,14 @@ const rules = computed(() => {
     deskripsi: {
       required: helpers.withMessage("Silahkan isi deskripsi", required)
     },
+    /*
     divisi: {
       required: helpers.withMessage("Silahkan isi divisi", required),
     },
     jabatan: {
       required: helpers.withMessage("Silahkan isi jabatan", required)
     }
+    */
   }
 })
 
@@ -52,7 +56,7 @@ const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 const handleBack = () => {
   router.back()
 }
-
+/*
 const dropdownDivisiShouldOpen = (VueSelect) => {
   if (VueSelect.search?.length) {
     return VueSelect.open;
@@ -68,6 +72,7 @@ const dropdownJabatanShouldOpen = (VueSelect) => {
     return false;
   }
 }
+*/
 
 const handleSubmit = async () => {
   const result = await v$.value.$validate()
@@ -142,7 +147,8 @@ const handleSubmit = async () => {
             <ErrorMessage :errors="v$.deskripsi.$errors" />
           </div>
 
-          <div class="mb-3">
+          
+          <!-- <div class="mb-3">
             <label class="form-label" for="divisi">Daftar Divisi</label>
 
             <v-select id="divisi" taggable multiple v-model="formState.divisi" placeholder="Tambahkan Divisi"
@@ -194,7 +200,7 @@ const handleSubmit = async () => {
             </v-select>
 
             <ErrorMessage :errors="v$.jabatan.$errors" />
-          </div>
+          </div> -->
         </div>
       </div>
 
