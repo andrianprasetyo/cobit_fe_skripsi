@@ -5,6 +5,7 @@ import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
+import BaseCheckboxInputWithVModel from '@/components/Input/BaseCheckboxInputWithVModel.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
 import OrganisasiServices from '@/services/lib/organisasi'
@@ -38,7 +39,8 @@ const emits = defineEmits(['close', 'refresh'])
 /* ---------------------------------- STATE --------------------------------- */
 const formState = reactive({
   loadingSubmit: false,
-  nama: ''
+  nama: '',
+  is_specific_df: false
 })
 
 const rules = computed(() => {
@@ -73,7 +75,8 @@ const handleSubmit = async () => {
 
       const response = await OrganisasiServices.createDivisi({
         nama: formState.nama,
-        organisasi_id: route.params?.id
+        is_specific_df: formState.is_specific_df,
+        organisasi_id: route.params?.id,
       })
 
       if (response) {
@@ -103,6 +106,7 @@ const handleSubmitEdit = async () => {
 
       const response = await OrganisasiServices.editDivisi({
         id: props.selectedDivisi?.id,
+        is_specific_df: formState.is_specific_df,
         nama: formState.nama,
       })
 
@@ -132,10 +136,12 @@ const onSubmit = () => {
 
 const setValueToForm = () => {
   formState.nama = props.selectedDivisi?.nama || ''
+  formState.is_specific_df = !!props?.selectedDivisi?.is_specific_df
 }
 
 const resetState = () => {
   formState.nama = ''
+  formState.is_specific_df = false
 }
 
 watch(() => [props.isOnEdit], () => {
@@ -147,8 +153,8 @@ watch(() => [props.isOnEdit], () => {
 </script>
 
 <template>
-  <BaseModal id="organisasi_divisi" :order="1" :open="props.isShow" :showBtnCloseFooter="false" classNameModal="modal-lg"
-    @close="handleClose">
+  <BaseModal id="organisasi_divisi" :order="1" :open="props.isShow" :showBtnCloseFooter="false"
+    classNameModal="modal-lg" @close="handleClose">
     <template #header>
       <h4 class="modal-title">
         {{ props.isOnEdit ? 'Edit' : 'Tambah' }} Divisi
@@ -157,9 +163,19 @@ watch(() => [props.isOnEdit], () => {
 
     <template #body>
       <div class="mb-3">
-        <BaseInput id="nama" v-model="v$.nama.$model" label="Nama Divisi" placeholder="Masukkan Nama Divisi" tabindex="1"
-          :isInvalid="v$.nama.$errors?.length" :disabled="formState.loadingSubmit" />
+        <BaseInput id="nama" v-model="v$.nama.$model" label="Nama Divisi" placeholder="Masukkan Nama Divisi"
+          tabindex="1" :isInvalid="v$.nama.$errors?.length" :disabled="formState.loadingSubmit" />
         <ErrorMessage :errors="v$.nama.$errors" />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="is_specific_df">
+          Apakah Design Factor Spesifik?
+        </label>
+
+        <BaseCheckboxInputWithVModel id="is_specific_df" name="is_specific_df" label="Ya"
+          v-model="formState.is_specific_df" :true-value="true" :false-value="false"
+          :disabled="formState.loadingSubmit" />
       </div>
     </template>
 

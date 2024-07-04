@@ -71,6 +71,15 @@ export default {
 
   /**
    *
+   * @param {id} payload
+   * @returns
+   */
+  getDetailDivisi(payload) {
+    return axiosClient.get(`organisasi-divisi/detail/${payload?.id}`)
+  },
+
+  /**
+   *
    * @param {nama, jenis, organisasi_id} payload
    * @returns
    */
@@ -94,6 +103,24 @@ export default {
    */
   deleteDivisi(payload) {
     return axiosClient.delete(`organisasi-divisi/remove/${payload?.id}`)
+  },
+
+  /**
+   *
+   * @param {{id: String}} payload
+   * @returns
+   */
+  mappingDesignFactorDivisi(payload) {
+    return axiosClient.post(`organisasi-divisi/map-df/${payload?.id}`, payload)
+  },
+
+  /**
+   *
+   * @param {{id: String}} payload
+   * @returns
+   */
+  getSelectedDesignFactorByDivisi(payload) {
+    return axiosClient.get(`organisasi-divisi/map-df/${payload?.id}`)
   },
 
   /**
