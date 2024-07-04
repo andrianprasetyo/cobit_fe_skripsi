@@ -261,6 +261,26 @@ const finishQuisioner = async () => {
   }
 }
 
+const backToFillFormData = async () => {
+  try {
+    const response = await QuisionerServices.backToFillFormData({ assesment_user_id: quesioner?.responden?.id });
+
+    if (response) {
+      quesioner.$patch({
+        question: {
+          currentQuestion: 1
+        }
+      })
+
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+
+}
+
 const scrollToTop = () => {
   const scrollbar = rootTemplate.value;
 
@@ -360,6 +380,34 @@ const handleBack = async () => {
   }
 }
 
+const handleNavigateToFillFormData = ({ code }) => {
+  router.replace({ path: '/kuesioner/responden', query: { code } })
+}
+
+const handleBackToFillFormData = () => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Kembali ke Pengisian Data`,
+    footer: `
+        <span class="text-danger">[Perhatian]</span> <br /> <span class="fst-italic">Semua jawaban dipilih akan hilang jika dikonfirmasi</span>
+    `,
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await backToFillFormData()
+
+        if (response) {
+          const data = response?.data;
+          handleNavigateToFillFormData({ code: data?.code })
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
+}
+
 const handleNavigateFinish = () => {
   router.replace({ path: '/kuesioner/responden/question/finish' })
 }
@@ -399,7 +447,6 @@ watch(() => [quesioner.question.currentQuestion], () => {
     getNavigationQuestion({ assesment_id: quesioner.responden.assesment?.id, responden_id: quesioner?.responden?.id })
   }
 }, { deep: true })
-
 </script>
 
 <template>
@@ -435,17 +482,29 @@ watch(() => [quesioner.question.currentQuestion], () => {
         <DesignFactorHeader :nama="question?.nama" :deskripsi="question?.deskripsi" />
 
         <div class="card">
-          <div v-if="Array.isArray(questions.navigation) && questions.navigation.length" class="card-header">
-            <div class="d-flex flex-row flex-wrap gap-3">
-              <template v-for="(item, index) in questions.navigation" :key="`navigation-${index}`">
-                <BaseButton @click="handleClickNavigation({ number: item?.urutan })" class="btn btn-navigation-question"
-                  :class="{
+          <div class="card-header">
+            <div class="d-flex">
+              <BaseButton v-tooltip="`Kembali ke Pengisian Data Diri`"
+                class="btn btn-navigation-question btn-danger me-3 d-none" @click="handleBackToFillFormData">
+                <template #icon-left>
+                  <TablerIcon icon="ArrowLeftIcon" />
+                </template>
+              </BaseButton>
+
+              <template v-if="Array.isArray(questions.navigation) && questions.navigation.length">
+                <div class="d-flex flex-row flex-wrap gap-3">
+                  <template v-for="(item, index) in questions.navigation" :key="`navigation-${index}`">
+                    <BaseButton @click="handleClickNavigation({ number: item?.urutan })"
+                      class="btn btn-navigation-question" :class="{
       'btn-success': item?.terisi && item.urutan !== quesioner.question.currentQuestion,
       'btn-primary': item?.urutan === quesioner.question.currentQuestion,
       'btn-outline-dark': !item?.terisi && item?.urutan !== quesioner.question.currentQuestion
     }" :title="item?.urutan" />
+                  </template>
+                </div>
               </template>
             </div>
+
           </div>
 
           <div class="card-body">

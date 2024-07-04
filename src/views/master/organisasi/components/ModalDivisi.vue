@@ -5,19 +5,22 @@ import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
-import BaseCheckboxInputWithVModel from '@/components/Input/BaseCheckboxInputWithVModel.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
+/*
+import BaseCheckboxInputWithVModel from '@/components/Input/BaseCheckboxInputWithVModel.vue'
+*/
 
 import OrganisasiServices from '@/services/lib/organisasi'
 
 import { useVuelidate } from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 
 const toast = useToast()
 const route = useRoute()
+const router = useRouter()
 const loading = useLoading()
 
 const props = defineProps({
@@ -40,8 +43,10 @@ const emits = defineEmits(['close', 'refresh'])
 const formState = reactive({
   loadingSubmit: false,
   nama: '',
-  is_specific_df: false
+  is_specific_df: true
 })
+
+const organisasiId = computed(() => route.params?.id);
 
 const rules = computed(() => {
   return {
@@ -53,6 +58,7 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, formState, { $autoDirty: false })
 
+
 /* --------------------------------- METHODS -------------------------------- */
 const handleClose = () => {
   emits('close', true)
@@ -62,6 +68,16 @@ const handleClose = () => {
 
 const handleRefreshList = () => {
   emits('refresh')
+}
+
+const handleNavigateToMappingDesignFactor = ({ organisasi_id, divisi_id, organisasi_nama, divisi_nama }) => {
+  router.push({
+    path: `/master/organisasi/${organisasi_id}/divisi-dan-jabatan/${divisi_id}/mapping-design-factor`,
+    query: {
+      organisasi: organisasi_nama,
+      divisi: divisi_nama
+    }
+  })
 }
 
 const handleSubmit = async () => {
@@ -80,12 +96,20 @@ const handleSubmit = async () => {
       })
 
       if (response) {
+        const data = response?.data;
+
         loader.hide()
         formState.loadingSubmit = false
         resetState()
         v$.value.$reset()
         handleClose()
-        handleRefreshList()
+
+        handleNavigateToMappingDesignFactor({
+          organisasi_id: organisasiId.value,
+          divisi_id: data?.id,
+          divisi_nama: data?.nama,
+          organisasi_nama: formState.nama
+        })
       }
     } catch (error) {
       loader.hide()
@@ -136,7 +160,6 @@ const onSubmit = () => {
 
 const setValueToForm = () => {
   formState.nama = props.selectedDivisi?.nama || ''
-  formState.is_specific_df = !!props?.selectedDivisi?.is_specific_df
 }
 
 const resetState = () => {
@@ -168,7 +191,7 @@ watch(() => [props.isOnEdit], () => {
         <ErrorMessage :errors="v$.nama.$errors" />
       </div>
 
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label class="form-label" for="is_specific_df">
           Apakah Design Factor Spesifik?
         </label>
@@ -176,7 +199,7 @@ watch(() => [props.isOnEdit], () => {
         <BaseCheckboxInputWithVModel id="is_specific_df" name="is_specific_df" label="Ya"
           v-model="formState.is_specific_df" :true-value="true" :false-value="false"
           :disabled="formState.loadingSubmit" />
-      </div>
+      </div> -->
     </template>
 
     <template #footer>

@@ -55,5 +55,14 @@ export default {
    */
   finishQuisioner(payload) {
     return axiosClient.post(`quisioner/responden/finish`, payload)
+  },
+
+  /**
+   *
+   * @param {assesment_user_id} payload
+   * @returns
+   */
+  backToFillFormData(payload) {
+    return axiosClient.post(`quisioner/response/back-form-fill-data`, payload)
   }
 }

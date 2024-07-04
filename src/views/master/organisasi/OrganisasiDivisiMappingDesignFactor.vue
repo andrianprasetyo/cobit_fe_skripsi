@@ -6,6 +6,7 @@ import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
 import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
+import BaseCheckboxInput from '@/components/Input/BaseCheckboxInput.vue'
 import BaseCheckboxInputWithVModel from '@/components/Input/BaseCheckboxInputWithVModel.vue'
 
 import DesignFactorServices from '@/services/lib/design-factor'
@@ -34,6 +35,13 @@ const divisiNama = computed(() => route.query?.divisi);
 const organisasiNama = computed(() => route?.query?.organisasi)
 
 const divisiId = computed(() => route.params?.divisi_id);
+
+const isCheckedAll = computed(() => {
+  return (
+    formState.listDesignFactor.data.length > 0 &&
+    formState.listDesignFactor.data.length === formState.selectedDesignFactor.length
+  )
+})
 
 /* --------------------------------- METHODS -------------------------------- */
 const getListDesignFactor = async ({ nopaging }) => {
@@ -82,6 +90,18 @@ const handleBack = () => {
   router.back()
 }
 
+const handleCheckAll = (event) => {
+  const isChecked = event.target.checked
+
+  if (isChecked) {
+    formState.listDesignFactor.data.map(item =>
+      formState.selectedDesignFactor.push(item?.id)
+    )
+  } else {
+    formState.selectedDesignFactor = []
+  }
+}
+
 const handleSubmit = async () => {
   const loader = loading.show()
   try {
@@ -120,15 +140,26 @@ onMounted(() => {
 
     <section>
       <div class="card">
+
         <div class="card-header">
-          <h5 class="card-title fw-semibold">
-            Atur Design Factor Berdasarkan Divisi
-          </h5>
-          <p class="card-subtitle mb-0">
-            Organisasi : <span class="fw-bold">{{ organisasiNama }}</span>
-            /
-            Divisi: <span class="fw-bold">{{ divisiNama }}</span>
-          </p>
+          <div
+            class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
+            <div class="mb-3 mb-sm-0">
+              <h5 class="card-title fw-semibold">
+                Atur Design Factor Berdasarkan Divisi
+              </h5>
+              <p class="card-subtitle mb-0">
+                Organisasi : <span class="fw-bold">{{ organisasiNama }}</span>
+                /
+                Divisi: <span class="fw-bold">{{ divisiNama }}</span>
+              </p>
+            </div>
+            <div
+              class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between mx-4">
+              <BaseCheckboxInput id="checkbox-check-all-access" class="form-check-input big-checkbox"
+                @change="handleCheckAll" :checked="isCheckedAll" :access="['master-organisasi-edit']" />
+            </div>
+          </div>
         </div>
 
         <div class="card-body">
@@ -195,3 +226,9 @@ onMounted(() => {
     </section>
   </div>
 </template>
+
+<style>
+.big-checkbox {
+  transform: scale(1.3) !important;
+}
+</style>
