@@ -152,7 +152,11 @@ const handleRedirectTo404 = () => {
 }
 
 const handleNavigateToQuestion = () => {
-  router.replace({ path: '/kuesioner/responden/question' })
+  router.replace({
+    path: '/kuesioner/responden/question', query: {
+      code: route.query?.code
+    }
+  })
 }
 
 const handleNavigateToFinishQuestion = () => {
@@ -207,6 +211,8 @@ watch(() => [formState.divisi], () => {
   if (formState.divisi) {
     handleSearchJabatan({ search: '' })
   }
+
+  formState.jabatan = ''
 }, { deep: true })
 
 </script>
@@ -295,7 +301,7 @@ watch(() => [formState.divisi], () => {
 
             <div class="row mb-3">
               <div class="col-12 col-md-6 mb-2 mb-md-0">
-                <label class="form-label" for="divisi">Divisi</label>
+                <label class="form-label" for="divisi">Divisi / Direktorat</label>
 
                 <v-select id="divisi" @search="(search) => handleSearchDivisi({ search })" :filterable="false"
                   :options="formState.listDivisi.data" v-model="formState.divisi"
