@@ -127,7 +127,7 @@ const handleSubmitEdit = async () => {
 
       const response = await OrganisasiServices.editJabatan({
         id: props.selectedJabatan?.id,
-        organisasi_divisi_id: formState.organisasi_divisi_id,
+        organisasi_divisi_id: formState.organisasi_divisi_id?.id,
         nama: formState.nama,
       })
 
