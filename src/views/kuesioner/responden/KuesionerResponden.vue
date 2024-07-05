@@ -263,7 +263,7 @@ watch(() => [formState.divisi], () => {
 
           <div class="row">
             <BaseAlert v-if="!isKuesionerAvailable" variant="danger">
-              <div>
+              <div class="d-flex flex-column flex-md-row">
                 <strong>Perhatian.</strong> Periode Kuisioner Belum Dimulai atau Sudah Terlewat.
                 <br />
                 <strong>Periode Kuesioner :</strong> {{ formatDate({
@@ -278,7 +278,8 @@ watch(() => [formState.divisi], () => {
             </BaseAlert>
 
             <BaseAlert v-else-if="isKuesionerAvailable" variant="primary">
-              <strong>Periode Kuesioner : </strong> {{ formatDate({
+              <div class="d-flex flex-column flex-md-row">
+                <strong>Periode Kuesioner : </strong> {{ formatDate({
       value:
         formState.detail?.assesment?.start_date_quisioner
     }) }} s/d {{
@@ -286,6 +287,7 @@ watch(() => [formState.divisi], () => {
         value:
           formState.detail?.assesment?.end_date_quisioner
       }) }}
+              </div>
             </BaseAlert>
 
             <hr />

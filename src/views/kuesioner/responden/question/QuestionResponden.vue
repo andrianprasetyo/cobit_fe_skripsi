@@ -658,7 +658,8 @@ watch(() => [quesioner.question.currentQuestion], () => {
 
       </div>
 
-      <div class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between">
+      <div
+        class="d-flex flex-column flex-md-row align-items-center justify-content-center justify-content-md-between mb-5 mb-md-3">
         <div>
           <BaseButton v-if="quesioner.question.currentQuestion > 1" @click="handleBack" title="Sebelumnya"
             class="btn btn-outline-primary" :disabled="questions.loadingSubmitBack || questions.loadingSubmit"
