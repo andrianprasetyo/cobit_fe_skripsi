@@ -14,7 +14,7 @@ import QuisionerServices from '@/services/lib/quisioner'
 import RespondenServices from '@/services/lib/responden'
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required, requiredIf, helpers } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useKuesionerStore } from '@/views/kuesioner/kuesionerStore'
 import { formatDateMoments, isSameOrBefore, isSameOrAfter } from '@/utils/momentDateFormat'
@@ -52,7 +52,7 @@ const rules = computed(() => {
       required: helpers.withMessage("Silahkan isi divisi", required)
     },
     jabatan: {
-      required: helpers.withMessage("Silahkan isi jabatan", required)
+      required: helpers.withMessage("Silahkan isi jabatan", requiredIf(false))
     }
   }
 })
@@ -170,13 +170,18 @@ const onSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await QuisionerServices.saveResponden({
+      let payload = {
         id: formState.detail?.id,
         assesment_id: formState?.detail?.assesment?.id,
         nama: formState.nama,
-        divisi_id: formState.divisi?.id,
-        jabatan_id: formState.jabatan?.id
-      })
+        divisi_id: formState.divisi?.id
+      }
+
+      if (formState.jabatan?.id) {
+        payload['jabatan_id'] = formState.jabatan?.id
+      }
+
+      const response = await QuisionerServices.saveResponden(payload);
 
       if (response) {
         const data = response?.data
