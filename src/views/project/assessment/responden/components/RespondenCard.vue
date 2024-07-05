@@ -395,7 +395,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             <li v-if="!isAssessmentDone">
               <BaseButton @click="toggleModalInviteResponden"
                 class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Undang Responden"
-                :access="['project-edit']">
+                :access="['project-invite-responden']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="SendIcon" class="me-2" />
                 </template>
