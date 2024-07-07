@@ -163,14 +163,19 @@ onMounted(() => {
                 <template v-for="(kuesionerItem, kuesionerIndex) in resultKuesioner.data.kuesioner"
                   :key="`kuesioner-${kuesionerItem?.id}-${kuesionerItem?.nama}-${kuesionerIndex}`">
                   <tr>
-                    <td class="width-75px text-center align-content-center sticky-col">{{ kuesionerIndex + 1 }}</td>
-                    <td class="width-150px text-center align-content-center sticky-col">
+                    <td class="width-75px text-center align-content-center text-truncate sticky-col">
+                      {{ kuesionerIndex + 1 }}
+                    </td>
+                    <td v-tooltip="`${kuesionerItem?.nama_responden}`"
+                      class="width-150px text-center align-content-center text-truncate sticky-col">
                       {{ kuesionerItem?.nama_responden }}
                     </td>
-                    <td class="width-150px text-center align-content-center sticky-col">
+                    <td v-tooltip="`${kuesionerItem?.nama_jabatan}`"
+                      class="width-150px text-center align-content-center text-truncate sticky-col">
                       {{ kuesionerItem?.nama_jabatan }}
                     </td>
-                    <td class="width-150px text-center align-content-center sticky-col">
+                    <td v-tooltip="`${kuesionerItem?.nama_divisi}`"
+                      class="width-150px text-center align-content-center text-truncate sticky-col">
                       {{ kuesionerItem?.nama_divisi }}
                     </td>
 
