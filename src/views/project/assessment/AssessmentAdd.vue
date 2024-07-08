@@ -494,16 +494,16 @@ onMounted(() => {
                 </template>
 
                 <template #option="option">
-                  <div class="d-flex flex-row align-items-center py-1 width-150px">
-                    <span class="me-2 fw-bold text-truncate">
+                  <div class="d-flex flex-row align-items-center py-1">
+                    <span class="me-2 fw-bold text-wrap">
                       {{ option.nama }}
                     </span>
                   </div>
                 </template>
 
                 <template #selected-option="option">
-                  <div class="d-flex flex-row align-items-center py-1 width-150px ">
-                    <span class="me-2 fw-bold text-truncate">
+                  <div class="d-flex flex-row align-items-center py-1">
+                    <span class="me-2 fw-bold text-wrap">
                       {{ option.nama }}
                     </span>
                   </div>
@@ -526,16 +526,16 @@ onMounted(() => {
                 </template>
 
                 <template #option="option">
-                  <div class="d-flex flex-row align-items-center py-1 width-150px">
-                    <span class="me-2 fw-bold text-truncate">
+                  <div class="d-flex flex-row align-items-center py-1">
+                    <span class="me-2 fw-bold text-wrap">
                       {{ option.nama }}
                     </span>
                   </div>
                 </template>
 
                 <template #selected-option="option">
-                  <div class="d-flex flex-row align-items-center py-1 width-150px ">
-                    <span class="me-2 fw-bold text-truncate">
+                  <div class="d-flex flex-row align-items-center py-1">
+                    <span class="me-2 fw-bold text-wrap">
                       {{ option.nama }}
                     </span>
                   </div>
