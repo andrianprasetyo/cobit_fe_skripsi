@@ -215,6 +215,7 @@ const saveJawaban = async ({ isLastQuestion = false, withScrollToTop = true }) =
   }
 }
 
+/*
 const saveJawabanBack = async () => {
   try {
     questions.loadingSubmitBack = true
@@ -239,6 +240,7 @@ const saveJawabanBack = async () => {
     throw error
   }
 }
+  */
 
 const finishQuisioner = async () => {
   try {
@@ -379,11 +381,21 @@ const handleForceFinish = async () => {
 
 const handleBack = async () => {
   if (quesioner.question.currentQuestion > 0) {
+    quesioner.$patch({
+      question: {
+        currentQuestion: quesioner.question.currentQuestion - 1
+      }
+    })
+  }
+
+  /* With Validation
+  if (quesioner.question.currentQuestion > 0) {
     const result = await v$.value.$validate()
     if (result) {
       saveJawabanBack({ isLastQuestion: false })
     }
   }
+  */
 }
 
 const handleNavigateToFillFormData = ({ code }) => {
