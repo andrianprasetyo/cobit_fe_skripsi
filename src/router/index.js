@@ -36,12 +36,15 @@ function userHasMenuAccess(to, from, next) {
   }
 }
 
-function setMenuToProject(_, __, next) {
+function setMenuToProject(to, _, next) {
   const auth = useAuth()
 
-  auth.setMenuToProject()
-
-  return next()
+  if (to?.params?.id && to?.params?.id != ':id') {
+    auth.setMenuToProject()
+    return next()
+  } else {
+    return next('/project/assessment')
+  }
 }
 
 const router = createRouter({

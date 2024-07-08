@@ -20,12 +20,14 @@ import { useToast } from '@/stores/toast'
 import { useRoute } from 'vue-router'
 import { useAlert } from '@/stores/alert'
 import { useAppConfig } from '@/stores/appConfig'
+import { useClipboard } from '@vueuse/core'
 
 const toast = useToast()
 const assessmentStore = useAssessmentStore()
 const route = useRoute()
 const alert = useAlert()
 const appConfig = useAppConfig()
+const { isSupported, copy } = useClipboard()
 
 /* ---------------------------- STATE & COMPUTED ---------------------------- */
 const responden = reactive({
@@ -321,6 +323,17 @@ const toggleModalUploadLaporan = () => {
   }
 }
 
+const handleCopyLinkKuesioner = ({ title, link }) => {
+  copy(link).then(() => {
+    toast.success({
+      title: 'Salink Link Kuesioner',
+      text: `Berhasil Menyalin Link Kuesioner ${title}`
+    })
+  }).catch(() => {
+    toast.error({ text: 'Gagal Menyalin Link Kuesioner' })
+  })
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   getListResponden({ limit: 10, page: 1, assesment_id: route.params?.id })
@@ -496,54 +509,63 @@ watch(() => [serverOptions.value, filter.value], () => {
         </template>
 
         <template #item-action="item">
-          <template v-if="!isAssessmentDone">
-            <div v-if="item.item?.status === 'diundang'" class="dropdown dropstart">
-              <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
-                id="dropdownMenuButton" aria-expanded="false" />
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li>
-                  <BaseButton @click="reinviteResponden({ id: item.item?.id, email: item?.item?.email })"
-                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-edit']">
-                    <template #icon-left>
-                      <TablerIcon icon="MailIcon" />
-                      <span class="ms-2">
-                        Kirim Ulang Undangan
-                      </span>
-                    </template>
-                  </BaseButton>
-                </li>
-
-                <li>
-                  <BaseButton
-                    @click="handleDeleteResponden({ title: item.item?.nama || item.item?.email, id: item.item?.id })"
-                    class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger"
-                    :access="['project-edit']">
-                    <template #icon-left>
-                      <TablerIcon icon="TrashIcon" />
-                      <span class="ms-2">
-                        Hapus Responden
-                      </span>
-                    </template>
-                  </BaseButton>
-                </li>
-
-                <!-- <li>
-                  <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
-                    <template #icon-left>
-                      <TablerIcon icon="ClipboardDataIcon" />
-                      <span class="ms-2">
-                        Lihat Hasil Quisioner
-                      </span>
-                    </template>
-                  </BaseButton>
-                </li> -->
-              </ul>
+          <div class="d-flex flex-row align-items-center">
+            <div v-if="item?.item?.status !== 'done' && isSupported" class="me-2">
+              <TablerIcon v-tooltip="`Salin Link Kuesioner ${item?.item?.nama || ''}`" icon="LinkIcon"
+                class="text-muted cursor-pointer"
+                @click="handleCopyLinkKuesioner({ link: item?.item?.quesioner_link, title: item?.item?.nama || item?.item?.email })" />
             </div>
-          </template>
 
-          <div v-if="item?.item?.status === 'done'">
-            <TablerIcon v-tooltip="`Lihat Hasil Kuesioner ${item?.item?.nama || ''}`" icon="CheckupListIcon"
-              class="text-muted cursor-pointer" @click="toggleModalResultKuesioner(item?.item)" />
+            <div v-if="item?.item?.status === 'done'" class="me-2">
+              <TablerIcon v-tooltip="`Lihat Hasil Kuesioner ${item?.item?.nama || ''}`" icon="CheckupListIcon"
+                class="text-muted cursor-pointer" @click="toggleModalResultKuesioner(item?.item)" />
+            </div>
+
+            <template v-if="!isAssessmentDone">
+              <div v-if="item.item?.status === 'diundang'" class="dropdown dropstart">
+                <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
+                  id="dropdownMenuButton" aria-expanded="false" />
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li>
+                    <BaseButton @click="reinviteResponden({ id: item.item?.id, email: item?.item?.email })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer d-none"
+                      :access="['project-edit']">
+                      <template #icon-left>
+                        <TablerIcon icon="MailIcon" />
+                        <span class="ms-2">
+                          Kirim Ulang Undangan
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <li>
+                    <BaseButton
+                      @click="handleDeleteResponden({ title: item.item?.nama || item.item?.email, id: item.item?.id })"
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger"
+                      :access="['project-edit']">
+                      <template #icon-left>
+                        <TablerIcon icon="TrashIcon" />
+                        <span class="ms-2">
+                          Hapus Responden
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li>
+
+                  <!-- <li>
+                    <BaseButton class="dropdown-item d-flex align-items-center gap-3 cursor-pointer">
+                      <template #icon-left>
+                        <TablerIcon icon="ClipboardDataIcon" />
+                        <span class="ms-2">
+                          Lihat Hasil Quisioner
+                        </span>
+                      </template>
+                    </BaseButton>
+                  </li> -->
+                </ul>
+              </div>
+            </template>
           </div>
         </template>
       </DataTable>
