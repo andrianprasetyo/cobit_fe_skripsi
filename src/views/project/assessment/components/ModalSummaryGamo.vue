@@ -145,7 +145,7 @@ watch(() => [serverOptions.value, props.isShow], () => {
         <div
           class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
           <BaseButton @click="exportSummaryGamo" class="btn btn-outline-primary" title="Export Summary"
-            :disabled="summary.loading">
+            :disabled="summary.loading" :access="['project-add', 'project-edit']">
             <template #icon-right>
               <TablerIcon size="16" icon="FileExportIcon" />
             </template>

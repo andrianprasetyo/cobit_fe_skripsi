@@ -133,7 +133,7 @@ onUnmounted(() => {
                 </template>
               </BaseButton>
 
-              <BaseButton @click="onSubmitAdjustment" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3"
+              <BaseButton @click="onSubmitAdjustment" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" :access="['project-add', 'project-edit']"
                 title="Simpan Perubahan" :disabled="state.loadingSubmit" :is-loading="state.loadingSubmit">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
