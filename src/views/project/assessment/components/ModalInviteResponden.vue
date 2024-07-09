@@ -109,6 +109,16 @@ const handleChangeFile = (event) => {
 }
 */
 
+const handleResetState = () => {
+  formState.inviteBy = '';
+  formState.emails = [];
+  formState.file = null;
+  formState.filename = '';
+  formState.files = [];
+
+  v$.value.$reset()
+}
+
 const onUpdateFiles = (files) => {
   if (files && files?.length) {
     const listFile = []
@@ -120,6 +130,7 @@ const onUpdateFiles = (files) => {
 }
 
 const handleClose = () => {
+  handleResetState();
   emits('close', true)
 }
 
@@ -134,7 +145,7 @@ const inviteRespondenByEmail = async () => {
 
     if (response) {
       formState.loadingSubmit = false
-      v$.value.$reset()
+      handleResetState();
       handleClose()
       handleRefreshList()
     }
@@ -156,7 +167,7 @@ const inviteRespondenByExcel = async () => {
 
     if (response) {
       formState.loadingSubmit = false
-      v$.value.$reset()
+      handleResetState();
       handleClose()
       handleRefreshList()
     }

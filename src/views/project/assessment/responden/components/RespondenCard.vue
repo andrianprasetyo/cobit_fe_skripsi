@@ -84,6 +84,8 @@ const isAssessmentDone = computed(() => {
   return assessmentStore?.detail?.status === 'completed'
 })
 
+const currentIndexResponden = computed(() => value => responden.data.findIndex(item => item?.id == value))
+
 const assessmentId = computed(() => route?.params?.id)
 
 const classStatus = computed(() => {
@@ -495,10 +497,11 @@ watch(() => [serverOptions.value, filter.value], () => {
         <template #item-quesioner_processed="item">
           <div class="d-flex justify-content-center align-items-center w-100">
             <template v-if="item?.item?.status === 'done'">
-              <div v-if="item?.item?.index >= 1 && responden.isOnEditProcessedKuesioner && responden.data?.[item.item.index - 1]">
+              <div
+                v-if="item?.item?.index >= 1 && responden.isOnEditProcessedKuesioner && currentIndexResponden(item?.item?.id) != -1">
                 <BaseSwitchInput :id="`switch-${item?.item?.nama}-${item?.item?.status}`" :disabled="responden.loading"
-                  v-model="responden.data[item.item.index - 1].quesioner_processed" active-text="Diproses"
-                  in-active-text="Jangan Diproses" />
+                  v-model="responden.data[currentIndexResponden(item?.item?.id)].quesioner_processed"
+                  active-text="Diproses" in-active-text="Jangan Diproses" />
               </div>
 
               <BaseLightBadge v-else :title="textRespondenKuesioner(!!item?.item?.quesioner_processed)"
