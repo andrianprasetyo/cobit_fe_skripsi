@@ -91,7 +91,7 @@ onMounted(() => {
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
               <BaseButton @click="exportHasilQuisioner" class="btn btn-outline-primary" title="Export Hasil Kuesioner"
-                :disabled="resultKuesioner.loading" :access="['project']">
+                :disabled="resultKuesioner.loading" :access="['project-add', 'project-edit']">
                 <template #icon-right>
                   <TablerIcon size="16" icon="FileExportIcon" />
                 </template>

@@ -272,7 +272,8 @@ onMounted(() => {
         </BaseButton>
 
         <BaseButton @click="onSubmit" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Simpan Data"
-          :disabled="capability.loadingSubmit || capability.loading" :is-loading="capability.loadingSubmit">
+          :disabled="capability.loadingSubmit || capability.loading" :is-loading="capability.loadingSubmit"
+          :access="['project-edit']">
           <template #icon-left>
             <TablerIcon icon="DeviceFloppyIcon" />
           </template>

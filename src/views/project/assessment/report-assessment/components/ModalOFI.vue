@@ -144,7 +144,7 @@ watch(() => [props.isShow], () => {
 
           <div class="col-12 col-md-3 text-start text-md-end d-none">
             <BaseButton v-if="reportOFI.data?.ofi?.length" @click="handleExport" title="Export"
-              class="btn btn-outline-primary mt-2 mt-md-0">
+              class="btn btn-outline-primary mt-2 mt-md-0"  :access="['project-add', 'project-edit']">
               <template #icon-left>
                 <TablerIcon icon="FileExportIcon" />
               </template>

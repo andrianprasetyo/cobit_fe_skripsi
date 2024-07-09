@@ -228,7 +228,7 @@ watch(() => [serverOptions.value, filter.value], () => {
             <div
               class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
               <BaseButton @click="handleExport" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-                title="Export Report" :disabled="report.loading || !filter.target_id" :access="['project']">
+                title="Export Report" :disabled="report.loading || !filter.target_id" :access="['project-add', 'project-edit']">
                 <template #icon-left>
                   <TablerIcon size="16" icon="FileExportIcon" />
                 </template>
