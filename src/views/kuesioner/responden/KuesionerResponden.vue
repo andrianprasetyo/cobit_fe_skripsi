@@ -207,7 +207,7 @@ onMounted(() => {
 
   getDetailQuisionerRespondenByCode().then(() => {
     if (formState.detail?.assesment?.organisasi?.id) {
-      handleSearchDivisi({ search: 'direktorat' })
+      handleSearchDivisi({ search: '' })
     }
   })
 })
