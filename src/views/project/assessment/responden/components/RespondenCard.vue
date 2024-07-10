@@ -36,21 +36,26 @@ const responden = reactive({
   headers: [{
     text: 'Nama',
     value: 'nama',
+    sortable: true
   }, {
     text: 'Email',
     value: 'email',
   }, {
     text: 'Divisi',
     value: 'divisi',
+    sortable: true
   }, {
     text: 'Jabatan',
     value: 'jabatan',
+    sortable: true
   }, {
     text: 'Status',
-    value: 'status'
+    value: 'status',
+    sortable: true
   }, {
     text: 'Kuesioner Diproses',
-    value: 'quesioner_processed'
+    value: 'quesioner_processed',
+    sortable: true
   }, {
     text: 'Action',
     value: 'action'
