@@ -119,7 +119,7 @@ const getDetailQuisionerRespondenByCode = async () => {
 
 const handleSearchDivisi = debounce(async ({ search }) => {
   try {
-    const response = await RespondenServices.getListDivisi({ limit: 100, page: 1, search, organisasi_id: formState.detail?.assesment?.organisasi?.id })
+    const response = await RespondenServices.getListDivisi({ limit: 10, page: 1, search, organisasi_id: formState.detail?.assesment?.organisasi?.id })
 
     if (response) {
       const data = response?.data
@@ -310,7 +310,7 @@ watch(() => [formState.divisi], () => {
               <div class="col-12 col-md-6 mb-2 mb-md-0">
                 <label class="form-label" for="divisi">Divisi / Direktorat</label>
 
-                <v-select id="divisi" @search="(search) => handleSearchDivisi({ search })" :searchable="false" :filterable="false"
+                <v-select id="divisi" @search="(search) => handleSearchDivisi({ search })" :filterable="false"
                   :options="formState.listDivisi.data" v-model="formState.divisi"
                   :disabled="formState.listDivisi.loading || formState.loadingSubmit || !isKuesionerAvailable"
                   label="nama" placeholder="Cari Divisi" :select-on-key-codes="[]"
