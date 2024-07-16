@@ -235,5 +235,14 @@ export default {
    */
   getDashboardAssessment(payload) {
     return axiosClient.get(`dashboard/assesment/report?assesment_id=${payload?.assesment_id}`)
+  },
+
+  /**
+   *
+   * @param {{assesment_id: String, method: Array}} payload
+   * @returns
+   */
+  recalculateAssessment(payload) {
+    return axiosClient.post(`assesment/manual-kalkulasi`, payload)
   }
 }

@@ -163,5 +163,16 @@
     "type": "menu",
     "urutan": 14,
     "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
+  },
+  {
+    "id": "56a4cdb6-1f07-45c5-99ed-c6198561cefd",
+    "parent_id": null,
+    "title": "Kalkulasi Ulang",
+    "menu_key": "project",
+    "url": "/project/assessment/:id/recalculate",
+    "icon": "SettingsBoltIcon",
+    "type": "menu",
+    "urutan": 15,
+    "role_type": "[\"administrator\"]"
   }
 ]

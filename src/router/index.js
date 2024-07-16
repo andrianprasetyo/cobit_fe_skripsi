@@ -1517,6 +1517,37 @@ const router = createRouter({
                 ]
               },
               beforeEnter: setMenuToProject
+            },
+            {
+              name: 'RecalculateProject',
+              path: '/project/assessment/:id/recalculate',
+              component: () =>
+                import('@/views/project/assessment/recalculate/AssessmentRecalculate.vue'),
+              meta: {
+                pageTitle: 'Kalkulasi Ulang',
+                layout: 'AppLayoutAdmin',
+                requiredAuth: true,
+                breadcrumb: [
+                  {
+                    text: 'Project',
+                    disabled: false,
+                    href: '/project',
+                    active: false
+                  },
+                  {
+                    text: 'Asesmen',
+                    disabled: false,
+                    href: '/project/assessment',
+                    active: false
+                  },
+                  {
+                    text: 'Kalkulasi Ulang',
+                    disabled: true,
+                    href: '/project/assessment/:id/recalculate',
+                    active: true
+                  }
+                ]
+              }
             }
           ]
         },

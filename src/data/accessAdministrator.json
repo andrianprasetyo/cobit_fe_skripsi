@@ -20,5 +20,6 @@
   "project-canvas",
   "project-capability",
   "project-target",
-  "project-complete"
+  "project-complete",
+  "project-recalculate"
 ]
