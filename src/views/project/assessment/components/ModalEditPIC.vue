@@ -25,6 +25,10 @@ const props = defineProps({
   isShow: {
     type: Boolean,
     default: false
+  },
+  selectedPic: {
+    type: Object,
+    default: null
   }
 })
 
@@ -105,11 +109,15 @@ const handleClose = () => {
   emits('close', true)
 }
 
+const handleRefresh = () => {
+  emits('refresh')
+}
+
 const setValueToForm = () => {
-  formState.pic_nama = assessment.detail?.pic?.nama || ''
-  formState.pic_email = assessment.detail?.pic?.email || ''
-  formState.pic_divisi = assessment.detail?.pic?.divisi || ''
-  formState.pic_jabatan = assessment.detail?.pic?.jabatan || ''
+  formState.pic_nama = props.selectedPic?.nama || ''
+  formState.pic_email = props.selectedPic?.email || ''
+  formState.pic_divisi = props.selectedPic?.divisi || ''
+  formState.pic_jabatan = props.selectedPic?.jabatan || ''
 }
 
 const onSubmit = async () => {
@@ -121,7 +129,7 @@ const onSubmit = async () => {
       formState.loadingSubmit = true
 
       const response = await AssessmentServices.editPic({
-        id: assessment.detail?.pic?.id,
+        id: props.selectedPic?.id,
         pic_nama: formState.pic_nama,
         pic_email: formState.pic_email,
         pic_divisi_id: formState.pic_divisi?.id,
@@ -132,22 +140,15 @@ const onSubmit = async () => {
       if (response) {
         loader.hide()
         formState.loadingSubmit = false
+
         toast.success({
           title: 'Edit PIC',
           text: 'Berhasil Mengubah Data PIC'
         })
-        assessment.$patch({
-          detail: {
-            ...assessment.detail, pic: {
-              ...assessment.detail.pic,
-              nama: formState.pic_nama,
-              email: formState.pic_email,
-              divisi: formState.pic_divisi,
-              posisi: formState.pic_jabatan
-            }
-          }
-        })
+
         v$.value.$reset()
+        
+        handleRefresh()
         handleClose()
       }
     } catch (error) {

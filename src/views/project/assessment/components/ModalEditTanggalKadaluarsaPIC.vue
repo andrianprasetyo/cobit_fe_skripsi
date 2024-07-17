@@ -23,6 +23,10 @@ const props = defineProps({
   isShow: {
     type: Boolean,
     default: false
+  },
+  selectedPic: {
+    type: Object,
+    default: null
   }
 })
 
@@ -51,8 +55,12 @@ const handleClose = () => {
   emits('close', true)
 }
 
+const handleRefresh = () => {
+  emits('refresh')
+}
+
 const setValueToForm = () => {
-  formState.expire_at = assessment.detail?.assesment_user?.expire_at || ''
+  formState.expire_at = props.selectedPic?.assesment?.expire_at || ''
 }
 
 const onSubmit = async () => {
@@ -64,7 +72,7 @@ const onSubmit = async () => {
       formState.loadingSubmit = true
 
       const response = await AssessmentServices.editTanggalKadaluarsaPic({
-        id: assessment.detail?.assesment_user?.id,
+        id: props.selectedPic?.assesment?.id,
         expire_at: formState.expire_at
       })
 
@@ -75,14 +83,8 @@ const onSubmit = async () => {
           title: 'Ubah Tanggal Kadaluarsa PIC',
           text: 'Berhasil Mengubah Tanggal Kadaluarsa PIC'
         })
-        assessment.$patch({
-          detail: {
-            ...assessment.detail, assesment_user: {
-              ...assessment.detail.assesment_user,
-              expire_at: formState.expire_at
-            }
-          }
-        })
+
+        handleRefresh()
         v$.value.$reset()
         handleClose()
       }
@@ -102,7 +104,7 @@ watch(() => [props.isShow], () => {
 </script>
 
 <template>
-  <BaseModal id="tanggal_kadaluarsa_pic" :order="7" :open="props.isShow" :showBtnCloseFooter="false"
+  <BaseModal id="tanggal_kadaluarsa_pic" :order="9" :open="props.isShow" :showBtnCloseFooter="false"
     classNameModal="modal-lg" @close="handleClose">
     <template #header>
       <h4 class="modal-title">
