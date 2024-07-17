@@ -39,31 +39,31 @@ const recalculateProject = reactive({
     },
     */
     {
-      sorting: 1,
+      step: 1,
       command: "assesmentDfWeight",
       title: "Nilai Bobot Design Faktor",
       description: 'Kalkulasi Ulang Nilai Bobot Design Faktor berdasarkan hasil responden yang telah selesai'
     },
     {
-      sorting: 2,
+      step: 2,
       command: "setCanvasStep2Value",
       title: "Nilai Canvas Step 2",
       description: 'Kalkulasi Ulang Nilai Canvas dari Design Faktor 1, 2, 3, dan 4 berdasarkan hasil responden yang telah selesai'
     },
     {
-      sorting: 3,
+      step: 3,
       command: "setCanvasStep3Value",
       title: "Nilai Canvas Step 3",
       description: 'Kalkulasi Ulang Nilai Canvas dari Design Faktor 5, 6, 7, 8, 9 dan 10 berdasarkan hasil responden yang telah selesai'
     },
     {
-      sorting: 4,
+      step: 4,
       command: "updateCanvasAdjust",
       title: "Nilai Canvas Hasil Adjustment",
       description: 'Kalkulasi Ulang Nilai Canvas dari Hasil Adjustment atau Penyesuaian yang telah disepakati'
     },
     {
-      sorting: 5,
+      step: 5,
       command: "generateTargetLevelDomain",
       title: "Perhitungan Target Level Domain Kapabilitas Asesmen",
       description: 'Kalkulasi Ulang Perhitungan Target Level Domain Kapabilitas Asesmen'
@@ -74,9 +74,9 @@ const recalculateProject = reactive({
 const assessmentId = computed(() => route.params?.id)
 
 /* --------------------------------- METHODS -------------------------------- */
-const executeCommand = async ({ method, assesment_id }) => {
+const executeCommand = async ({ step, assesment_id }) => {
   try {
-    const response = await AssessmentServices.recalculateAssessment({ method, assesment_id })
+    const response = await AssessmentServices.recalculateAssessment({ step, assesment_id })
 
     if (response) {
       toast.success({
@@ -92,27 +92,16 @@ const executeCommand = async ({ method, assesment_id }) => {
   }
 }
 
-const handleExecuteCommand = async ({ title, command, sorting }) => {
+const handleExecuteCommand = async ({ title, step }) => {
   alert.info({
     title: `Apakah Anda Yakin untuk mengeksekusi perintah '${title}'`
   }).then(async (result) => {
     if (result.isConfirmed) {
       alert.loading()
       try {
-        let anotherCommandMustBeExcecuted = [];
-
-        recalculateProject.commands.map(item => {
-          if (item?.sorting < sorting) {
-            anotherCommandMustBeExcecuted.push(item?.command)
-          }
-        });
-
         let payload = {
           assesment_id: assessmentId.value,
-          method: [
-            command,
-            ...anotherCommandMustBeExcecuted,
-          ],
+          step: step
         }
 
         const response = await executeCommand(payload)
@@ -140,7 +129,7 @@ const handleBack = () => {
       <div class="card">
         <div class="card-body">
           <template v-if="Array.isArray(recalculateProject?.commands) && recalculateProject?.commands.length">
-            <div v-for="command in recalculateProject.commands" :key="`command-${command?.sorting}`"
+            <div v-for="command in recalculateProject.commands" :key="`command-${command?.step}`"
               class="d-flex flex-column flex-md-row align-items-center justify-content-md-between mb-4">
               <div class="d-flex align-items-center gap-3">
                 <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
@@ -152,8 +141,7 @@ const handleBack = () => {
                 </div>
               </div>
               <div>
-                <BaseButton
-                  @click="handleExecuteCommand({ title: command.title, command: command.command, sorting: command.sorting })"
+                <BaseButton @click="handleExecuteCommand({ title: command.title, step: command.step })"
                   class="btn btn-outline-primary mt-2 mt-md-0" title="Jalankan">
                   <template #icon-left>
                     <TablerIcon icon="PlayerPlayIcon" />

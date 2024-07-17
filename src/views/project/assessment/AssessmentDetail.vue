@@ -2,15 +2,19 @@
 import { computed, onMounted, onUnmounted, ref, reactive } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
+import BaseLightBadge from '@/components/Badge/BaseLightBadge.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
+import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
 import OverviewCard from '@/views/project/assessment/components/OverviewCard.vue'
 import ModalEditPIC from '@/views/project/assessment/components/ModalEditPIC.vue'
+import ModalInvitePIC from '@/views/project/assessment/components/ModalInvitePIC.vue'
 import ModalEditTanggalKadaluarsaPIC from '@/views/project/assessment/components/ModalEditTanggalKadaluarsaPIC.vue'
 import ModalEditOrganisasi from '@/views/project/assessment/components/ModalEditOrganisasi.vue'
+
 
 import { formatDateMoments } from '@/utils/momentDateFormat'
 import { useRoute, useRouter } from 'vue-router'
@@ -38,9 +42,12 @@ const scrollTo = useScrollTo()
 const formState = reactive({
   loadingSubmit: false,
   delete_confirmation_word: '',
+  selectedPic: null,
 })
 
 const isShowModalEditPIC = ref(false)
+
+const isShowModalInvitePIC = ref(false)
 
 const isShowModalEditTanggalKadaluarsaPIC = ref(false)
 
@@ -79,6 +86,34 @@ const rules = computed(() => {
   }
 })
 
+const classBadgeStatus = computed(() => {
+  return value => {
+    if (value === 'active') {
+      return 'success'
+    } else if (value === 'pending') {
+      return 'warning'
+    } else if (value === 'banned') {
+      return 'danger'
+    } else {
+      return 'dark'
+    }
+  }
+})
+
+const labelStatus = computed(() => {
+  return value => {
+    if (value === 'active') {
+      return 'Aktif'
+    } else if (value === 'pending') {
+      return 'Menunggu Aktivasi'
+    } else if (value === 'banned') {
+      return 'Diblokir'
+    } else {
+      return 'Tidak Diketahui'
+    }
+  }
+})
+
 const v$ = useVuelidate(rules, formState, { $scope: false })
 
 /* --------------------------------- METHODS -------------------------------- */
@@ -86,8 +121,22 @@ const handleBack = () => {
   router.push("/project/assessment")
 }
 
+const handleEditPIC = ({ data }) => {
+  isShowModalEditPIC.value = true;
+  formState.selectedPic = data;
+}
+
+const handleEditTanggalKadaluarsaPIC = ({ data }) => {
+  isShowModalEditTanggalKadaluarsaPIC.value = true;
+  formState.selectedPic = data;
+}
+
 const toggleModalEditPIC = () => {
   isShowModalEditPIC.value = !isShowModalEditPIC.value
+}
+
+const toggleModalInvitePIC = () => {
+  isShowModalInvitePIC.value = !isShowModalInvitePIC.value
 }
 
 const toggleModalEditTanggalKadaluarsaPIC = () => {
@@ -110,6 +159,25 @@ const handleScrollToElement = (target) => {
   scrollTo(target)
 }
 
+const deletePIC = async ({ id }) => {
+  try {
+    const response = await AssessmentServices.deletePic({ id })
+
+    if (response) {
+      toast.success({
+        title: 'Hapus PIC',
+        text: `Berhasil Menghapus Data PIC`
+      })
+      handleRefresh()
+
+      return response
+    }
+  } catch (error) {
+    toast.error({ error })
+    throw error
+  }
+}
+
 const deleteAssessment = async ({ id }) => {
   formState.loadingSubmit = true
   try {
@@ -130,6 +198,25 @@ const deleteAssessment = async ({ id }) => {
     toast.error({ error })
     throw error
   }
+}
+
+const handleDeletePIC = async ({ title, id }) => {
+  alert.info({
+    title: `Apakah Anda Yakin untuk Menghapus ${title}`
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      alert.loading()
+      try {
+        const response = await deletePIC({ id })
+
+        if (response) {
+          alert.instance().close()
+        }
+      } catch (error) {
+        alert.instance().close()
+      }
+    }
+  })
 }
 
 const handleDeleteAssessment = async ({ title, id }) => {
@@ -306,6 +393,7 @@ onUnmounted(() => {
             </div>
           </template>
         </OverviewCard>
+
         <OverviewCard heading="Organisasi">
           <template #icon>
             <TablerIcon icon="BuildingSkyscraperIcon" size="36" class="text-primary" />
@@ -340,73 +428,119 @@ onUnmounted(() => {
             </div>
           </template>
         </OverviewCard>
-        <OverviewCard>
-          <template #icon>
-            <TablerIcon icon="UserCheckIcon" size="36" class="text-primary" />
-          </template>
 
-          <template #header>
-            <div class="d-flex flex-row justify-content-between align-items-center">
-              <h4 class="card-title text-primary mb-0">PIC</h4>
+        <template v-if="Array.isArray(assessment?.detail?.allpic) && assessment?.detail?.allpic?.length">
+          <OverviewCard v-for="(pic, index) in assessment.detail.allpic" :key="`card-pic-${pic?.id}`">
+            <template #icon>
+              <TablerIcon icon="UserCheckIcon" size="36" class="text-primary" />
+            </template>
 
-              <BaseButton :access="['project-edit']" v-if="assessment.detail?.pic?.status === 'pending'"
-                @click="toggleModalEditPIC" title="Edit PIC">
-                <template #icon-right>
-                  <TablerIcon icon="EditIcon" class="ms-1" />
-                </template>
-              </BaseButton>
+            <template #header>
+              <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center">
+                <h4 class="card-title text-primary mb-0">PIC {{ index + 1 }}</h4>
 
-              <BaseButton v-else-if="assessment.detail?.pic?.status === 'active'" :access="['project-edit']"
-                @click="toggleModalEditTanggalKadaluarsaPIC" title="Edit Tanggal Kadaluarsa PIC">
-                <template #icon-right>
-                  <TablerIcon icon="EditIcon" class="ms-1" />
-                </template>
-              </BaseButton>
-            </div>
-          </template>
+                <div>
+                  <BaseButton :access="['project-edit']" @click="handleEditPIC({ data: pic })" v-tooltip="`Edit PIC`"
+                    class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3">
+                    <template #icon-right>
+                      <TablerIcon icon="EditIcon" class="ms-1" />
+                    </template>
+                  </BaseButton>
 
-          <template #body>
-            <div class="row">
-              <div class="col-12 col-md-6">
-                <div class="fs-2 mb-2 d-flex flex-column">
-                  <h6 class="mb-0 fw-semibold"> Nama : </h6>
+                  <BaseButton :access="['project-edit']" @click="handleEditTanggalKadaluarsaPIC({ data: pic })"
+                    v-tooltip="`Edit Tanggal Kadaluarsa PIC`" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3">
+                    <template #icon-right>
+                      <TablerIcon icon="CalendarTimeIcon" class="ms-1" />
+                    </template>
+                  </BaseButton>
 
-                  <span class="fs-3">{{ assessment.detail?.pic?.nama || "-" }}</span>
-                </div>
-
-                <div class="fs-2 mb-2 d-flex flex-column">
-                  <h6 class="mb-0 fw-semibold"> Email : </h6>
-
-                  <span class="fs-3">{{ assessment.detail?.pic?.email || '-' }}</span>
-                </div>
-
-                <div class="fs-2 mb-2 d-flex flex-column">
-                  <h6 class="mb-0 fw-semibold"> Tanggal Kadaluarsa PIC : </h6>
-
-                  <span v-if="assessment.detail?.assesment_user?.expire_at" class="fs-3">
-                    {{ formatDate({ value: assessment.detail?.assesment_user?.expire_at }) }}
-                  </span>
-
-                  <span class="fs-3" v-else>-</span>
+                  <BaseButton :access="['project-edit']" @click="handleDeletePIC({ title: pic?.nama, id: pic?.id })"
+                    v-tooltip="`Hapus PIC`" class="btn btn-outline-danger ms-0 mt-3 mt-md-0 ms-md-3">
+                    <template #icon-right>
+                      <TablerIcon icon="TrashIcon" class="ms-1" />
+                    </template>
+                  </BaseButton>
                 </div>
               </div>
+            </template>
 
-              <div class="col-12 col-md-6">
-                <div class="fs-2 mb-2 d-flex flex-column">
-                  <h6 class="mb-0 fw-semibold"> Divisi : </h6>
+            <template #body>
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <div class="fs-2 mb-2 d-flex flex-column">
+                    <h6 class="mb-0 fw-semibold"> Nama : </h6>
 
-                  <span class="fs-3">{{ assessment.detail?.pic?.divisi?.nama || '-' }}</span>
+                    <span class="fs-3">{{ pic?.nama || "-" }}</span>
+                  </div>
+
+                  <div class="fs-2 mb-2 d-flex flex-column">
+                    <h6 class="mb-0 fw-semibold"> Email : </h6>
+
+                    <span class="fs-3">{{ pic?.email || '-' }}</span>
+                  </div>
+
+                  <div class="fs-2 mb-2 d-flex flex-column">
+                    <h6 class="mb-0 fw-semibold"> Tanggal Kadaluarsa PIC : </h6>
+
+                    <span v-if="pic?.assesment?.expire_at" class="fs-3">
+                      {{ formatDate({ value: pic?.assesment?.expire_at }) }}
+                    </span>
+
+                    <span class="fs-3" v-else>-</span>
+                  </div>
                 </div>
 
-                <div class="fs-2 mb-2 d-flex flex-column">
-                  <h6 class="mb-0 fw-semibold"> Jabatan : </h6>
+                <div class="col-12 col-md-6">
+                  <div class="fs-2 mb-2 d-flex flex-column">
+                    <h6 class="mb-0 fw-semibold"> Divisi : </h6>
 
-                  <span class="fs-3">{{ assessment.detail?.pic?.jabatan?.nama || '-' }}</span>
+                    <span class="fs-3">{{ pic?.divisi?.nama || '-' }}</span>
+                  </div>
+
+                  <div class="fs-2 mb-2 d-flex flex-column">
+                    <h6 class="mb-0 fw-semibold"> Jabatan : </h6>
+
+                    <span class="fs-3">{{ pic?.jabatan?.nama || '-' }}</span>
+                  </div>
+
+                  <div class="fs-2 mb-2 d-flex flex-column">
+                    <h6 class="mb-0 fw-semibold"> Status : </h6>
+
+                    <div class="mt-1">
+                      <BaseLightBadge :title="labelStatus(pic?.status)" :variant="classBadgeStatus(pic?.status)" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-        </OverviewCard>
+            </template>
+          </OverviewCard>
+        </template>
+
+        <template v-else>
+          <OverviewCard>
+            <template #header>
+              <div class="d-flex flex-row justify-content-between align-items-center">
+                <h4 class="card-title text-primary mb-0">PIC</h4>
+              </div>
+            </template>
+
+            <template #body>
+              <div class="d-flex flex-column justify-content-center align-items-center">
+                <NoOptions title="Belum Ada PIC Diundang" />
+              </div>
+            </template>
+          </OverviewCard>
+        </template>
+
+        <div class="col-12">
+          <div class="mt-2 mb-5 d-flex justify-content-center align-items-center">
+            <BaseButton title="Tambah PIC" :access="['project-edit']" @click=toggleModalInvitePIC>
+              <template #icon-left>
+                <TablerIcon icon="PlusIcon" />
+              </template>
+            </BaseButton>
+          </div>
+        </div>
       </div>
 
       <div class="card" v-if="auth.getIsAdministrator || auth.getIsAssessor">
@@ -429,7 +563,8 @@ onUnmounted(() => {
 
           <div>
             <BaseButton class="btn btn-danger" title="Hapus Project"
-              @click="handleDeleteAssessment({ title: assessment.detail?.nama, id: assessmentId })" :access="['project-delete']">
+              @click="handleDeleteAssessment({ title: assessment.detail?.nama, id: assessmentId })"
+              :access="['project-delete']">
               <template #icon-right>
                 <TablerIcon icon="TrashIcon" />
               </template>
@@ -453,9 +588,14 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <ModalEditPIC :is-show="isShowModalEditPIC" @close="toggleModalEditPIC" @refresh="handleRefresh" />
-    <ModalEditTanggalKadaluarsaPIC :is-show="isShowModalEditTanggalKadaluarsaPIC"
+    <ModalEditPIC :is-show="isShowModalEditPIC" :selected-pic="formState.selectedPic" @close="toggleModalEditPIC"
+      @refresh="handleRefresh" />
+
+    <ModalInvitePIC :is-show="isShowModalInvitePIC" @close="toggleModalInvitePIC" @refresh="handleRefresh" />
+
+    <ModalEditTanggalKadaluarsaPIC :is-show="isShowModalEditTanggalKadaluarsaPIC" :selected-pic="formState.selectedPic"
       @close="toggleModalEditTanggalKadaluarsaPIC" @refresh="handleRefresh" />
+
     <ModalEditOrganisasi :is-show="isShowModalEditOrganisasi" @close="toggleModalEditOrganisasi"
       @refresh="handleRefresh" />
   </div>

@@ -78,6 +78,24 @@ export default {
 
   /**
    *
+   * @param {{assesment_id: String, organisasi_id: String, users: Array}} payload
+   * @returns
+   */
+  invitePic(payload) {
+    return axiosClient.post(`assesment/pic/invite`, payload)
+  },
+
+  /**
+   *
+   * @param {{id: String}} payload
+   * @returns
+   */
+  deletePic(payload){
+    return axiosClient.delete(`assesment/remove-pic/${payload?.id}`)
+  },
+
+  /**
+   *
    * @param {{id: String, status: String}} payload
    * @returns
    */
@@ -239,10 +257,10 @@ export default {
 
   /**
    *
-   * @param {{assesment_id: String, method: Array}} payload
+   * @param {{assesment_id: String, step: Number}} payload
    * @returns
    */
   recalculateAssessment(payload) {
     return axiosClient.post(`assesment/manual-kalkulasi`, payload)
-  }
+  },
 }
