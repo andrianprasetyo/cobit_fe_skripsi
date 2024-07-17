@@ -3,7 +3,6 @@ import { reactive, ref, watch, computed, onMounted } from 'vue'
 import debounce from 'lodash.debounce'
 
 import ApexChartsRadar from '@/components/ApexCharts/ApexChartsRadar.vue'
-import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
 
 import { useToast } from '@/stores/toast'
@@ -26,7 +25,9 @@ const listTarget = reactive({
 })
 
 const filter = ref({
-  target_id: '',
+  target: {
+    id: 'all', nama: 'Semua Target'
+  },
 })
 
 const chartOptions = reactive({
@@ -40,6 +41,11 @@ const chartOptions = reactive({
       top: 1
     }
   },
+  yaxis: {
+    min: 0,
+    stepSize: 1,
+    // max: 100,
+  }
 })
 
 const assessmentTitle = computed(() => {
@@ -51,10 +57,10 @@ const assessmentId = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getReportChartAssessment = async ({ assesment_id, target_id }) => {
+const getReportChartAssessment = async ({ assesment_id, target }) => {
   try {
     report.loading = true
-    const response = await AssessmentServices.getReportChartAssessment({ assesment_id, target_id })
+    const response = await AssessmentServices.getReportChartAssessment({ assesment_id, target })
 
     if (response) {
       const data = response?.data
@@ -96,15 +102,13 @@ const handleSearchListTarget = debounce(async ({ search }) => {
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   handleSearchListTarget({ search: '' })
-  if (filter.value.target_id) {
-    getReportChartAssessment({ assesment_id: assessmentId.value })
+  if (filter.value.target) {
+    getReportChartAssessment({ assesment_id: assessmentId.value, target: "all" })
   }
 })
 
-watch(() => [filter.value], value => {
-  if (value) {
-    getReportChartAssessment({ assesment_id: assessmentId.value, target_id: filter.value.target_id })
-  }
+watch(() => [filter.value], () => {
+  getReportChartAssessment({ assesment_id: assessmentId.value, target: filter.value.target })
 }, { deep: true })
 
 </script>
@@ -119,31 +123,30 @@ watch(() => [filter.value], value => {
         </div>
 
         <div class="my-3">
-          <BaseAlert v-if="!filter.target_id" variant="primary">
-            <strong>Perhatian.</strong> Silahkan pilih Target terlebih dahulu
-          </BaseAlert>
-
           <div class="col-12 md-12">
-            <label class="form-label" for="filter-target-chart">Chart Report Berdasarkan Target</label>
+            <label class="form-label" for="filter-target-chart">
+              Pilih Tampilan Semua Target atau Berdasarkan
+              Target Tertentu
+            </label>
 
             <v-select id="filter-target-chart" @search="(search) => handleSearchListTarget({ search })"
-              :filterable="false" :options="listTarget.data" v-model="filter.target_id" label="nama"
+              :filterable="false" :options="listTarget.data" v-model="filter.target" label="nama"
               :reduce="state => state?.id" placeholder="Pilih Target" :select-on-key-codes="[]">
               <template #no-options>
                 {{ listTarget.loading ? 'Loading...' : 'Tidak ada Target Ditemukan' }}
               </template>
 
               <template #option="option">
-                <div class="d-flex flex-row align-items-center py-1 width-150px">
-                  <span class="me-2 fw-bold">
+                <div class="d-flex flex-row align-items-center py-1">
+                  <span class="me-2 fw-bold text-wrap">
                     {{ option.nama }} <span class="ms-2" v-if="option?.default">( Default )</span>
                   </span>
                 </div>
               </template>
 
               <template #selected-option="option">
-                <div class="d-flex flex-row align-items-center py-1 width-150px ">
-                  <span class="me-2 fw-bold">
+                <div class="d-flex flex-row align-items-center py-1">
+                  <span class="me-2 fw-bold text-wrap">
                     {{ option.nama }} <span class="ms-2" v-if="option?.default">( Default )</span>
                   </span>
                 </div>
@@ -154,8 +157,8 @@ watch(() => [filter.value], value => {
 
         <LoadingOverlay :active="report.loading" />
 
-        <ApexChartsRadar v-if="filter.target_id" :height="1000" :categories="report.data?.categories || []"
-          :options="chartOptions" :series="report.data?.series || []" />
+        <ApexChartsRadar :height="1000" :categories="report.data?.categories || []" :options="chartOptions"
+          :series="report.data?.series || []" />
       </div>
     </div>
   </div>
