@@ -130,8 +130,7 @@ const agreedCapabilityLevel = computed(() => {
                     <div v-if="hasil?.ket" class="width-250px text-break text-wrap" v-html="hasil?.ket" />
                   </div>
                 </td>
-                <template v-if="Array.isArray(hasil?.assesmenthasil) && hasil?.assesmenthasil?.length">
-                  <!-- Domain Section 3 -->
+                 <!-- Domain Section 3 -->
                   <td class="bg-light fw-bold border-0 width-250px text-center">
                     <span :class="[hasil?.assesmentcanvas?.step3_value < 0 ? 'text-danger' : 'text-primary']">
                       {{ hasil?.assesmentcanvas?.step3_value }}
@@ -173,7 +172,6 @@ const agreedCapabilityLevel = computed(() => {
                     <BaseInput type="text-area" :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
                       placeholder="Masukkan Alasan (Jika Ada)" />
                   </td>
-                </template>
               </tr>
             </template>
           </tbody>
