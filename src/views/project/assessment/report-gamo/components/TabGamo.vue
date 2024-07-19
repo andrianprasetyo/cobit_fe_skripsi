@@ -38,7 +38,6 @@ const summary = reactive({
   }, {
     text: 'Assessment',
     value: 'assessment',
-    sortable: true
   }
   ],
   meta: {
