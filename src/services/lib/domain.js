@@ -61,9 +61,10 @@ export default {
     return axiosClient.get(
       `domain/assesment/list?limit=${payload?.limit || 10}&page=${
         payload?.page || 1
-      }&assesment_id=${payload?.assessment_id}${
+      }&assesment_id=${payload?.assessment_id}&assesment=${payload?.assesment || 0}${
         payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''
-      }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}`
+      }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}
+      `
     )
   },
 

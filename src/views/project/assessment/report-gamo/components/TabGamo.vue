@@ -2,6 +2,7 @@
 import { reactive, watch, ref, onMounted, computed } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
+import BaseSelect from '@/components/Select/BaseSelect.vue'
 import DataTable from '@/components/DataTable/DataTable.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 
@@ -26,15 +27,18 @@ const summary = reactive({
   }, {
     text: 'Target Capability Level',
     value: 'suggest_capability_level',
+    sortable: true
   }, {
     text: 'Hasil Adjustment',
-    value: 'aggreed_capability_level'
+    value: 'aggreed_capability_level',
+    sortable: true
   }, {
     text: 'Target BUMN',
-    value: 'target'
+    value: 'target',
   }, {
     text: 'Assessment',
     value: 'assessment',
+    sortable: true
   }
   ],
   meta: {
@@ -43,6 +47,20 @@ const summary = reactive({
     total: 0,
     total_page: 0
   },
+  optionsFilterAssessment: [
+    {
+      label: 'Hanya GAMO yang Perlu Diasesmen',
+      value: 1
+    },
+    {
+      label: 'Tampilkan Semua GAMO',
+      value: 0
+    }
+  ]
+})
+
+const filter = ref({
+  assesment: 1
 })
 
 const serverOptions = ref({
@@ -74,10 +92,10 @@ const assessmentId = computed(() => {
 })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getSummaryGamo = async ({ limit, page, assessment_id, sortBy, sortType }) => {
+const getSummaryGamo = async ({ limit, page, assessment_id, sortBy, sortType, assesment }) => {
   try {
     summary.loading = true
-    const response = await DomainServices.getSummaryGamo({ limit, page, assessment_id, sortBy, sortType })
+    const response = await DomainServices.getSummaryGamo({ limit, page, assessment_id, sortBy, sortType, assesment })
 
     if (response) {
       const data = response?.data
@@ -93,7 +111,7 @@ const getSummaryGamo = async ({ limit, page, assessment_id, sortBy, sortType }) 
 }
 
 const exportSummaryGamo = async () => {
-  const url = `${appConfig.app.appHost}domain/assesment-adjustment/download?id=${route.params?.id}`
+  const url = `${appConfig.app.appHost}domain/assesment-adjustment/download?assesment=1&id=${route.params?.id}`
   window.open(url, '_blank');
 }
 
@@ -101,15 +119,29 @@ const handleNavigateToAdjustSummaryGamo = () => {
   router.push(`/project/assessment/${assessmentId.value}/summary${assessmentTitle.value ? `?assessment=${assessmentTitle.value}` : ''}`)
 }
 
+const resetServerOptions = () => {
+  serverOptions.value.page = 1
+  serverOptions.value.rowsPerPage = 10
+  serverOptions.value.sortBy = ''
+  serverOptions.value.sortType = ''
+}
+
 
 /* ---------------------------------- HOOKS --------------------------------- */
-watch(() => [serverOptions.value], () => {
+watch(() => [filter.value], value => {
+  if (value) {
+    resetServerOptions()
+  }
+}, { deep: true })
+
+watch(() => [serverOptions.value, filter.value], () => {
   getSummaryGamo({
     limit: serverOptions.value.rowsPerPage,
     page: serverOptions.value.page,
     assessment_id: assessmentId.value,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
+    assesment: filter.value.assesment
   })
 }, { deep: true })
 
@@ -120,6 +152,7 @@ onMounted(() => {
     assessment_id: assessmentId.value,
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
+    assesment: filter.value.assesment
   })
 })
 
@@ -151,6 +184,14 @@ onMounted(() => {
               <TablerIcon size="16" icon="AdjustmentsIcon" />
             </template>
           </BaseButton>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-12 col-md-4">
+          <BaseSelect id="filter-gamo" v-model="filter.assesment" label="Filter GAMO yang Ditampilkan"
+            default-option="Pilih Opsi Filter" :options="summary.optionsFilterAssessment" options-label="label"
+            options-value="value" :disabled="summary.loading" />
         </div>
       </div>
 
