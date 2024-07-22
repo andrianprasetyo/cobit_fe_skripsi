@@ -101,7 +101,12 @@ export const useAuth = defineStore('auth', {
       }
     },
     setMenuToProject() {
-      this.menu = menuProject
+      const filteredMenu = filterMenu({
+        menuData: menuProject,
+        role_type: this.account?.roleaktif?.role?.code
+      })
+
+      this.menu = filteredMenu
     },
     setAccessToDefault() {
       this.access = accessAdministrator
