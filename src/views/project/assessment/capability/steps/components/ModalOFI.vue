@@ -3,11 +3,14 @@ import { reactive, computed, watch } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import BaseModal from '@/components/Modal/BaseModal.vue'
-import BaseSelect from '@/components/Select/BaseSelect.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import CKEditor from '@/components/CKEditor/CKEditor.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
+
+/*
+import BaseSelect from '@/components/Select/BaseSelect.vue'
+*/
 
 import { useAlert } from '@/stores/alert'
 import { useVuelidate } from "@vuelidate/core";
@@ -40,6 +43,7 @@ const rules = computed(() => {
     ofi: {
       $each: helpers.forEach({
         capability_target_id: {
+          // required: helpers.withMessage('Silahkan pilih Target', requiredIf(false)),
           required: helpers.withMessage('Silahkan pilih Target', requiredIf(props.isShow)),
         },
         ofi: {
@@ -101,7 +105,8 @@ const setValueToForm = () => {
     assessmentStore.capability.selectedSubGamo?.capabilityass?.ofi.map((item, index) => {
 
       list.push({
-        capability_target_id: item?.capability_target_id || '',
+        // capability_target_id: item?.capability_target_id || '',
+        capability_target_id: '',
         ofi: item.ofi,
         domain_id: assessmentStore.capability.selectedGamo?.id
       })
@@ -186,7 +191,7 @@ watch(() => [props.isShow], () => {
 
             <div>
               <BaseButton @click="handleHapusOFI({ title: index + 1, index: index })" class="btn btn-outline-danger"
-                title="Hapus Opportunity for Improvement" :access="['project-add', 'project-edit' ]">
+                title="Hapus Opportunity for Improvement" :access="['project-add', 'project-edit']">
                 <template #icon-left>
                   <TablerIcon icon="TrashIcon" />
                 </template>
@@ -194,7 +199,7 @@ watch(() => [props.isShow], () => {
             </div>
           </div>
 
-          <div class="mb-3">
+          <!-- <div class="mb-3">  
             <BaseSelect :id="`list-target-ofi-${index}`" v-model="ofi.capability_target_id" label="Target"
               default-option="Pilih Target" :options="formState.listTarget.data[index].data" options-label="nama"
               options-value="id"
@@ -203,7 +208,7 @@ watch(() => [props.isShow], () => {
             <ErrorMessage
               v-if="Array.isArray(v$.ofi.$each?.$response?.$errors) && v$.ofi.$each?.$response?.$errors.length"
               :errors="v$.ofi.$each?.$response?.$errors[index]?.capability_target_id" />
-          </div>
+          </div> -->
 
           <div class="mb-3">
             <label class="form-label" :for="`ofi-input-${index}`">Opportunity for Improvement</label>
@@ -225,7 +230,8 @@ watch(() => [props.isShow], () => {
 
       <div v-if="formState.ofi.length < assessmentStore.capability.listTarget?.length"
         class="mt-5 d-flex justify-content-center align-items-center">
-        <BaseButton @click="handleTambahOFI" title="Tambah Opportunity for Improvement" :access="['project-add', 'project-edit' ]">
+        <BaseButton @click="handleTambahOFI" title="Tambah Opportunity for Improvement"
+          :access="['project-add', 'project-edit']">
           <template #icon-left>
             <TablerIcon icon="PlusIcon" />
           </template>
@@ -234,7 +240,8 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Opportunity for Improvement" :access="['project-add', 'project-edit' ]">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Opportunity for Improvement"
+        :access="['project-add', 'project-edit']">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>
