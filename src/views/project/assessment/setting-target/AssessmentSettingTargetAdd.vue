@@ -12,7 +12,7 @@ import BaseAlert from '@/components/Alert/BaseAlert.vue'
 import AssessmentTargetServices from '@/services/lib/assessment-target'
 
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, maxValue, minValue } from "@vuelidate/validators";
+import { required, helpers, maxValue, minValue, requiredIf } from "@vuelidate/validators";
 import { useToast } from '@/stores/toast'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
@@ -40,7 +40,7 @@ const rules = computed(() => {
     listTarget: {
       $each: helpers.forEach({
         target: {
-          required: helpers.withMessage('Silahkan isi target', required),
+          required: helpers.withMessage('Silahkan isi target', requiredIf(false)),
           minValue: helpers.withMessage("Minimal angka target 0", minValue(0)),
           maxValue: helpers.withMessage("Maksimal angka target 5", maxValue(5)),
         },
@@ -229,7 +229,7 @@ onMounted(() => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit" :access="['project-add', 'project-edit' ]">
+                :is-loading="formState.loadingSubmit" :access="['project-add', 'project-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>
