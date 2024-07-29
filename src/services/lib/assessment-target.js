@@ -54,21 +54,23 @@ export default {
 
   /**
    *
-   * @param {{target_id: String}} payload
+   * @param {{assesment_id: String, target_id: String}} payload
    * @returns
    */
   getListTargetGamoByTargetId(payload) {
-    return axiosClient.get(`capabilitytargetlevel/list?target_id=${payload?.target_id}`)
+    return axiosClient.get(
+      `capabilitytargetlevel/list?assesment_id=${payload?.assesment_id}${payload?.target_id ? `&target_id=${payload?.target_id}` : ''}`
+    )
   },
 
   /**
    *
-   * @param {{assesment_id: String}} payload
+   * @param {{assesment_id: String, assesment: Number}} payload
    * @returns
    */
   getListTargetGamoByAssessmentId(payload) {
     return axiosClient.get(
-      `capabilitytargetlevel/list-target?assesment_id=${payload?.assesment_id}`
+      `capabilitytargetlevel/list-target?assesment_id=${payload?.assesment_id}${payload?.assesment ? `&assesment=${payload?.assesment}` : ''}`
     )
   },
 

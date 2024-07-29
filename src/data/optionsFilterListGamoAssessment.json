@@ -1,0 +1,12 @@
+[
+  {
+    "key": "only-gamo-assessment",
+    "label": "Hanya GAMO yang Perlu Diasesmen",
+    "value": 1
+  },
+  {
+    "key": "all-gamo-assessment",
+    "label": "Tampilkan Semua GAMO",
+    "value": 0
+  }
+]
