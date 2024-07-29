@@ -71,11 +71,11 @@ const assessmentTargetNama = computed(() => {
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getListTargetGamoByTargetId = async ({ assesment_id, target_id }) => {
+const getListTargetGamoByTargetId = async ({ assesment_id, target_id, assesment }) => {
   const loader = loading.show()
   try {
     formState.loading = true
-    const response = await AssessmentTargetServices.getListTargetGamoByTargetId({ assesment_id, target_id })
+    const response = await AssessmentTargetServices.getListTargetGamoByTargetId({ assesment_id, target_id, assesment })
 
     if (response) {
       const data = response?.data
@@ -131,7 +131,8 @@ const handleSubmit = async () => {
 watch(() => [filter.value], () => {
   getListTargetGamoByTargetId({
     assesment_id: assessmentId.value,
-    target_id: filter.value.assesment ? assessmentTargetId.value : ''
+    target_id: assessmentTargetId.value,
+    assesment: filter.value.assesment
   })
 }, { deep: true, immediate: true })
 
