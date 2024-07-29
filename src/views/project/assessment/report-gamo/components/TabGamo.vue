@@ -12,6 +12,8 @@ import { useToast } from '@/stores/toast'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppConfig } from '@/stores/appConfig'
 
+import optionsFilterAssessment from '@/data/optionsFilterListGamoAssessment.json'
+
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
@@ -46,16 +48,6 @@ const summary = reactive({
     total: 0,
     total_page: 0
   },
-  optionsFilterAssessment: [
-    {
-      label: 'Hanya GAMO yang Perlu Diasesmen',
-      value: 1
-    },
-    {
-      label: 'Tampilkan Semua GAMO',
-      value: 0
-    }
-  ]
 })
 
 const filter = ref({
@@ -189,7 +181,7 @@ onMounted(() => {
       <div class="row mb-3">
         <div class="col-12 col-md-4">
           <BaseSelect id="filter-gamo" v-model="filter.assesment" label="Filter GAMO yang Ditampilkan"
-            default-option="Pilih Opsi Filter" :options="summary.optionsFilterAssessment" options-label="label"
+            default-option="Pilih Opsi Filter" :options="optionsFilterAssessment" options-label="label"
             options-value="value" :disabled="summary.loading" />
         </div>
       </div>

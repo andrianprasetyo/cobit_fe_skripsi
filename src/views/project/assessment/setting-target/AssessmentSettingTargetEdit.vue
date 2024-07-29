@@ -1,9 +1,10 @@
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, ref, watch } from 'vue'
 
 import BreadCrumb from '@/components/BreadCrumb/BreadCrumb.vue'
 import BaseInput from '@/components/Input/BaseInput.vue'
 import BaseButton from '@/components/Button/BaseButton.vue'
+import BaseSelect from '@/components/Select/BaseSelect.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
@@ -17,6 +18,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { useAuth } from '@/stores/auth'
 
+import optionsFilterAssessment from '@/data/optionsFilterListGamoAssessment.json'
+
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
@@ -28,7 +31,12 @@ const formState = reactive({
   loading: false,
   loadingSubmit: false,
   listTarget: [],
-  nama: ''
+  nama: '',
+  optionsFilterAssessment: optionsFilterAssessment
+})
+
+const filter = ref({
+  assesment: 0
 })
 
 const rules = computed(() => {
@@ -63,11 +71,11 @@ const assessmentTargetNama = computed(() => {
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
 
 /* --------------------------------- METHODS -------------------------------- */
-const getListTargetGamoByTargetId = async ({ target_id }) => {
+const getListTargetGamoByTargetId = async ({ assesment_id, target_id }) => {
   const loader = loading.show()
   try {
     formState.loading = true
-    const response = await AssessmentTargetServices.getListTargetGamoByTargetId({ target_id })
+    const response = await AssessmentTargetServices.getListTargetGamoByTargetId({ assesment_id, target_id })
 
     if (response) {
       const data = response?.data
@@ -120,17 +128,20 @@ const handleSubmit = async () => {
 }
 
 /* ---------------------------------- HOOKS --------------------------------- */
+watch(() => [filter.value], () => {
+  getListTargetGamoByTargetId({
+    assesment_id: assessmentId.value,
+    target_id: filter.value.assesment ? assessmentTargetId.value : ''
+  })
+}, { deep: true, immediate: true })
+
 onMounted(() => {
   auth.setMenuToProject()
-  
-  getListTargetGamoByTargetId({ target_id: assessmentTargetId.value })
 
   if (assessmentTargetNama.value) {
     formState.nama = assessmentTargetNama.value
   }
 })
-
-
 </script>
 
 <template>
@@ -150,9 +161,17 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="formState.listTarget?.length" class="card">
+      <div class="card">
         <div class="card-body">
-          <div class="table-responsive rounded-2 mb-4 mt-4">
+          <div class="row mb-3">
+            <div class="col-12 col-md-4">
+              <BaseSelect id="filter-gamo" v-model="filter.assesment" label="Filter GAMO yang Ditampilkan"
+                default-option="Pilih Opsi Filter" :options="formState.optionsFilterAssessment" options-label="label"
+                options-value="value" :disabled="formState.loading" />
+            </div>
+          </div>
+
+          <div v-if="formState.listTarget?.length" class="table-responsive rounded-2 mb-4 mt-4">
             <div class="mh-100vh">
               <table class="table border customize-table text-nowrap mb-0 align-middle">
                 <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">
@@ -195,12 +214,8 @@ onMounted(() => {
               </table>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div v-else class="card">
-        <div class="card-body">
-          <NoOptions title="Tidak ada Daftar GAMO Ditemukan" />
+          <NoOptions v-else title="Tidak ada Daftar GAMO Ditemukan" />
         </div>
       </div>
 
@@ -217,7 +232,7 @@ onMounted(() => {
 
             <div>
               <BaseButton @click="handleSubmit" title="Simpan" :disabled="formState.loadingSubmit"
-                :is-loading="formState.loadingSubmit" :access="['project-add', 'project-edit' ]">
+                :is-loading="formState.loadingSubmit" :access="['project-add', 'project-edit']">
                 <template #icon-left>
                   <TablerIcon icon="DeviceFloppyIcon" />
                 </template>
