@@ -1,12 +1,6 @@
 # Assessment Cobit APP
 
-![Logo Cobit APP](https://www.itcolombia.com/wp-content/uploads/2022/08/COBIT-F.png "Logo Cobit APP")
-
-## Domain
-| Branch                          | Description                                                                                    |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| `dev`                   | https://assessment-dev.millennia-solusi.xyz  (`development`)                                                 |
-| `main`                   | https://assessment.millennia-solusi.xyz  (`production`)                             
+![Logo Cobit APP](https://www.itcolombia.com/wp-content/uploads/2022/08/COBIT-F.png "Logo Cobit APP")                          
 
 ## Branch
 
