@@ -19,7 +19,7 @@
     "icon": null,
     "type": "menu",
     "urutan": 2,
-    "role_type": "[\"administrator\", \"assesor\"]"
+    "role_type": "[\"administrator\"]"
   },
   {
     "id": "98061b78-a961-4910-8756-d0e2161458bd",
@@ -30,7 +30,7 @@
     "icon": "AssemblyIcon",
     "type": "menu",
     "urutan": 3,
-    "role_type": "[\"administrator\", \"assesor\"]",
+    "role_type": "[\"administrator\"]",
     "children": [
       {
         "id": "98061bf4-3e16-43f1-b645-6cfbedbd7238",
@@ -74,7 +74,7 @@
         "icon": "BuildingCommunityIcon",
         "type": "menu",
         "urutan": 3,
-        "role_type": "[\"administrator\", \"assesor\"]"
+        "role_type": "[\"administrator\"]"
       }
     ]
   },

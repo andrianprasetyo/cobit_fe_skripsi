@@ -49,7 +49,8 @@ const handleClose = () => {
   <portal to="modal" :order="props.order">
     <Transition name="fade-top" mode="out-in">
       <div v-if="props.open" ref="baseModal" :id="id" class="modal fade" :class="[props.open ? 'show d-block' : '']"
-        tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static" v-bind="$attrs">
+        tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static" @keydown.esc="handleClose"
+        v-bind="$attrs">
         <div class="modal-dialog modal-dialog-centered" :class="props.classNameModal">
           <div class="modal-content" :class="props.classNameModalContent">
             <div class="modal-header">

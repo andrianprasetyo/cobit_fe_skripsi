@@ -54,17 +54,32 @@ export default {
 
   /**
    *
-   * @param {{limit: String | Number, page: String | Number, assessment_id: String, sortBy: String, sortType: String}} payload
+   * @param {{limit: String | Number, page: String | Number, assessment_id: String, sortBy: String, sortType: String, target_id: String }} payload
    * @returns
    */
   getSummaryGamo(payload) {
     return axiosClient.get(
       `domain/assesment/list?limit=${payload?.limit || 10}&page=${
         payload?.page || 1
-      }&assesment_id=${payload?.assessment_id}&assesment=${payload?.assesment || 0}${
+      }&assesment_id=${payload?.assessment_id}${payload?.target_id ? `&target_id=${payload?.target_id}` : ''}${
         payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''
       }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}
       `
+    )
+  },
+
+  /**
+   *
+   * @param {{limit: String | Number, page: String | Number, assessment_id: String, sortBy: String, sortType: String, target_id: String, assessment: String }} payload
+   * @returns
+   */
+  getGamoByTarget(payload) {
+    return axiosClient.get(
+      `domain/assesment/list-by-target?limit=${payload?.limit || 10}&page=${
+        payload?.page || 1
+      }&assesment_id=${payload?.assessment_id}${payload?.target_id ? `&target_id=${payload?.target_id}` : ''}${
+        payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''
+      }${payload?.sortType ? `&sortType=${payload?.sortType}` : ''}${payload?.assessment ? `&assessment=${payload?.assessment}` : ''}`
     )
   },
 

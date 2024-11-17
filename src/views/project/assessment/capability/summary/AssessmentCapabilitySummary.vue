@@ -1,172 +1,111 @@
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { defineAsyncComponent, watch, ref, computed } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
 
-import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
-import NoData from '@/components/EmptyPlaceholder/NoData.vue'
-import LoadingOverlay from '@/components/Loading/LoadingOverlay.vue'
+import BaseTab from '@/components/Tab/BaseTab.vue'
+import BaseButton from '@/components/Button/BaseButton.vue'
 
-import { useAppConfig } from '@/stores/appConfig'
-import { useRoute } from 'vue-router'
-import { useAssessmentStore } from '@/views/project/assessment/assessmentStore'
-
-const assessmentStore = useAssessmentStore()
-const appConfig = useAppConfig()
+const router = useRouter()
 const route = useRoute()
 
+const TabPenilaian = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/summary/AssessmentCapabilitySummaryPenilaian.vue'),
+})
+
+const TabActivities = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/summary/AssessmentCapabilitySummaryActivities.vue'),
+})
+
+const TabPBC = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/summary/AssessmentCapabilitySummaryPBC.vue'),
+})
+
 /* ---------------------------------- STATE --------------------------------- */
-const summary = reactive({
-  loading: false,
+const tab = ref("step")
+
+const ViewComponent = {
+  'penilaian': TabPenilaian,
+  'activities': TabActivities,
+  'pbc': TabPBC,
+}
+
+const querySummaryView = computed(() => {
+  return route.query?.summary
 })
-
-const assessmentId = computed(() => {
-  return route.params?.id
-})
-
-const isLastValueLevelNotNA = computed(() => {
-  return ({ index, lastIndex, label }) => {
-    return ((index + 1 === lastIndex) && label !== 'N/A')
-  }
-})
-
-const indexIsLastValueLevelNA = computed(() => {
-  return value => {
-    if (Array.isArray(value) && value.length) {
-      const indexNA = value.findIndex(v => v?.label === 'N/A' || !v?.label)
-
-      if (indexNA !== -1) {
-        return indexNA - 1
-      } else {
-        return -1
-      }
-    } else {
-      return -1
-    }
-  }
-})
-
 /* --------------------------------- METHODS -------------------------------- */
-const getSummary = async () => {
-  try {
-    summary.loading = true
-    const response = await assessmentStore.getCapabilitySummaryAssessment({
-      assesment_id: assessmentId.value,
-    })
+const handleClickSummaryView = (value) => {
+  router.replace({
+    query: { ...route.query, summary: value }
+  })
+}
 
-    if (response) {
-      summary.loading = false
-    }
-  } catch (error) {
-    summary.loading = false
+/* ---------------------------------- HOOKS --------------------------------- */
+watch(() => querySummaryView.value, (value) => {
+  switch (value) {
+    case 'penilaian':
+      tab.value = 'penilaian'
+      break;
+    case 'pbc':
+      tab.value = 'pbc'
+      break;
+    case 'activities':
+      tab.value = 'activities'
+      break;
+    default:
+      tab.value = 'penilaian';
+      break;
   }
-}
-
-const handleExport = () => {
-  const url = `${appConfig.app.appHost}capabilityassesment/summary-by-domain/download?assesment_id=${assessmentId.value}`
-  window.open(url, '_blank');
-}
-
-onMounted(() => {
-  getSummary()
-})
+}, { deep: true, immediate: true })
 
 </script>
 
 <template>
-  <div class="card">
-    <div class="card-body">
-      <div class="d-flex flex-row justify-content-between align-items-center">
-        <h5 class="card-title mb-3 mb-md-0 fw-semibold">Summary</h5>
-
-        <div
-          class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-          <BaseButton @click="handleExport" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-            title="Export Summary" :access="['project-add', 'project-edit']">
-            <template #icon-left>
-              <TablerIcon icon="FileExportIcon" />
-            </template>
+  <div>
+    <BaseTab>
+      <template #tab-navigation>
+        <li class="nav-item" role="presentation">
+          <BaseButton @click="handleClickSummaryView('penilaian')"
+            class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
+            :class="[tab === 'penilaian' ? 'active' : '']" :id="`pills-penilaian-tab`" role="tab"
+            :aria-controls="`pills-step`" aria-selected="true">
+            <div class="d-flex flex-row align-items-center">
+              <TablerIcon :icon="`FilePencilIcon`" class="me-2" />
+              <span class="d-none d-md-block text-truncate">Penilaian</span>
+            </div>
           </BaseButton>
-        </div>
-      </div>
-
-      <LoadingOverlay :active="summary.loading" />
-
-      <div v-if="Array.isArray(assessmentStore.capability.listSummary) && assessmentStore.capability.listSummary.length"
-        class="table-responsive rounded-2 mb-4 mt-4">
-        <div class="mh-100vh">
-          <table class="table border customize-table text-nowrap mb-0 align-middle">
-            <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">
-              <tr>
-                <th class="align-middle" rowspan="2">
-                  <h6 class="fs-3 fw-semibold mb-0">Governance and Management Objectives</h6>
-                </th>
-                <th class="align-middle text-center" rowspan="2">
-                  <h6 class="fs-3 fw-semibold mb-0">Target Adjustment</h6>
-                </th>
-                <th class="align-middle text-center" rowspan="2">
-                  <h6 class="fs-3 fw-semibold mb-0">Hasil Assessment</h6>
-                </th>
-                <th class="align-middle text-center" rowspan="1"
-                  :colspan="assessmentStore.capability.listSummaryLevel?.length">
-                  <h6 class="fs-3 fw-semibold mb-0 text-center">Level</h6>
-                </th>
-              </tr>
-              <tr>
-                <template
-                  v-if="Array.isArray(assessmentStore.capability.listSummaryLevel) && assessmentStore.capability.listSummaryLevel.length">
-                  <th v-for="(summaryLevel, index) in assessmentStore.capability.listSummaryLevel"
-                    class="align-middle text-center" :key="`summary-level-header-${index}`">
-                    <h6 class="fs-3 fw-semibold mb-0">{{ summaryLevel }}</h6>
-                  </th>
-                </template>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, indexSummary) in assessmentStore.capability.listSummary"
-                :key="`summary-item-${indexSummary}`">
-                <td>
-                  <div class="fw-bolder">{{ item?.kode }}</div>
-                  <div v-html="item.ket" />
-                </td>
-                <td class="text-center">
-                  {{ item?.target_adjustment }}
-                </td>
-                <td class="text-center">
-                  {{ item?.total }}
-                </td>
-
-                <template v-if="Array.isArray(item?.level) && item?.level?.length">
-                  <template v-if="item?.level?.length">
-                    <td v-for="(level, index) in item?.level" :key="`value-level-${index}-${indexSummary}`"
-                      v-tooltip="`${level?.total_compilance}`" class="text-center">
-                      <span
-                        v-if="(indexIsLastValueLevelNA(item?.level) === index) || isLastValueLevelNotNA({ index: index, lastIndex: item?.level?.length, label: level?.label })"
-                        class="badge rounded-pill font-medium text-capitalize fw-bold bg-primary">
-                        {{ level?.label }}
-                      </span>
-                      <span v-else>
-                        {{ level?.label }}
-                      </span>
-                    </td>
-                  </template>
-                  <template v-else>
-                    <td colspan="5" />
-                  </template>
-                </template>
-                <template
-                  v-else-if="Array.isArray(assessmentStore.capability.listSummaryLevel) && assessmentStore.capability.listSummaryLevel.length">
-                  <td v-for="(index) in assessmentStore.capability.listSummaryLevel"
-                    :key="`value-placeholder-${index}-${indexSummary}`" />
-                </template>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <template v-else>
-        <NoData title="Belum Ada Summary" />
+        </li>
+        <li class="nav-item" role="presentation">
+          <BaseButton @click="handleClickSummaryView('activities')"
+            class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
+            :class="[tab === 'activities' ? 'active' : '']" :id="`pills-activities-tab`" role="tab"
+            :aria-controls="`pills-step`" aria-selected="true">
+            <div class="d-flex flex-row align-items-center">
+              <TablerIcon :icon="`ReportIcon`" class="me-2" />
+              <span class="d-none d-md-block text-truncate">Progress Kapabilitas</span>
+            </div>
+          </BaseButton>
+        </li>
+        <li class="nav-item" role="presentation">
+          <BaseButton @click="handleClickSummaryView('pbc')"
+            class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-4"
+            :class="[tab === 'pbc' ? 'active' : '']" :id="`pills-pbc-tab`" role="tab" :aria-controls="`pills-step`"
+            aria-selected="true">
+            <div class="d-flex flex-row align-items-center">
+              <TablerIcon :icon="`ChartPieIcon`" class="me-2" />
+              <span class="d-none d-md-block text-truncate">Status PBC</span>
+            </div>
+          </BaseButton>
+        </li>
       </template>
-    </div>
+
+      <template #tab-content>
+        <RouterView>
+          <Transition name="fade-top" mode="out-in">
+            <component :is="ViewComponent[tab]" />
+          </Transition>
+        </RouterView>
+      </template>
+    </BaseTab>
   </div>
 </template>

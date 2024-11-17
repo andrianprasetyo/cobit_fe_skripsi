@@ -1770,7 +1770,18 @@ router.beforeEach((to, from, next) => {
   }
 
   if (isRequiredAuth && !auth.isAuthenticated) {
-    return next({ path: '/auth/login' })
+    const redirectQuery = to?.fullPath || to?.redirectedFrom?.fullPath
+
+    if (redirectQuery) {
+      return next({
+        path: '/auth/login',
+        query: { redirect: redirectQuery }
+      })
+    } else {
+      return next({
+        path: '/auth/login'
+      })
+    }
   } else {
     return next()
   }

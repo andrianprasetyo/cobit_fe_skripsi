@@ -47,7 +47,12 @@ const capabilityLevel = reactive({
     }, {
       text: 'Translate',
       value: 'translate',
-    }, {
+    },
+    {
+      text: 'Kebutuhan Dokumen',
+      value: 'Guidelines'
+    },
+    {
       text: 'Weight',
       value: 'bobot',
       sortable: true
@@ -298,6 +303,15 @@ watch(() => [serverOptions.value, filter.value], () => {
               </div>
             </template>
 
+            <template #item-guidelines="item">
+              <div v-if="item.item?.guidelines" class="d-flex flex-wrap">
+                <div class="width-250px text-break text-wrap" v-html="item.item?.guidelines" />
+              </div>
+              <div v-else>
+                -
+              </div>
+            </template>
+
             <template #item-bobot="item">
               <div class="d-flex justify-content-center align-items-center w-100">
                 {{ item.item?.bobot }}
@@ -307,7 +321,8 @@ watch(() => [serverOptions.value, filter.value], () => {
             <template #item-action="item">
               <div class="d-flex align-items-center">
                 <BaseButton v-tooltip="`Edit ${item.item?.subkode || ''}`"
-                  @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })" class="btn btn-icon" :access="['master-edit']">
+                  @click="handleNavigateToEdit({ id: item.item?.id, title: item.item?.subkode })" class="btn btn-icon"
+                  :access="['master-edit']">
                   <template #icon-left>
                     <TablerIcon icon="EditIcon" />
                   </template>

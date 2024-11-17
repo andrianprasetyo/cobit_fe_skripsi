@@ -130,31 +130,32 @@ const agreedCapabilityLevel = computed(() => {
                     <div v-if="hasil?.ket" class="width-250px text-break text-wrap" v-html="hasil?.ket" />
                   </div>
                 </td>
-                 <!-- Domain Section 3 -->
-                  <td class="bg-light fw-bold border-0 width-250px text-center">
-                    <span :class="[hasil?.assesmentcanvas?.step3_value < 0 ? 'text-danger' : 'text-primary']">
-                      {{ hasil?.assesmentcanvas?.step3_value }}
-                    </span>
-                  </td>
-                  <td>
-                    <BaseInput :id="`adjustment-${indexHasil}`" class="text-center form-control" type="number"
-                      v-model="assessment.reportCanvasSummary.hasil[indexHasil].assesmentcanvas.adjustment"
-                      placeholder="Masukkan Nilai Adjustment (Jika Perlu)" />
-                  </td>
-                  <td>
-                    <BaseInput type="text-area" :id="`reason-adjustment-${indexHasil}`"
-                      v-model="hasil.assesmentcanvas.reason_adjustment" placeholder="Masukkan Alasan (Jika Ada)" />
-                  </td>
-                  <td class="text-center bg-light fw-bold">
-                    {{ concludedScope({
+                <!-- Domain Section 3 -->
+                <td class="bg-light fw-bold border-0 width-250px text-center">
+                  <span :class="[hasil?.assesmentcanvas?.step3_value < 0 ? 'text-danger' : 'text-primary']">
+                    {{ hasil?.assesmentcanvas?.step3_value }}
+                  </span>
+                </td>
+                <td>
+                  <BaseInput :id="`adjustment-${indexHasil}`" class="text-center form-control" type="number"
+                    v-model="assessment.reportCanvasSummary.hasil[indexHasil].assesmentcanvas.adjustment"
+                    placeholder="Masukkan Nilai Adjustment (Jika Perlu)" />
+                </td>
+                <td>
+                  <BaseInput type="text-area" :id="`reason-adjustment-${indexHasil}`"
+                    v-model="hasil.assesmentcanvas.reason_adjustment" placeholder="Masukkan Alasan (Jika Ada)" />
+                </td>
+                <td class="text-center bg-light fw-bold">
+                  {{ concludedScope({
                 refinedScope: hasil?.assesmentcanvas?.step3_value, adjustment:
                   hasil.assesmentcanvas.adjustment
               }) }}
-                  </td>
-                  <td class="text-center bg-light fw-bold">
-                    {{ hasil?.assesmentcanvas?.suggest_capability_level }}
-                  </td>
-                  <td class="text-center">
+                </td>
+                <td class="text-center bg-light fw-bold">
+                  {{ hasil?.assesmentcanvas?.suggest_capability_level }}
+                </td>
+                <td class="text-center">
+                  <template v-if="assessment.reportCanvasSummary.hasil[indexHasil].assesmentcanvas.adjustment">
                     <span>
                       {{ hasil?.assesmentcanvas?.suggest_capability_level }}
                     </span>
@@ -167,11 +168,18 @@ const agreedCapabilityLevel = computed(() => {
               })) }}
                       </span>
                     </template>
-                  </td>
-                  <td class="text-center">
-                    <BaseInput type="text-area" :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
-                      placeholder="Masukkan Alasan (Jika Ada)" />
-                  </td>
+                  </template>
+
+                  <template v-else>
+                    <span>
+                      {{ hasil?.assesmentcanvas?.aggreed_capability_level }}
+                    </span>
+                  </template>
+                </td>
+                <td class="text-center">
+                  <BaseInput type="text-area" :id="`reason-${indexHasil}`" v-model="hasil.assesmentcanvas.reason"
+                    placeholder="Masukkan Alasan (Jika Ada)" />
+                </td>
               </tr>
             </template>
           </tbody>

@@ -33,6 +33,8 @@ axiosClient.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`
     }
 
+    // config.headers['Domain'] = window.location.origin
+
     return config
   },
   (error) => Promise.reject(error)
@@ -56,7 +58,7 @@ axiosClient.interceptors.response.use(
     const auth = useAuth()
 
     const toast = useToast()
-    
+
     const isNetworkError =
       error?.code === 'ERR_NETWORK' && error?.message?.includes('Network Error')
 
@@ -75,7 +77,6 @@ axiosClient.interceptors.response.use(
     if (error?.response?.status === 401) {
       auth.resetState()
       auth.redirectToLogin()
-
     } else if (error?.response?.status == 503) {
       toast.error({
         title: 'Aplikasi Sedang Maintenance',

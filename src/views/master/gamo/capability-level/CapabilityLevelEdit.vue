@@ -41,6 +41,7 @@ const formState = reactive({
   kode: '',
   kegiatan: '',
   translate: '',
+  guidelines: '',
   level: '',
   bobot: '',
   domain_id: null
@@ -81,6 +82,9 @@ const rules = computed(() => {
     translate: {
       required: helpers.withMessage('Silahkan isi translate', required),
     },
+    guidelines: {
+      required: helpers.withMessage('Silahkan isi kebutuhan dokumen', required),
+    },
     level: {
       required: helpers.withMessage('Silahkan pilih level', required),
     },
@@ -113,6 +117,7 @@ const getDetailCapabilityLevel = async () => {
       formState.level = data?.level
       formState.kegiatan = data?.kegiatan || ''
       formState.translate = data?.translate || ''
+      formState.guidelines = data?.guidelines || ''
       formState.bobot = data?.bobot
 
       title.value = `Edit Capability Level ${data?.kode}`
@@ -164,6 +169,7 @@ const handleSubmit = async () => {
         kode: formState.kode,
         kegiatan: formState.kegiatan,
         translate: formState.translate,
+        guidelines: formState.guidelines,
         level: formState.level,
         bobot: formState.bobot,
         domain_id: idGamo.value
@@ -227,8 +233,8 @@ onMounted(() => {
             </div>
 
             <div class="col-12 col-md-3">
-              <BaseInput id="urutan" type="number" v-model="v$.urutan.$model" label="Urutan" placeholder="Masukkan Urutan"
-                tabindex="2" :min="1" :isInvalid="v$.urutan.$errors?.length"
+              <BaseInput id="urutan" type="number" v-model="v$.urutan.$model" label="Urutan"
+                placeholder="Masukkan Urutan" tabindex="2" :min="1" :isInvalid="v$.urutan.$errors?.length"
                 :disabled="formState.loading || formState.loadingSubmit" />
               <ErrorMessage :errors="v$.urutan.$errors" />
             </div>
@@ -254,14 +260,15 @@ onMounted(() => {
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-12 col-md-9">
-              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode" tabindex="3"
-                :isInvalid="v$.kode.$errors?.length" :disabled="formState.loading || formState.loadingSubmit" />
+              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode"
+                tabindex="3" :isInvalid="v$.kode.$errors?.length"
+                :disabled="formState.loading || formState.loadingSubmit" />
               <ErrorMessage :errors="v$.kode.$errors" />
             </div>
 
             <div class="col-12 col-md-3">
-              <BaseInput id="weight" type="number" v-model="v$.bobot.$model" label="Weight" placeholder="Masukkan Weight"
-                tabindex="4" :isInvalid="v$.bobot.$errors?.length"
+              <BaseInput id="weight" type="number" v-model="v$.bobot.$model" label="Weight"
+                placeholder="Masukkan Weight" tabindex="4" :isInvalid="v$.bobot.$errors?.length"
                 :disabled="formState.loading || formState.loadingSubmit" />
               <ErrorMessage :errors="v$.bobot.$errors" />
             </div>
@@ -280,6 +287,15 @@ onMounted(() => {
 
             <CKEditor id="translate" tabindex="6" v-model="v$.translate.$model" placeholder="Masukkan Translate"
               :isInvalid="!!v$.translate.$errors?.length" :disabled="formState.loading || formState.loadingSubmit" />
+            <ErrorMessage :errors="v$.translate.$errors" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="guidelines">Kebutuhan Dokumen</label>
+
+            <CKEditor id="guidelines" tabindex="7" v-model="v$.guidelines.$model"
+              :isInvalid="!!v$.guidelines.$errors?.length" :disabled="formState.loadingSubmit"
+              placeholder="Masukkan Kebutuhan Dokumen" />
             <ErrorMessage :errors="v$.translate.$errors" />
           </div>
         </div>

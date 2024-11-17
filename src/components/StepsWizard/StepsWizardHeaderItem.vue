@@ -40,7 +40,9 @@ const slots = defineSlots()
       <slot v-if="slots['label']" name="label" />
 
       <div v-else>
-        {{ label }}
+        <span class="fw-bolder">
+          {{ label }}
+        </span>
       </div>
       <slot></slot>
     </a>

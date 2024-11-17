@@ -98,6 +98,9 @@ watch(() => [props.isShow], () => {
         <p class="mb-1 fs-2">Translate</p>
         <div style="font-weight: bold !important; font-style: italic !important;"
           v-html="assessmentStore.capability.selectedSubGamo?.kegiatan" />
+        <p class="mb-1 fs-2">Kebutuhan Dokumen</p>
+        <div style="font-weight: bold !important; font-style: italic !important;"
+          v-html="assessmentStore.capability.selectedSubGamo?.guidelines || '-'" />
       </div>
 
       <div class="mb-3">
@@ -153,7 +156,7 @@ watch(() => [props.isShow], () => {
       <hr class="my-3" />
 
       <div class="mb-3">
-        <label class="form-label" for="ofi-input">Note</label>
+        <label class="form-label" for="note-input">Note</label>
 
         <CKEditor id="note-input" placeholder="Masukkan Note (Jika Ada)" v-model="formState.note" />
       </div>
