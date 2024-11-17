@@ -1,0 +1,12 @@
+[
+  {
+    "key": "report-only-gamo-assessment",
+    "label": "Hanya GAMO yang Perlu Diasesmen",
+    "id": 1
+  },
+  {
+    "key": "report-all-gamo-assessment",
+    "label": "Tampilkan Semua GAMO",
+    "id": 0
+  }
+]

@@ -4,6 +4,7 @@ import AssessmentTargetServices from '@/services/lib/assessment-target'
 import AssessmentServices from '@/services/lib/assessment'
 import ReportServices from '@/services/lib/report'
 import CapabilityServices from '@/services/lib/capability'
+import CapabilityAnswerServices from '@/services/lib/capability-answer'
 import RepositoryServices from '@/services/lib/repository'
 import DesignFactorServices from '@/services/lib/design-factor'
 
@@ -30,16 +31,24 @@ export const useAssessmentStore = defineStore('assessment', {
       listGamo: [],
       selectedGamo: null,
       listLevel: [],
+      listCapabilityAnswer: [],
+      weightComplianceEnough: 0.67,
       selectedSubGamo: null,
       selectedLevel: '2',
       detailListLevel: [],
       detailListAnswer: [],
       detailTotalBobot: null,
+      detailListPBC: [],
       listMediaFile: [],
       selectedMediaFile: null,
       averageComplianceLevel: null,
       listSummary: [],
-      listSummaryLevel: []
+      listSummaryLevel: [],
+      listProgress: [],
+      listProgressLevel: [],
+      listProgressTotal: 0,
+      listProgressTotalAnswered: 0,
+      listSummaryPBC: [],
     },
     reportDesignFactor: {
       listDesignFactor: []
@@ -107,7 +116,19 @@ export const useAssessmentStore = defineStore('assessment', {
     },
 
     getCapabilityIsComplianceEnough(state) {
-      return state.capability.detailTotalBobot?.result >= 0.85
+      return state.capability.detailTotalBobot?.result >= state.capability.weightComplianceEnough
+    },
+
+    getCapabilityIsEditedPbc(state) {
+      const indexEdited = state.capability.detailListPBC.findIndex((level) => {
+        return level?.capabilityass?.isEditedPbc
+      })
+
+      if (indexEdited !== -1) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   actions: {
@@ -144,6 +165,16 @@ export const useAssessmentStore = defineStore('assessment', {
         const patched = this.capability.detailListLevel
         patched[indexSaved] = payload
         this.capability.detailListLevel = patched
+      }
+    },
+
+    saveCapabilityPBCSubGamo(payload) {
+      const indexSaved = this.capability.detailListPBC.findIndex((item) => item?.id === payload?.id)
+
+      if (indexSaved != -1) {
+        const patched = this.capability.detailListPBC
+        patched[indexSaved] = payload
+        this.capability.detailListPBC = patched
       }
     },
 
@@ -368,6 +399,32 @@ export const useAssessmentStore = defineStore('assessment', {
       }
     },
 
+    async getCapabilityListCapabilityAnswerAssessment() {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityAnswerServices.getCapabilityAnswer()
+
+        if (response) {
+          const data = response.data
+          this.capability.listCapabilityAnswer = data?.list || []
+
+          if (Array.isArray(data?.list) && data?.list?.length) {
+            const largellyAnswer = data?.list?.find((item) => item?.label === 'L')
+
+            if (largellyAnswer) {
+              this.capability.weightComplianceEnough = largellyAnswer?.bobot
+            }
+          }
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
     async getCapabilityListTargetAssessment(payload) {
       const toast = useToast()
       const loader = loading.show()
@@ -556,7 +613,8 @@ export const useAssessmentStore = defineStore('assessment', {
 
       try {
         const response = await CapabilityServices.getSummaryCapability({
-          assesment_id: payload.assesment_id
+          assesment_id: payload?.assesment_id,
+          target_id: payload?.target_id
         })
 
         if (response) {
@@ -565,6 +623,81 @@ export const useAssessmentStore = defineStore('assessment', {
           this.capability.listSummary = data?.list || []
           this.capability.listSummaryLevel = data?.level || []
 
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityProgressAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getProgressCapability({
+          assesment_id: payload?.assesment_id
+        })
+
+        if (response) {
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityProgressListAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getProgressListCapability({
+          assesment_id: payload?.assesment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.listProgress = data?.list || []
+          this.capability.listProgressLevel = data?.level || []
+          this.capability.listProgressTotal = data?.total || 0
+          this.capability.listProgressTotalAnswered = data?.total_answered || 0
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilitySummaryStatusPBCAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getSummaryStatusPBCCapability({
+          assesment_id: payload?.assesment_id
+        })
+
+        if (response) {
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilitySummaryChartStatusPBCAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getSummaryChartStatusPBCCapability({
+          assesment_id: payload?.assesment_id
+        })
+
+        if (response) {
           return response
         }
       } catch (error) {
@@ -594,6 +727,50 @@ export const useAssessmentStore = defineStore('assessment', {
         }
       } catch (error) {
         loader.hide()
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilityPBCAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getPBCCapability({
+          level: payload.level,
+          domain_id: payload.domain_id,
+          assesment_id: payload.assesment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.detailListPBC = data?.list || []
+
+          return response
+        }
+      } catch (error) {
+        toast.error({ error })
+        throw error
+      }
+    },
+
+    async getCapabilitySummaryPBCListAssessment(payload) {
+      const toast = useToast()
+
+      try {
+        const response = await CapabilityServices.getPBCListCapability({
+          assesment_id: payload?.assesment_id
+        })
+
+        if (response) {
+          const data = response?.data
+
+          this.capability.listSummaryPBC = data?.list || []
+
+          return response
+        }
+      } catch (error) {
         toast.error({ error })
         throw error
       }

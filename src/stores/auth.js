@@ -191,7 +191,10 @@ export const useAuth = defineStore('auth', {
             title: 'Login Berhasil',
             text: `Selamat Datang ${data?.user?.nama || data?.user?.username || ''}`
           })
-          this.router.push('/dashboard')
+
+          const query = this.router.currentRoute.value.query
+
+          this.router.push({ path: query?.redirect || '/dashboard' })
         }
       } catch (error) {
         toast.error({ error })

@@ -4,6 +4,7 @@ import { reactive, ref, onMounted, watch, computed } from 'vue'
 import LoadingSkeleton from '@/components/Loading/LoadingSkeleton.vue'
 import NoData from '@/components/EmptyPlaceholder/NoData.vue'
 import EasyPagination from '@/components/Pagination/EasyPagination.vue'
+import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import AssessmentListCardItem from '@/views/project/assessment/components/AssessmentListCardItem.vue'
 
 import AssessmentServices from '@/services/lib/assessment'
@@ -19,6 +20,29 @@ const alert = useAlert()
 const router = useRouter()
 const auth = useAuth()
 const route = useRoute()
+
+const props = defineProps({
+  status: {
+    type: String,
+    default: 'open'
+  },
+  label: {
+    type: String,
+    default: 'Ongoing'
+  },
+  sublabel: {
+    type: String,
+    default: ''
+  },
+  icon: {
+    type: String,
+    default: ''
+  },
+  variant: {
+    type: String,
+    default: 'primary'
+  }
+})
 
 /* ---------------------------------- STATE --------------------------------- */
 const assessment = reactive({
@@ -78,10 +102,10 @@ const resetServerOptions = () => {
   serverOptions.value.sortType = ''
 }
 
-const getListAssessment = async ({ limit, page, sortBy, sortType, search, organisasi_id }) => {
+const getListAssessment = async ({ limit, page, sortBy, sortType, search, organisasi_id, status }) => {
   try {
     assessment.loading = true
-    const response = await AssessmentServices.getListAssessment({ limit, page, sortBy, sortType, search, organisasi_id })
+    const response = await AssessmentServices.getListAssessment({ limit, page, sortBy, sortType, search, organisasi_id, status })
 
     if (response) {
       const data = response?.data
@@ -103,6 +127,7 @@ const handleRefresh = () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
+    status: props.status
   })
 }
 
@@ -155,7 +180,7 @@ const handleNavigateDetail = ({ id }) => {
 /* ---------------------------------- HOOKS --------------------------------- */
 onMounted(() => {
   auth.setMenuToDefault()
-  getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, search: filter.value.search, organisasi_id: filter.value.organisasi_id })
+  getListAssessment({ limit: serverOptions.value.rowsPerPage, page: serverOptions.value.page, search: filter.value.search, organisasi_id: filter.value.organisasi_id, status: props.status })
 })
 
 watch(() => [filter.value], value => {
@@ -171,58 +196,77 @@ watch(() => [serverOptions.value, filter.value], () => {
     sortBy: serverOptions.value.sortBy,
     sortType: serverOptions.value.sortType,
     search: filter.value.search,
-    organisasi_id: filter.value.organisasi_id
+    organisasi_id: filter.value.organisasi_id,
+    status: props.status
   })
 }, { deep: true })
 
 </script>
 
 <template>
-  <section>
+  <div class="position-relative mb-3" :class="{
+    'border rounded': status === 'ongoing' || filter.search || (status === 'completed' && Array.isArray(assessment.data) && assessment.data.length)
+  }">
+    <section
+      v-if="status === 'ongoing' || filter.search || (status === 'completed' && Array.isArray(assessment.data) && assessment.data.length)"
+      class="my-4 mx-4">
+      <div class="row">
+        <div class="mb-3 mb-sm-0">
+          <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-center">
+            <div class="d-flex align-items-center mb-2 mb-md-0">
+              <div>
+                <TablerIcon :icon="props.icon" :class="`text-${props.variant}`" size="40" />
+              </div>
 
-    <div class="row">
-      <template v-if="assessment.loading">
-        <div class="col-12 col-md-4 mb-3" v-for="(_, index) in Array.from({ length: 12 })"
-          :key="`skeleton-project-${index}`">
-          <LoadingSkeleton class="skeleton-project" />
-        </div>
-      </template>
-
-      <template v-else-if="!assessment.loading && Array.isArray(assessment.data) && assessment.data.length">
-        <AssessmentListCardItem v-for="item in assessment.data" :key="`assessment-card-list-${item?.id}`"
-          :nama="item?.nama" :organisasi="item?.organisasi?.nama" :status="item?.status" :start_date="item?.start_date"
-          :end_date="item?.end_date" :start_date_quisioner="item?.start_date_quisioner"
-          :end_date_quisioner="item?.end_date_quisioner" :minimum_target="item?.minimum_target"
-          :users_count="item?.users_count" @handle-delete="handleDelete({ title: item?.nama, id: item?.id })"
-          @handle-edit="handleNavigateEdit({ id: item?.id })" @handle-detail="handleNavigateDetail({ id: item?.id })" />
-      </template>
-
-      <template
-        v-else-if="!assessment.loading && Array.isArray(assessment.data) && !assessment.data.length && filter.search">
-        <div class="card">
-          <div class="card-body">
-            <NoData :title="`Project dengan kata kunci '${filter.search}' Tidak Ditemukan`" />
+              <div class="ms-2">
+                <h4 class="fw-semibold text-primary mb-1"> {{ props.label }}</h4>
+                <p v-if="props.sublabel" class="card-subtitle mb-0">{{ props.sublabel }}</p>
+              </div>
+            </div>
           </div>
         </div>
-      </template>
-
-      <template v-else>
-        <div class="card">
-          <div class="card-body">
-            <NoData :title="`Belum Ada Data Project`" />
+        <template v-if="assessment.loading">
+          <div class="col-12 col-md-4 mb-3" v-for="(_, index) in Array.from({ length: 12 })"
+            :key="`skeleton-project-${index}`">
+            <LoadingSkeleton class="skeleton-project" />
           </div>
-        </div>
-      </template>
+        </template>
 
-      <div class="col-12">
-        <EasyPagination :loading="assessment.loading" :items="assessment.data"
-          :server-items-length="assessment.meta.total" :rows-items="[12, 24, 56, 99]"
-          v-model:server-options="serverOptions" :filter="filter" />
+        <template v-else-if="!assessment.loading && Array.isArray(assessment.data) && assessment.data.length">
+          <AssessmentListCardItem v-for="item in assessment.data" :key="`assessment-card-list-${item?.id}`"
+            :nama="item?.nama" :organisasi="item?.organisasi?.nama" :status="item?.status"
+            :start_date="item?.start_date" :end_date="item?.end_date" :start_date_quisioner="item?.start_date_quisioner"
+            :end_date_quisioner="item?.end_date_quisioner" :minimum_target="item?.minimum_target"
+            :users_count="item?.users_count" @handle-delete="handleDelete({ title: item?.nama, id: item?.id })"
+            @handle-edit="handleNavigateEdit({ id: item?.id })"
+            @handle-detail="handleNavigateDetail({ id: item?.id })" />
+        </template>
+
+        <template
+          v-else-if="!assessment.loading && Array.isArray(assessment.data) && !assessment.data.length && filter.search">
+          <div class="card">
+            <div class="card-body">
+              <NoData :title="`Project dengan kata kunci '${filter.search}' Tidak Ditemukan`" />
+            </div>
+          </div>
+        </template>
+
+        <template v-else>
+          <div class="card">
+            <div class="card-body">
+              <NoData :title="`Belum Ada Data Project`" />
+            </div>
+          </div>
+        </template>
+
+        <div class="col-12">
+          <EasyPagination :loading="assessment.loading" :items="assessment.data"
+            :server-items-length="assessment.meta.total" :rows-items="[12, 24, 56, 99]"
+            v-model:server-options="serverOptions" :filter="filter" />
+        </div>
       </div>
-    </div>
-
-
-  </section>
+    </section>
+  </div>
 </template>
 
 <style scoped>

@@ -90,7 +90,7 @@ const handleCopy = () => {
 }
 
 const handleExport = () => {
-  const url = `${appConfig.app.appHost} assesment / report / detail - ofi ? domain_id = ${assessmentStore.report.selectedGamo?.domain_id}& assesment_id=${assessmentStore.report.selectedGamo?.assesment_id}& capability_target_id=${assessmentStore.report.selectedGamo?.capability_target_id}& download=true`
+  const url = `${appConfig.app.appHost}assesment/report/detail-ofi?domain_id=${assessmentStore.report.selectedGamo?.domain_id}&assesment_id=${assessmentStore.report.selectedGamo?.assesment_id}&capability_target_id=${assessmentStore.report.selectedGamo?.capability_target_id}&download=true`
   window.open(url, '_blank');
 }
 
@@ -144,7 +144,7 @@ watch(() => [props.isShow], () => {
 
           <div class="col-12 col-md-3 text-start text-md-end d-none">
             <BaseButton v-if="reportOFI.data?.ofi?.length" @click="handleExport" title="Export"
-              class="btn btn-outline-primary mt-2 mt-md-0"  :access="['project-add', 'project-edit']">
+              class="btn btn-outline-primary mt-2 mt-md-0" :access="['project-add', 'project-edit']">
               <template #icon-left>
                 <TablerIcon icon="FileExportIcon" />
               </template>
@@ -158,10 +158,10 @@ watch(() => [props.isShow], () => {
       <div v-if="Array.isArray(reportOFI.data?.ofi) && reportOFI.data?.ofi.length" class="row rounded border p-3 mt-3">
         <div class="col-12 col-md-10">
           <h6 class="lh-base">Rekomendasi aktivitas yang dapat dilakukan untuk mencapai tingkat kematangan {{
-            assessmentStore.report?.selectedGamo?.target_level }} <br />
+    assessmentStore.report?.selectedGamo?.target_level }} <br />
             <span class="text-primary">(aktivitas COBIT untuk mencapai {{
-              assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama
-            }} = {{ assessmentStore.report?.selectedGamo?.target_level }})
+    assessmentStore.report?.selectedGamo?.target_organisasi?.target?.nama
+  }} = {{ assessmentStore.report?.selectedGamo?.target_level }})
             </span>
             adalah:
           </h6>

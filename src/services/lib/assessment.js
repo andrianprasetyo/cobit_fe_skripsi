@@ -3,7 +3,7 @@ import axiosClient from '@/services/axiosClient'
 export default {
   /**
    *
-   * @param {{limit: String | Number, page : String | Number, search: String, sortBy: String, sortType: String, organisasi_id: String}} payload
+   * @param {{limit: String | Number, page : String | Number, search: String, sortBy: String, sortType: String, organisasi_id: String, status: String}} payload
    * @returns
    */
   getListAssessment(payload) {
@@ -12,7 +12,7 @@ export default {
         payload?.search ? `&search=${payload?.search}` : ''
       }${payload?.sortBy ? `&sortBy=${payload?.sortBy}` : ''}${
         payload?.sortType ? `&sortType=${payload?.sortType}` : ''
-      }${payload?.organisasi_id ? `&organisasi_id=${payload?.organisasi_id}` : ''}`
+      }${payload?.organisasi_id ? `&organisasi_id=${payload?.organisasi_id}` : ''}${payload?.status ? `&status=${payload?.status}` : ''}`
     )
   },
 
@@ -90,7 +90,7 @@ export default {
    * @param {{id: String}} payload
    * @returns
    */
-  deletePic(payload){
+  deletePic(payload) {
     return axiosClient.delete(`assesment/remove-pic/${payload?.id}`)
   },
 
@@ -235,9 +235,7 @@ export default {
       `assesment/report/detail-ofi?domain_id=${payload?.domain_id}&assesment_id=${
         payload?.assesment_id
       }${
-        payload?.capability_target
-          ? `&capability_target_id=${payload?.capability_target_id}`
-          : ''
+        payload?.capability_target ? `&capability_target_id=${payload?.capability_target_id}` : ''
       }${
         payload?.capability_assesment_id
           ? `&capability_assesment_id=${payload?.capability_assesment_id}`
@@ -262,5 +260,5 @@ export default {
    */
   recalculateAssessment(payload) {
     return axiosClient.post(`assesment/manual-kalkulasi`, payload)
-  },
+  }
 }

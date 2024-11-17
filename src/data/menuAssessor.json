@@ -11,41 +11,6 @@
     "role_type": "[\"administrator\", \"assesor\", \"eksternal\"]"
   },
   {
-    "id": "68170d81-6ff6-4490-9ac9-a465a8874b63",
-    "parent_id": null,
-    "title": "Data Master",
-    "menu_key": "header-master",
-    "url": null,
-    "icon": null,
-    "type": "menu",
-    "urutan": 2,
-    "role_type": "[\"administrator\", \"assesor\"]"
-  },
-  {
-    "id": "98061b78-a961-4910-8756-d0e2161458bd",
-    "parent_id": null,
-    "title": "Data Master",
-    "menu_key": "master",
-    "url": null,
-    "icon": "AssemblyIcon",
-    "type": "menu",
-    "urutan": 3,
-    "role_type": "[\"administrator\", \"assesor\"]",
-    "children": [
-      {
-        "id": "5ab4e70f-0ea9-4dd5-acce-324ddffasdasd",
-        "parent_id": "98061b78-a961-4910-8756-d0e2161458bd",
-        "title": "Organisasi",
-        "menu_key": "master-organisasi",
-        "url": "/master/organisasi",
-        "icon": "BuildingCommunityIcon",
-        "type": "menu",
-        "urutan": 1,
-        "role_type": "[\"administrator\", \"assesor\"]"
-      }
-    ]
-  },
-  {
     "id": "24c0d48c-c6a2-4dfd-987a-e0d3e4d0e125",
     "parent_id": null,
     "title": "Project",

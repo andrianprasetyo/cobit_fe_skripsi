@@ -37,6 +37,7 @@ const formState = reactive({
   kode: '',
   kegiatan: '',
   translate: '',
+  guidelines: '',
   level: '',
   bobot: '',
   domain_id: null,
@@ -68,6 +69,9 @@ const rules = computed(() => {
     },
     translate: {
       required: helpers.withMessage('Silahkan isi translate', required),
+    },
+    guidelines: {
+      required: helpers.withMessage('Silahkan isi kebutuhan dokumen', required),
     },
     level: {
       required: helpers.withMessage('Silahkan pilih level', required),
@@ -118,6 +122,7 @@ const handleSubmit = async ({ isSaveAndClear = false }) => {
         kode: formState.kode,
         kegiatan: formState.kegiatan,
         translate: formState.translate,
+        guidelines: formState.guidelines,
         level: formState.level,
         bobot: formState.bobot,
         domain_id: formState.domain_id
@@ -150,6 +155,7 @@ const handleResetState = () => {
   formState.kode = ''
   formState.kegiatan = ''
   formState.translate = ''
+  formState.guidelines = ''
   formState.level = ''
   formState.bobot = ''
 }
@@ -213,14 +219,15 @@ onMounted(() => {
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-12 col-md-9">
-              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode" tabindex="3"
-                :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
+              <BaseInput id="kode" v-model="v$.kode.$model" label="Sub Kode" placeholder="Masukkan Sub Kode"
+                tabindex="3" :isInvalid="v$.kode.$errors?.length" :disabled="formState.loadingSubmit" />
               <ErrorMessage :errors="v$.kode.$errors" />
             </div>
 
             <div class="col-12 col-md-3">
-              <BaseInput id="weight" type="number" v-model="v$.bobot.$model" label="Weight" placeholder="Masukkan Weight"
-                tabindex="4" :isInvalid="v$.bobot.$errors?.length" :disabled="formState.loadingSubmit" />
+              <BaseInput id="weight" type="number" v-model="v$.bobot.$model" label="Weight"
+                placeholder="Masukkan Weight" tabindex="4" :isInvalid="v$.bobot.$errors?.length"
+                :disabled="formState.loadingSubmit" />
               <ErrorMessage :errors="v$.bobot.$errors" />
             </div>
           </div>
@@ -239,6 +246,15 @@ onMounted(() => {
             <CKEditor id="translate" tabindex="6" v-model="v$.translate.$model"
               :isInvalid="!!v$.translate.$errors?.length" :disabled="formState.loadingSubmit"
               placeholder="Masukkan Translate" />
+            <ErrorMessage :errors="v$.translate.$errors" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="guidelines">Kebutuhan Dokumen</label>
+
+            <CKEditor id="guidelines" tabindex="7" v-model="v$.guidelines.$model"
+              :isInvalid="!!v$.guidelines.$errors?.length" :disabled="formState.loadingSubmit"
+              placeholder="Masukkan Kebutuhan Dokumen" />
             <ErrorMessage :errors="v$.translate.$errors" />
           </div>
         </div>
@@ -267,7 +283,8 @@ onMounted(() => {
                     title="Simpan & Reset" :access="['master-add']">
                   </BaseButton>
 
-                  <BaseButton @click.stop="handleResetState" type="button" class="dropdown-item w-100" title="Reset" :access="['master-add']">
+                  <BaseButton @click.stop="handleResetState" type="button" class="dropdown-item w-100" title="Reset"
+                    :access="['master-add']">
                   </BaseButton>
                 </template>
               </BaseDropdownButton>

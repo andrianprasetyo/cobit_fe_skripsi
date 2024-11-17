@@ -180,6 +180,9 @@ watch(() => [props.isShow], () => {
         <p class="mb-1 fs-2">Translate</p>
         <div style="font-weight: bold !important; font-style: italic !important;"
           v-html="assessmentStore.capability.selectedSubGamo?.kegiatan" />
+        <p class="mb-1 fs-2">Kebutuhan Dokumen</p>
+        <div style="font-weight: bold !important; font-style: italic !important;"
+          v-html="assessmentStore.capability.selectedSubGamo?.guidelines || '-'" />
       </div>
 
       <template v-if="formState.ofi.length">

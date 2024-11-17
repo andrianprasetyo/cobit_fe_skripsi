@@ -29,7 +29,7 @@ export default {
 
   /**
    *
-   * @param {kode, kegiatan, translate, level, bobot, domain_id} payload
+   * @param {kode, kegiatan, translate, level, bobot, domain_id, guidelines} payload
    * @returns
    */
   createCapabilityLevel(payload) {
@@ -38,7 +38,7 @@ export default {
 
   /**
    *
-   * @param {kegiatan, translate, level, bobot, domain_id} payload
+   * @param {kegiatan, translate, level, bobot, domain_id, guidelines} payload
    * @returns
    */
   editCapabilityLevel(payload) {

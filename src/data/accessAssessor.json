@@ -1,9 +1,5 @@
 [
   "dashboard",
-  "master-organisasi",
-  "master-organisasi-add",
-  "master-organisasi-edit",
-  "master-organisasi-delete",
   "project",
   "project-invite-responden",
   "project-add",

@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, computed, watch, onMounted } from 'vue'
+import { reactive, computed, watch, onBeforeMount, onBeforeUnmount, onUnmounted } from 'vue'
 
 import BaseButton from '@/components/Button/BaseButton.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
@@ -11,6 +11,8 @@ import ModalAverageCompliance from '@/views/project/assessment/capability/steps/
 import ModalViewDetailEvidence from '@/views/project/assessment/capability/steps/components/ModalViewDetailEvidence.vue'
 import ModalOFI from "@/views/project/assessment/capability/steps/components/ModalOFI.vue"
 import ModalHistory from '@/views/project/assessment/capability/steps/components/ModalHistory.vue'
+import ModalPenilaianNoteList from '@/views/project/assessment/capability/steps/components/ModalPenilaianNoteList.vue'
+import ModalEvidenceList from '@/views/project/assessment/capability/steps/components/ModalEvidenceList.vue'
 
 import CapabilityServices from '@/services/lib/capability'
 
@@ -33,7 +35,9 @@ const capability = reactive({
   isShowModalViewDetailEvidence: false,
   isShowModalAverageCompliance: false,
   isShowModalOFI: false,
-  isShowModalHistory: false
+  isShowModalHistory: false,
+  isShowModalPenilaianNoteList: false,
+  isShowModalEvidenceList: false,
 })
 
 const valueAnwer = computed(() => {
@@ -77,7 +81,7 @@ const totalValue = computed(() => {
   return assessmentStore.capability.detailListLevel.reduce((acc, value) => {
     if (value?.capabilityass?.capability_level_id) {
       const values = valueAnwer.value(value?.capabilityass?.capability_answer_id)?.bobot
-      acc += parseFloat(values) || 0
+      acc += Math.fround(values) || 0
     }
 
     return acc
@@ -165,6 +169,14 @@ const handleToggleModalAverageCompliance = () => {
   capability.isShowModalAverageCompliance = !capability.isShowModalAverageCompliance
 }
 
+const handleToggleModalPenilaianNoteList = () => {
+  capability.isShowModalPenilaianNoteList = !capability.isShowModalPenilaianNoteList
+}
+
+const handleToggleModalEvidenceList = () => {
+  capability.isShowModalEvidenceList = !capability.isShowModalEvidenceList
+}
+
 const onSubmit = async () => {
   const loader = loading.show()
 
@@ -196,6 +208,7 @@ const onSubmit = async () => {
               formData.append(`evident[${index}][${indexEv}][media_repositories_id]`, ev?.media_repositories_id)
             }
 
+            formData.append(`evident[${index}][${indexEv}][name]`, ev?.name || '')
             formData.append(`evident[${index}][${indexEv}][deskripsi]`, ev?.deskripsi || '')
           })
         }
@@ -231,6 +244,20 @@ const onSubmit = async () => {
   }
 }
 
+const resetLevel = () => {
+  if (Array.isArray(assessmentStore.capability.listLevel) && assessmentStore.capability.listLevel.length) {
+    assessmentStore.setCapabilitySelectedLevel(assessmentStore.capability.listLevel?.[0]?.level)
+  } else {
+    assessmentStore.setCapabilitySelectedLevel("2")
+  }
+}
+
+const preventReload = (event) => {
+  if (!assessmentStore.getCapabilityIsEditedPenilaianSubGamo) return
+  event.preventDefault()
+  event.returnValue = ""
+}
+
 /* ---------------------------------- HOOKS --------------------------------- */
 watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capability.listLevel], () => {
   if (assessmentStore.capability.listLevel.length && assessmentStore.capability.selectedLevel && assessmentStore.capability.selectedGamo) {
@@ -238,10 +265,17 @@ watch(() => [assessmentStore.capability.selectedLevel, assessmentStore.capabilit
   }
 }, { deep: true, immediate: true })
 
-onMounted(() => {
-  assessmentStore.getCapabilityListMediaRepositoryAssessment({ assesment_id: route.params?.id, limit: 12 })
+onUnmounted(() => {
+  resetLevel()
 })
 
+onBeforeMount(() => {
+  window.addEventListener("beforeunload", preventReload)
+})
+
+onBeforeUnmount(() => {
+  window.addEventListener("beforeunload", preventReload)
+})
 </script>
 
 <template>
@@ -256,21 +290,6 @@ onMounted(() => {
 
       <div
         class="d-flex flex-column flex-md-row align-items-md-center justify-content-center justify-content-md-between">
-        <BaseButton @click="handleToggleModalHistory" class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3"
-          title="Lihat History Perubahan Data" :disabled="capability.loadingSubmit || capability.loading">
-          <template #icon-left>
-            <TablerIcon icon="HistoryIcon" />
-          </template>
-        </BaseButton>
-
-        <BaseButton @click="handleToggleModalAverageCompliance"
-          class="btn btn-outline-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Lihat Nilai Rata-rata"
-          :disabled="capability.loadingSubmit || capability.loading">
-          <template #icon-left>
-            <TablerIcon icon="GraphIcon" />
-          </template>
-        </BaseButton>
-
         <BaseButton @click="onSubmit" class="btn btn-primary ms-0 mt-3 mt-md-0 ms-md-3" title="Simpan Data"
           :disabled="capability.loadingSubmit || capability.loading" :is-loading="capability.loadingSubmit"
           :access="['project-edit']">
@@ -278,6 +297,45 @@ onMounted(() => {
             <TablerIcon icon="DeviceFloppyIcon" />
           </template>
         </BaseButton>
+
+        <div class="dropdown dropstart">
+          <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer ms-0 mt-3 mt-md-0 ms-md-3"
+            data-bs-toggle="dropdown" id="dropdownMenuButton" aria-expanded="false" />
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <BaseButton @click="handleToggleModalHistory"
+              class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat History Perubahan Data"
+              :disabled="capability.loadingSubmit || capability.loading">
+              <template #icon-left>
+                <TablerIcon icon="HistoryIcon" />
+              </template>
+            </BaseButton>
+
+            <BaseButton @click="handleToggleModalAverageCompliance"
+              class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Nilai Rata-rata"
+              :disabled="capability.loadingSubmit || capability.loading">
+              <template #icon-left>
+                <TablerIcon icon="GraphIcon" />
+              </template>
+            </BaseButton>
+
+            <BaseButton @click="handleToggleModalPenilaianNoteList"
+              class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
+              title="Lihat Daftar Catatan / Note Penilaian" :disabled="capability.loadingSubmit || capability.loading">
+              <template #icon-left>
+                <TablerIcon icon="NoteIcon" />
+              </template>
+            </BaseButton>
+
+            <BaseButton @click="handleToggleModalEvidenceList"
+              class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" title="Lihat Daftar Evidence"
+              :disabled="capability.loadingSubmit || capability.loading">
+              <template #icon-left>
+                <TablerIcon icon="FileTextIcon" />
+              </template>
+            </BaseButton>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -293,7 +351,7 @@ onMounted(() => {
           <thead class="position-sticky top-0 bg-white text-dark" style="z-index: 5 !important;">
             <tr>
               <th class="align-middle" rowspan="2">
-                <h6 class="fs-3 fw-semibold mb-0">Urutan</h6>
+                <h6 class="fs-3 fw-semibold mb-0 text-center">Urutan</h6>
               </th>
               <th class="width-150px align-middle" rowspan="2">
                 <div class="width-100px text-break text-wrap">
@@ -346,12 +404,12 @@ onMounted(() => {
                   </div>
                 </td>
                 <td class="width-175px" :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
-                  <div class="d-flex flex-wrap justify-content-center ">
+                  <div class="d-flex flex-wrap ">
                     <div v-if="item?.kegiatan" class="width-150px text-break text-wrap" v-html="item?.kegiatan" />
                   </div>
                 </td>
                 <td class="width-175px" :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
-                  <div class="d-flex flex-wrap justify-content-center ">
+                  <div class="d-flex flex-wrap ">
                     <div v-if="item?.translate" class="width-150px text-break text-wrap" v-html="item?.translate" />
                   </div>
                 </td>
@@ -390,7 +448,8 @@ onMounted(() => {
                       </template>
 
                       <template v-else>
-                        <span v-tooltip="`Ketuk Untuk Menambahkan Penilaian`" class="cursor-pointer fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base"
+                        <span v-tooltip="`Ketuk Untuk Menambahkan Penilaian`"
+                          class="cursor-pointer fst-italic text-muted text-capitalize fw-bold text-break text-wrap lh-base"
                           @click="handleToggleModalPenilaian({ gamo: item })">
                           Belum Dinilai
                         </span>
@@ -403,7 +462,7 @@ onMounted(() => {
                 </td>
                 <td :class="{ 'bg-light-warning bg-opacity-50': item?.capabilityass?.isEdited }">
                   <BaseButton v-tooltip="`Lihat Aksi`" class="btn btn-sm btn-primary btn-icon" data-bs-toggle="dropdown"
-                    id="dropdownMenuButton" aria-expanded="false" :access="['project-add', 'project-edit' ]">
+                    id="dropdownMenuButton" aria-expanded="false" :access="['project-add', 'project-edit']">
                     <template #icon-left>
                       <TablerIcon icon="DotsIcon" />
                     </template>
@@ -411,7 +470,8 @@ onMounted(() => {
 
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <BaseButton @click="handleToggleModalPenilaian({ gamo: item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-add', 'project-edit' ]">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
+                      :access="['project-add', 'project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />
                         <span class="ms-2">
@@ -421,7 +481,8 @@ onMounted(() => {
                     </BaseButton>
 
                     <BaseButton @click="handleToggleModalEvidence({ gamo: item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-add', 'project-edit' ]">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
+                      :access="['project-add', 'project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="FileTextIcon" />
                         <span class="ms-2">
@@ -431,7 +492,8 @@ onMounted(() => {
                     </BaseButton>
 
                     <BaseButton @click="handleToggleModalOFI({ gamo: item })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-add', 'project-edit' ]">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer"
+                      :access="['project-add', 'project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="FileStarIcon" />
                         <span class="ms-2">
@@ -515,12 +577,15 @@ onMounted(() => {
 
     <ModalOFI :is-show="capability.isShowModalOFI" @close="handleToggleModalOFI" />
     <ModalPenilaian :is-show="capability.isShowModalPenilaian" @close="handleToggleModalPenilaian" />
-    <ModalEvidence :is-show="capability.isShowModalEvidence" @close="handleToggleModalEvidence" />
+    <ModalEvidence :is-show="capability.isShowModalEvidence" type="penilaian" @close="handleToggleModalEvidence" />
     <ModalViewDetailEvidence :is-show="capability.isShowModalViewDetailEvidence"
       @close="handleToggleModalViewDetailEvidence" />
     <ModalAverageCompliance :is-show="capability.isShowModalAverageCompliance"
       @close="handleToggleModalAverageCompliance" />
     <ModalHistory :is-show="capability.isShowModalHistory" @close="handleToggleModalHistory" />
+    <ModalPenilaianNoteList :is-show="capability.isShowModalPenilaianNoteList"
+      @close="handleToggleModalPenilaianNoteList" />
+    <ModalEvidenceList :is-show="capability.isShowModalEvidenceList" @close="handleToggleModalEvidenceList" />
   </section>
 </template>
 

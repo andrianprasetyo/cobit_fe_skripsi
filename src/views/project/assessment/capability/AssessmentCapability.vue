@@ -27,6 +27,10 @@ const TabStep = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/capability/steps/AssessmentCapabilitySteps.vue'),
 })
 
+const TabPBC = defineAsyncComponent({
+  loader: () => import('@/views/project/assessment/capability/pbc/AssessmentCapabilityPBC.vue'),
+})
+
 const TabRepository = defineAsyncComponent({
   loader: () => import('@/views/project/assessment/capability/repository/AssessmentCapabilityRepository.vue'),
 })
@@ -40,6 +44,7 @@ const tab = ref("step")
 
 const ViewComponent = {
   'step': TabStep,
+  'pbc': TabPBC,
   'repository': TabRepository,
   'summary': TabSummary,
 }
@@ -93,6 +98,9 @@ watch(() => queryView.value, (value) => {
     case 'step':
       tab.value = 'step'
       break;
+    case 'pbc':
+      tab.value = 'pbc'
+      break;
     case 'repository':
       tab.value = 'repository'
       break;
@@ -108,6 +116,8 @@ watch(() => queryView.value, (value) => {
 onMounted(() => {
   auth.setMenuToProject()
   appConfig.setMiniSidebar(true)
+
+  assessmentStore.getCapabilityListCapabilityAnswerAssessment();
   assessmentStore.getCapabilityListTargetAssessment({
     assesment_id: route.params?.id,
   })
@@ -118,6 +128,8 @@ onMounted(() => {
     assesment_id: route.params?.id,
     limit: 100
   })
+
+  assessmentStore.getCapabilityListMediaRepositoryAssessment({ assesment_id: route.params?.id, limit: 12 })
 })
 
 onUnmounted(() => {
@@ -139,7 +151,6 @@ watch(() => [assessmentStore.capability.selectedGamo], () => {
 
   }
 }, { deep: true, immediate: true })
-
 </script>
 
 <template>
@@ -189,6 +200,17 @@ watch(() => [assessmentStore.capability.selectedGamo], () => {
               </BaseButton>
             </li>
             <li class="nav-item" role="presentation">
+              <BaseButton @click="handleClickView('pbc')"
+                class="nav-link d-flex align-items-center justify-content-center fs-3"
+                :class="[tab === 'pbc' ? 'active' : '']" :id="`pills-pbc-tab`" role="tab" :aria-controls="`pills-pbc`"
+                aria-selected="true">
+                <div class="d-flex flex-row align-items-center">
+                  <TablerIcon :icon="`FilesIcon`" class="me-2" />
+                  <span class="d-none d-md-block text-truncate">PBC</span>
+                </div>
+              </BaseButton>
+            </li>
+            <li class="nav-item" role="presentation">
               <BaseButton @click="handleClickView('repository')"
                 class="nav-link d-flex align-items-center justify-content-center fs-3"
                 :class="[tab === 'repository' ? 'active' : '']" :id="`pills-repository-tab`" role="tab"
@@ -215,9 +237,7 @@ watch(() => [assessmentStore.capability.selectedGamo], () => {
           <template #tab-content>
             <RouterView>
               <Transition name="fade-top" mode="out-in">
-                <KeepAlive :max="2" :include="['summary']">
-                  <component :is="ViewComponent[tab]" />
-                </KeepAlive>
+                <component :is="ViewComponent[tab]" />
               </Transition>
             </RouterView>
           </template>

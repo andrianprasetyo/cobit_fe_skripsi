@@ -31,6 +31,10 @@ const props = defineProps({
   isShow: {
     type: Boolean,
     default: false
+  },
+  type: {
+    type: String,
+    default: 'penilaian'
   }
 })
 
@@ -65,6 +69,9 @@ const rules = computed(() => {
         url: {
           url: helpers.withMessage("Tautan atau URL tidak valid", url)
         },
+        name: {
+          required: helpers.withMessage("Silahkan isi nama evident", requiredIf(props.isShow))
+        }
         /*
         deskripsi: {
           required: helpers.withMessage('Silahkan isi deskripsi', requiredIf(props.isShow)),
@@ -107,6 +114,7 @@ const handleClose = () => {
 
 const handleSelectTipe = ({ tipe, index }) => {
   formState.evident[index].tipe = tipe;
+  formState.evident[index].nama = ""
   formState.evident[index].url = null
   formState.evident[index].media_repositories_id = null
   formState.evident[index].deskripsi = ''
@@ -127,6 +135,7 @@ const filterEvident = (index) => {
 const handleTambahEvident = () => {
   formState.evident.push({
     tipe: '',
+    nama: "",
     url: null,
     media_repositories_id: null,
     deskripsi: '',
@@ -243,7 +252,7 @@ const handleDeleteFile = async ({ media_repositories_id, index }) => {
   }
 }
 
-const handleSubmit = async () => {
+const submitOnPenilaian = async () => {
   const result = await v$.value.$validate()
   if (result) {
     const payload = {
@@ -259,6 +268,30 @@ const handleSubmit = async () => {
   }
 }
 
+const submitOnPBC = async () => {
+  const result = await v$.value.$validate()
+  if (result) {
+    const payload = {
+      ...assessmentStore.capability.selectedSubGamo,
+      capabilityass: {
+        ...assessmentStore.capability.selectedSubGamo.capabilityass,
+        evident: formState.evident,
+        isEditedPbc: true,
+      },
+    }
+    assessmentStore.saveCapabilityPBCSubGamo(payload)
+    handleClose()
+  }
+}
+
+const handleSubmit = async () => {
+  if (props.type === 'penilaian') {
+    submitOnPenilaian()
+  } else if (props.type === 'pbc') {
+    submitOnPBC()
+  }
+}
+
 const setValueToForm = () => {
   if (Array.isArray(assessmentStore.capability.selectedSubGamo?.capabilityass?.evident) && assessmentStore.capability.selectedSubGamo?.capabilityass?.evident.length) {
     assessmentStore.capability.selectedSubGamo?.capabilityass?.evident.map((ev) => {
@@ -266,6 +299,7 @@ const setValueToForm = () => {
         formState.evident.push({
           tipe: 'url',
           url: ev?.url,
+          name: ev?.name || '',
           deskripsi: ev?.deskripsi || '',
           media_repositories_id: null,
           search: '',
@@ -284,6 +318,7 @@ const setValueToForm = () => {
         formState.evident.push({
           tipe: 'file-repository',
           url: null,
+          name: ev?.name || '',
           media_repositories_id: ev?.media_repositories_id,
           files: files,
           deskripsi: ev?.deskripsi || '',
@@ -295,6 +330,7 @@ const setValueToForm = () => {
         formState.evident.push({
           tipe: 'file-repository',
           url: null,
+          name: ev?.name || '',
           media_repositories_id: ev?.media_repositories_id,
           files: ev?.files,
           deskripsi: ev?.deskripsi,
@@ -342,12 +378,15 @@ watch(() => [props.isShow], () => {
         </h4>
         <hr />
         <p class="mb-1 fs-2">Activities</p>
-        <div style="font-weight: bold !important;" v-html="assessmentStore.capability.selectedSubGamo?.translate" />
+        <div style="font-weight: bold !important;" v-html="assessmentStore.capability.selectedSubGamo?.translate || '-'" />
         <p class="mb-1 fs-2">Translate</p>
         <div style="font-weight: bold !important; font-style: italic !important;"
-          v-html="assessmentStore.capability.selectedSubGamo?.kegiatan" />
+          v-html="assessmentStore.capability.selectedSubGamo?.kegiatan || '-'" />
+        <p class="mb-1 fs-2">Kebutuhan Dokumen</p>
+        <div style="font-weight: bold !important; font-style: italic !important;"
+          v-html="assessmentStore.capability.selectedSubGamo?.guidelines || '-'" />
       </div>
-      
+
       <template v-if="formState.evident.length">
         <template v-for="(evident, index) in formState.evident" :key="`evident-form-${index}`">
 
@@ -358,7 +397,7 @@ watch(() => [props.isShow], () => {
 
             <div>
               <BaseButton @click="handleHapusEvident({ title: index + 1, index: index })" class="btn btn-outline-danger"
-                title="Hapus Evidence" :access="['project-add', 'project-edit' ]">
+                title="Hapus Evidence" :access="['project-add', 'project-edit']">
                 <template #icon-left>
                   <TablerIcon icon="TrashIcon" />
                 </template>
@@ -382,6 +421,16 @@ watch(() => [props.isShow], () => {
             <ErrorMessage
               v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
               :errors="v$.evident.$each?.$response?.$errors[index]?.tipe" />
+          </div>
+
+          <!-- Name -->
+          <div class="mb-3">
+            <BaseInput :id="`evident_nama_${index}`" v-model="evident.name" label="Nama" placeholder="Masukkan Nama"
+              :disabled="formState.loadingSubmit" />
+
+            <ErrorMessage
+              v-if="Array.isArray(v$.evident.$each?.$response?.$errors) && v$.evident.$each?.$response?.$errors.length"
+              :errors="v$.evident.$each?.$response?.$errors[index]?.name" />
           </div>
 
           <!-- URL -->
@@ -461,7 +510,7 @@ watch(() => [props.isShow], () => {
       </template>
 
       <div class="mt-5 d-flex justify-content-center align-items-center">
-        <BaseButton @click="handleTambahEvident" title="Tambah Evidence" :access="['project-add', 'project-edit' ]">
+        <BaseButton @click="handleTambahEvident" title="Tambah Evidence" :access="['project-add', 'project-edit']">
           <template #icon-left>
             <TablerIcon icon="PlusIcon" />
           </template>
@@ -470,7 +519,7 @@ watch(() => [props.isShow], () => {
     </template>
 
     <template #footer>
-      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Evidence" :access="['project-add', 'project-edit' ]">
+      <BaseButton @click="handleSubmit" title="Simpan Sebagai Draft Evidence" :access="['project-add', 'project-edit']">
         <template #icon-left>
           <TablerIcon icon="CheckboxIcon" />
         </template>

@@ -18,7 +18,7 @@ const auth = useAuth()
 const appConfig = useAppConfig()
 
 const TabProjectListCard = defineAsyncComponent({
-  loader: () => import('@/views/project/assessment/AssessmentListCard.vue'),
+  loader: () => import('@/views/project/assessment/AssessmentListAllCard.vue'),
 })
 
 const TabProjectListTable = defineAsyncComponent({

@@ -8,6 +8,8 @@ import BaseSelect from '@/components/Select/BaseSelect.vue'
 import TablerIcon from '@/components/TablerIcon/TablerIcon.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 import NoOptions from '@/components/EmptyPlaceholder/NoOptions.vue'
+import BaseCheckboxInput from '@/components/Input/BaseCheckboxInput.vue'
+import BaseCheckboxInputWithVModel from '@/components/Input/BaseCheckboxInputWithVModel.vue'
 
 import AssessmentTargetServices from '@/services/lib/assessment-target'
 
@@ -49,23 +51,25 @@ const rules = computed(() => {
         target: {
           required: helpers.withMessage('Silahkan isi target', requiredIf(false)),
           minValue: helpers.withMessage("Minimal angka target 0", minValue(0)),
-          maxValue: helpers.withMessage("Maksimal angka target 5", maxValue(5)),
+          maxValue: helpers.withMessage("Maksimal angka target 4", maxValue(4)),
         },
       })
     }
   }
 })
 
-const assessmentTargetId = computed(() => {
-  return route.params?.assessment_target_id
-})
+const assessmentTargetId = computed(() => route.params?.assessment_target_id)
 
-const assessmentId = computed(() => {
-  return route.params?.id
-})
+const assessmentId = computed(() => route.params?.id)
 
-const assessmentTargetNama = computed(() => {
-  return route.query?.target
+const isAssessmentDefault = computed(() => route?.query?.defaults === "true")
+
+const assessmentTargetNama = computed(() => route.query?.target)
+
+const isCheckedAll = computed(() => {
+  return (
+    formState.listTarget?.length > 0 &&
+    formState.listTarget.every(item => item?.assesment))
 })
 
 const v$ = useVuelidate(rules, formState, { $rewardEarly: true })
@@ -95,6 +99,29 @@ const handleBack = () => {
   router.back()
 }
 
+const handleCheckAll = (event) => {
+  const isChecked = event.target.checked
+
+  if (isChecked) {
+    const listChecked = [];
+
+    formState.listTarget.map(item => {
+      listChecked.push({ ...item, assesment: item?.target ? true : false })
+    }
+    )
+
+    formState.listTarget = listChecked;
+  } else {
+    const listUnchecked = [];
+
+    formState.listTarget.map(item =>
+      listUnchecked.push({ ...item, assesment: false })
+    )
+
+    formState.listTarget = listUnchecked;
+  }
+}
+
 const handleSubmit = async () => {
   const result = await v$.value.$validate()
 
@@ -103,12 +130,18 @@ const handleSubmit = async () => {
     try {
       formState.loadingSubmit = true
 
-      const response = await AssessmentTargetServices.saveTarget({
+      let payload = {
         id: assessmentTargetId.value,
         assesment_id: assessmentId.value,
         nama: formState.nama,
-        target: formState.listTarget
-      })
+        default: isAssessmentDefault.value
+      }
+
+      if (!isAssessmentDefault.value) {
+        payload.target = formState.listTarget
+      }
+
+      const response = await AssessmentTargetServices.saveTarget(payload)
 
       if (response) {
         loader.hide()
@@ -186,6 +219,14 @@ onMounted(() => {
                     <th class="align-middle text-center" rowspan="2">
                       <h6 class="fs-3 fw-semibold mb-0">Target</h6>
                     </th>
+                    <th class="align-middle text-center" rowspan="2">
+                      <div class="d-flex justify-content-center align-items-center"
+                        v-tooltip="`Apakah Semua GAMO yang Mempunyai Value Ingin Dijadikan Asesmen?`">
+                        <BaseCheckboxInput id="checkbox-check-all-access" class="form-check-input big-checkbox"
+                          style="transform: scale(1.15);" @change="handleCheckAll" :checked="isCheckedAll"
+                          :access="['master-organisasi-edit']" />
+                      </div>
+                    </th>
                   </tr>
                 </thead>
 
@@ -203,12 +244,25 @@ onMounted(() => {
                       </div>
                     </td>
                     <td>
-                      <BaseInput :id="`input-gamo-${index}`" type="number" v-model="item.target"
-                        :disabled="formState.loadingSubmit" placeholder="Masukkan Target"
-                        :is-invalid="!!v$.listTarget.$each?.$response?.$errors[index].target?.length" />
-                      <ErrorMessage
-                        v-if="Array.isArray(v$.listTarget.$each?.$response?.$errors) && v$.listTarget.$each?.$response?.$errors.length"
-                        :errors="v$.listTarget.$each?.$response?.$errors[index].target" />
+                      <div class="d-flex flex-column">
+                        <BaseInput :id="`input-gamo-${index}`" type="number" v-model="item.target"
+                          :disabled="formState.loadingSubmit || isAssessmentDefault" placeholder="Masukkan Target"
+                          :is-invalid="!!v$.listTarget.$each?.$response?.$errors[index].target?.length">
+                        </BaseInput>
+                        <ErrorMessage
+                          v-if="Array.isArray(v$.listTarget.$each?.$response?.$errors) && v$.listTarget.$each?.$response?.$errors.length"
+                          :errors="v$.listTarget.$each?.$response?.$errors[index].target" />
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center"
+                        v-tooltip="`Apakah GAMO Ingin Dijadikan Asesmen?`">
+                        <BaseCheckboxInputWithVModel :id="`is-assessment-${item?.id}`" :name="`assessment-${item?.id}`"
+                          :disabled="formState.loadingSubmit || !item.target" :value="item?.assesment"
+                          :true-value="true" style="transform: scale(1.15);" :false-value="false"
+                          v-model="item.assesment">
+                        </BaseCheckboxInputWithVModel>
+                      </div>
                     </td>
                   </tr>
                 </tbody>

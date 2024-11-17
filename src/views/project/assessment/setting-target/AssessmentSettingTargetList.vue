@@ -140,8 +140,8 @@ const handleDelete = async ({ title, id }) => {
   })
 }
 
-const handleNavigateEdit = ({ id, target }) => {
-  router.push({ path: `/project/assessment/${assessmentId.value}/setting-target/${id}/edit`, query: { target } })
+const handleNavigateEdit = ({ id, target, defaults }) => {
+  router.push({ path: `/project/assessment/${assessmentId.value}/setting-target/${id}/edit`, query: { target, defaults } })
 }
 
 const handleNavigateAdd = () => {
@@ -217,13 +217,14 @@ watch(() => [serverOptions.value, filter.value], () => {
             </template>
 
             <template #item-action="item">
-              <div v-if="!item.item.default" class="dropdown dropstart">
+              <div class="dropdown dropstart">
                 <TablerIcon icon="DotsIcon" class="text-muted cursor-pointer" data-bs-toggle="dropdown"
                   id="dropdownMenuButton" aria-expanded="false" />
 
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <BaseButton @click="handleNavigateEdit({ id: item?.item?.id, target: item?.item?.nama })"
+                    <BaseButton
+                      @click="handleNavigateEdit({ id: item?.item?.id, target: item?.item?.nama, defaults: item?.item?.default })"
                       class="dropdown-item d-flex align-items-center gap-3 cursor-pointer" :access="['project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="EditIcon" />
@@ -238,7 +239,8 @@ watch(() => [serverOptions.value, filter.value], () => {
                   </li>
                   <li>
                     <BaseButton @click="handleDelete({ title: item?.item?.nama, id: item?.item?.id })"
-                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger" :access="['project-edit']">
+                      class="dropdown-item d-flex align-items-center gap-3 cursor-pointer text-danger"
+                      :access="['project-edit']">
                       <template #icon-left>
                         <TablerIcon icon="TrashIcon" />
                         <span class="ms-2">

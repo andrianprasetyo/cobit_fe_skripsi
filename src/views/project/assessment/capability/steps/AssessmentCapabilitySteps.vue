@@ -26,7 +26,7 @@ const isStepsUnlocked = computed(() => {
   return level => {
     const isOverlapped = level < assessmentStore.capability.selectedLevel
     const isCurrentLevel = level == assessmentStore.capability.selectedLevel
-    const isNextLevelUnlocked = assessmentStore.getCapabilityIsComplianceEnough > 0.85 && (level == +assessmentStore.capability.selectedLevel + 1)
+    const isNextLevelUnlocked = assessmentStore.getCapabilityIsComplianceEnough && (level == +assessmentStore.capability.selectedLevel + 1)
 
     if (isOverlapped || isCurrentLevel || isNextLevelUnlocked) {
       return true
@@ -67,13 +67,18 @@ const handleClickLevel = (level) => {
             :disabled="!isStepsUnlocked(level.level)" @click="handleClickLevel(level.level)">
             <template #step>
               <span v-if="isStepsUnlocked(level.level)" v-tooltip="`Pindah Ke Level ${level.level}`"
-                class="step cursor-pointer">
+                class="step cursor-pointer fw-bolder">
                 {{ level.level }}
               </span>
               <span v-else>
                 <span class="step" v-tooltip="`Level Terkunci`">
                   <TablerIcon icon="LockIcon" />
                 </span>
+              </span>
+            </template>
+            <template #default>
+              <span class="mt-1">
+                {{ level?.count || 0 }} Activities
               </span>
             </template>
           </StepsWizardHeaderItem>
